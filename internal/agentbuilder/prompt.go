@@ -1,0 +1,67 @@
+package agentbuilder
+
+import (
+	"fmt"
+	"html"
+	"strings"
+
+	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
+)
+
+const systemPromptBase = `You are an expert AI agent skill designer for the Gentleman AI ecosystem.
+Your task is to generate a complete SKILL.md file for a custom sub-agent skill.
+
+The SKILL.md MUST include these exact sections in order:
+1. # {Title} — A clear, descriptive title for the skill
+2. ## Description — What this skill does and its purpose
+3. ## Trigger — When to activate this skill (specific phrases, contexts, or conditions)
+4. ## Instructions — Step-by-step instructions the agent must follow when this skill is active
+5. ## Rules — Hard constraints and guardrails (what the agent must/must not do)
+6. ## Examples — Concrete usage examples demonstrating the skill in action
+
+Requirements:
+- Write in clear, direct language that an AI agent can execute
+- Instructions must be actionable and specific
+- Rules must be unambiguous constraints
+- Examples must be realistic and cover edge cases
+- The Trigger section must be precise enough to avoid false activations
+
+Engram Integration:
+- After completing significant work triggered by this skill, the agent MUST call mem_save
+- Include a "PROACTIVE SAVE TRIGGERS" list in the Instructions section
+- Reference the Engram persistent memory protocol for cross-session continuity
+
+Output ONLY the raw SKILL.md content, starting with "# {Title}".
+Do NOT wrap the output in code fences or add any preamble.`
+
+// ComposePrompt builds the full prompt sent to the generation engine.
+// It combines the system instructions with the user's intent and installed-agent context.
+func ComposePrompt(userInput string, installedAgents []model.AgentID) string {
+	var sb strings.Builder
+
+	sb.WriteString(systemPromptBase)
+	sb.WriteString("\n\n")
+
+	// Installed agents context.
+	if len(installedAgents) > 0 {
+		sb.WriteString("<installed_agents>\n")
+		sb.WriteString("This skill will be installed for the following agents:\n")
+		for _, a := range installedAgents {
+			sb.WriteString(fmt.Sprintf("- %s\n", promptEscape(string(a))))
+		}
+		sb.WriteString("</installed_agents>\n\n")
+	}
+
+	// User's intent. Keep volatile user-provided data inside an explicit
+	// wrapper so it is easier for the generation model to distinguish from
+	// authoritative system instructions above.
+	sb.WriteString("<user_request>\n")
+	sb.WriteString(promptEscape(userInput))
+	sb.WriteString("\n</user_request>\n")
+
+	return sb.String()
+}
+
+func promptEscape(value string) string {
+	return html.EscapeString(value)
+}

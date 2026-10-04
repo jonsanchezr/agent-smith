@@ -1,0 +1,513 @@
+package filemerge
+
+import (
+	"bytes"
+	"errors"
+	"os"
+	"path/filepath"
+	"runtime"
+	"strings"
+	"syscall"
+	"testing"
+)
+
+// isSymlinkPrivilegeError reports whether err is the Windows
+// ERROR_PRIVILEGE_NOT_HELD (1314) error returned by os.Symlink when the
+// process lacks SeCreateSymbolicLinkPrivilege. errors.Is does not map this
+// errno to os.ErrPermission, so we unwrap and check the raw value.
+func isSymlinkPrivilegeError(err error) bool {
+	var le *os.LinkError
+	if errors.As(err, &le) {
+		var errno syscall.Errno
+		if errors.As(le.Err, &errno) {
+			return errno == 1314 // ERROR_PRIVILEGE_NOT_HELD
+		}
+	}
+	return false
+}
+
+func TestRefuseLockedSettingsFileRejectsNonRegular(t *testing.T) {
+	dir := t.TempDir()
+	target := filepath.Join(dir, "target.json")
+	if err := os.WriteFile(target, []byte(`{}`), 0o600); err != nil {
+		t.Fatal(err)
+	}
+	link := filepath.Join(dir, "settings.json")
+	if err := os.Symlink(target, link); err != nil {
+		if isSymlinkPrivilegeError(err) {
+			t.Skipf("symlink privilege unavailable: %v", err)
+		}
+		t.Fatal(err)
+	}
+	for _, tc := range []struct{ name, path, kind string }{
+		{"symlink", link, "symlink"},
+		{"directory", dir, "regular file"},
+	} {
+		t.Run(tc.name, func(t *testing.T) {
+			err := RefuseLockedSettingsFile(tc.path)
+			if err == nil || !strings.Contains(err.Error(), tc.kind) || !strings.Contains(err.Error(), "retry") {
+				t.Fatalf("want actionable %s refusal, got %v", tc.kind, err)
+			}
+		})
+	}
+	if err := RefuseLockedSettingsFile(target); err != nil {
+		t.Fatalf("regular settings refused: %v", err)
+	}
+	if err := RefuseLockedSettingsFile(filepath.Join(dir, "absent.json")); err != nil {
+		t.Fatalf("absent settings refused: %v", err)
+	}
+}
+
+func TestWriteFileAtomicReadOnlyDirRelaxesOwnerWritePermission(t *testing.T) {
+	if runtime.GOOS == "windows" {
+		t.Skip("chmod 555 semantics differ on Windows")
+	}
+	base := t.TempDir()
+	skillDir := filepath.Join(base, "sdd-init")
+	if err := os.Mkdir(skillDir, 0o555); err != nil {
+		t.Fatalf("Mkdir() error = %v", err)
+	}
+
+	path := filepath.Join(skillDir, "SKILL.md")
+	content := []byte("# SDD Init\n")
+
+	_, err := WriteFileAtomic(path, content, 0o644)
+	if err != nil {
+		t.Fatalf("WriteFileAtomic() error = %v, want successful write with permission relaxation", err)
+	}
+
+	got, readErr := os.ReadFile(path)
+	if readErr != nil {
+		t.Fatalf("ReadFile() error = %v", readErr)
+	}
+	if string(got) != string(content) {
+		t.Fatalf("file content = %q, want %q", string(got), string(content))
+	}
+}
+
+func TestWriteFileAtomicCreatesAndIsIdempotent(t *testing.T) {
+	dir := t.TempDir()
+	path := filepath.Join(dir, "nested", "config.json")
+	content := []byte("{\"ok\":true}\n")
+
+	first, err := WriteFileAtomic(path, content, 0o644)
+	if err != nil {
+		t.Fatalf("WriteFileAtomic() first write error = %v", err)
+	}
+
+	if !first.Changed || !first.Created {
+		t.Fatalf("WriteFileAtomic() first write result = %+v", first)
+	}
+
+	second, err := WriteFileAtomic(path, content, 0o644)
+	if err != nil {
+		t.Fatalf("WriteFileAtomic() second write error = %v", err)
+	}
+
+	if second.Changed || second.Created {
+		t.Fatalf("WriteFileAtomic() second write result = %+v", second)
+	}
+
+	got, err := os.ReadFile(path)
+	if err != nil {
+		t.Fatalf("ReadFile() error = %v", err)
+	}
+
+	if string(got) != string(content) {
+		t.Fatalf("file content = %q", string(got))
+	}
+}
+
+// TestWriteFileAtomicPreservesExistingModeByDefault pins gentle-ai#5006(F5):
+// rewriting an existing file must never widen its permissions, even when the
+// caller passes a wider perm literal — the common case across ~76 call sites
+// that pass a literal 0o644.
+func TestWriteFileAtomicPreservesExistingModeByDefault(t *testing.T) {
+	if runtime.GOOS == "windows" {
+		t.Skip("POSIX permission bits are not meaningful on Windows")
+	}
+	path := filepath.Join(t.TempDir(), "settings.json")
+	if err := os.WriteFile(path, []byte("{}"), 0o600); err != nil {
+		t.Fatal(err)
+	}
+
+	if _, err := WriteFileAtomic(path, []byte(`{"share":"disabled"}`), 0o644); err != nil {
+		t.Fatalf("WriteFileAtomic() error = %v", err)
+	}
+
+	info, err := os.Stat(path)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if got := info.Mode().Perm(); got != 0o600 {
+		t.Fatalf("mode after rewrite = %v, want 0600 preserved (not widened to the requested 0644)", got)
+	}
+}
+
+// TestWriteFileAtomicNewFileUsesRequestedPerm confirms perm still applies when
+// there is no existing file whose mode could be preserved.
+func TestWriteFileAtomicNewFileUsesRequestedPerm(t *testing.T) {
+	if runtime.GOOS == "windows" {
+		t.Skip("POSIX permission bits are not meaningful on Windows")
+	}
+	path := filepath.Join(t.TempDir(), "fresh.json")
+
+	if _, err := WriteFileAtomic(path, []byte("{}"), 0o640); err != nil {
+		t.Fatalf("WriteFileAtomic() error = %v", err)
+	}
+
+	info, err := os.Stat(path)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if got := info.Mode().Perm(); got != 0o640 {
+		t.Fatalf("mode of new file = %v, want the requested 0640", got)
+	}
+}
+
+// TestWriteFileAtomicIdenticalContentNeverTouchesMode pins the existing no-op
+// contract: a byte-identical rewrite through the default (non-forced) API must
+// not touch the file's mode even when perm differs.
+func TestWriteFileAtomicIdenticalContentNeverTouchesMode(t *testing.T) {
+	if runtime.GOOS == "windows" {
+		t.Skip("POSIX permission bits are not meaningful on Windows")
+	}
+	path := filepath.Join(t.TempDir(), "settings.json")
+	content := []byte("{}")
+	if err := os.WriteFile(path, content, 0o600); err != nil {
+		t.Fatal(err)
+	}
+
+	if _, err := WriteFileAtomic(path, content, 0o644); err != nil {
+		t.Fatalf("WriteFileAtomic() error = %v", err)
+	}
+
+	info, err := os.Stat(path)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if got := info.Mode().Perm(); got != 0o600 {
+		t.Fatalf("mode after identical-content no-op = %v, want 0600 untouched", got)
+	}
+}
+
+// TestWriteFileAtomicModeForcesRequestedPermOnExistingFile pins
+// WriteFileAtomicMode's contrasting contract: it always applies perm, even
+// widening an existing file, for callers that own the target mode outright
+// (executable scripts, credential files, backup restores).
+func TestWriteFileAtomicModeForcesRequestedPermOnExistingFile(t *testing.T) {
+	if runtime.GOOS == "windows" {
+		t.Skip("POSIX permission bits are not meaningful on Windows")
+	}
+	path := filepath.Join(t.TempDir(), "script.sh")
+	if err := os.WriteFile(path, []byte("old\n"), 0o644); err != nil {
+		t.Fatal(err)
+	}
+
+	if _, err := WriteFileAtomicMode(path, []byte("new\n"), 0o755); err != nil {
+		t.Fatalf("WriteFileAtomicMode() error = %v", err)
+	}
+
+	info, err := os.Stat(path)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if got := info.Mode().Perm(); got != 0o755 {
+		t.Fatalf("mode after forced rewrite = %v, want 0755", got)
+	}
+}
+
+// TestWriteFileAtomicModeEnforcesPermOnIdenticalContent pins the gga runtime
+// case named in gentle-ai#5006(F5): an existing script whose content already
+// matches the embedded asset but whose mode drifted (e.g. 0644) must still be
+// forced to the intended mode (0755) by the forced API. That mode-only repair
+// mutates the file, so it reports Changed=true (#5022).
+func TestWriteFileAtomicModeEnforcesPermOnIdenticalContent(t *testing.T) {
+	if runtime.GOOS == "windows" {
+		t.Skip("POSIX permission bits are not meaningful on Windows")
+	}
+	path := filepath.Join(t.TempDir(), "script.sh")
+	content := []byte("#!/bin/sh\necho hi\n")
+	if err := os.WriteFile(path, content, 0o644); err != nil {
+		t.Fatal(err)
+	}
+
+	result, err := WriteFileAtomicMode(path, content, 0o755)
+	if err != nil {
+		t.Fatalf("WriteFileAtomicMode() error = %v", err)
+	}
+	if !result.Changed || result.Created {
+		t.Fatalf("WriteFileAtomicMode() result = %+v, want Changed=true Created=false: the mode was repaired", result)
+	}
+
+	info, err := os.Stat(path)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if got := info.Mode().Perm(); got != 0o755 {
+		t.Fatalf("mode after identical-content forced write = %v, want 0755 enforced", got)
+	}
+}
+
+// TestWriteFileAtomicModeIdenticalContentAndModeIsNoOp pins the other half of
+// #5022: same bytes and same mode touch nothing and report Changed=false.
+func TestWriteFileAtomicModeIdenticalContentAndModeIsNoOp(t *testing.T) {
+	if runtime.GOOS == "windows" {
+		t.Skip("POSIX permission bits are not meaningful on Windows")
+	}
+	path := filepath.Join(t.TempDir(), "script.sh")
+	content := []byte("#!/bin/sh\necho hi\n")
+	if err := os.WriteFile(path, content, 0o755); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.Chmod(path, 0o755); err != nil {
+		t.Fatal(err)
+	}
+
+	result, err := WriteFileAtomicMode(path, content, 0o755)
+	if err != nil {
+		t.Fatalf("WriteFileAtomicMode() error = %v", err)
+	}
+	if result.Changed || result.Created {
+		t.Fatalf("WriteFileAtomicMode() result = %+v, want Changed=false Created=false: nothing changed", result)
+	}
+
+	info, err := os.Stat(path)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if got := info.Mode().Perm(); got != 0o755 {
+		t.Fatalf("mode after no-op forced write = %v, want 0755", got)
+	}
+}
+
+func TestWriteFileAtomicRejectsExistingSymlink(t *testing.T) {
+	dir := t.TempDir()
+	target := filepath.Join(dir, "target.txt")
+	if err := os.WriteFile(target, []byte("old\n"), 0o644); err != nil {
+		t.Fatalf("WriteFile(target) error = %v", err)
+	}
+	path := filepath.Join(dir, "linked.txt")
+	if err := os.Symlink(target, path); err != nil {
+		// On Windows without Developer Mode or admin rights, symlink creation
+		// requires SeCreateSymbolicLinkPrivilege (ERROR_PRIVILEGE_NOT_HELD = 1314).
+		// Skip gracefully — the test infrastructure lacks the privilege, not the code.
+		if isSymlinkPrivilegeError(err) {
+			t.Skipf("skipping: SeCreateSymbolicLinkPrivilege not held on this Windows build: %v", err)
+		}
+		t.Fatalf("Symlink() error = %v", err)
+	}
+
+	_, err := WriteFileAtomic(path, []byte("new\n"), 0o644)
+	if err == nil || err.Error() == "" {
+		t.Fatalf("WriteFileAtomic(symlink) error = %v, want rejection", err)
+	}
+	if got, readErr := os.ReadFile(target); readErr != nil || string(got) != "old\n" {
+		t.Fatalf("target content changed through symlink: got %q err=%v", got, readErr)
+	}
+}
+
+func TestWriteFileAtomicRejectsOversizedExistingFile(t *testing.T) {
+	dir := t.TempDir()
+	path := filepath.Join(dir, "big.txt")
+	data := make([]byte, maxAtomicFileSize+1)
+	if err := os.WriteFile(path, data, 0o644); err != nil {
+		t.Fatalf("WriteFile(big) error = %v", err)
+	}
+
+	_, err := WriteFileAtomic(path, []byte("small\n"), 0o644)
+	if err == nil {
+		t.Fatal("WriteFileAtomic(big) error = nil, want max-size rejection")
+	}
+}
+
+func TestWriteFileAtomicFollowsSymlinkParentDirectory(t *testing.T) {
+	base := t.TempDir()
+	realDir := filepath.Join(base, "real")
+	if err := os.Mkdir(realDir, 0o755); err != nil {
+		t.Fatalf("Mkdir(realDir) error = %v", err)
+	}
+	linkDir := filepath.Join(base, "linked")
+	if err := os.Symlink(realDir, linkDir); err != nil {
+		// On Windows without Developer Mode or admin rights, symlink creation
+		// requires SeCreateSymbolicLinkPrivilege (ERROR_PRIVILEGE_NOT_HELD = 1314).
+		// Skip gracefully — the test infrastructure lacks the privilege, not the code.
+		if isSymlinkPrivilegeError(err) {
+			t.Skipf("skipping: SeCreateSymbolicLinkPrivilege not held on this Windows build: %v", err)
+		}
+		t.Fatalf("Symlink(linkDir) error = %v", err)
+	}
+
+	// Writing through a symlinked parent (e.g. ~/.claude/agents → dotfiles repo)
+	// must succeed: the file lands in the real directory.
+	content := []byte("value\n")
+	path := filepath.Join(linkDir, "config.txt")
+	_, err := WriteFileAtomic(path, content, 0o644)
+	if err != nil {
+		t.Fatalf("WriteFileAtomic() via symlink parent error = %v, want success", err)
+	}
+
+	// Verify the file was written to the real directory.
+	realPath := filepath.Join(realDir, "config.txt")
+	got, readErr := os.ReadFile(realPath)
+	if readErr != nil {
+		t.Fatalf("ReadFile(realPath) error = %v", readErr)
+	}
+	if !bytes.Equal(got, content) {
+		t.Fatalf("content = %q, want %q", got, content)
+	}
+}
+
+// TestWriteFileAtomicIgnoresPermissionErrorFromSyncDirOnWindows verifies that
+// ErrPermission from syncDirFn is silently tolerated on Windows — NTFS returns
+// ACCESS_DENIED when syncing a directory fd, which must not fail the write.
+func TestWriteFileAtomicIgnoresPermissionErrorFromSyncDirOnWindows(t *testing.T) {
+	dir := t.TempDir()
+	path := filepath.Join(dir, "nested", "config.json")
+	content := []byte("{\"ok\":true}\n")
+
+	origGOOS := runtimeGOOS
+	origSyncDir := syncDirFn
+	t.Cleanup(func() {
+		runtimeGOOS = origGOOS
+		syncDirFn = origSyncDir
+	})
+
+	runtimeGOOS = func() string { return "windows" }
+	syncDirFn = func(string) error { return os.ErrPermission }
+
+	result, err := WriteFileAtomic(path, content, 0o644)
+	if err != nil {
+		t.Fatalf("WriteFileAtomic() error = %v, want nil on windows permission-denied dir sync", err)
+	}
+	if !result.Changed || !result.Created {
+		t.Fatalf("WriteFileAtomic() result = %+v, want Changed=true Created=true", result)
+	}
+	got, readErr := os.ReadFile(path)
+	if readErr != nil {
+		t.Fatalf("ReadFile() error = %v", readErr)
+	}
+	if string(got) != string(content) {
+		t.Fatalf("file content = %q, want %q", string(got), string(content))
+	}
+}
+
+// TestWriteFileAtomicPropagatesSyncDirErrorOnUnix verifies that any syncDirFn
+// error is propagated on non-Windows platforms — no silent swallowing.
+func TestWriteFileAtomicPropagatesSyncDirErrorOnUnix(t *testing.T) {
+	dir := t.TempDir()
+	path := filepath.Join(dir, "nested", "config.json")
+	content := []byte("{\"ok\":true}\n")
+
+	origGOOS := runtimeGOOS
+	origSyncDir := syncDirFn
+	t.Cleanup(func() {
+		runtimeGOOS = origGOOS
+		syncDirFn = origSyncDir
+	})
+
+	runtimeGOOS = func() string { return "linux" }
+	syncDirFn = func(string) error { return os.ErrPermission }
+
+	_, err := WriteFileAtomic(path, content, 0o644)
+	if err == nil {
+		t.Fatal("WriteFileAtomic() error = nil, want sync parent directory failure on unix")
+	}
+	if !strings.Contains(err.Error(), "sync parent directory") {
+		t.Fatalf("WriteFileAtomic() error = %v, want sync parent directory context", err)
+	}
+}
+
+// TestWriteFileAtomicPropagatesUnexpectedSyncDirErrorOnWindows verifies that
+// non-ErrPermission errors from syncDirFn are still propagated on Windows —
+// only the specific NTFS directory-sync permission error is tolerated.
+func TestWriteFileAtomicPropagatesUnexpectedSyncDirErrorOnWindows(t *testing.T) {
+	dir := t.TempDir()
+	path := filepath.Join(dir, "nested", "config.json")
+	content := []byte("{\"ok\":true}\n")
+	boom := errors.New("boom")
+
+	origGOOS := runtimeGOOS
+	origSyncDir := syncDirFn
+	t.Cleanup(func() {
+		runtimeGOOS = origGOOS
+		syncDirFn = origSyncDir
+	})
+
+	runtimeGOOS = func() string { return "windows" }
+	syncDirFn = func(string) error { return boom }
+
+	_, err := WriteFileAtomic(path, content, 0o644)
+	if err == nil {
+		t.Fatal("WriteFileAtomic() error = nil, want unexpected sync dir error on windows")
+	}
+	if !errors.Is(err, boom) {
+		t.Fatalf("WriteFileAtomic() error = %v, want wrapped boom", err)
+	}
+}
+
+// TestWriteFileAtomicPreservesOriginalOnRenameFailure proves the atomicity
+// guarantee a reviewer worried about: when the rename step fails, the existing
+// file is left byte-identical, never partially written or corrupted.
+func TestWriteFileAtomicPreservesOriginalOnRenameFailure(t *testing.T) {
+	dir := t.TempDir()
+	path := filepath.Join(dir, "config.json")
+	original := []byte("{\"original\":true}\n")
+	if err := os.WriteFile(path, original, 0o644); err != nil {
+		t.Fatalf("seed original file: %v", err)
+	}
+
+	boom := errors.New("rename boom")
+	origRename := renameFn
+	t.Cleanup(func() { renameFn = origRename })
+	renameFn = func(string, string) error { return boom }
+
+	_, err := WriteFileAtomic(path, []byte("{\"new\":true}\n"), 0o644)
+	if err == nil {
+		t.Fatal("WriteFileAtomic() error = nil, want rename failure")
+	}
+	if !errors.Is(err, boom) {
+		t.Fatalf("WriteFileAtomic() error = %v, want wrapped rename boom", err)
+	}
+
+	got, err := os.ReadFile(path)
+	if err != nil {
+		t.Fatalf("read file after failed rename: %v", err)
+	}
+	if !bytes.Equal(got, original) {
+		t.Fatalf("file after failed rename = %q, want the untouched original %q", got, original)
+	}
+
+	entries, err := os.ReadDir(dir)
+	if err != nil {
+		t.Fatalf("read dir: %v", err)
+	}
+	for _, entry := range entries {
+		if strings.HasPrefix(entry.Name(), ".gentle-ai-") {
+			t.Fatalf("temp file %q left behind after failed rename", entry.Name())
+		}
+	}
+}
+
+// TestWriteFileAtomicModeZeroNeverWidens pins that a forced zero mode, as
+// passed by restore paths for a recorded 0000 mode, lands as owner-only
+// instead of the 0644 default used for omitted modes on new files.
+func TestWriteFileAtomicModeZeroNeverWidens(t *testing.T) {
+	if runtime.GOOS == "windows" {
+		t.Skip("POSIX permission bits")
+	}
+	path := filepath.Join(t.TempDir(), "restored")
+	if err := os.WriteFile(path, []byte("before"), 0o600); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := WriteFileAtomicMode(path, []byte("after"), 0); err != nil {
+		t.Fatal(err)
+	}
+	info, err := os.Stat(path)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if got := info.Mode().Perm(); got&^0o600 != 0 {
+		t.Fatalf("mode = %v, want no wider than 0600", got)
+	}
+}
