@@ -11,17 +11,17 @@ import (
 	"strings"
 	"time"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/reviewtransaction"
+	"github.com/jonsanchezr/agent-smith/v4/internal/reviewtransaction"
 )
 
 // A reviewer result that admission refuses used to be discarded, so a defect
 // report could only quote the refusal and never the bytes that earned it
 // (issues #3942, #2791). Every refused payload is now preserved verbatim under
-// <GitCommonDir>/gentle-ai/rejected-results/<lineage>/, outside the working
+// <GitCommonDir>/agent-smith/rejected-results/<lineage>/, outside the working
 // tree and outside the review-transactions authority store: it is evidence,
 // never authority, and nothing reads it back into a lineage.
 const (
-	reviewRejectedResultSchema  = "gentle-ai.review-rejected-result/v1"
+	reviewRejectedResultSchema  = "agent-smith.review-rejected-result/v1"
 	reviewRejectedResultDirName = "rejected-results"
 )
 
@@ -51,7 +51,7 @@ func writeReviewRejectedResult(ctx context.Context, root string, meta reviewReje
 	}
 	digest := sha256.Sum256(raw)
 	rawSHA256 := hex.EncodeToString(digest[:])
-	dir := filepath.Join(lease.Identity().GitCommonDir, "gentle-ai", reviewRejectedResultDirName, reviewRejectedResultPathComponent(meta.LineageID))
+	dir := filepath.Join(lease.Identity().GitCommonDir, "agent-smith", reviewRejectedResultDirName, reviewRejectedResultPathComponent(meta.LineageID))
 	if err := os.MkdirAll(dir, 0o700); err != nil {
 		return "", fmt.Errorf("create rejected result directory: %w", err)
 	}
@@ -97,3 +97,4 @@ func reviewRejectedResultClause(ctx context.Context, root string, meta reviewRej
 	}
 	return "; the rejected reviewer payload was preserved at " + path
 }
+

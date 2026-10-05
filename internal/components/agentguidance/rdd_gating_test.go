@@ -4,14 +4,14 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/catalog"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
+	"github.com/jonsanchezr/agent-smith/v4/internal/catalog"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
 )
 
 // rddOnlyHeadings are the sections receipt-driven development owns. They reach
 // the prompt of an RDD runtime exactly once and never any other runtime.
 var rddOnlyHeadings = []string{
-	"Gentle AI Provider Defect Handoff",
+	"Agent Smith Provider Defect Handoff",
 	"Native Compact Review Orchestration",
 	"Receipt-driven development is user-owned",
 }
@@ -26,7 +26,7 @@ var rddVocabulary = []string{
 	"Provider Defect Handoff",
 	"receipt-driven development",
 	"Receipt-driven development is user-owned",
-	"gentle-ai review",
+	"agent-smith review",
 	"review assess",
 	"review_due",
 	"review-integration",
@@ -111,8 +111,8 @@ func TestInstalledPromptCarriesRDDOnlyOnRDDRuntimes(t *testing.T) {
 				}
 				for _, want := range []string{
 					"The native RDD refuter owns native review claims; never duplicate or bypass it.",
-					"gentle-ai review mode enable|disable|status",
-					"gentle-ai review assess --cwd <repo> --json",
+					"agent-smith review mode enable|disable|status",
+					"agent-smith review assess --cwd <repo> --json",
 					"**RDD on**",
 				} {
 					if !strings.Contains(prompt, want) {
@@ -164,8 +164,9 @@ func TestRenderRoutingGatesRDDByRuntime(t *testing.T) {
 func TestStripReceiptDrivenDevelopmentFailsClosedOnUnknownReviewWording(t *testing.T) {
 	t.Parallel()
 
-	content := "### Delegation Rules\n\nRun `gentle-ai review status` after every task.\n"
+	content := "### Delegation Rules\n\nRun `agent-smith review status` after every task.\n"
 	if _, err := stripReceiptDrivenDevelopment(content); err == nil {
 		t.Fatal("stripReceiptDrivenDevelopment kept unknown review wording without failing")
 	}
 }
+

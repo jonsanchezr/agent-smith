@@ -6,8 +6,8 @@ import (
 	"strings"
 	"testing"
 
-	componentuninstall "github.com/gentleman-programming/gentle-ai/v4/internal/components/uninstall"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
+	componentuninstall "github.com/jonsanchezr/agent-smith/v4/internal/components/uninstall"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
 )
 
 func TestRenderUninstallResultIncludesManualCleanup(t *testing.T) {
@@ -98,7 +98,7 @@ func TestRenderUninstallResultPiAdviceStatus(t *testing.T) {
 
 func TestRenderUninstallResultDistinguishesRetainedPiResourcesAndCommands(t *testing.T) {
 	out := RenderUninstallResult(componentuninstall.Result{
-		RetainedPiResources: []string{"/home/test/.pi/gentle-ai"},
+		RetainedPiResources: []string{"/home/test/.pi/agent-smith"},
 		OptionalPiPackageCleanupCommands: []string{
 			"pi remove npm:gentle-pi",
 			"pi remove npm:gentle-engram",
@@ -111,7 +111,7 @@ func TestRenderUninstallResultDistinguishesRetainedPiResourcesAndCommands(t *tes
 	for _, want := range []string{
 		"Pi resources retained for review",
 		"Retained Pi resources (not deleted)",
-		"/home/test/.pi/gentle-ai",
+		"/home/test/.pi/agent-smith",
 		"Optional Pi package cleanup",
 		"Review shared or user-modified packages/resources before removing them",
 		"pi remove npm:gentle-pi",
@@ -149,3 +149,4 @@ func TestRenderUninstallResultIncludesEngramScopeSummary(t *testing.T) {
 		t.Fatalf("RenderUninstallResult() should include Engram project scope summary; got:\n%s", out)
 	}
 }
+

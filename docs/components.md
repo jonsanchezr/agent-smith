@@ -1,9 +1,9 @@
-# Components, Skills & Presets
+﻿# Components, Skills & Presets
 
 > [!NOTE]
-> These docs track `main`, which may include unreleased changes. For the latest release, see the [v4.0.0 docs](https://github.com/Gentleman-Programming/gentle-ai/tree/v4.0.0/docs).
+> These docs track `main`, which may include unreleased changes. For the latest release, see the [v4.0.0 docs](https://github.com/jonsanchezr/agent-smith/tree/v4.0.0/docs).
 
-← [Back to README](../README.md)
+â† [Back to README](../README.md)
 
 ---
 
@@ -11,12 +11,12 @@
 
 | Component | ID | Description |
 |-----------|-----|-------------|
-| Engram™ | `engram` | Persistent cross-session memory via MCP — auto-detection of project name, full-text search, git sync, project consolidation. See [engram repo](https://github.com/Gentleman-Programming/engram) |
+| Engramâ„¢ | `engram` | Persistent cross-session memory via MCP â€” auto-detection of project name, full-text search, git sync, project consolidation. See [engram repo](https://github.com/jonsanchezr/engram) |
 | Skills | `skills` | Curated coding skill library |
 | Context7 | `context7` | MCP server for live framework/library documentation |
 | Persona | `persona` | Managed Gentleman/neutral persona injection, or unmanaged custom persona mode |
 | Permissions | `permissions` | Security-first defaults and guardrails. Applied to Claude Code and OpenCode (the two adapters with permissions overlay support). Default sensitive-paths deny list: `~/.ssh/*`, `~/.ssh/**/*`, `**/*.pem`, `**/*.key`, `**/.env*`, `~/.credentials/*`, `~/.aws/credentials`, `~/.config/gh/hosts.yml`, `~/Library/Keychains/*`, `**/secrets/*`, `**/*.p12`, `**/*.pfx` |
-| GGA | `gga` | Gentleman Guardian Angel — AI provider switcher |
+| GGA | `gga` | Gentleman Guardian Angel â€” AI provider switcher |
 | Theme | `theme` | Gentleman Kanagawa theme overlay |
 
 ODD (Organic Driven Development) is shared routing guidance, not a separate component to install. It is the only implementation workflow for direct and delegated work. See [ODD and recovery](usage.md#organic-driven-development-odd).
@@ -31,7 +31,7 @@ This first delivery covers the 15 non-Pi primary instruction carriers, not every
 
 ## GGA Behavior
 
-`gentle-ai install --component gga` installs/provisions the `gga` binary globally on your machine.
+`agent-smith install --component gga` installs/provisions the `gga` binary globally on your machine.
 
 It does **not** run project-level hook setup automatically (`gga init` / `gga install`) because that should be an explicit decision per repository.
 
@@ -46,17 +46,17 @@ gga install
 
 ## Optional Community Tools
 
-Community Tools are opt-in and are not included by presets or automatic detection. Select them from the installer’s **Community Tools/Plugins** screen.
+Community Tools are opt-in and are not included by presets or automatic detection. Select them from the installerâ€™s **Community Tools/Plugins** screen.
 
 | Tool | Behavior | Removal |
 |---|---|---|
-| CodeGraph | Installs its CLI and configures supported agent MCP/guidance integration. | Use CodeGraph’s upstream lifecycle commands. |
+| CodeGraph | Installs its CLI and configures supported agent MCP/guidance integration. | Use CodeGraphâ€™s upstream lifecycle commands. |
 
 ---
 
 ## Skills
 
-### Included Skills (installed by gentle-ai)
+### Included Skills (installed by agent-smith)
 
 Skill files organized by category, embedded in the binary and injected into your agent's configuration:
 
@@ -64,7 +64,7 @@ Skill files organized by category, embedded in the binary and injected into your
 
 | Skill | ID | Description |
 |-------|-----|-------------|
-| Judgment Day | `judgment-day` | Parallel adversarial review — two independent judges review the same target |
+| Judgment Day | `judgment-day` | Parallel adversarial review â€” two independent judges review the same target |
 
 #### Foundation
 
@@ -86,7 +86,7 @@ Of these, `go-testing`, `skill-creator`, `skill-improver`, `skill-registry`, `ch
 
 ### Coding Skills (separate repository)
 
-For framework-specific skills (React 19, Angular, TypeScript, Tailwind 4, Zod 4, Playwright, etc.), see [Gentleman-Programming/Gentleman-Skills](https://github.com/Gentleman-Programming/Gentleman-Skills). These are maintained by the community and installed separately by cloning the repo and copying skills to your agent's skills directory.
+For framework-specific skills (React 19, Angular, TypeScript, Tailwind 4, Zod 4, Playwright, etc.), see [jonsanchezr/Gentleman-Skills](https://github.com/jonsanchezr/Gentleman-Skills). These are maintained by the community and installed separately by cloning the repo and copying skills to your agent's skills directory.
 
 ---
 
@@ -100,3 +100,4 @@ For framework-specific skills (React 19, Angular, TypeScript, Tailwind 4, Zod 4,
 | Custom | `custom` | You choose components and skills manually while keeping any existing persona/settings unmanaged |
 
 Persona is selected separately on the Persona screen and applied independently of the preset.
+

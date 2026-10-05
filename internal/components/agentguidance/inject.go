@@ -9,10 +9,10 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/agents"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/components/filemerge"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/components/opencodedefault"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
+	"github.com/jonsanchezr/agent-smith/v4/internal/agents"
+	"github.com/jonsanchezr/agent-smith/v4/internal/components/filemerge"
+	"github.com/jonsanchezr/agent-smith/v4/internal/components/opencodedefault"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
 )
 
 // RoutingSectionID is the managed marker section that owns routing guidance.
@@ -89,7 +89,7 @@ type RoutingOptions struct {
 // managed section placed ahead of routing (see RenderOrchestrator); a v3.7.0
 // sdd-orchestrator block is converted in place so exactly one remains.
 //
-// Only the marked sections are owned by Gentle AI: everything a user wrote
+// Only the marked sections are owned by Agent Smith: everything a user wrote
 // around them is preserved verbatim, and a second identical injection is a no-op.
 func InjectRoutingWithOptions(targetDir string, agent model.AgentID, options RoutingOptions) (Result, error) {
 	// Conductor is detection/catalog-only: its workspaces inherit Claude Code
@@ -470,3 +470,4 @@ func readBytesOrEmpty(path string) ([]byte, error) {
 	}
 	return data, nil
 }
+

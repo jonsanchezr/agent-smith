@@ -1,4 +1,4 @@
-# Wave 7 Deletion Proof Tracker — `superseded-by-design` Backlog Rows
+﻿# Wave 7 Deletion Proof Tracker â€” `superseded-by-design` Backlog Rows
 
 > [!WARNING]
 > **Historical record.** This document is a point-in-time snapshot kept for traceability. It is not maintained and may not describe current behavior.
@@ -12,11 +12,11 @@ paths" coverage row (Wave 7 REMOVE disposition):
 
 | # | Kind | Title |
 |---|---|---|
-| [gentle-ai#1455](https://github.com/Gentleman-Programming/gentle-ai/issues/1455) | Issue | fix(review): reject completed tasks with empty reviewer results |
-| [gentle-ai#1462](https://github.com/Gentleman-Programming/gentle-ai/issues/1462) | Issue | fix(review): quarantine seven invalid legacy-v1 authority records |
-| [gentle-ai#1570](https://github.com/Gentleman-Programming/gentle-ai/issues/1570) | Issue | fix(review): expose legacy HEAD required by repair-legacy-alias |
-| [gentle-ai#1549](https://github.com/Gentleman-Programming/gentle-ai/pull/1549) | PR | fix(review): reject completed tasks with empty reviewer results, distinguish from nested-envelope |
-| [gentle-ai#1550](https://github.com/Gentleman-Programming/gentle-ai/pull/1550) | PR | fix(review): reject completed tasks with empty reviewer results |
+| [agent-smith#1455](https://github.com/jonsanchezr/agent-smith/issues/1455) | Issue | fix(review): reject completed tasks with empty reviewer results |
+| [agent-smith#1462](https://github.com/jonsanchezr/agent-smith/issues/1462) | Issue | fix(review): quarantine seven invalid legacy-v1 authority records |
+| [agent-smith#1570](https://github.com/jonsanchezr/agent-smith/issues/1570) | Issue | fix(review): expose legacy HEAD required by repair-legacy-alias |
+| [agent-smith#1549](https://github.com/jonsanchezr/agent-smith/pull/1549) | PR | fix(review): reject completed tasks with empty reviewer results, distinguish from nested-envelope |
+| [agent-smith#1550](https://github.com/jonsanchezr/agent-smith/pull/1550) | PR | fix(review): reject completed tasks with empty reviewer results |
 
 That document's own "Closure audit protocol" step 4 already names the exact
 proof obligation for these rows: *"for #1455/#1462/#1570: proof that the
@@ -35,8 +35,8 @@ re-investigation.
 
 ## Forensic-read half (D5), proven now, not deferred
 
-The other half of the closure-audit step-4 obligation — "historical records
-parse read-only" — is ALREADY proven at WU1 time by
+The other half of the closure-audit step-4 obligation â€” "historical records
+parse read-only" â€” is ALREADY proven at WU1 time by
 `TestLegacyReadOnlyGuardRetainedSymbolsDeclared` (RG.1a,
 `internal/reviewtransaction/legacy_readonly_guard_test.go`), which is GREEN
 from WU1 forward and stays GREEN through every subsequent deletion slice:
@@ -48,13 +48,13 @@ the read-half of the #1462/#1570 proof obligation; only the mutation-half
 
 ## Status at WU3 time (this commit)
 
-- Mutation-lifecycle-gone proof: **PENDING** — RG.1b
+- Mutation-lifecycle-gone proof: **PENDING** â€” RG.1b
   (`TestLegacyReadOnlyGuardMutationVerbsUnreachable`) is intentionally RED
   until WU19; it lists all 11 still-reachable legacy verbs today.
-- Forensic-read-still-works proof: **SATISFIED** — RG.1a is GREEN as of
+- Forensic-read-still-works proof: **SATISFIED** â€” RG.1a is GREEN as of
   WU1 and covers every D5 retained symbol.
 - Closure audit protocol step 5 (closing the actual GitHub issues/PRs with
-  a linking comment): explicitly **NOT** run by this wave's apply phase —
+  a linking comment): explicitly **NOT** run by this wave's apply phase â€”
   it is a maintainer action gated on the whole wave's exit evidence, per
   `rdd-backlog-disposition.md`'s own framing ("advisory and closes
   nothing"). This tracker records readiness; it does not perform closure.
@@ -65,14 +65,14 @@ At S9b close-out, WU20 re-reads this table, confirms RG.1b is fully GREEN
 (zero legacy verbs reachable) and every WU14-WU17 exit-evidence deletion
 proof exists, then updates `docs/architecture/rdd-backlog-disposition.md`'s
 own closure audit protocol row for step 4 as satisfied for these five
-items — still without performing step 5 (the actual GitHub closure),
+items â€” still without performing step 5 (the actual GitHub closure),
 which stays a separate maintainer action.
 
-## Reconciliation at WU20 close-out (verify W4 — corrected, was not done as originally worded)
+## Reconciliation at WU20 close-out (verify W4 â€” corrected, was not done as originally worded)
 
 WU20 did not actually perform the paragraph above as written, and the
-paragraph's own condition — "RG.1b is fully GREEN (zero legacy verbs
-reachable)" — no longer holds in the blanket form this tracker assumed at
+paragraph's own condition â€” "RG.1b is fully GREEN (zero legacy verbs
+reachable)" â€” no longer holds in the blanket form this tracker assumed at
 WU3 time. Both need an honest correction, not a silent checkmark:
 
 - **"Zero legacy verbs reachable" was imprecise.** At WU3 time this tracker
@@ -81,13 +81,13 @@ WU3 time. Both need an honest correction, not a silent checkmark:
   design's original assumption that WU18 (switch removal) would land and
   retire the whole bucket together. WU18 was deferred (see the
   `rdd-single-lifecycle` spec amendment), and WU19's honest D4
-  classification — done against the actual, not the assumed, tree — found
+  classification â€” done against the actual, not the assumed, tree â€” found
   only 5 of those 11 verbs are truly legacy-only and were in fact retired
   this wave (`reconcile-authority`, `reconcile-authority-batch`,
   `quarantine-legacy`, `quarantine-legacy-fix-scope`, `repair-legacy-alias`
-  — landed WU14/WU16). The remaining 6 (`invalidate`, `abandon`, `recover`,
+  â€” landed WU14/WU16). The remaining 6 (`invalidate`, `abandon`, `recover`,
   `reclaim`, `dispose-result`, `reopen-results`) turned out to be live,
-  active compact-v2 mutation surface, not legacy code awaiting deletion —
+  active compact-v2 mutation surface, not legacy code awaiting deletion â€”
   they stay reachable by design, gated on the still-present switch, and
   RG.1b now asserts that reachability positively
   (`TestLegacyReadOnlyGuardLiveCompactV2VerbsRemainReachable`) rather than
@@ -96,12 +96,12 @@ WU3 time. Both need an honest correction, not a silent checkmark:
   holds.** None of the 6 live D4 verbs are the retired surface those three
   issues name. #1462 names `quarantine-legacy`; #1570 names
   `repair-legacy-alias`; #1455/#1549/#1550 name the reconcile/quarantine/
-  repair verb clusters (rows 6-19) — all five of those specific verbs are
+  repair verb clusters (rows 6-19) â€” all five of those specific verbs are
   the ones confirmed unreachable by the narrowed
   `TestLegacyReadOnlyGuardMutationVerbsUnreachable` (RG.1b). So the
   closure-audit step-4 proof obligation for these three specific backlog
   rows IS satisfied; it was this tracker's broader "zero legacy verbs
-  reachable" framing — not the underlying proof for #1455/#1462/#1570 —
+  reachable" framing â€” not the underlying proof for #1455/#1462/#1570 â€”
   that was wrong.
 - **`rdd-backlog-disposition.md`'s closure audit protocol was not edited.**
   It has no per-item "satisfied" checkbox to flip (step 4 is prose applying
@@ -109,3 +109,4 @@ WU3 time. Both need an honest correction, not a silent checkmark:
   a maintainer applying step 4 today should read it as satisfied for
   #1455/#1462/#1570/#1549/#1550 specifically, on the corrected evidence
   above, not on this tracker's original unscoped claim.
+

@@ -7,7 +7,7 @@ import (
 	"runtime"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
 )
 
 func TestDetectRequiresVSCodeAndCopilotExtension(t *testing.T) {
@@ -71,8 +71,8 @@ func TestSystemPromptFileUsesInstructionsExtension(t *testing.T) {
 		t.Fatalf("SystemPromptFile() should end with .md: %q", path)
 	}
 
-	if filepath.Base(path) != "gentle-ai.instructions.md" {
-		t.Fatalf("SystemPromptFile() = %q, want filename gentle-ai.instructions.md", path)
+	if filepath.Base(path) != "agent-smith.instructions.md" {
+		t.Fatalf("SystemPromptFile() = %q, want filename agent-smith.instructions.md", path)
 	}
 }
 
@@ -157,3 +157,4 @@ func TestMCPConfigPathUsesVSCodeUserProfile(t *testing.T) {
 		}
 	}
 }
+

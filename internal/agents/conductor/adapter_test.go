@@ -8,8 +8,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/system"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
+	"github.com/jonsanchezr/agent-smith/v4/internal/system"
 )
 
 func TestDetect(t *testing.T) {
@@ -133,7 +133,7 @@ func TestWritePathsAreEmpty(t *testing.T) {
 	a := NewAdapter()
 	homeDir := filepath.Join(string(filepath.Separator), "home", "test")
 
-	// Gentle AI performs no writes for Conductor, so every write-target path
+	// Agent Smith performs no writes for Conductor, so every write-target path
 	// must stay empty and fail closed.
 	tests := []struct {
 		name string
@@ -222,10 +222,11 @@ func TestCapabilityManifestMatchesCanonical(t *testing.T) {
 		t.Fatalf("capability manifest claims write features for Conductor: %+v", features)
 	}
 
-	if manifest.Advertises("gentle-ai.review-transport/v1") {
+	if manifest.Advertises("agent-smith.review-transport/v1") {
 		t.Fatal("Conductor must not advertise the review transport contract")
 	}
-	if manifest.Advertises("gentle-ai.immutable-review-executor/v1") {
+	if manifest.Advertises("agent-smith.immutable-review-executor/v1") {
 		t.Fatal("Conductor must not advertise the immutable review executor contract")
 	}
 }
+

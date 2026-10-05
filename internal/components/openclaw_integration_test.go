@@ -7,11 +7,11 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/agents"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/components/agentguidance"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/components/engram"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/components/persona"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
+	"github.com/jonsanchezr/agent-smith/v4/internal/agents"
+	"github.com/jonsanchezr/agent-smith/v4/internal/components/agentguidance"
+	"github.com/jonsanchezr/agent-smith/v4/internal/components/engram"
+	"github.com/jonsanchezr/agent-smith/v4/internal/components/persona"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
 )
 
 func TestOpenClawSelectedAdapterRoutesToExpectedInjectors(t *testing.T) {
@@ -51,12 +51,12 @@ func TestOpenClawSelectedAdapterRoutesToExpectedInjectors(t *testing.T) {
 	}
 
 	agentsText := readText(t, filepath.Join(workspace, "AGENTS.md"))
-	for _, want := range []string{"gentle-ai:engram-protocol", "gentle-ai:agent-routing", "Organic Driven Development", "review", "gentle-ai:strict-tdd-mode"} {
+	for _, want := range []string{"agent-smith:engram-protocol", "agent-smith:agent-routing", "Organic Driven Development", "review", "agent-smith:strict-tdd-mode"} {
 		if !strings.Contains(agentsText, want) {
 			t.Fatalf("OpenClaw AGENTS.md missing %q; got:\n%s", want, agentsText)
 		}
 	}
-	if strings.Contains(agentsText, "gentle-ai:sdd-orchestrator") {
+	if strings.Contains(agentsText, "agent-smith:sdd-orchestrator") {
 		t.Fatalf("OpenClaw AGENTS.md must not receive retired SDD guidance; got:\n%s", agentsText)
 	}
 	if strings.Contains(agentsText, "Senior Architect") {
@@ -64,7 +64,7 @@ func TestOpenClawSelectedAdapterRoutesToExpectedInjectors(t *testing.T) {
 	}
 
 	soulText := readText(t, filepath.Join(workspace, "SOUL.md"))
-	if !strings.Contains(soulText, "gentle-ai:persona") || !strings.Contains(soulText, "Senior Architect") {
+	if !strings.Contains(soulText, "agent-smith:persona") || !strings.Contains(soulText, "Senior Architect") {
 		t.Fatalf("OpenClaw SOUL.md missing managed persona content; got:\n%s", soulText)
 	}
 	if _, err := os.Stat(filepath.Join(workspace, "TOOLS.md")); !os.IsNotExist(err) {
@@ -141,3 +141,4 @@ func objectAt(t *testing.T, root map[string]any, key string) map[string]any {
 	}
 	return object
 }
+

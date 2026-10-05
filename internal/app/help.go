@@ -6,15 +6,15 @@ import (
 )
 
 func printHelp(w io.Writer, version string) {
-	fmt.Fprintf(w, `gentle-ai — Gentle-AI: Ecosystem, Frameworks, Workflows (%s)
+	fmt.Fprintf(w, `agent-smith — agent-smith: Ecosystem, Frameworks, Workflows (%s)
 
 USAGE
-  gentle-ai                     Launch interactive TUI
-  gentle-ai <command> [flags]
+  agent-smith                     Launch interactive TUI
+  agent-smith <command> [flags]
 
 COMMANDS
   install      Configure AI coding agents on this machine
-  uninstall    Remove Gentle AI managed files from this machine
+  uninstall    Remove Agent Smith managed files from this machine
   sync         Sync agent configs and skills to current version
   skill-registry refresh
                Refresh .atl/skill-registry.md with cache-hit fast path
@@ -41,7 +41,7 @@ COMMANDS
                'review start' asks per candidate before a review that would do work;
                accepting covers that candidate only and nothing is granted for later candidates,
                'not now' applies to that candidate only and persists nothing, turning reviews
-               off for good needs a deliberate 'gentle-ai review mode disable', and a session
+               off for good needs a deliberate 'agent-smith review mode disable', and a session
                without a terminal reviews the change and says so instead of asking
 
 COMPATIBILITY COMMANDS
@@ -70,7 +70,8 @@ COMPATIBILITY COMMANDS
 FLAGS
   --help, -h    Show global help; every review subcommand also supports help
 
-Run 'gentle-ai help' for this message.
-Documentation: https://github.com/Gentleman-Programming/gentle-ai
+Run 'agent-smith help' for this message.
+Documentation: https://github.com/jonsanchezr/agent-smith
 `, version)
 }
+

@@ -6,7 +6,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/telemetry"
+	"github.com/jonsanchezr/agent-smith/v4/internal/telemetry"
 )
 
 func insertRetentionDelivery(t *testing.T, s *Storage, id int, received time.Time) telemetry.RuntimeEvent {
@@ -212,3 +212,4 @@ func TestRuntimeMaintenanceCancellationCanRetry(t *testing.T) {
 	}
 	assertRetentionCounts(t, s, 0, 0, 0)
 }
+

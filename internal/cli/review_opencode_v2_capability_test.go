@@ -6,8 +6,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/opencode"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
+	"github.com/jonsanchezr/agent-smith/v4/internal/opencode"
 )
 
 // OpenCode immutable review is admitted only for a matching pair: a V1 runtime
@@ -27,7 +27,7 @@ func TestOpenCodeTransportCapabilityRequiresMatchingRuntimeAndDeclaration(t *tes
 		{"unknown runtime without declaration", "", "unknown", false, true},
 		{"V1 runtime with the V2 declaration", openCodeRelayContractV2, "1.18.30", false, true},
 		{"unknown runtime with the V2 declaration", openCodeRelayContractV2, "unknown", false, true},
-		{"V2 runtime with another declaration", "gentle-ai.opencode-relay/v3", "2.0.19", false, false},
+		{"V2 runtime with another declaration", "agent-smith.opencode-relay/v3", "2.0.19", false, false},
 		{"V2 runtime with a padded declaration", openCodeRelayContractV2 + " ", "2.0.19", false, false},
 	} {
 		t.Run(test.name, func(t *testing.T) {
@@ -75,3 +75,4 @@ func TestOpenCodeV2TransportDeclarationCannotInheritV1(t *testing.T) {
 		t.Fatal("active V2 declaration inherited V1 capability")
 	}
 }
+

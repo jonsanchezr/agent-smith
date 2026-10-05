@@ -20,7 +20,7 @@ import (
 	"runtime"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/reviewtransaction"
+	"github.com/jonsanchezr/agent-smith/v4/internal/reviewtransaction"
 )
 
 // candidateDeclineDowngradeScanRoots mirrors review_pre_pr_composition_deletion_test.go's
@@ -164,3 +164,4 @@ func TestCandidateDecline_UnmanagedDelivery_ByteIdenticalToDisabled(t *testing.T
 			declinedOutput.String(), controlOutput.String())
 	}
 }
+

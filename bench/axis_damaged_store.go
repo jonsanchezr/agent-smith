@@ -172,7 +172,7 @@ func setOrderedMember(value any, key string, next any) bool {
 
 // storeStatePrefix is the domain separator the product hashes the state under.
 // It is part of the persisted format, which is what this axis depends on.
-const storeStatePrefix = "gentle-ai.review-state/v2\x00"
+const storeStatePrefix = "agent-smith.review-state/v2\x00"
 
 // storeRecord is one loaded `review-state.json`, still in the shape it was
 // persisted in.
@@ -307,7 +307,7 @@ func storeLineageDir(sandbox *Sandbox, lineage string) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	return filepath.Join(common, "gentle-ai", "review-transactions", "v2", lineage), nil
+	return filepath.Join(common, "agent-smith", "review-transactions", "v2", lineage), nil
 }
 
 // ---------------------------------------------------------------------------
@@ -572,7 +572,7 @@ func captureOneLensResult(sandbox *Sandbox) error {
 //
 // This is the first of the two shapes the community report describes: the
 // authorization still carries the correct
-// `gentle-ai.review-recovery-authorization/v1` prefix — so it still asserts
+// `agent-smith.review-recovery-authorization/v1` prefix — so it still asserts
 // that a maintainer bound this exact edge — but it now binds content the record
 // no longer holds. In a real repository that is what an edited reason, or a
 // record written by a build with a different reason-normalisation, leaves
@@ -642,7 +642,7 @@ func damageAuthorizationPredecessorRevision(sandbox *Sandbox, lineage, observedP
 	return record.save()
 }
 
-const damagedAuthorizationSchema = "gentle-ai.review-recovery-authorization/v1"
+const damagedAuthorizationSchema = "agent-smith.review-recovery-authorization/v1"
 
 // halveStateFile truncates a record to the first half of its bytes, which is
 // what an interrupted write leaves behind. Nothing is re-derived: the point is
@@ -1230,10 +1230,10 @@ type dispositionRepairResult struct {
 // unexported compactContentMismatchedRecoveryAuthorizationClass value — the
 // one closed anomaly class Wave 2 derives a plan for.
 const (
-	authorityDispositionPlanSchema              = "gentle-ai.review-authority-disposition-plan/v1"
-	authorityDispositionAuthorizationSchema     = "gentle-ai.review-disposition-authorization/v1"
+	authorityDispositionPlanSchema              = "agent-smith.review-authority-disposition-plan/v1"
+	authorityDispositionAuthorizationSchema     = "agent-smith.review-disposition-authorization/v1"
 	contentMismatchedRecoveryAuthorizationClass = "content_mismatched_recovery_authorization"
-	dispositionRepositoryBindingDomain          = "gentle-ai.review-repository-binding/v1\n"
+	dispositionRepositoryBindingDomain          = "agent-smith.review-repository-binding/v1\n"
 	dispositionWitnessLineage                   = "review-damaged-disposition-witness"
 	scratchDispositionPlanDigest                = "damaged-store/disposition-plan-digest"
 	scratchDispositionInventoryRevision         = "damaged-store/disposition-inventory-revision"
@@ -1268,7 +1268,7 @@ func dispositionRepositoryBinding(sandbox *Sandbox) (string, error) {
 }
 
 // dispositionAuthorization renders the exact seven-line
-// gentle-ai.review-disposition-authorization/v1 binding
+// agent-smith.review-disposition-authorization/v1 binding
 // authorityDispositionAuthorizationBinding
 // (authority_disposition_plan.go) computes internally, mirroring how
 // reconcileArgs and abandonArgs above hand-render their own authorization
@@ -1474,14 +1474,14 @@ func dispositionRepairWithSelectorArgs(reason string, replacementRevision ...str
 
 func requireWrongDispositionSelectorRefusal(sandbox *Sandbox, observation Observation) error {
 	if observation.ExitCode == 0 || !strings.Contains(observation.Stderr, "review transaction changed concurrently: exact content-mismatch selector no longer matches the inspected graph") {
-		return fmt.Errorf("altered emitted selector did not produce the typed preflight refusal; rerun `gentle-ai review repair --preflight`")
+		return fmt.Errorf("altered emitted selector did not produce the typed preflight refusal; rerun `agent-smith review repair --preflight`")
 	}
 	base, err := reviewTransactionsBase(sandbox)
 	if err != nil {
 		return err
 	}
 	if _, err := os.Stat(filepath.Join(base, "quarantine")); !os.IsNotExist(err) {
-		return fmt.Errorf("altered emitted selector changed quarantine state; rerun `gentle-ai review repair --preflight`")
+		return fmt.Errorf("altered emitted selector changed quarantine state; rerun `agent-smith review repair --preflight`")
 	}
 	return requireInvalidEdges(sandbox, 2, theExactBindingProblem)
 }
@@ -1612,3 +1612,4 @@ var repairDispositionExecuteCapability = &Capability{
 	Verb:  []string{"review", "repair"},
 	Flags: []string{"--cwd", "--plan-digest", "--inventory-revision", "--actor", "--reason", "--authorization"},
 }
+

@@ -1,7 +1,7 @@
-# Guard population declarations
+﻿# Guard population declarations
 
 > [!NOTE]
-> These docs track `main`, which may include unreleased changes. For the latest release, see the [v4.0.0 docs](https://github.com/Gentleman-Programming/gentle-ai/tree/v4.0.0/docs).
+> These docs track `main`, which may include unreleased changes. For the latest release, see the [v4.0.0 docs](https://github.com/jonsanchezr/agent-smith/tree/v4.0.0/docs).
 
 Guard population declarations make the accepted input set of selected production guards explicit at the check itself. The v2.2.1 contract covers ten evidenced guard families in `internal/cli`, `internal/reviewtransaction`, and `internal/sddstatus`.
 
@@ -50,3 +50,4 @@ GENTLE_AI_GUARD_POPULATION_UPDATE=1 go test ./internal/cli -run TestEveryRegiste
 ## Proof boundary
 
 The contract proves declaration presence, AST adjacency, and exact registry agreement. It does not prove that the population claim is true, that every qualifying guard was identified, or that tests sample the outside world. Review must challenge the claim against production platforms, repository shapes, persisted states, and incident evidence.
+

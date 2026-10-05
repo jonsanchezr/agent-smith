@@ -8,9 +8,9 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/components/filemerge"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/components/opencodeagents"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
+	"github.com/jonsanchezr/agent-smith/v4/internal/components/filemerge"
+	"github.com/jonsanchezr/agent-smith/v4/internal/components/opencodeagents"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
 )
 
 func TestPersonaOnlyUninstallRemovesOnlyManagedGentleman(t *testing.T) {
@@ -74,7 +74,7 @@ func TestKiloUninstallPreservesOpenCodeOnlyShape(t *testing.T) {
 	path := filepath.Join(t.TempDir(), "opencode.json")
 	var explore map[string]any
 	for _, spec := range opencodeagents.Parity(model.AgentOpenCode) {
-		if spec.Name == "gentle-ai-explore" {
+		if spec.Name == "agent-smith-explore" {
 			var err error
 			explore, err = opencodeagents.Entry(spec)
 			if err != nil {
@@ -85,7 +85,7 @@ func TestKiloUninstallPreservesOpenCodeOnlyShape(t *testing.T) {
 	if explore == nil {
 		t.Fatal("missing explore spec")
 	}
-	raw, err := json.Marshal(map[string]any{"agent": map[string]any{"gentle-ai-explore": explore}})
+	raw, err := json.Marshal(map[string]any{"agent": map[string]any{"agent-smith-explore": explore}})
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -103,7 +103,7 @@ func TestKiloUninstallPreservesOpenCodeOnlyShape(t *testing.T) {
 	if err := json.Unmarshal(body, &root); err != nil {
 		t.Fatal(err)
 	}
-	if root["agent"].(map[string]any)["gentle-ai-explore"] == nil {
+	if root["agent"].(map[string]any)["agent-smith-explore"] == nil {
 		t.Fatalf("OpenCode-only agent removed: %s", body)
 	}
 }
@@ -149,7 +149,7 @@ func TestUninstallLegacyMarkedAgents(t *testing.T) {
 				t.Fatal(err)
 			}
 			agents := root["agent"].(map[string]any)
-			for _, name := range []string{"gentle-orchestrator", "sdd-init", "jd-judge-a", "review-risk", "review-refuter"} {
+			for _, name := range []string{"agent-smith-orchestrator", "sdd-init", "jd-judge-a", "review-risk", "review-refuter"} {
 				if agents[name] != nil {
 					t.Errorf("legacy %s retained: %s", name, body)
 				}
@@ -205,7 +205,7 @@ func TestRemoveOpenCodeOrchestratorOnlyWhenEntireEntryIsManaged(t *testing.T) {
 					break
 				}
 			}
-			root := map[string]any{"agent": map[string]any{"gentle-orchestrator": orchestrator, "jd-judge-b": judge}}
+			root := map[string]any{"agent": map[string]any{"agent-smith-orchestrator": orchestrator, "jd-judge-b": judge}}
 			raw, err := json.Marshal(root)
 			if err != nil {
 				t.Fatal(err)
@@ -227,13 +227,13 @@ func TestRemoveOpenCodeOrchestratorOnlyWhenEntireEntryIsManaged(t *testing.T) {
 				t.Fatal(err)
 			}
 			agents := after["agent"].(map[string]any)
-			entry, exists := agents["gentle-orchestrator"].(map[string]any)
+			entry, exists := agents["agent-smith-orchestrator"].(map[string]any)
 			if exists != tc.keep {
 				t.Fatalf("orchestrator existence=%v, want %v: %s", exists, tc.keep, body)
 			}
 			if exists {
 				remainingPrompt := entry["prompt"].(string)
-				if strings.Contains(remainingPrompt, "gentle-ai:") || !strings.Contains(remainingPrompt, tc.userPrompt) {
+				if strings.Contains(remainingPrompt, "agent-smith:") || !strings.Contains(remainingPrompt, tc.userPrompt) {
 					t.Fatalf("managed prompt not stripped or user text lost: %s", body)
 				}
 				if _, ok := entry["permission"]; ok {
@@ -243,3 +243,4 @@ func TestRemoveOpenCodeOrchestratorOnlyWhenEntireEntryIsManaged(t *testing.T) {
 		})
 	}
 }
+

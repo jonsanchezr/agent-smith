@@ -6,21 +6,21 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/components/communitytool"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/state"
+	"github.com/jonsanchezr/agent-smith/v4/internal/components/communitytool"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
+	"github.com/jonsanchezr/agent-smith/v4/internal/state"
 )
 
 // Regression test for issue. The reported machine had Codex and Cursor
 // installed but selected only OpenCode. Because the CodeGraph sync steps
 // discovered agents from the filesystem rather than the persisted selection,
-// every sync rewrote ~/.codex/AGENTS.md and ~/.cursor/rules/gentle-ai.mdc.
+// every sync rewrote ~/.codex/AGENTS.md and ~/.cursor/rules/agent-smith.mdc.
 func TestSyncNeverWritesOutsideSelectedAgents(t *testing.T) {
 	home := t.TempDir()
 
 	opencodeDir := filepath.Join(home, ".config", "opencode")
 	codexPrompt := filepath.Join(home, ".codex", "AGENTS.md")
-	cursorPrompt := filepath.Join(home, ".cursor", "rules", "gentle-ai.mdc")
+	cursorPrompt := filepath.Join(home, ".cursor", "rules", "agent-smith.mdc")
 
 	// OpenCode is selected and already has effective CodeGraph MCP wiring, so
 	// the reconcile path stays quiet and no installer subprocess is spawned.
@@ -35,7 +35,7 @@ func TestSyncNeverWritesOutsideSelectedAgents(t *testing.T) {
 }`))
 	// A managed guidance marker makes CodeGraph report as configured.
 	mustWriteFile(t, filepath.Join(opencodeDir, "AGENTS.md"),
-		[]byte("<!-- gentle-ai:codegraph-guidance -->\nstale\n<!-- /gentle-ai:codegraph-guidance -->\n"))
+		[]byte("<!-- agent-smith:codegraph-guidance -->\nstale\n<!-- /agent-smith:codegraph-guidance -->\n"))
 
 	// Codex and Cursor exist on the machine but were never selected.
 	codexBefore := "user codex instructions\n"
@@ -83,3 +83,4 @@ func TestSyncNeverWritesOutsideSelectedAgents(t *testing.T) {
 		}
 	}
 }
+

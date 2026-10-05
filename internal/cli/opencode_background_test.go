@@ -10,13 +10,13 @@ import (
 	"testing"
 	"time"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/agents"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/backup"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/components/persona"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
-	opencodeactivation "github.com/gentleman-programming/gentle-ai/v4/internal/opencode"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/state"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/system"
+	"github.com/jonsanchezr/agent-smith/v4/internal/agents"
+	"github.com/jonsanchezr/agent-smith/v4/internal/backup"
+	"github.com/jonsanchezr/agent-smith/v4/internal/components/persona"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
+	opencodeactivation "github.com/jonsanchezr/agent-smith/v4/internal/opencode"
+	"github.com/jonsanchezr/agent-smith/v4/internal/state"
+	"github.com/jonsanchezr/agent-smith/v4/internal/system"
 )
 
 func TestOpenCodeBackgroundIntentValidation(t *testing.T) {
@@ -182,7 +182,7 @@ func TestOpenCodeBackgroundStateIsOptionalAndLossless(t *testing.T) {
 	}
 
 	legacy := t.TempDir()
-	if err := os.MkdirAll(filepath.Join(legacy, ".gentle-ai"), 0o755); err != nil {
+	if err := os.MkdirAll(filepath.Join(legacy, ".agent-smith"), 0o755); err != nil {
 		t.Fatal(err)
 	}
 	if err := os.WriteFile(state.Path(legacy), []byte(`{"installed_agents":["opencode"]}`), 0o644); err != nil {
@@ -285,7 +285,7 @@ func TestInstallActivationCapabilityControlsPolicyAndReport(t *testing.T) {
 			if err != nil {
 				t.Fatal(err)
 			}
-			if got := strings.Contains(string(settings), "gentle-ai:opencode-background-subagents"); got != tt.wantPolicy {
+			if got := strings.Contains(string(settings), "agent-smith:opencode-background-subagents"); got != tt.wantPolicy {
 				t.Fatalf("managed background policy present = %t, want %t", got, tt.wantPolicy)
 			}
 			if result.Background.Activation.Capability.Ready() != tt.wantReady {
@@ -755,3 +755,4 @@ func TestSyncBackgroundNoOpStillPublishesExplicitIntent(t *testing.T) {
 		t.Fatalf("no-op published intent = %q, error = %v", persisted.BackgroundIntent, err)
 	}
 }
+

@@ -8,8 +8,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/agents/pi"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/testenv"
+	"github.com/jonsanchezr/agent-smith/v4/internal/agents/pi"
+	"github.com/jonsanchezr/agent-smith/v4/internal/testenv"
 )
 
 // isolateSentinelSubprocessEnv triggers the sentinel-check stand-in below.
@@ -75,3 +75,4 @@ func TestIsolateNeutralizesSentinelSetBeforeTestMain(t *testing.T) {
 		t.Fatalf("sentinel subprocess resolved a path under the sentinel dir %q: %s", sentinel, out)
 	}
 }
+

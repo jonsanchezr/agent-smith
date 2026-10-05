@@ -1,10 +1,10 @@
-# gentle-ai-bench
+﻿# agent-smith-bench
 
-Measures the **friction** of driving `gentle-ai`'s review lifecycle, so a
+Measures the **friction** of driving `agent-smith`'s review lifecycle, so a
 "before" binary and an "after" binary can be compared and the change can be
 shown rather than asserted.
 
-Its core corpus is a **black box**. It drives a `gentle-ai` binary given by
+Its core corpus is a **black box**. It drives a `agent-smith` binary given by
 `--binary` as a subprocess and never instruments the product, so it works
 against any build including old releases. It is **deterministic and offline**:
 no model is ever called. Every journey runs in a fresh temp directory with its
@@ -13,7 +13,7 @@ local bare remote. It never touches your real config or repositories.
 
 That claim is scoped to the core on purpose. A run can additionally select an
 **opt-in axis** with `--axis`, and an axis measures states the CLI cannot
-construct — so it is not black-box and not portable across builds. No axis runs
+construct â€” so it is not black-box and not portable across builds. No axis runs
 unless you name it, each one declares what it costs, and the report prints that
 declaration next to the journeys it contributed. See
 [Opt-in axes](#opt-in-axes).
@@ -23,7 +23,7 @@ declaration next to the journeys it contributed. See
 `bench/` declares its own `go.mod`, so the root module's `go build ./...`,
 `go vet ./...` and `go test ./...` do not see it. That is deliberate: the tool
 must never be able to break, slow, or enter a release build of the product it
-measures. The cost is that nothing verifies it automatically — build it from
+measures. The cost is that nothing verifies it automatically â€” build it from
 inside this directory:
 
 ```
@@ -54,9 +54,9 @@ different populations and the table would be meaningless.
 ### Driven
 
 ```
-gentle-ai-bench run --binary /path/to/gentle-ai --out results-after.json
-gentle-ai-bench run --binary /path/to/old-gentle-ai --out results-before.json
-gentle-ai-bench compare --before results-before.json --after results-after.json
+agent-smith-bench run --binary /path/to/agent-smith --out results-after.json
+agent-smith-bench run --binary /path/to/old-agent-smith --out results-before.json
+agent-smith-bench compare --before results-before.json --after results-after.json
 ```
 
 `run --only j05-gate-without-any-review,j10-invalid-flag-combination` runs a
@@ -65,8 +65,8 @@ registered one. An unknown axis name is a hard error, never a quiet fall back to
 the core.
 
 **`run` fails closed on failed journeys.** A journey that reports `failed`
-produced no numbers — the harness could not build or prove its fixture, or an
-assertion fired — and community issue #1883 found that such a run still exited
+produced no numbers â€” the harness could not build or prove its fixture, or an
+assertion fired â€” and community issue #1883 found that such a run still exited
 0, so a CI gate reading the exit saw success in a run that measured nothing
 for those rows. `run` now exits nonzero when any journey failed; the results
 file is still written first, so the evidence survives the failure. Journeys
@@ -78,19 +78,19 @@ a pass or a failure. Both rules are pinned in `main_test.go`.
 ### Observed
 
 ```
-gentle-ai-bench record --binary $(which gentle-ai) --out session.jsonl
+agent-smith-bench record --binary $(which agent-smith) --out session.jsonl
 # follow the printed PATH line, then run your agent through the testing guide
-gentle-ai-bench analyze --session session.jsonl --out results-observed.json
+agent-smith-bench analyze --session session.jsonl --out results-observed.json
 ```
 
-A ready-to-paste prompt for the agent — which starts and closes the recording
-itself — lives in [`AGENT-PROMPT.md`](AGENT-PROMPT.md). It carries one rule
-worth repeating here: **the agent must not read gentle-ai's source.** An agent
+A ready-to-paste prompt for the agent â€” which starts and closes the recording
+itself â€” lives in [`AGENT-PROMPT.md`](AGENT-PROMPT.md). It carries one rule
+worth repeating here: **the agent must not read agent-smith's source.** An agent
 that has read the implementation recovers using knowledge a real user does not
 have, so the run comes out clean for the wrong reason. The whole point is
 measuring whether the tool explains itself.
 
-`record` writes a directory containing an executable named `gentle-ai` and
+`record` writes a directory containing an executable named `agent-smith` and
 prints the one line that puts it first on `PATH`. The shim logs every
 invocation and delegates to the real binary, preserving argv, stdin, stdout,
 stderr and the exit code. Because it intercepts at the process boundary, it
@@ -98,9 +98,9 @@ works with any agent or harness.
 
 **Shim fidelity rule.** A stream that is a character device (a terminal, and
 also `/dev/null`) is passed through untouched instead of being teed. Replacing
-it with a pipe would flip `gentle-ai`'s own interactivity check — it decides
+it with a pipe would flip `agent-smith`'s own interactivity check â€” it decides
 whether to ask the consent question by testing whether stdin *and* stderr are
-character devices — and a benchmark that changes the thing it measures is
+character devices â€” and a benchmark that changes the thing it measures is
 worthless. The cost is that such invocations are recorded with
 `stdout_captured: false` / `stderr_captured: false`, and the dimensions that
 depend on them become `null` rather than a guess.
@@ -109,17 +109,17 @@ depend on them become `null` rather than a guess.
 
 | # | Dimension | What it counts | How |
 |---|---|---|---|
-| 1 | `human_prompts` | Times the flow would stop to ask a human | Runs non-TTY. `gentle-ai` prints a consent-skipped notice on **stderr** when it would have asked; the benchmark counts occurrences of that exact string. |
+| 1 | `human_prompts` | Times the flow would stop to ask a human | Runs non-TTY. `agent-smith` prints a consent-skipped notice on **stderr** when it would have asked; the benchmark counts occurrences of that exact string. |
 | 2 | `manual_tokens` | Steps needing a hand-assembled authorization | Invocations whose argv carries a non-empty `--maintainer-authorization`. Both `--flag value` and `--flag=value`. |
 | 3 | `commands_to_completion` | Binary invocations from start to terminal state | Every product invocation the journey issues. Benchmark instrumentation (capability probes) is **not** counted. |
 | 4 | `blocks` | Every non-zero exit or denial, in five buckets | See the classifier below. |
 | 5 | `recovery_round_trips` | Commands spent between a block and the flow resuming | From the blocking command up to and including the first subsequent command that is not itself a block. |
-| 6 | `model_runs` | Reviewer/lens invocations the flow required, re-runs included | Driven mode: measured — the benchmark issues them. Observed mode: **proxy**, see below. |
+| 6 | `model_runs` | Reviewer/lens invocations the flow required, re-runs included | Driven mode: measured â€” the benchmark issues them. Observed mode: **proxy**, see below. |
 | 7 | `human_surface_bytes` | Human-facing narration volume | Total stderr bytes. |
 
 There is one extra, informational field, deliberately **not** one of the seven:
 
-- `git_subprocesses` — git processes the product spawned, counted from
+- `git_subprocesses` â€” git processes the product spawned, counted from
   `GIT_TRACE` lines. In driven mode `GIT_TRACE` points at a per-journey log;
   in observed mode the shim sets it only when the user has not. It is a lower
   bound if a build ever performs git operations in-process. It is reported
@@ -141,23 +141,23 @@ counts: the flow cannot proceed.
 
 **Which class?** In this order:
 
-1. The flow continued with no extra command → `self_recovered`.
-2. The emitted text (stdout or stderr) contains a runnable `gentle-ai <verb> …`
-   command → `in_band`.
+1. The flow continued with no extra command â†’ `self_recovered`.
+2. The emitted text (stdout or stderr) contains a runnable `agent-smith <verb> â€¦`
+   command â†’ `in_band`.
 3. The stdout JSON envelope carries a `next_action`, `recovery_operation`, or
    `collect.capture_operation` (and its execute-shaped sibling
    `next_transition.execute.operation`) naming an operation that is not
-   `stop`/`none`/empty → `in_band`.
+   `stop`/`none`/empty â†’ `in_band`.
 4. The corpus declares the refusal correct **and** the exact next-action text
-   it quotes is verified present in the emitted bytes → `by_design`.
-5. The journey corpus declares that no continuation exists → `dead_end`.
-6. Otherwise → `out_of_band`: blocked, and the output named no runnable
+   it quotes is verified present in the emitted bytes â†’ `by_design`.
+5. The journey corpus declares that no continuation exists â†’ `dead_end`.
+6. Otherwise â†’ `out_of_band`: blocked, and the output named no runnable
    continuation, so the user had to go and look it up.
 
 Two precise sub-rules:
 
-- **"Runnable" excludes templates.** `gentle-ai review validate --gate <gate>`
-  is not runnable — the user still has to fill it in — so it does not make a
+- **"Runnable" excludes templates.** `agent-smith review validate --gate <gate>`
+  is not runnable â€” the user still has to fill it in â€” so it does not make a
   block in-band on its own. A line offering both a templated command and a
   clean one counts as in-band on the strength of the clean one.
 - **`action` is deliberately not a continuation key.** A gate denial carrying
@@ -170,10 +170,10 @@ is decidable from outside the binary. Both are set per step in the corpus, and
 a mechanically detected continuation always overrides either one.
 
 - `dead_end` (`Step.DeadEnd`) says there is **no next action**. The flow is
-  over. The current corpus declares none, so `dead_end` is 0 everywhere — an
+  over. The current corpus declares none, so `dead_end` is 0 everywhere â€” an
   honest 0, not a measured absence of dead ends in the product as a whole.
 - `by_design` (`Step.ByDesign`) says there **is** a next action, the product
-  already stated it, and it is not expressible as a `gentle-ai` command.
+  already stated it, and it is not expressible as a `agent-smith` command.
 
 They are opposite answers to "is there anything to do next?", so a step
 declaring both is contradicting itself and the run refuses to start.
@@ -182,10 +182,10 @@ declaring both is contradicting itself and the run refuses to start.
 benchmark, because it is the only annotation that can make `out_of_band`
 smaller. It costs two things:
 
-- **A shape, from a closed vocabulary.** `operator-knowledge` — the product
-  cannot know a value only the operator has. `world-action` — the exit is an
+- **A shape, from a closed vocabulary.** `operator-knowledge` â€” the product
+  cannot know a value only the operator has. `world-action` â€” the exit is an
   action, not a command: edit the code, free some disk space, plug the mount
-  back in. `human-authority` — the block *is* a human decision, and if a
+  back in. `human-authority` â€” the block *is* a human decision, and if a
   command could produce the authorization the gate would be theatre. Not free
   text: an unrecognised shape is a corpus error and `run` exits before driving
   anything.
@@ -193,21 +193,21 @@ smaller. It costs two things:
   verifies is really in the bytes the product emitted. This is the load-bearing
   half. "No command can exist" never excuses "the message says nothing", so
   `Error: no.` cannot be declared by-design: there is nothing to quote, and a
-  quote that is not in the output is not a quote — the declaration does not
+  quote that is not in the output is not a quote â€” the declaration does not
   apply and the block stays `out_of_band`.
 
 An exemption is a **reclassification, never a subtraction**: the block is still
 a block and still inside `4 blocks (total)`. Every declaration in the run is
 printed under *By-design blocks* with its shape and its verified quote,
-including the ones that did **not** apply — a declaration the classifier
+including the ones that did **not** apply â€” a declaration the classifier
 refused is the first sign the product's message changed under the corpus, so it
 is reported rather than dropped.
 
 The corpus declares one, in `j17-bare-repository`
 (`operator-knowledge`): `review start` in a bare repository can only offer
 `--cwd <path-to-a-checkout>`, an unfillable template, because it cannot know
-where the operator's checkout is. What it prints instead is the action —
-*"run the same command again from a checkout"* — and that is the string the
+where the operator's checkout is. What it prints instead is the action â€”
+*"run the same command again from a checkout"* â€” and that is the string the
 classifier checks for.
 
 Observed mode has no corpus, so nothing there can declare an exemption and
@@ -224,9 +224,9 @@ counted separately. In every table an unsupported journey renders as `unsup`,
 never as a number.
 
 Runtime detection backs this up, matching on output rather than exit code
-alone: `flag provided but not defined`, `unknown … command "…"`,
-`unexpected … argument "…"` and friends. Matching on the message is deliberate
-— exit codes for "I do not have that flag" are not guaranteed to differ from
+alone: `flag provided but not defined`, `unknown â€¦ command "â€¦"`,
+`unexpected â€¦ argument "â€¦"` and friends. Matching on the message is deliberate
+â€” exit codes for "I do not have that flag" are not guaranteed to differ from
 ordinary state failures, and counting a missing surface as a state failure
 would make an old binary look capable.
 
@@ -253,7 +253,7 @@ run it.
   timestamps only to order records; no duration is computed or reported.
 - **Real model tokens.** Excluded by design: provider-dependent, costly, and
   not reproducible. Where a journey needs reviewer output, it is synthesized
-  from the binary's **own** preflight/collect envelope — the subject hash and
+  from the binary's **own** preflight/collect envelope â€” the subject hash and
   the changed-path manifest come straight from the product, so the capture is
   admitted for the same reason a real reviewer's would be. That is what makes
   "model runs" countable without spending a token.
@@ -262,7 +262,7 @@ run it.
   dimensions would hide exactly the regression that matters most. The tables
   print every dimension separately and `compare` emits no aggregate.
 
-## Honesty contract — known gaps
+## Honesty contract â€” known gaps
 
 Everything below is a real limitation, stated because a benchmark that quietly
 invents a metric is worse than one that admits a gap.
@@ -323,8 +323,8 @@ invents a metric is worse than one that admits a gap.
 
 9. **`by_design` is an author-declared exemption, and it is the one number in
    here that can be gamed.** It exists because `out_of_band` was counting two
-   different things: a defect — the product blocked the operator and gave them
-   nothing runnable when a runnable continuation could exist — and a correct
+   different things: a defect â€” the product blocked the operator and gave them
+   nothing runnable when a runnable continuation could exist â€” and a correct
    refusal for which naming a command would mean naming a dead end. Only the
    first is what the release criterion cares about. Splitting them makes the
    defect count mean something; it also opens a channel for laundering real
@@ -333,7 +333,7 @@ invents a metric is worse than one that admits a gap.
    next-action text that the classifier verifies against the emitted bytes.
    **The failure mode it introduces:** a declaration is a claim about a message
    the corpus does not own. The quote can keep matching while the sentence
-   around it stops being useful, and the harness cannot tell the difference —
+   around it stops being useful, and the harness cannot tell the difference â€”
    it checks that the words are there, not that they still help. So the
    exemption is never a subtraction (the block stays in the total, in its own
    column, in its own section, quote included) and the honest way to read the
@@ -344,19 +344,19 @@ invents a metric is worse than one that admits a gap.
 10. **The report is not byte-identical between two runs, though every count
     except one is.** Each journey runs under `os.MkdirTemp`, whose random
     suffix varies in length, and several journeys quote that path back in a
-    block message — `j14`, `j17`, `j31`, `j33`, and `j34` observed so
+    block message â€” `j14`, `j17`, `j31`, `j33`, and `j34` observed so
     far, and any journey that drives a refusal naming a
     repository path can join them. Which of them actually moves between a given
     pair of runs is chance: the suffix is 9 or 10 digits. No `damaged-store`
     axis journey has been observed to move: its refusals name lineages,
     artifacts and target identities, all of which are fixed by the fixture.
-    No `real-world` axis journey has been observed to move either — its one
+    No `real-world` axis journey has been observed to move either â€” its one
     refusal that quotes a path quotes the repository-relative `".wt/test/"`,
     not the sandbox prefix. So
     the quoted messages differ run to run and
     `human_surface_bytes` wobbles by one byte per affected journey; every block
     classification, every count and `git_subprocesses` are stable. This is why the "byte-identical" claim under
-    *Measured* below is scoped to the 14-journey corpus it describes — no
+    *Measured* below is scoped to the 14-journey corpus it describes â€” no
     journey in that corpus echoed a sandbox path. Making it hold again means
     choosing between a fixed-width random suffix (stabilises the numbers, not
     the quoted paths) and a deterministic per-journey path (stabilises both,
@@ -369,7 +369,7 @@ invents a metric is worse than one that admits a gap.
     states cannot be reached that way, and reaching them means reading or
     writing something the product owns. So a `--axis` run gives up portability:
     against a build whose internals have moved, those journeys report `failed`
-    or `unsupported` rather than a number, by design — see the two checks under
+    or `unsupported` rather than a number, by design â€” see the two checks under
     [Opt-in axes](#opt-in-axes) that make sure a fixture cannot quietly build
     the wrong state and pass. **This entry is not where that lives.** The
     property belongs to the axis and travels with the run: it is in
@@ -377,14 +377,14 @@ invents a metric is worse than one that admits a gap.
     `axis` column, and printed in full under *Opt-in axes in this run*. A
     property a reader has to come and find is a property that gets missed, so
     the report states it and this entry only points at it. What remains a real
-    gap is that no axis can be portable — that is inherent, not a bug to fix,
+    gap is that no axis can be portable â€” that is inherent, not a bug to fix,
     and the honest response is that the core stays black-box and the axis stays
     opt-in.
 
 12. **The `real-world` axis is black-box and is still not the core, and its
     strongest assertions prove less than they might seem to.** Nothing in that
     axis touches product-owned state, so entry 11's portability cost does not
-    apply to it — but it remains opt-in because it is a different population
+    apply to it â€” but it remains opt-in because it is a different population
     (cluttered repositories, interleaved lifecycles) governed by a different
     growth rule: community-reported shapes become journeys, so its size tracks
     community reports, not releases, and folding it into the core would make
@@ -393,7 +393,7 @@ invents a metric is worse than one that admits a gap.
     the truth about today's build, not a permanent verdict, and the journey is
     kept precisely so the fix has a permanent pin. And the no-echo assertions
     in `rw03`/`rw09` prove absence of the sentinel **from the emitted bytes of
-    counted commands only** — a black-box harness cannot see whether the
+    counted commands only** â€” a black-box harness cannot see whether the
     product ever *read* the secret file or the ignored binary, only whether it
     quoted them. "The journey passed" means "nothing counted echoed it",
     nothing stronger.
@@ -409,7 +409,7 @@ invents a metric is worse than one that admits a gap.
 ## Measured: the current build
 
 `results-after.json` in this directory is a real run of the whole corpus
-against `gentle-ai 1.49.1-0.20260726001603-c2b91ac966ca+dirty`, built from
+against `agent-smith 1.49.1-0.20260726001603-c2b91ac966ca+dirty`, built from
 this repository at commit `c2b91ac9`. All 14 journeys
 completed; nothing was unsupported. Re-running produces byte-identical numbers,
 `git_subprocesses` included.
@@ -440,29 +440,29 @@ with `dead_end` at `4e`.
 example of the cross-version path: 5 journeys completed and 9 recorded
 `unsupported` (no `review capture-result`, no `review capture-evidence`, no
 `review status`, no `review mode`). Nothing crashed and nothing was scored as
-zero. On the 5 comparable journeys, blocks fell from 10 to 3 — all seven
-removed blocks were `out_of_band` — and `human_surface_bytes` from 604 to 383,
+zero. On the 5 comparable journeys, blocks fell from 10 to 3 â€” all seven
+removed blocks were `out_of_band` â€” and `human_surface_bytes` from 604 to 383,
 with `commands_to_completion` unchanged at 16.
 
 ## The corpus
 
-Journeys are data — a slice of `Step` in `journeys.go`. Adding one is
+Journeys are data â€” a slice of `Step` in `journeys.go`. Adding one is
 appending to that slice.
 
 ### Every journey declares its review precondition
 
 Receipt-driven development defaults to ON in a fresh sandbox `HOME`.
 Lifecycle journeys still explicitly enable it rather than depending on that default.
-`Journey.Review` declares this setup and is **mandatory** —
+`Journey.Review` declares this setup and is **mandatory** â€”
 `validateCorpus` fails the whole run on a journey that does not declare one.
 
-- `reviewOptedIn` — before the journey's first step, the runner enables review as
-  a user does: `gentle-ai review mode enable --scope global`, run from a
+- `reviewOptedIn` â€” before the journey's first step, the runner enables review as
+  a user does: `agent-smith review mode enable --scope global`, run from a
   throwaway checkout of its own, then read back. The journey fails if the
   product does not report the switch on. It is sandbox setup, not operator work,
   so it is never counted in `commands_to_completion`. Global is the only scope
   that can assert "on"; a clone may only ever assert "off".
-- `reviewUntouched` — the runner runs no mode command at all. This is for a
+- `reviewUntouched` â€” the runner runs no mode command at all. This is for a
   journey whose subject IS the switch (`j03-kill-switch` drives it itself,
   `j31-nonsense-mode-value` authors the record under test) and for one that has
   nothing to do with reviews (`j2138`, `j3043`, `j3500` install or sync OpenCode).
@@ -481,7 +481,7 @@ execution against a product binary.
 
 The declaration is mandatory because the alternative already cost us once: the
 corpus measured the review lifecycle only because the product's default happened
-to say yes, and the day that default changed those journeys did not fail — they
+to say yes, and the day that default changed those journeys did not fail â€” they
 quietly measured a different flow, with the review refused and the gate passing
 under ordinary repository policy.
 
@@ -513,11 +513,11 @@ coverage remains in j59, j60, and j111.
 
 | shape | what it is |
 |---|---|
-| 1 | **asymmetric comparison** — one operand canonicalized, the other not |
-| 2 | **transient read as permanent** — a retryable condition surfacing as terminal or ambiguous |
-| 3 | **a guard behind the wrong condition** — a check gated on something that is not its own precondition |
+| 1 | **asymmetric comparison** â€” one operand canonicalized, the other not |
+| 2 | **transient read as permanent** â€” a retryable condition surfacing as terminal or ambiguous |
+| 3 | **a guard behind the wrong condition** â€” a check gated on something that is not its own precondition |
 | 4 | **a message naming something that does not work** |
-| 5 | **two sources of truth** — a document and the code disagreeing about the same fact |
+| 5 | **two sources of truth** â€” a document and the code disagreeing about the same fact |
 
 A journey that stresses none of them is not added: it would only make the
 number look covered.
@@ -530,7 +530,7 @@ number look covered.
 | `j18-space-and-non-ascii-path` | repository path with spaces and non-ASCII characters | 1 |
 | `j19-submodule-gitlink` | a 160000 index entry with no blob behind it | 1 |
 | `j20-symlink-candidate` | mode 120000 whose blob is a path | 1 |
-| `j21-mode-only-change` | `100644` → `100755`, identical blob on both sides | 1 |
+| `j21-mode-only-change` | `100644` â†’ `100755`, identical blob on both sides | 1 |
 | `j22-pure-rename` | every byte identical, only the path moved | 1 |
 | `j23-deletion-only` | a candidate whose new side is empty | 1 |
 | `j24-empty-file` | zero bytes, zero changed lines | 4 |
@@ -557,7 +557,7 @@ A fixture that sets its edge case up wrongly and then passes is the failure mode
 these journeys exist to avoid, so each one reads the state back out of git and
 fails the journey when it is not what it claims: the linked worktree asserts
 that `.git` is a file and that its git dir differs from the common dir, the
-mode-only change asserts the index really went `100644` → `100755` with a
+mode-only change asserts the index really went `100644` â†’ `100755` with a
 `0\t0` numstat, the mid-operation fixtures assert `MERGE_HEAD` /
 `rebase-merge` / `CHERRY_PICK_HEAD` exist *after* the conflict is resolved, and
 the nonsense mode record asserts that it still parses as JSON so the journey
@@ -640,8 +640,8 @@ its own declaration.
   which were not without opening this document.
 
 Adding an axis is adding one file with an `init()` that calls `RegisterAxis`.
-The seam in `axis.go` is deliberately small — one registry, one flag, one report
-section — and it does not know what any axis measures.
+The seam in `axis.go` is deliberately small â€” one registry, one flag, one report
+section â€” and it does not know what any axis measures.
 
 ### `damaged-store` (`axis_damaged_store.go`)
 
@@ -657,7 +657,7 @@ the compact transport import, so **no sequence of CLI commands produces a store
 holding a recovery edge that does not re-derive**. A community tester reached
 one anyway; reproducing it needed store bytes written directly, and once
 reproduced it turned out to be a dead end. Real repositories reach states like
-that through history — a store written by an older build, an operation
+that through history â€” a store written by an older build, an operation
 interrupted between two writes, a revision that drifted while something else
 moved. Ours never do, because ours are minutes old.
 
@@ -675,8 +675,8 @@ failure mode is specific: the format moves, the bytes stop producing the state
 the journey claims, and the journey keeps passing while measuring nothing. Two
 checks stand in the way, and both fail the run loudly rather than degrading it.
 
-1. **Every fixture reads its damage back out of the product** — `review
-   inspect-authority` or `review status` — and requires the product to report
+1. **Every fixture reads its damage back out of the product** â€” `review
+   inspect-authority` or `review status` â€” and requires the product to report
    exactly the damage the journey claims, before a single counted command is
    spent. This is the same discipline the git fixtures already follow, and here
    it is doing more work: it is also the drift tripwire.
@@ -685,7 +685,7 @@ checks stand in the way, and both fail the run loudly rather than degrading it.
    a SHA-256 over the canonical marshalling of the state, so reproducing it is
    proof that this axis can still write bytes the product will accept. When the
    marshalling moves this fails *first*, naming the reason, instead of a fixture
-   writing a store the product then rejects as a checksum mismatch — a symptom
+   writing a store the product then rejects as a checksum mismatch â€” a symptom
    that looks nothing like its cause.
 
 The layout is derived from a store the fixture itself builds through the CLI,
@@ -701,20 +701,20 @@ repository whose store was already in this state.
 Journeys through repositories that are not sterile, and review lifecycles that
 are not contiguous.
 
-The detection-gap audit named the corpus's first two blind spots — unvisited
+The detection-gap audit named the corpus's first two blind spots â€” unvisited
 paths, unconstructable states. This axis exists because a community tester
 named the third by hitting it: they ran the RC on a real production repository
 and `review start` was walled by a nested git worktree, not gitignored, inside
-the tree (`logical path is not canonical: ".wt/test/"`, exit 1, empty stdout —
+the tree (`logical path is not canonical: ".wt/test/"`, exit 1, empty stdout â€”
 issue #1881). No fixture had that shape, because **every repository in the
-corpus is minutes old** — minimal, historyless, and touched by nothing except
+corpus is minutes old** â€” minimal, historyless, and touched by nothing except
 the fixture that built it. Real repositories carry tool residue, and real
 operators interleave git life with the review lifecycle instead of running it
 back to back. Two families follow, and every journey names its family:
 
-- **Family A — ecosystem clutter**: shapes produced by tools and by
+- **Family A â€” ecosystem clutter**: shapes produced by tools and by
   accumulated sessions, not by the git operations the corpus runs.
-- **Family B — life between commands**: the lifecycle interleaved with
+- **Family B â€” life between commands**: the lifecycle interleaved with
   ordinary git operations.
 
 **This axis is black-box**, unlike `damaged-store`: every fixture is built
@@ -727,19 +727,19 @@ Second, it carries a standing rule the core does not:
 
 > **Community-reported shapes become journeys: the reporter's fixture is the
 > finding.** This axis exists because a tester's production repository was the
-> fixture nobody wrote, and its job is to keep absorbing those — it grows at
+> fixture nobody wrote, and its job is to keep absorbing those â€” it grows at
 > the pace of community reports, not at the pace of releases.
 
 `rw01` is #1881 verbatim, measured honestly: a product fix is in flight, so
 the journey may block today and clear tomorrow, and the axis records the truth
-either way — once fixed it is the permanent pin. `rw08` and `rw09` rebuild the
+either way â€” once fixed it is the permanent pin. `rw08` and `rw09` rebuild the
 two elements of the same reporter's published production composite that the
 corpus could never have built from a fresh fixture: review state accumulated
 across days of sessions, and a large gitignored binary inside the tree.
 
 | ID | Shape | Family |
 |---|---|---|
-| `rw01-nested-worktree-not-ignored` | linked worktree at `.wt/test` INSIDE the tree, untracked, not ignored — #1881 verbatim | A |
+| `rw01-nested-worktree-not-ignored` | linked worktree at `.wt/test` INSIDE the tree, untracked, not ignored â€” #1881 verbatim | A |
 | `rw02-node-modules-scale-untracked-tree` | 3,000 untracked files beside a docs candidate; STATUS must collect explicit exclusion before START | A |
 | `rw03-untracked-env-with-secrets` | untracked `.env` holding a sentinel secret; explicit exclusion must not quote the value | A |
 | `rw04-mutating-pre-commit-hook` | husky-style hook rewrites a tracked file during commit; bytes proven moved between review and commit | A |
@@ -754,7 +754,7 @@ across days of sessions, and a large gitignored binary inside the tree.
 
 The fixture-proof discipline is unchanged and did real work here: `rw12`'s
 first draft cloned the shared remote without naming a branch, the colleague's
-commit landed on a different branch, and the pull under test was a no-op —
+commit landed on a different branch, and the pull under test was a no-op â€”
 the ancestry proof caught it before the journey could pass while measuring
 nothing. `rw03` and `rw09` add an assertion no other journey has: every
 counted observation is scanned for a planted sentinel (the `.env`'s secret
@@ -763,18 +763,18 @@ if it ever appears. The firing half of that detector is pinned in
 `axis_real_world_test.go`, because a detector that could never fire would
 make the passing half a tautology. `rw08`'s three stale lineages are built
 through the product's own CLI, uncounted, for the same reason damaged-store's
-setup is: the operator being measured did not run them — they opened a
+setup is: the operator being measured did not run them â€” they opened a
 repository that already held the residue.
 
 **Rejected candidates**, because a journey that stresses no distinct product
 path only makes the number look covered:
 
-- **Start → `git stash` → pop → resume.** `stash pop --index` restores the
+- **Start â†’ `git stash` â†’ pop â†’ resume.** `stash pop --index` restores the
   candidate byte-for-byte (provably: same `write-tree`), so every product
   invocation after the detour meets a state indistinguishable from no detour.
-  The one distinct surface — a read-only `review status` against an absent
-  candidate — did not carry a journey once the production composite arrived.
-- **Start → switch branch → switch back → resume.** Staged bytes carry across
+  The one distinct surface â€” a read-only `review status` against an absent
+  candidate â€” did not carry a journey once the production composite arrived.
+- **Start â†’ switch branch â†’ switch back â†’ resume.** Staged bytes carry across
   the switch, j16 proves review identity needs no branch at all, and j15
   proves two branches; every counted invocation would meet byte-identical
   state.
@@ -792,7 +792,7 @@ path only makes the number look covered:
 **What this axis still cannot reach.** Platform-specific clutter: Windows
 Defender holding a file mid-write, macOS `.DS_Store` semantics and
 Unicode-normalizing or case-insensitive volumes, Windows long paths. Same
-verdict as honesty-contract entry 8 — they need a machine this harness cannot
+verdict as honesty-contract entry 8 â€” they need a machine this harness cannot
 build in a Linux temp directory, and naming them is honest where implying
 coverage would not be.
 
@@ -803,7 +803,7 @@ main.go        run / record / analyze / compare / __shim dispatch
 classify.go    Observation, IsBlock, IsUnsupported, Classify   <- the contract
 metrics.go     Dimension, BlockCounts, accumulator, aggregate
 runner.go      Sandbox, capability probe, journey engine
-journeys.go    the corpus, as data — guide flows and their failure paths
+journeys.go    the corpus, as data â€” guide flows and their failure paths
 journeys_edge.go  the edge-case part of the corpus, with self-proving fixtures
 journeys_wave1.go  integrated review community fixes exercised at their CLI boundary
 axis.go        the opt-in axis seam: registry, --axis selection, provenance
@@ -815,5 +815,6 @@ axis_real_world.go  ONE axis, deletable: cluttered repositories and
 record.go      the recording shim and session log
 analyze.go     observed-mode metrics, same classifier
 report.go      plain-text tables and the comparison JSON
-testdata/      recorded real gentle-ai output, used by the classifier tests
+testdata/      recorded real agent-smith output, used by the classifier tests
 ```
+

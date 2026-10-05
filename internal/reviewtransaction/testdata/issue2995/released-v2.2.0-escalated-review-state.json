@@ -1,8 +1,8 @@
-{
-  "schema": "gentle-ai.review-state-record/v2",
+﻿{
+  "schema": "agent-smith.review-state-record/v2",
   "revision": "sha256:70ca8946a21ae651926e2a91cf2431e52973d5050ebd96644f4c4b2efa79c719",
   "state": {
-    "schema": "gentle-ai.review-state/v2",
+    "schema": "agent-smith.review-state/v2",
     "lineage_id": "review-a3118da0f4a4c425",
     "generation": 1,
     "state": "escalated",
@@ -62,8 +62,9 @@
         "reason": "reviewer inspected a path absent from the frozen candidate; result cannot describe this candidate",
         "actor": "repro-script",
         "disposed_at": "2026-09-22T15:27:33.112129428Z",
-        "maintainer_authorization": "gentle-ai.review-result-disposition-authorization/v1\nrepository=/tmp/ga2995/repro\nlineage=review-a3118da0f4a4c425\nrevision=sha256:c0b93e63e38bb8be1bb6dd59b1040484407e0970fd8a5d402d4479a4d6734c0a\ntarget_identity=sha256:a3118da0f4a4c42536eb5760a51d84f199301e2eb14c6f9c3b0fd81f1f392c1a\nlens=review-reliability\norder=0\nartifact_digest=sha256:b540b3af7c2a943e941700d460cd459025ede416c524e5abe171c48186733487\nclass=wrong_target\nactor=repro-script\nreason=reviewer inspected a path absent from the frozen candidate; result cannot describe this candidate"
+        "maintainer_authorization": "agent-smith.review-result-disposition-authorization/v1\nrepository=/tmp/ga2995/repro\nlineage=review-a3118da0f4a4c425\nrevision=sha256:c0b93e63e38bb8be1bb6dd59b1040484407e0970fd8a5d402d4479a4d6734c0a\ntarget_identity=sha256:a3118da0f4a4c42536eb5760a51d84f199301e2eb14c6f9c3b0fd81f1f392c1a\nlens=review-reliability\norder=0\nartifact_digest=sha256:b540b3af7c2a943e941700d460cd459025ede416c524e5abe171c48186733487\nclass=wrong_target\nactor=repro-script\nreason=reviewer inspected a path absent from the frozen candidate; result cannot describe this candidate"
       }
     ]
   }
 }
+

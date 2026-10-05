@@ -5,9 +5,9 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/assets"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/components/filemerge"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
+	"github.com/jonsanchezr/agent-smith/v4/internal/assets"
+	"github.com/jonsanchezr/agent-smith/v4/internal/components/filemerge"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
 )
 
 // engramProtocolAssetPath is the single canonical source for every rendered
@@ -125,3 +125,4 @@ func protocolFor(agent model.AgentID, opts InjectOptions) string {
 	}
 	return protocolFull()
 }
+

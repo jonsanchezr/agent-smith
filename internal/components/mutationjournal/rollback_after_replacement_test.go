@@ -7,7 +7,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/components/filemerge"
+	"github.com/jonsanchezr/agent-smith/v4/internal/components/filemerge"
 )
 
 // replaceThenFail mimics the one window WriteFileAtomic documents: the rename
@@ -147,3 +147,4 @@ func TestRestoreSkipsEntryWhenWriteFailedWithoutReplacing(t *testing.T) {
 		t.Errorf("writeFileAtomic called %d times, want 1: Restore rewrote a file that was never replaced", restoreCalls)
 	}
 }
+

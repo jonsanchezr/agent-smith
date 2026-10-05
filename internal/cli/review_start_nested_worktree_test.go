@@ -21,7 +21,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/reviewtransaction"
+	"github.com/jonsanchezr/agent-smith/v4/internal/reviewtransaction"
 )
 
 func TestReviewStartExcludesNestedWorktreeFromFrozenManifest(t *testing.T) {
@@ -94,3 +94,4 @@ func TestReviewStartKeepsSiblingLinkedWorktreeWorking(t *testing.T) {
 		t.Fatalf("sibling-worktree start state = %q", started.State)
 	}
 }
+

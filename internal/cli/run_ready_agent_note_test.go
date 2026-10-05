@@ -4,9 +4,9 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/planner"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/verify"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
+	"github.com/jonsanchezr/agent-smith/v4/internal/planner"
+	"github.com/jonsanchezr/agent-smith/v4/internal/verify"
 )
 
 // TestWithPostInstallNotesNamesOnlyTheInstalledRunnableAgents closes fisidj
@@ -76,3 +76,4 @@ func TestWithPostInstallNotesDoesNotOverrideAnAlreadyCustomizedFinalNote(t *test
 		t.Fatalf("FinalNote changed unexpectedly: %q", updated.FinalNote)
 	}
 }
+

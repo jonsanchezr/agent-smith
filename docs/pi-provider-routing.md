@@ -1,13 +1,13 @@
-# Configure native Pi review roles
+﻿# Configure native Pi review roles
 
 > [!NOTE]
-> These docs track `main`, which may include unreleased changes. For the latest release, see the [v4.0.0 docs](https://github.com/Gentleman-Programming/gentle-ai/tree/v4.0.0/docs).
+> These docs track `main`, which may include unreleased changes. For the latest release, see the [v4.0.0 docs](https://github.com/jonsanchezr/agent-smith/tree/v4.0.0/docs).
 
 Configure `review-refuter` and `review-validator` through gentle-pi's model configuration. Go reads those same saved assignments for native role capture; it never writes configuration or creates another routing format.
 
 ## Resolution
 
-Go reads `GENTLE_PI_CONFIG_HOME/models.json` when that existing locator is set, otherwise `~/.pi/gentle-ai/models.json`. Only an absent global file falls back to `<validated repository>/.pi/gentle-ai/models.json`; entries are never merged. Unrelated entries are ignored and the file remains untouched.
+Go reads `GENTLE_PI_CONFIG_HOME/models.json` when that existing locator is set, otherwise `~/.pi/agent-smith/models.json`. Only an absent global file falls back to `<validated repository>/.pi/agent-smith/models.json`; entries are never merged. Unrelated entries are ignored and the file remains untouched.
 
 An assignment is a model string or an object containing optional `model` and `thinking` fields. A missing assignment or `{}` leaves the original Pi arguments unchanged, using **Pi's persisted defaults**, not the active session. There is no special `default` role entry.
 
@@ -22,3 +22,4 @@ Go still owns binding validation, prompt materialization, request hashes, and ad
 ## Verification boundary
 
 Tests exercise local helper subprocesses and both native capture/admission paths, including malformed-config refusal without spawning. They do **not** prove organic execution by the real Pi runtime. That proof and the linked gentle-pi configuration UI work remain separate; no paid model invocation is required by these tests.
+

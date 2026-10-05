@@ -8,7 +8,7 @@ Stop provisioning `pi-mcp-adapter` for Pi and rely on Pi's built-in MCP support 
 
 ## Problem / Why
 
-Pi 0.99.0 ships `builtin:mcp`, which reads `mcp.json`. Per Pi `docs/mcp.md`, any installed extension that registers `/mcp` (such as `pi-mcp-adapter`) replaces the built-in support. Gentle AI still installs the adapter, so it now shadows the native runtime. Pi < 0.99.0 has no built-in MCP, so dropping the adapter requires a Pi version floor.
+Pi 0.99.0 ships `builtin:mcp`, which reads `mcp.json`. Per Pi `docs/mcp.md`, any installed extension that registers `/mcp` (such as `pi-mcp-adapter`) replaces the built-in support. Agent Smith still installs the adapter, so it now shadows the native runtime. Pi < 0.99.0 has no built-in MCP, so dropping the adapter requires a Pi version floor.
 
 ## Scope
 

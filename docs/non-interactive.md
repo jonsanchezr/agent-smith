@@ -1,14 +1,14 @@
-# Non-Interactive Mode
+﻿# Non-Interactive Mode
 
 > [!NOTE]
-> These docs track `main`, which may include unreleased changes. For the latest release, see the [v4.0.0 docs](https://github.com/Gentleman-Programming/gentle-ai/tree/v4.0.0/docs).
+> These docs track `main`, which may include unreleased changes. For the latest release, see the [v4.0.0 docs](https://github.com/jonsanchezr/agent-smith/tree/v4.0.0/docs).
 
 Use non-interactive mode for CI, scripts, or reproducible local setup.
 
 ## Command
 
 ```bash
-go run ./cmd/gentle-ai install [flags]
+go run ./cmd/agent-smith install [flags]
 ```
 
 ## Supported flags
@@ -23,7 +23,7 @@ go run ./cmd/gentle-ai install [flags]
 - `--opencode-background-subagents`, `--pi-background-subagents`: `auto`, `on`, or `off`. Without a flag, env var, or saved choice, `auto` resolves to `off` in non-interactive runs.
 - `--dry-run`: render plan without executing.
 
-`gentle-ai sync` accepts the same `--scope` and background-subagent flags and env vars. See [Usage](usage.md#cli-flags-sync).
+`agent-smith sync` accepts the same `--scope` and background-subagent flags and env vars. See [Usage](usage.md#cli-flags-sync).
 
 ## Environment variables
 
@@ -38,7 +38,7 @@ go run ./cmd/gentle-ai install [flags]
 
 ## Platform behavior
 
-The installer detects the platform automatically at runtime — there is no flag to override platform selection. The detected platform profile determines which package manager is used for install commands:
+The installer detects the platform automatically at runtime â€” there is no flag to override platform selection. The detected platform profile determines which package manager is used for install commands:
 
 | Platform | Package manager | Example install command |
 |---|---|---|
@@ -51,10 +51,10 @@ The `--dry-run` output includes a `Platform decision` line showing `os`, `distro
 
 ## Examples
 
-macOS (or any supported platform — same flags, platform is auto-detected):
+macOS (or any supported platform â€” same flags, platform is auto-detected):
 
 ```bash
-go run ./cmd/gentle-ai install \
+go run ./cmd/agent-smith install \
   --agent claude-code,opencode \
   --component engram,skills \
   --skill go-testing \
@@ -69,3 +69,4 @@ The flags are identical across platforms. Only the resolved install commands cha
 
 - Unknown or unsupported options fail fast with validation errors.
 - Running on an unsupported platform exits immediately before any install work begins.
+

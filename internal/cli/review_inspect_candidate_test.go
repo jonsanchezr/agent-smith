@@ -12,7 +12,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/reviewtransaction"
+	"github.com/jonsanchezr/agent-smith/v4/internal/reviewtransaction"
 )
 
 type inspectionCase struct {
@@ -331,3 +331,4 @@ func removeInspectionArg(args []string, name string) []string {
 	index := slices.Index(result, name)
 	return append(result[:index], result[index+2:]...)
 }
+

@@ -5,7 +5,7 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
 )
 
 func TestTopologicalSortOrdersDependenciesFirst(t *testing.T) {
@@ -149,3 +149,4 @@ func TestTopologicalSortDetectsCycles(t *testing.T) {
 		t.Fatalf("TopologicalSort() error = %v, want ErrDependencyCycle", err)
 	}
 }
+

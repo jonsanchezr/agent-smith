@@ -13,15 +13,15 @@ import (
 	"slices"
 	"strings"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/agents/capabilitymanifest"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/components/filemerge"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/system"
+	"github.com/jonsanchezr/agent-smith/v4/internal/agents/capabilitymanifest"
+	"github.com/jonsanchezr/agent-smith/v4/internal/components/filemerge"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
+	"github.com/jonsanchezr/agent-smith/v4/internal/system"
 )
 
 // pi-mcp-adapter is retired: Pi >= 0.99.0 ships built-in MCP support that
 // reads mcp.json, and any installed extension registering /mcp (such as
-// pi-mcp-adapter) replaces that built-in support. Gentle AI therefore never
+// pi-mcp-adapter) replaces that built-in support. Agent Smith therefore never
 // installs the adapter and removes it wherever it finds it.
 const (
 	retiredPiMCPAdapterPackage    = "npm:pi-mcp-adapter"
@@ -77,7 +77,7 @@ func ManagedPackageSources() []string {
 
 // UninstallPackageSources returns every Pi package source an uninstall should
 // remove: the managed sources plus the retired pi-mcp-adapter, which older
-// Gentle AI releases installed and which may still be present.
+// Agent Smith releases installed and which may still be present.
 func UninstallPackageSources() []string {
 	return append(ManagedPackageSources(), retiredPiMCPAdapterPackage)
 }
@@ -95,7 +95,7 @@ type Adapter struct {
 	statPath func(string) statResult
 }
 
-// CodeGraphPathSet declares the Pi paths owned or inspected by Gentle AI's
+// CodeGraphPathSet declares the Pi paths owned or inspected by Agent Smith's
 // optional CodeGraph integration. It intentionally contains no gentle-pi path.
 type CodeGraphPathSet struct {
 	AgentDir  string
@@ -109,10 +109,10 @@ type CodeGraphPathSet struct {
 // cross-contamination with the default global Pi manifest.
 func CodeGraphPaths(homeDir string) CodeGraphPathSet {
 	agentDir := AgentConfigPath(homeDir)
-	manifest := filepath.Join(homeDir, ".gentle-ai", "pi-codegraph.json")
+	manifest := filepath.Join(homeDir, ".agent-smith", "pi-codegraph.json")
 	if defaultDir := filepath.Join(ConfigPath(homeDir), "agent"); filepath.Clean(agentDir) != filepath.Clean(defaultDir) {
 		sum := sha256.Sum256([]byte(filepath.Clean(agentDir)))
-		manifest = filepath.Join(homeDir, ".gentle-ai", fmt.Sprintf("pi-codegraph-%x.json", sum[:8]))
+		manifest = filepath.Join(homeDir, ".agent-smith", fmt.Sprintf("pi-codegraph-%x.json", sum[:8]))
 	}
 	return CodeGraphPathSet{
 		AgentDir:  agentDir,
@@ -366,7 +366,7 @@ func ConfigPath(homeDir string) string { return filepath.Join(homeDir, ".pi") }
 
 // AgentConfigPath returns Pi's current agent-owned config directory path. It
 // honors PI_CODING_AGENT_DIR when set and non-blank, matching Pi's own
-// runtime override, so gentle-ai's install and sync operations target the
+// runtime override, so agent-smith's install and sync operations target the
 // same directory Pi itself reads and writes (for example gentle-shell's
 // isolated `~/.gentle-shell/agent` home). A "~" or "~/..." form always
 // expands against homeDir and stays contained there; an absolute or
@@ -605,7 +605,7 @@ func readPiJSONObject(path string) (map[string]any, error) {
 	return object, nil
 }
 
-// retainPiPackages returns the packages Gentle AI keeps in Pi's settings:
+// retainPiPackages returns the packages Agent Smith keeps in Pi's settings:
 // everything except the retired pi-mcp-adapter, the legacy subagent packages,
 // and the retired companion packages.
 func retainPiPackages(existing any) []any {
@@ -705,3 +705,4 @@ func defaultStat(path string) statResult {
 	}
 	return statResult{isDir: info.IsDir()}
 }
+

@@ -5,12 +5,12 @@ import (
 	"testing"
 
 	tea "github.com/charmbracelet/bubbletea"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/cli"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/pipeline"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/planner"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/system"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/tui/screens"
+	"github.com/jonsanchezr/agent-smith/v4/internal/cli"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
+	"github.com/jonsanchezr/agent-smith/v4/internal/pipeline"
+	"github.com/jonsanchezr/agent-smith/v4/internal/planner"
+	"github.com/jonsanchezr/agent-smith/v4/internal/system"
+	"github.com/jonsanchezr/agent-smith/v4/internal/tui/screens"
 )
 
 func piSDDReviewModel(background model.PiBackgroundIntent) Model {
@@ -154,3 +154,4 @@ func TestOpenCodeBackgroundPromptChainsIntoPiBackground(t *testing.T) {
 		t.Fatalf("opencode choice lost: %q/%q", state.BackgroundIntent, state.BackgroundPersist)
 	}
 }
+

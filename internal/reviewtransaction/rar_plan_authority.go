@@ -13,14 +13,14 @@ import (
 )
 
 const (
-	RARPlanAuthoritySchema = "gentle-ai.rar-plan-authority/v1"
+	RARPlanAuthoritySchema = "agent-smith.rar-plan-authority/v1"
 
-	VerificationFrozenPlanConsentSchema   = "gentle-ai.verification-frozen-plan-consent/v1"
-	VerificationEffectAuthorizationSchema = "gentle-ai.verification-effect-authorization/v1"
+	VerificationFrozenPlanConsentSchema   = "agent-smith.verification-frozen-plan-consent/v1"
+	VerificationEffectAuthorizationSchema = "agent-smith.verification-effect-authorization/v1"
 
-	rarPlanAuthorityDigestDomain              = "gentle-ai.rar-plan-authority-digest/v1"
-	verificationFrozenPlanConsentDigestDomain = "gentle-ai.verification-frozen-plan-consent-digest/v1"
-	verificationEffectAuthorizationDomain     = "gentle-ai.verification-effect-authorization-digest/v1"
+	rarPlanAuthorityDigestDomain              = "agent-smith.rar-plan-authority-digest/v1"
+	verificationFrozenPlanConsentDigestDomain = "agent-smith.verification-frozen-plan-consent-digest/v1"
+	verificationEffectAuthorizationDomain     = "agent-smith.verification-effect-authorization-digest/v1"
 )
 
 // RARPlanAuthority is the complete RAR-owned pre-execution plan preimage.
@@ -602,3 +602,4 @@ func rarPlanAuthorityDigest(authority RARPlanAuthority) (string, error) {
 	_, _ = hash.Write(payload)
 	return "sha256:" + hex.EncodeToString(hash.Sum(nil)), nil
 }
+

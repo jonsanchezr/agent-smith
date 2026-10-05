@@ -14,7 +14,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/backup"
+	"github.com/jonsanchezr/agent-smith/v4/internal/backup"
 )
 
 // TestPrepareBackupStep_InstallWritesMetadataToManifest verifies that when
@@ -32,7 +32,7 @@ func TestPrepareBackupStep_InstallWritesMetadataToManifest(t *testing.T) {
 		t.Fatalf("WriteFile config: %v", err)
 	}
 
-	snapshotDir := filepath.Join(home, ".gentle-ai", "backups",
+	snapshotDir := filepath.Join(home, ".agent-smith", "backups",
 		time.Now().UTC().Format("20060102150405.000000000"))
 	state := &runtimeState{}
 
@@ -89,7 +89,7 @@ func TestPrepareBackupStep_SyncWritesMetadataToManifest(t *testing.T) {
 		t.Fatalf("WriteFile config: %v", err)
 	}
 
-	snapshotDir := filepath.Join(home, ".gentle-ai", "backups",
+	snapshotDir := filepath.Join(home, ".agent-smith", "backups",
 		time.Now().UTC().Format("20060102150405.000000001"))
 	state := &runtimeState{}
 
@@ -136,7 +136,7 @@ func TestPrepareBackupStep_NoMetadataWhenSourceEmpty(t *testing.T) {
 		t.Fatalf("WriteFile config: %v", err)
 	}
 
-	snapshotDir := filepath.Join(home, ".gentle-ai", "backups",
+	snapshotDir := filepath.Join(home, ".agent-smith", "backups",
 		time.Now().UTC().Format("20060102150405.000000002"))
 	state := &runtimeState{}
 
@@ -167,3 +167,4 @@ func TestPrepareBackupStep_NoMetadataWhenSourceEmpty(t *testing.T) {
 		t.Errorf("manifest.CreatedByVersion = %q, want empty when not provided", manifest.CreatedByVersion)
 	}
 }
+

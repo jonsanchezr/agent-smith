@@ -8,7 +8,7 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/reviewtransaction"
+	"github.com/jonsanchezr/agent-smith/v4/internal/reviewtransaction"
 )
 
 // TestRelayedCandidateDeclineNeverAuthorizesLaterGateDelivery supersedes
@@ -42,7 +42,7 @@ func TestRelayedCandidateDeclineNeverAuthorizesLaterGateDelivery(t *testing.T) {
 	} else if _, err := store.Load(); !errors.Is(err, os.ErrNotExist) {
 		t.Fatalf("declined candidate created review lineage: %v", err)
 	}
-	if _, err := os.Stat(filepath.Join(repo, ".git", "gentle-ai", "review-transactions", "v2", "review-candidate-decline", "receipt.json")); !errors.Is(err, os.ErrNotExist) {
+	if _, err := os.Stat(filepath.Join(repo, ".git", "agent-smith", "review-transactions", "v2", "review-candidate-decline", "receipt.json")); !errors.Is(err, os.ErrNotExist) {
 		t.Fatalf("declined candidate created receipt: %v", err)
 	}
 
@@ -84,3 +84,4 @@ func TestCandidateDeclineNeverAuthorizesRelease(t *testing.T) {
 	}
 	assertEnabledUnmanagedGatePayload(t, output.Bytes(), reviewtransaction.GateRelease)
 }
+

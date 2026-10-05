@@ -1,6 +1,6 @@
-[Unit]
+﻿[Unit]
 Description=VictoriaMetrics (single node) for gentle-telemetry runtime metrics
-Documentation=https://github.com/Gentleman-Programming/gentle-ai/blob/main/docs/telemetry-collector.md
+Documentation=https://github.com/jonsanchezr/agent-smith/blob/main/docs/telemetry-collector.md
 After=network-online.target gentle-telemetry.service
 Wants=network-online.target
 
@@ -71,3 +71,4 @@ UMask=0077
 
 [Install]
 WantedBy=multi-user.target
+

@@ -13,11 +13,11 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/reviewtransaction"
+	"github.com/jonsanchezr/agent-smith/v4/internal/reviewtransaction"
 	jsonschema "github.com/santhosh-tekuri/jsonschema/v6"
 )
 
-const capabilityFixtureExecutable = "gentle-ai capability fixture\n"
+const capabilityFixtureExecutable = "agent-smith capability fixture\n"
 
 func TestReviewCapabilitiesMatchesConformanceFixtureOutsideRepository(t *testing.T) {
 	fixturePath, err := filepath.Abs(filepath.Join("..", "..", "contracts", "review-integration", "v1", "fixtures", "capabilities-v1.5.fixture.json"))
@@ -28,7 +28,7 @@ func TestReviewCapabilitiesMatchesConformanceFixtureOutsideRepository(t *testing
 	if err != nil {
 		t.Fatal(err)
 	}
-	executable := filepath.Join(t.TempDir(), "gentle-ai-fixture")
+	executable := filepath.Join(t.TempDir(), "agent-smith-fixture")
 	if err := os.WriteFile(executable, []byte(capabilityFixtureExecutable), 0o755); err != nil {
 		t.Fatal(err)
 	}
@@ -130,7 +130,7 @@ func TestReviewCapabilitiesV26AdvertisementIsCurrent(t *testing.T) {
 	if got.Schema != ReviewIntegrationCapabilitiesSchemaV26 || got.Protocol != (ReviewCapabilitiesProtocol{Major: 2, Minor: 6}) ||
 		!slices.Contains(got.Schemas, ReviewIntegrationStatusSchemaV5) || !slices.Contains(got.Schemas, ReviewIntegrationStatusSchemaV6) ||
 		!slices.Contains(got.Schemas, ReviewIntegrationStatusSchemaV7) || !slices.Contains(got.Schemas, ReviewIntegrationStatusSchemaV8) ||
-		!slices.Contains(got.Schemas, "gentle-ai.review-intended-untracked-selection/v1") || !slices.Contains(got.Schemas, ReviewIntegrationStartSchema) || !slices.Contains(got.Schemas, ReviewIntegrationConsentSchemaV3) ||
+		!slices.Contains(got.Schemas, "agent-smith.review-intended-untracked-selection/v1") || !slices.Contains(got.Schemas, ReviewIntegrationStartSchema) || !slices.Contains(got.Schemas, ReviewIntegrationConsentSchemaV3) ||
 		slices.Contains(got.Schemas, ReviewIntegrationCapabilitiesSchemaV23) || slices.Contains(got.Schemas, ReviewIntegrationCapabilitiesSchemaV24) || slices.Contains(got.Schemas, ReviewIntegrationCapabilitiesSchemaV25) {
 		t.Fatalf("current v2 capabilities advertisement = %#v", got)
 	}
@@ -190,8 +190,8 @@ func validateReviewCapabilitiesSchema(t *testing.T, name, id string, fixture []b
 	}
 	compiler := jsonschema.NewCompiler()
 	for uri, payload := range map[string][]byte{
-		"https://gentle-ai.dev/contracts/review-integration/v1/schemas/capabilities-v1.4.schema.json": v14,
-		"https://gentle-ai.dev/contracts/review-integration/v2/schemas/capabilities-v2.3.schema.json": v23,
+		"https://agent-smith.dev/contracts/review-integration/v1/schemas/capabilities-v1.4.schema.json": v14,
+		"https://agent-smith.dev/contracts/review-integration/v2/schemas/capabilities-v2.3.schema.json": v23,
 		id: capabilities,
 	} {
 		var document any
@@ -225,7 +225,7 @@ func TestReviewCapabilitiesContractValidationIsExactAndReadOnly(t *testing.T) {
 		{name: "supported", contract: ReviewIntegrationContractV1},
 		{name: "native Git", contract: ReviewIntegrationContractV2},
 		{name: "empty", contract: "", wantErr: true},
-		{name: "future major", contract: "gentle-ai.review-integration/v3", wantErr: true},
+		{name: "future major", contract: "agent-smith.review-integration/v3", wantErr: true},
 		{name: "surrounding whitespace", contract: " " + ReviewIntegrationContractV1, wantErr: true},
 	}
 	for _, tt := range tests {
@@ -252,7 +252,7 @@ func TestReviewCapabilitiesContractValidationIsExactAndReadOnly(t *testing.T) {
 }
 
 func TestReviewCapabilitiesAdvertisesOnlyNativeSurface(t *testing.T) {
-	executable := filepath.Join(t.TempDir(), "gentle-ai-fixture")
+	executable := filepath.Join(t.TempDir(), "agent-smith-fixture")
 	if err := os.WriteFile(executable, []byte(capabilityFixtureExecutable), 0o755); err != nil {
 		t.Fatal(err)
 	}
@@ -277,7 +277,7 @@ func TestReviewCapabilitiesAdvertisesOnlyNativeSurface(t *testing.T) {
 	if !slices.Contains(result.Schemas, reviewResultArtifactSchema) || !slices.Contains(result.Schemas, ReviewIntegrationOperationSchema) || !slices.Contains(result.Schemas, ReviewIntegrationStartSchemaV2) || !slices.Contains(result.Schemas, ReviewIntegrationStatusSchemaV2) || !slices.Contains(result.Schemas, ReviewIntegrationProjectionSchema) || !slices.Contains(result.Schemas, ReviewIntegrationRepairSchema) || !slices.Contains(result.Schemas, reviewtransaction.AuthorityRepairAssessmentSchema) {
 		t.Fatalf("capability schemas do not advertise the negotiated provider surface: %v", result.Schemas)
 	}
-	if result.Bootstrap == nil || result.Bootstrap.Command != "gentle-ai review status --cwd <repo> --contract gentle-ai.review-integration/v1 --next-transition" ||
+	if result.Bootstrap == nil || result.Bootstrap.Command != "agent-smith review status --cwd <repo> --contract agent-smith.review-integration/v1 --next-transition" ||
 		result.Bootstrap.RequiredFeature != "native_next_transition" || result.Bootstrap.UnsupportedOutcome != "unsupported-capability" || !result.Bootstrap.ParentOnly ||
 		len(result.Bootstrap.TargetSelectorVariants) != 4 {
 		t.Fatalf("capability bootstrap = %#v", result.Bootstrap)
@@ -581,7 +581,7 @@ func stubReviewCapabilityIdentity(t *testing.T, executable string) func() {
 	reviewCapabilitiesBuildInfoReader = func() (*debug.BuildInfo, bool) {
 		return &debug.BuildInfo{
 			GoVersion: "go1.25.10",
-			Main:      debug.Module{Path: "github.com/gentleman-programming/gentle-ai/v3", Version: "v2.1.7"},
+			Main:      debug.Module{Path: "github.com/jonsanchezr/agent-smith/v3", Version: "v2.1.7"},
 			Settings: []debug.BuildSetting{
 				{Key: "vcs", Value: "git"},
 				{Key: "vcs.revision", Value: "0123456789abcdef0123456789abcdef01234567"},
@@ -619,7 +619,7 @@ func findCapabilityForbiddenField(value any, forbidden map[string]struct{}) stri
 }
 
 func TestReviewCapabilitiesFeatureRequirementsAreExplicit(t *testing.T) {
-	executable := filepath.Join(t.TempDir(), "gentle-ai-fixture")
+	executable := filepath.Join(t.TempDir(), "agent-smith-fixture")
 	if err := os.WriteFile(executable, []byte(capabilityFixtureExecutable), 0o755); err != nil {
 		t.Fatal(err)
 	}
@@ -666,7 +666,7 @@ func TestReviewCapabilitiesFeatureRequirementsAreExplicit(t *testing.T) {
 }
 
 func TestReviewCapabilitiesBootstrapIsOptionalForExistingV1Consumers(t *testing.T) {
-	executable := filepath.Join(t.TempDir(), "gentle-ai-fixture")
+	executable := filepath.Join(t.TempDir(), "agent-smith-fixture")
 	if err := os.WriteFile(executable, []byte(capabilityFixtureExecutable), 0o755); err != nil {
 		t.Fatal(err)
 	}
@@ -738,3 +738,4 @@ func TestReviewIntegrationDocumentationMatchesPublishedArtifactInventory(t *test
 		}
 	}
 }
+

@@ -327,7 +327,7 @@ func requireAtomicLastCaptureReviewerResults(observation Observation, lenses []s
 		return fmt.Errorf("decode final reviewer capture closure: %w", err)
 	}
 	expectedLenses := []string{"review-risk", "review-resilience", "review-readability", "review-reliability"}
-	if closure.Schema != "gentle-ai.review-last-event-closure/v1" || closure.State != "approved" || len(closure.Acknowledgement) == 0 ||
+	if closure.Schema != "agent-smith.review-last-event-closure/v1" || closure.State != "approved" || len(closure.Acknowledgement) == 0 ||
 		len(lenses) != len(expectedLenses) || len(closure.ReviewerResults) != len(expectedLenses) {
 		return fmt.Errorf("final reviewer capture closure = %+v, want approved acknowledgement with every canonical selected-lens result", closure)
 	}
@@ -526,7 +526,7 @@ func captureCorrectionPlanFor(r *journeyRun, lineageID string, correctionLines i
 	if err := json.Unmarshal([]byte(strings.TrimSpace(observation.Stdout)), &captured); err != nil {
 		return fmt.Errorf("decode correction-plan capture: %w", err)
 	}
-	if captured.Schema != "gentle-ai.review-last-event-closure/v1" || captured.Operation != "review.capture-correction-plan" ||
+	if captured.Schema != "agent-smith.review-last-event-closure/v1" || captured.Operation != "review.capture-correction-plan" ||
 		captured.LineageID != lineageID || captured.State != "correction_required" {
 		return fmt.Errorf("correction-plan capture = %+v", captured)
 	}
@@ -684,3 +684,4 @@ func waveThreeJourneys() []Journey {
 		},
 	}
 }
+

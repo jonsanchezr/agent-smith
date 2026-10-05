@@ -23,7 +23,7 @@ import (
 // selector names — the sibling stays byte-identical.
 //
 // The two fixtures are byte-identical copies of compact review authority
-// written by the released gentle-ai v2.2.0 binary (see
+// written by the released agent-smith v2.2.0 binary (see
 // testdata/issue2995/PROVENANCE.md for the tarball, tag, and per-record
 // SHA-256 pins; a drifted fixture proves nothing, so the fixture step
 // re-hashes both against their pins).
@@ -264,3 +264,4 @@ func issue2995SelectedSelector(sandbox *Sandbox) ([]string, error) {
 	}
 	return fields, nil
 }
+

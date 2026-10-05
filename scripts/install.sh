@@ -1,24 +1,24 @@
-#!/usr/bin/env bash
+﻿#!/usr/bin/env bash
 set -euo pipefail
 
 # ============================================================================
-# Gentle-AI — Install Script
+# agent-smith â€” Install Script
 # Ecosystem, Frameworks, Workflows for AI coding agents.
 #
 # Usage:
-#   curl -sL https://raw.githubusercontent.com/Gentleman-Programming/gentle-ai/main/scripts/install.sh | bash
+#   curl -sL https://raw.githubusercontent.com/jonsanchezr/agent-smith/main/scripts/install.sh | bash
 #
 # Or download and run:
-#   curl -sLO https://raw.githubusercontent.com/Gentleman-Programming/gentle-ai/main/scripts/install.sh
+#   curl -sLO https://raw.githubusercontent.com/jonsanchezr/agent-smith/main/scripts/install.sh
 #   chmod +x install.sh
 #   ./install.sh
 # ============================================================================
 
-GITHUB_OWNER="Gentleman-Programming"
-GITHUB_REPO="gentle-ai"
-BINARY_NAME="gentle-ai"
-BREW_TAP="Gentleman-Programming/homebrew-tap"
-BREW_FORMULA_REF="gentleman-programming/tap/${BINARY_NAME}"
+GITHUB_OWNER="jonsanchezr"
+GITHUB_REPO="agent-smith"
+BINARY_NAME="agent-smith"
+BREW_TAP="jonsanchezr/homebrew-tap"
+BREW_FORMULA_REF="jonsanchezr/tap/${BINARY_NAME}"
 
 # ============================================================================
 # Color support
@@ -64,7 +64,7 @@ print_homebrew_failure_help() {
 
     if [[ "$lower" == *"untrusted tap"* || "$lower" == *"tap trust is required"* || "$lower" == *"homebrew_require_tap_trust"* ]]; then
         warn "Homebrew requires explicit trust for external taps."
-        echo "Trust only the Gentle AI formula, then retry:" >&2
+        echo "Trust only the Agent Smith formula, then retry:" >&2
         echo "  brew trust --formula ${BREW_FORMULA_REF}" >&2
         echo "  brew upgrade ${BINARY_NAME}" >&2
     fi
@@ -88,21 +88,21 @@ print_homebrew_failure_help() {
 
 show_help() {
     cat <<EOF
-${BOLD}Gentle-AI installer${NC}
+${BOLD}agent-smith installer${NC}
 
 Usage: install.sh [OPTIONS]
 
 Options:
   --method METHOD   Force install method: brew, go, binary (default: auto-detect)
-  --channel CHANNEL Gentle AI channel: stable (default), beta, or nightly (env: GENTLE_AI_CHANNEL)
+  --channel CHANNEL Agent Smith channel: stable (default), beta, or nightly (env: GENTLE_AI_CHANNEL)
   --dir DIR         Custom install directory for binary method
   --insecure        Skip checksum verification (not recommended)
   -h, --help        Show this help
 
 Install methods (auto-detected in priority order):
-  1. brew    — Homebrew tap (recommended)
-  2. go      — go install from source
-  3. binary  — Pre-built binary from GitHub Releases
+  1. brew    â€” Homebrew tap (recommended)
+  2. go      â€” go install from source
+  3. binary  â€” Pre-built binary from GitHub Releases
 
 Examples:
   curl -sL https://raw.githubusercontent.com/${GITHUB_OWNER}/${GITHUB_REPO}/main/scripts/install.sh | bash
@@ -148,8 +148,8 @@ detect_platform() {
 # GoReleaser v2 {{ .Os }} produces GOOS values (lowercase: darwin, linux)
 # GoReleaser {{ .Arch }} produces GOARCH values (amd64, arm64)
 # Examples:
-#   gentle-ai_1.0.0_darwin_arm64.tar.gz
-#   gentle-ai_1.0.0_linux_amd64.tar.gz
+#   agent-smith_1.0.0_darwin_arm64.tar.gz
+#   agent-smith_1.0.0_linux_amd64.tar.gz
 # ============================================================================
 
 get_archive_name() {
@@ -188,10 +188,10 @@ check_prerequisites() {
 detect_install_method() {
     if [ "${CHANNEL}" = "beta" ]; then
         if [ -n "${FORCE_METHOD:-}" ] && [ "${FORCE_METHOD}" != "go" ]; then
-            fatal "--channel beta installs Gentle AI from main and only supports --method go"
+            fatal "--channel beta installs Agent Smith from main and only supports --method go"
         fi
         INSTALL_METHOD="go"
-        info "Using beta channel — will install ${BINARY_NAME} from main via go install"
+        info "Using beta channel â€” will install ${BINARY_NAME} from main via go install"
         return
     fi
 
@@ -214,7 +214,7 @@ detect_install_method() {
     # a stale version.
     if command -v brew &>/dev/null; then
         INSTALL_METHOD="brew"
-        success "Homebrew found — will install via brew tap"
+        success "Homebrew found â€” will install via brew tap"
     else
         INSTALL_METHOD="binary"
         info "Will download pre-built binary from GitHub Releases"
@@ -269,8 +269,8 @@ install_brew() {
 # commit SHA for beta) declares the module's import path. Reading it there
 # is the only way to stay correct across future major versions: a /v3
 # installer hard-codes the answer and breaks the day the repo bumps to /v4.
-# The helpers below fail closed on every signal — non-200, empty body, or
-# no `module` line — so a transient ref-mismatch aborts the installer
+# The helpers below fail closed on every signal â€” non-200, empty body, or
+# no `module` line â€” so a transient ref-mismatch aborts the installer
 # instead of silently installing from the wrong path.
 # ============================================================================
 
@@ -290,7 +290,7 @@ get_main_commit_sha() {
         fatal "GitHub API returned HTTP $http_code resolving main commit"
     fi
 
-    # Parse "sha":"<hex>" — first match wins, identical style to
+    # Parse "sha":"<hex>" â€” first match wins, identical style to
     # get_latest_version's tag_name extraction below.
     local sha
     sha="$(printf '%s\n' "$body" | sed -n 's/.*"sha"[[:space:]]*:[[:space:]]*"\([^"]*\)".*/\1/p' | head -1)"
@@ -323,7 +323,7 @@ resolve_module_path() {
         fatal "Empty go.mod body at ref ${ref}"
     fi
 
-    # First `module ...` line — Go modules accept only one.
+    # First `module ...` line â€” Go modules accept only one.
     MODULE_PATH="$(printf '%s\n' "$body" | sed -n 's/^module \(.*\)$/\1/p' | head -1)"
 
     if [ -z "$MODULE_PATH" ]; then
@@ -342,15 +342,15 @@ install_go() {
     # bash 3.2, so piping `| bash` would fail with "bad substitution". Kept
     # in place (per the D1 design intent: owner_lc stays available to
     # compose the env pattern) even though the current implementation
-    # derives the pattern from ${module} directly — the previous code
-    # hard-coded "github.com/gentleman-programming/..." here, which the
+    # derives the pattern from ${module} directly â€” the previous code
+    # hard-coded "github.com/jonsanchezr/..." here, which the
     # D1 forbids.
     local owner_lc
     owner_lc="$(printf '%s' "$GITHUB_OWNER" | tr '[:upper:]' '[:lower:]')"
 
     # Resolve the ref first (release tag for stable, main SHA for beta), then
     # derive the module path from go.mod at that ref. The result replaces the
-    # previous hard-coded "/v3" — a future /v4 source must keep working
+    # previous hard-coded "/v3" â€” a future /v4 source must keep working
     # without touching this script.
     local module ref
     if [ "${CHANNEL}" = "beta" ]; then
@@ -440,7 +440,7 @@ get_latest_version() {
         fatal "GitHub API returned HTTP $http_code. Rate limited? Try again later or use --method brew/go"
     fi
 
-    # Extract tag_name — works without jq
+    # Extract tag_name â€” works without jq
     LATEST_VERSION="$(echo "$body" | sed -n 's/.*"tag_name"[[:space:]]*:[[:space:]]*"\([^"]*\)".*/\1/p' | head -1)"
 
     if [ -z "$LATEST_VERSION" ]; then
@@ -463,7 +463,7 @@ install_binary() {
     local download_url="https://github.com/${GITHUB_OWNER}/${GITHUB_REPO}/releases/download/${LATEST_VERSION}/${archive_name}"
     local checksums_url="https://github.com/${GITHUB_OWNER}/${GITHUB_REPO}/releases/download/${LATEST_VERSION}/checksums.txt"
 
-    # Create temp directory — clean up on exit
+    # Create temp directory â€” clean up on exit
     local tmpdir
     tmpdir="$(mktemp -d)"
     trap '[ -n "${tmpdir:-}" ] && rm -rf "$tmpdir"' EXIT
@@ -483,7 +483,7 @@ install_binary() {
 
     success "Downloaded ${archive_name} (${file_size} bytes)"
 
-    # Download and verify checksum — fail closed unless --insecure is set
+    # Download and verify checksum â€” fail closed unless --insecure is set
     info "Verifying checksum..."
     if curl -sL -o "${tmpdir}/checksums.txt" "$checksums_url"; then
         local expected_checksum
@@ -497,7 +497,7 @@ install_binary() {
                 actual_checksum="$(shasum -a 256 "${tmpdir}/${archive_name}" | awk '{print $1}')"
             else
                 if [ "$INSECURE" = "true" ]; then
-                    warn "No sha256sum or shasum found — checksum verification skipped (--insecure)"
+                    warn "No sha256sum or shasum found â€” checksum verification skipped (--insecure)"
                     actual_checksum="$expected_checksum"
                 else
                     fatal "No sha256sum or shasum tool found. Cannot verify checksum.\nInstall coreutils (sha256sum) or use --insecure to skip (not recommended)."
@@ -510,14 +510,14 @@ install_binary() {
             success "Checksum verified"
         else
             if [ "$INSECURE" = "true" ]; then
-                warn "Archive '${archive_name}' not found in checksums.txt — checksum verification skipped (--insecure)"
+                warn "Archive '${archive_name}' not found in checksums.txt â€” checksum verification skipped (--insecure)"
             else
                 fatal "Archive '${archive_name}' not found in checksums.txt. Refusing to install unverified binary.\nUse --insecure to skip (not recommended)."
             fi
         fi
     else
         if [ "$INSECURE" = "true" ]; then
-            warn "Could not download checksums.txt — checksum verification skipped (--insecure)"
+            warn "Could not download checksums.txt â€” checksum verification skipped (--insecure)"
         else
             fatal "Could not download checksums.txt from:\n  ${checksums_url}\nRefusing to install without integrity verification.\nUse --insecure to skip (not recommended)."
         fi
@@ -551,7 +551,7 @@ install_binary() {
 
     # Atomic install: stage next to the destination and rename in place.
     # POSIX rename within one filesystem is atomic, so the previous binary
-    # either survives intact or is fully replaced — never half-written.
+    # either survives intact or is fully replaced â€” never half-written.
     local staging="${install_dir}/${BINARY_NAME}.staging.$$"
     local final="${install_dir}/${BINARY_NAME}"
     trap 'rm -f -- "$staging" 2>/dev/null || true' EXIT TERM INT
@@ -632,7 +632,7 @@ print_banner() {
     echo " | |_| |  __/ | | | |_| |  __/_____/ ___ \ | | "
     echo "  \____|\___|_| |_|\__|_|\___|    /_/   \_\___|"
     echo -e "${NC}"
-    echo -e "  ${DIM}Gentle-AI — Ecosystem, Frameworks, Workflows${NC}"
+    echo -e "  ${DIM}agent-smith â€” Ecosystem, Frameworks, Workflows${NC}"
     echo ""
 }
 
@@ -725,8 +725,8 @@ main() {
 # Execution guard: run main when this script is executed, skip when sourced.
 #
 # Two execution paths must reach main:
-#   1. `bash install.sh ...` / `./install.sh ...` — BASH_SOURCE[0] equals $0.
-#   2. `curl -sL .../install.sh | bash` — bash reads the program from stdin,
+#   1. `bash install.sh ...` / `./install.sh ...` â€” BASH_SOURCE[0] equals $0.
+#   2. `curl -sL .../install.sh | bash` â€” bash reads the program from stdin,
 #      so BASH_SOURCE[0] is EMPTY and $0 is "bash". Skipping main here would
 #      silently no-op the installer's documented primary invocation, so the
 #      empty-BASH_SOURCE case must also run main.
@@ -736,3 +736,4 @@ main() {
 if [ -z "${BASH_SOURCE[0]:-}" ] || [ "${BASH_SOURCE[0]}" = "$0" ]; then
     main "$@"
 fi
+

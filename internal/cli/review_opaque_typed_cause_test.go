@@ -11,7 +11,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/reviewtransaction"
+	"github.com/jonsanchezr/agent-smith/v4/internal/reviewtransaction"
 )
 
 // The defect these tests pin: on the provider-issued repository-context path
@@ -241,7 +241,7 @@ func nativeNotExistCause(t *testing.T) string {
 
 // opaqueNativeCause still serves one call site, and its two arms are safe for
 // different reasons. The Windows arm expects "unsafe RAR authority path",
-// which gentle-ai produces itself. The Unix arm does pin an errno text, "not
+// which agent-smith produces itself. The Unix arm does pin an errno text, "not
 // a directory", and is safe because Go renders errno 20 from its own
 // compile-time table rather than from the installation. Neither arm reaches
 // FormatMessage, which is what the replaced assertions depended on.
@@ -270,7 +270,7 @@ func assertPairwiseDistinct(t *testing.T, messages map[string]string, want int) 
 }
 
 func reviewCLICompactStoreDir(repo, lineage string) string {
-	return filepath.Join(repo, ".git", "gentle-ai", "review-transactions", "v2", lineage)
+	return filepath.Join(repo, ".git", "agent-smith", "review-transactions", "v2", lineage)
 }
 
 func reviewCLICompactStatePath(repo, lineage string) string {
@@ -305,3 +305,4 @@ func admissibleOpaqueReviewerResult(t *testing.T, binding []string, evidence str
 	})
 	return path
 }
+

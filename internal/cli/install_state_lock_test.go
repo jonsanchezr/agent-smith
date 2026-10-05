@@ -8,10 +8,10 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/reviewtransaction"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/state"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/statecoord"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
+	"github.com/jonsanchezr/agent-smith/v4/internal/reviewtransaction"
+	"github.com/jonsanchezr/agent-smith/v4/internal/state"
+	"github.com/jonsanchezr/agent-smith/v4/internal/statecoord"
 )
 
 func TestPersistSyncManagedAssetStateReReadsLatestStateAfterLockContention(t *testing.T) {
@@ -46,7 +46,7 @@ func TestPersistSyncManagedAssetStateRefusesCorruptLatestState(t *testing.T) {
 	if err := os.WriteFile(state.Path(home), []byte("{not valid json\n"), 0o644); err != nil {
 		t.Fatal(err)
 	}
-	if err := persistSyncManagedAssetStateWithBackground(home, model.Selection{}, "sha256:current-writer", "", ""); err == nil || !strings.Contains(err.Error(), "run `gentle-ai install`") {
+	if err := persistSyncManagedAssetStateWithBackground(home, model.Selection{}, "sha256:current-writer", "", ""); err == nil || !strings.Contains(err.Error(), "run `agent-smith install`") {
 		t.Fatalf("corrupt sync state persistence error = %v", err)
 	}
 }
@@ -138,3 +138,4 @@ func TestInstallStateLockPathIsStableAcrossStateDirectoryCreation(t *testing.T) 
 		t.Fatal("a home that does not resolve must fail closed instead of guessing a lock path")
 	}
 }
+

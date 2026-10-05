@@ -51,7 +51,7 @@ func example() int { return 1 }
 import (
 	"context"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/reviewtransaction"
+	"github.com/jonsanchezr/agent-smith/v4/internal/reviewtransaction"
 )
 
 func example(ctx context.Context) {
@@ -130,3 +130,4 @@ func scanReviewOfferAbsenceCLITree(fileSet *token.FileSet, tree *ast.File) []str
 	})
 	return violations
 }
+

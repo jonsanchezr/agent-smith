@@ -8,7 +8,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/pathidentity"
+	"github.com/jonsanchezr/agent-smith/v4/internal/pathidentity"
 )
 
 func TestReviewLifecycleBootstrapsGenuinelyUnversionedWorkspace(t *testing.T) {
@@ -128,3 +128,4 @@ func assertLocalGitBootstrapPreservedWorkspace(t *testing.T, repo, candidate str
 		t.Fatalf("bootstrap created HEAD %q, want unborn HEAD", output)
 	}
 }
+

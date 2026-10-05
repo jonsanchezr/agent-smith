@@ -9,9 +9,9 @@ import (
 	"runtime"
 	"strings"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/agents/capabilitymanifest"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/system"
+	"github.com/jonsanchezr/agent-smith/v4/internal/agents/capabilitymanifest"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
+	"github.com/jonsanchezr/agent-smith/v4/internal/system"
 )
 
 type Adapter struct {
@@ -84,7 +84,7 @@ func (a *Adapter) SystemPromptDir(homeDir string) string {
 }
 
 func (a *Adapter) SystemPromptFile(homeDir string) string {
-	return filepath.Join(a.SystemPromptDir(homeDir), "gentle-ai.instructions.md")
+	return filepath.Join(a.SystemPromptDir(homeDir), "agent-smith.instructions.md")
 }
 
 func (a *Adapter) SkillsDir(homeDir string) string {
@@ -193,3 +193,4 @@ type AgentNotInstallableError struct {
 func (e AgentNotInstallableError) Error() string {
 	return "agent " + string(e.Agent) + " is a desktop app and cannot be installed via CLI"
 }
+

@@ -40,7 +40,7 @@ type NpmDownloads struct {
 }
 
 // Downloads holds external, public download counts (npm, GitHub release
-// assets) — not telemetry from any gentle-ai install.
+// assets) — not telemetry from any agent-smith install.
 type Downloads struct {
 	Npm    map[string]NpmDownloads `json:"npm"`
 	Github map[string]int64        `json:"github"`
@@ -275,3 +275,4 @@ func startOfISOWeek(t time.Time) time.Time {
 	}
 	return t.AddDate(0, 0, -offset)
 }
+

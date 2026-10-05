@@ -1,25 +1,25 @@
-#!/usr/bin/env bash
+﻿#!/usr/bin/env bash
 # Installs and starts the gentle-telemetry collector on an AlmaLinux/RHEL 9
 # VPS (cPanel/WHM + Apache, not Caddy): the binary, systemd units (service,
-# backup service, backup timer), and — with --domain — a rendered Apache
+# backup service, backup timer), and â€” with --domain â€” a rendered Apache
 # vhost template for the operator to append by hand.
 #
 # Subdomains on the reference server are explicit <VirtualHost> blocks
 # appended to /etc/apache2/conf.d/includes/post_virtualhost_global.conf,
-# not cPanel accounts — an EasyApache "userdata" include is never loaded
+# not cPanel accounts â€” an EasyApache "userdata" include is never loaded
 # for them. This script never edits that file itself; see the printed
 # steps at the end and docs/telemetry-collector.md.
 #
 # Usage:
 #   sudo ./install.sh --release-tag v0.1.0
-#   sudo ./install.sh --local-source /path/to/gentle-ai/checkout
-#   sudo ./install.sh --local-source /path/to/gentle-ai/checkout \
+#   sudo ./install.sh --local-source /path/to/agent-smith/checkout
+#   sudo ./install.sh --local-source /path/to/agent-smith/checkout \
 #       --domain telemetry.example.com --with-grafana
-#   sudo ./install.sh --local-source /path/to/gentle-ai/checkout \
+#   sudo ./install.sh --local-source /path/to/agent-smith/checkout \
 #       --with-victoria-metrics --with-grafana
 #
 # gentle-telemetry (cmd/gentle-telemetry) is not yet wired into
-# .goreleaser.yaml — see docs/telemetry-collector.md for why — so there is
+# .goreleaser.yaml â€” see docs/telemetry-collector.md for why â€” so there is
 # no published release asset today. Use --local-source to build from a
 # checkout until that changes; --release-tag is kept for when it does.
 #
@@ -34,7 +34,7 @@
 # see docs/telemetry-collector.md#grafana-dashboards.
 set -euo pipefail
 
-REPO="Gentleman-Programming/gentle-ai"
+REPO="jonsanchezr/agent-smith"
 RELEASE_TAG=""
 LOCAL_SOURCE=""
 WITH_GRAFANA="false"
@@ -55,7 +55,7 @@ APACHE_INCLUDE_FILE="/etc/apache2/conf.d/includes/post_virtualhost_global.conf"
 RENDERED_VHOST="/root/telemetry-vhost.conf.rendered"
 GRAFANA_INI="/etc/grafana/grafana.ini"
 GRAFANA_PROVISIONING_DIR="/etc/grafana/provisioning"
-GRAFANA_DASHBOARD_DIR="${GRAFANA_PROVISIONING_DIR}/dashboards/gentle-ai"
+GRAFANA_DASHBOARD_DIR="${GRAFANA_PROVISIONING_DIR}/dashboards/agent-smith"
 GRAFANA_ADMIN_PASSWORD_FILE="/etc/grafana/admin-password"
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
@@ -446,7 +446,7 @@ set_ini_kv() {
 	' "${file}" >"${file}.tmp"
 	# The redirection above creates ${file}.tmp fresh under the script's
 	# own umask, and mv would otherwise replace ${file}'s inode with that
-	# looser mode/ownership — silently widening access to a file that can
+	# looser mode/ownership â€” silently widening access to a file that can
 	# hold the Grafana admin password. Carry over the original file's mode
 	# and owner first, falling back to a restrictive default if it somehow
 	# does not exist yet.
@@ -510,7 +510,7 @@ EOF
 		install -m 0644 "${SCRIPT_DIR}/grafana/provisioning/datasources/victoria-metrics.yaml" "${GRAFANA_PROVISIONING_DIR}/datasources/victoria-metrics.yaml"
 	fi
 	install -m 0644 "${SCRIPT_DIR}/grafana/provisioning/dashboards/telemetry.yaml" "${GRAFANA_PROVISIONING_DIR}/dashboards/telemetry.yaml"
-	install -m 0644 "${SCRIPT_DIR}/grafana/dashboards/gentle-ai-usage.json" "${GRAFANA_DASHBOARD_DIR}/gentle-ai-usage.json"
+	install -m 0644 "${SCRIPT_DIR}/grafana/dashboards/agent-smith-usage.json" "${GRAFANA_DASHBOARD_DIR}/agent-smith-usage.json"
 
 	# Served at /grafana/ behind Apache (deploy/telemetry/apache/telemetry-vhost.conf.tmpl),
 	# on the same domain, so no separate port is exposed publicly.
@@ -530,7 +530,7 @@ EOF
 	# password and lock the account down in grafana.ini before Grafana
 	# ever starts, so admin/admin is never reachable, not even for one
 	# request. Grafana only seeds [security] admin_user/admin_password
-	# into its own database on that very first startup — on a re-run
+	# into its own database on that very first startup â€” on a re-run
 	# against an already-initialized Grafana, this does not rotate the
 	# live password; use `grafana cli --homepath /usr/share/grafana admin reset-admin-password` for that.
 	if [[ ! -f "${GRAFANA_ADMIN_PASSWORD_FILE}" ]]; then
@@ -596,7 +596,7 @@ mkdir -p /var/log/gentle-telemetry
 # the file is missing or has none. On a cPanel/WHM box, Apache selects a
 # name-based vhost only among the vhosts bound to the address a request
 # arrived on, so matching that existing address (rather than "*") is what
-# makes the rendered blocks actually reachable — see the comment in
+# makes the rendered blocks actually reachable â€” see the comment in
 # apache/telemetry-vhost.conf.tmpl.
 detect_vhost_address() {
 	local include_file="$1" detected
@@ -638,7 +638,7 @@ fi
 # This script never edits ${APACHE_INCLUDE_FILE} itself: only the operator
 # appends to it, backing it up first, and only the :80 block before the
 # certificate exists (Certbot's webroot check needs that block's ACME
-# exception reachable) — the :443 block references certificate files that
+# exception reachable) â€” the :443 block references certificate files that
 # do not exist yet, so appending it first would fail apachectl configtest.
 cat <<EOF
 
@@ -647,7 +647,7 @@ Next steps (not run by this script), in order:
 1. DNS: create an A record for ${print_domain} at your registrar, pointing
    at this VPS's IP. Confirm with: dig +short ${print_domain}
 
-2. Issue the certificate — the :80 block must exist and be live before
+2. Issue the certificate â€” the :80 block must exist and be live before
    Certbot's webroot check can pass, so append it, reload, THEN certbot,
    THEN append the :443 block:
 
@@ -671,3 +671,4 @@ Next steps (not run by this script), in order:
 
 done. gentle-telemetry is listening on 127.0.0.1:18181 (see ${UNIT_DIR}/gentle-telemetry.service).
 EOF
+

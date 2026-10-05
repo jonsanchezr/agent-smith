@@ -18,7 +18,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/system"
+	"github.com/jonsanchezr/agent-smith/v4/internal/system"
 )
 
 func TestMain(m *testing.M) {
@@ -1184,18 +1184,18 @@ func TestCanonicalEngramGoInstallPackagePreservesDeclaredModuleCasing(t *testing
 	}{
 		{
 			name: "lowercase owner is canonicalized",
-			pkg:  "github.com/gentleman-programming/engram/cmd/engram@main",
-			want: "github.com/Gentleman-Programming/engram/cmd/engram@main",
+			pkg:  "github.com/jonsanchezr/engram/cmd/engram@main",
+			want: "github.com/jonsanchezr/engram/cmd/engram@main",
 		},
 		{
 			name: "canonical owner remains unchanged",
-			pkg:  "github.com/Gentleman-Programming/engram/cmd/engram@v1.2.3",
-			want: "github.com/Gentleman-Programming/engram/cmd/engram@v1.2.3",
+			pkg:  "github.com/jonsanchezr/engram/cmd/engram@v1.2.3",
+			want: "github.com/jonsanchezr/engram/cmd/engram@v1.2.3",
 		},
 		{
 			name: "unrelated package remains unchanged",
-			pkg:  "github.com/gentleman-programming/gentle-ai/v3/cmd/gentle-ai@latest",
-			want: "github.com/gentleman-programming/gentle-ai/v3/cmd/gentle-ai@latest",
+			pkg:  "github.com/jonsanchezr/agent-smith/v3/cmd/agent-smith@latest",
+			want: "github.com/jonsanchezr/agent-smith/v3/cmd/agent-smith@latest",
 		},
 	}
 
@@ -1227,12 +1227,12 @@ func TestEngramGoInstallFromMainCanonicalizesModuleCasing(t *testing.T) {
 		return map[string]string{"GOBIN": fakeInstallDir, "GOPATH": ""}, nil
 	}
 
-	_, err := engramGoInstallFromMain("github.com/gentleman-programming/engram/cmd/engram@main")
+	_, err := engramGoInstallFromMain("github.com/jonsanchezr/engram/cmd/engram@main")
 	if err != nil {
 		t.Fatalf("engramGoInstallFromMain: unexpected error: %v", err)
 	}
 
-	wantPkg := "github.com/Gentleman-Programming/engram/cmd/engram@main"
+	wantPkg := "github.com/jonsanchezr/engram/cmd/engram@main"
 	if gotPkg != wantPkg {
 		t.Fatalf("go install package = %q, want %q", gotPkg, wantPkg)
 	}
@@ -1272,7 +1272,7 @@ func TestEngramGoInstallFromMain_UsesGoEnvForBinDir(t *testing.T) {
 	t.Cleanup(func() { engramGoInstallCmdFn = origGoInstallCmdFn })
 	engramGoInstallCmdFn = func(pkg string) error { return nil }
 
-	binaryPath, err := engramGoInstallFromMain("github.com/Gentleman-Programming/engram/cmd/engram@main")
+	binaryPath, err := engramGoInstallFromMain("github.com/jonsanchezr/engram/cmd/engram@main")
 	if err != nil {
 		t.Fatalf("engramGoInstallFromMain: unexpected error: %v", err)
 	}
@@ -1319,7 +1319,7 @@ func TestEngramGoInstallFromMain_BypassesPublicGoProxy(t *testing.T) {
 		return map[string]string{"GOBIN": goPath, "GOPATH": filepath.Join(t.TempDir(), "gopath")}, nil
 	}
 
-	if _, err := engramGoInstallFromMain("github.com/Gentleman-Programming/engram/cmd/engram@main"); err != nil {
+	if _, err := engramGoInstallFromMain("github.com/jonsanchezr/engram/cmd/engram@main"); err != nil {
 		t.Fatalf("engramGoInstallFromMain() error = %v", err)
 	}
 
@@ -1328,9 +1328,9 @@ func TestEngramGoInstallFromMain_BypassesPublicGoProxy(t *testing.T) {
 		t.Fatalf("ReadFile(%q) error = %v", recordPath, err)
 	}
 	for _, want := range []string{
-		"GONOSUMDB=github.com/Gentleman-Programming/engram",
-		"GOPRIVATE=github.com/Gentleman-Programming/engram",
-		"GONOPROXY=github.com/Gentleman-Programming/engram",
+		"GONOSUMDB=github.com/jonsanchezr/engram",
+		"GOPRIVATE=github.com/jonsanchezr/engram",
+		"GONOPROXY=github.com/jonsanchezr/engram",
 	} {
 		if !strings.Contains(string(recorded), want) {
 			t.Fatalf("go install env missing %q\nrecorded:\n%s", want, recorded)
@@ -1416,7 +1416,7 @@ func TestStopEngramProcessesUsesPowerShellResolver(t *testing.T) {
 // Related: PR #937 (PowerShell 5.1 fallback for SHA256 checksum verification)
 func TestSHA256ChecksumContract(t *testing.T) {
 	// Test data: arbitrary content to hash
-	testData := []byte("Gentle AI SHA256 contract test")
+	testData := []byte("Agent Smith SHA256 contract test")
 
 	// Calculate hash using Go's crypto/sha256 (same as engramDownloadToFile)
 	h := sha256.Sum256(testData)
@@ -1455,3 +1455,4 @@ func TestSHA256ChecksumContract(t *testing.T) {
 	t.Logf("SHA256 contract: Go produces %q format (64 lowercase hex chars)", goDigest)
 	t.Logf("PowerShell fallback must produce identical format using .NET SHA256")
 }
+

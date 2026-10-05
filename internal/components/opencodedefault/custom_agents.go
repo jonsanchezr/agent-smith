@@ -4,8 +4,8 @@ import (
 	"os"
 	"sort"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/components/filemerge"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/opencode"
+	"github.com/jonsanchezr/agent-smith/v4/internal/components/filemerge"
+	"github.com/jonsanchezr/agent-smith/v4/internal/opencode"
 )
 
 // DiscoverCustomAgents returns user-owned agent keys in OpenCode settings, sorted
@@ -30,7 +30,7 @@ func DiscoverCustomAgents(settingsPath string) ([]string, error) {
 	reserved := map[string]bool{
 		"build": true, "plan": true, "general": true, "explore": true,
 		"gentle-reviewer": true, "gentle-worker": true,
-		"gentle-orchestrator": true, "sdd-orchestrator": true,
+		"agent-smith-orchestrator": true, "sdd-orchestrator": true,
 	}
 	for _, phase := range opencode.ConfigurableAgentPhases() {
 		reserved[phase] = true
@@ -39,7 +39,7 @@ func DiscoverCustomAgents(settingsPath string) ([]string, error) {
 	// JD/review-lens phases but are not counted as "configurable legacy SDD
 	// identities" (that function also backs the telemetry runtime agent-class
 	// allowlist, which does not need these three names).
-	for _, phase := range opencode.GentleAIODDPhases() {
+	for _, phase := range opencode.AgentSmithODDPhases() {
 		reserved[phase] = true
 	}
 	var custom []string
@@ -54,3 +54,4 @@ func DiscoverCustomAgents(settingsPath string) ([]string, error) {
 	sort.Strings(custom)
 	return custom, nil
 }
+

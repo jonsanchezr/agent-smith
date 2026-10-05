@@ -12,7 +12,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/reviewtransaction"
+	"github.com/jonsanchezr/agent-smith/v4/internal/reviewtransaction"
 )
 
 func TestStatusRecoverTransitionExecutesExactBaseDiffSelectors(t *testing.T) {
@@ -264,7 +264,7 @@ func testAccountingOnlyRecoveryShape(t *testing.T, tc accountingRecoveryScenario
 		t.Fatal(err)
 	}
 	persisted, err := json.MarshalIndent(reviewtransaction.CompactRecord{
-		Schema: "gentle-ai.review-state-record/v2", Revision: revision, State: predecessor.State,
+		Schema: "agent-smith.review-state-record/v2", Revision: revision, State: predecessor.State,
 	}, "", "  ")
 	if err != nil {
 		t.Fatal(err)
@@ -329,7 +329,7 @@ func testAccountingOnlyRecoveryShape(t *testing.T, tc accountingRecoveryScenario
 		}
 		return
 	}
-	authorization := "gentle-ai.review-recovery-authorization/v1\npredecessor_lineage=" + started.LineageID +
+	authorization := "agent-smith.review-recovery-authorization/v1\npredecessor_lineage=" + started.LineageID +
 		"\npredecessor_revision=" + probe.Authority.Revision + "\ntarget_identity=" + probe.TargetIdentity +
 		"\nactor=" + actor + "\nreason=" + reason
 	status := selectorTransitionStatus(t, repo, "--lineage", started.LineageID,
@@ -425,7 +425,7 @@ func testAccountingOnlyRecoveryShape(t *testing.T, tc accountingRecoveryScenario
 			t.Fatalf("conflict refusal names no continuation: %v", err)
 		}
 		words := reviewShellWords(t, command)
-		if len(words) < 3 || words[0] != "gentle-ai" || words[1] != "review" {
+		if len(words) < 3 || words[0] != "agent-smith" || words[1] != "review" {
 			t.Fatalf("conflict continuation is not a review command: %q", command)
 		}
 		recoverArgs = words[2:]
@@ -669,7 +669,7 @@ func TestCurrentChangesRecoverSelectorPresenceSurvivesJSONRoundTrip(t *testing.T
 		t.Fatalf("current-changes recovery probe action = %q, target=%s authority=%s projection=%#v", probe.Action, probe.TargetIdentity, probe.AuthorityTargetIdentity, probe.Projection)
 	}
 	reason, actor, successor := "approved current scope", "maintainer", "selector-current-successor"
-	authorization := "gentle-ai.review-recovery-authorization/v1\npredecessor_lineage=" + record.State.LineageID +
+	authorization := "agent-smith.review-recovery-authorization/v1\npredecessor_lineage=" + record.State.LineageID +
 		"\npredecessor_revision=" + probe.Authority.Revision + "\ntarget_identity=" + probe.TargetIdentity +
 		"\nsuccessor_lineage=" + successor + "\nactor=" + actor + "\nreason=" + reason
 	status := selectorTransitionStatus(t, repo,
@@ -889,7 +889,7 @@ func TestStatusStopsUnchangedBaseDiffRecoveryWithoutSuccessor(t *testing.T) {
 	before, _ := os.ReadFile(store.StatePath())
 	probe := selectorTransitionStatus(t, repo, "--lineage", record.State.LineageID, "--base-ref", base)
 	reason, actor := "unchanged recovery", "maintainer"
-	authorization := "gentle-ai.review-recovery-authorization/v1\npredecessor_lineage=" + record.State.LineageID + "\npredecessor_revision=" + record.Revision + "\ntarget_identity=" + probe.TargetIdentity + "\nactor=" + actor + "\nreason=" + reason
+	authorization := "agent-smith.review-recovery-authorization/v1\npredecessor_lineage=" + record.State.LineageID + "\npredecessor_revision=" + record.Revision + "\ntarget_identity=" + probe.TargetIdentity + "\nactor=" + actor + "\nreason=" + reason
 	status := selectorTransitionStatus(t, repo, "--lineage", record.State.LineageID, "--base-ref", base,
 		"--recovery-successor-lineage", "selector-unchanged-successor", "--recovery-reason", reason,
 		"--recovery-actor", actor, "--recovery-authorization", authorization)
@@ -980,7 +980,7 @@ func recoveryAuthorizationFromStatus(t *testing.T, status ReviewTargetStatusResu
 		t.Fatalf("recovery provider binding = %#v", status)
 	}
 	return strings.Join([]string{
-		"gentle-ai.review-recovery-authorization/v1",
+		"agent-smith.review-recovery-authorization/v1",
 		"predecessor_lineage=" + binding.LineageID,
 		"predecessor_revision=" + binding.Revision,
 		"target_identity=" + binding.TargetIdentity,
@@ -1091,7 +1091,7 @@ func TestNativeRecoveryStatusRefusalsAreReadOnlyAndDiagnosticRuns(t *testing.T) 
 			t.Fatalf("invalid refusal envelope: %#v, %v", failure, err)
 		}
 		_, command, named := strings.Cut(failure.Cause, "re-run: ")
-		if !named || command != "gentle-ai review inspect-authority" {
+		if !named || command != "agent-smith review inspect-authority" {
 			t.Fatalf("refusal lacks read-only diagnostic: %v", err)
 		}
 		if err := RunReview(reviewShellWords(t, command)[2:], io.Discard); err != nil {
@@ -1172,3 +1172,4 @@ func requestedCorrectionSnapshot(t *testing.T, repo string, state reviewtransact
 	}
 	return snapshot
 }
+

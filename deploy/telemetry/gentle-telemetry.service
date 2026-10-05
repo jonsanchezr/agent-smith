@@ -1,6 +1,6 @@
-[Unit]
+﻿[Unit]
 Description=gentle-telemetry collector
-Documentation=https://github.com/Gentleman-Programming/gentle-ai/blob/main/docs/telemetry-collector.md
+Documentation=https://github.com/jonsanchezr/agent-smith/blob/main/docs/telemetry-collector.md
 After=network-online.target
 Wants=network-online.target
 
@@ -23,7 +23,7 @@ TimeoutStopSec=15s
 # A static system user/group (created by install.sh) rather than
 # DynamicUser: Grafana needs a stable, grantable path to read the SQLite
 # file via ACL, and DynamicUser materializes StateDirectory under
-# /var/lib/private/<name> with a symlink at /var/lib/gentle-telemetry —
+# /var/lib/private/<name> with a symlink at /var/lib/gentle-telemetry â€”
 # granting Grafana search access anywhere under /var/lib/private widens
 # that directory's mode, and systemd refuses to (re)start this unit once
 # /var/lib/private is no longer exactly 0700. A real directory owned by a
@@ -66,3 +66,4 @@ UMask=0077
 
 [Install]
 WantedBy=multi-user.target
+

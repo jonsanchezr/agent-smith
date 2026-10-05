@@ -7,7 +7,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/reviewtransaction"
+	"github.com/jonsanchezr/agent-smith/v4/internal/reviewtransaction"
 )
 
 func TestReviewStopHookSilentAfterAcknowledgementWithoutPostBurnStatus(t *testing.T) {
@@ -37,3 +37,4 @@ func TestReviewStopHookSilentAfterAcknowledgementWithoutPostBurnStatus(t *testin
 		t.Fatal("changed candidate did not trigger a reminder")
 	}
 }
+

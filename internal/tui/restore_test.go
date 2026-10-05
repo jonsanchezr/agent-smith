@@ -6,8 +6,8 @@ import (
 	"time"
 
 	tea "github.com/charmbracelet/bubbletea"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/backup"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/system"
+	"github.com/jonsanchezr/agent-smith/v4/internal/backup"
+	"github.com/jonsanchezr/agent-smith/v4/internal/system"
 )
 
 func makeTestBackup(id string, t time.Time, source backup.BackupSource) backup.Manifest {
@@ -176,3 +176,4 @@ func TestRestoreResultEnterNavigatesBackToBackups(t *testing.T) {
 		t.Errorf("pressing Enter on result should navigate to ScreenBackups, got %v", state.Screen)
 	}
 }
+

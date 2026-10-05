@@ -30,14 +30,14 @@ const (
 	// Used for tools that distribute via shell scripts rather than pre-built binaries
 	// (e.g., GGA which has no release binary assets).
 	InstallScript InstallMethod = "script"
-	// InstallOpenCodePlugin is a manual upgrade method: Gentle AI registers the
+	// InstallOpenCodePlugin is a manual upgrade method: Agent Smith registers the
 	// package in tui.json, and OpenCode owns package resolution on restart/reload.
 	InstallOpenCodePlugin InstallMethod = "opencode-plugin"
 )
 
 // ToolInfo describes a managed tool that can be checked for updates.
 type ToolInfo struct {
-	Name              string        // human-readable name (e.g., "gentle-ai")
+	Name              string        // human-readable name (e.g., "agent-smith")
 	Owner             string        // GitHub repository owner
 	Repo              string        // GitHub repository name
 	DetectCmd         []string      // command to detect installed version; nil = use build var
@@ -70,3 +70,4 @@ type UpdateResult struct {
 	BetaModulePath   string // validated go.mod module at BetaCommit
 	Err              error
 }
+

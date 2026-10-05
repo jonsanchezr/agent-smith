@@ -4,7 +4,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
 )
 
 func TestComposePrompt_GenericAgentHasNoRetiredPhaseContext(t *testing.T) {
@@ -68,3 +68,4 @@ func TestComposePrompt_PreservesRawSkillMarkdownOutputContract(t *testing.T) {
 		t.Errorf("raw SKILL.md output contract missing: %s", prompt)
 	}
 }
+

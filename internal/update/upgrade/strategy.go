@@ -15,11 +15,11 @@ import (
 	"strings"
 	"time"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/cli"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/components/engram"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/opencode"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/system"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/update"
+	"github.com/jonsanchezr/agent-smith/v4/internal/cli"
+	"github.com/jonsanchezr/agent-smith/v4/internal/components/engram"
+	"github.com/jonsanchezr/agent-smith/v4/internal/opencode"
+	"github.com/jonsanchezr/agent-smith/v4/internal/system"
+	"github.com/jonsanchezr/agent-smith/v4/internal/update"
 )
 
 // engramDownloadFn is the function used to download the engram binary on the stable channel.
@@ -65,7 +65,7 @@ type strategyOutcome struct {
 //   - brew profile → brewUpgrade (regardless of tool's declared method)
 //   - go-install method + apt/pacman/other → goInstallUpgrade
 //   - binary method + linux/darwin → binaryUpgrade
-//   - binary method + windows → manualFallback (gentle-ai explains the signed-distribution hold)
+//   - binary method + windows → manualFallback (agent-smith explains the signed-distribution hold)
 //   - script method + linux/darwin + gga → ggaScriptUpgrade (git clone approach)
 //   - script method + linux/darwin + other → scriptUpgrade (curl | bash install.sh)
 //   - script method + windows → manualFallback
@@ -111,7 +111,7 @@ func runStrategy(ctx context.Context, r update.UpdateResult, profile system.Plat
 		return false, err
 	default:
 		return false, &ManualFallbackError{
-			Hint: fmt.Sprintf("upgrade %q: unsupported install method %q — please update manually. See: https://github.com/Gentleman-Programming/%s",
+			Hint: fmt.Sprintf("upgrade %q: unsupported install method %q — please update manually. See: https://github.com/jonsanchezr/%s",
 				r.Tool.Name, method, r.Tool.Repo),
 		}
 	}
@@ -423,12 +423,12 @@ func openCodePluginRegisteredPendingHint(pkg string) string {
 func brewUpgrade(ctx context.Context, r update.UpdateResult, ownership update.HomebrewOwnership) error {
 	toolName := r.Tool.Name
 	flag := "--" + string(ownership)
-	// Ensure the Gentleman-Programming homebrew tap is present before upgrading.
+	// Ensure the jonsanchezr homebrew tap is present before upgrading.
 	// Non-fatal: brew tap is a no-op when already present; if it fails for any other
 	// reason, the subsequent brew upgrade will surface the real error. See issue #455:
 	// without this, a lost tap (untap, machine swap, brew cleanup) makes upgrades fail
-	// with "No available formula" for engram/gga/gentle-ai.
-	tapCmd := execCommand("brew", "tap", "Gentleman-Programming/homebrew-tap")
+	// with "No available formula" for engram/gga/agent-smith.
+	tapCmd := execCommand("brew", "tap", "jonsanchezr/homebrew-tap")
 	tapCmd.Stdin = nil
 	_ = tapCmd.Run()
 
@@ -479,7 +479,7 @@ func verifyLegacyCaskTarget(r update.UpdateResult) error {
 }
 
 func gentlemanProgrammingTapRef(toolName string) string {
-	return "gentleman-programming/tap/" + strings.TrimSpace(toolName)
+	return "jonsanchezr/tap/" + strings.TrimSpace(toolName)
 }
 
 func homebrewTrustFlag(toolName string) string {
@@ -521,7 +521,7 @@ func homebrewFailureAdvice(toolName string, output string, detected ...update.Ho
 			flag = "--formula"
 			artifact = "formula"
 		}
-		return fmt.Sprintf("Homebrew requires explicit trust for external taps. Trust only this Gentle AI %s, then retry:\n  brew trust %s %s\n  brew upgrade %s %s", artifact, flag, ref, flag, toolName)
+		return fmt.Sprintf("Homebrew requires explicit trust for external taps. Trust only this Agent Smith %s, then retry:\n  brew trust %s %s\n  brew upgrade %s %s", artifact, flag, ref, flag, toolName)
 	}
 
 	if strings.Contains(lower, "bubblewrap is installed but cannot create a rootless sandbox") ||
@@ -536,7 +536,7 @@ func homebrewFailureAdvice(toolName string, output string, detected ...update.Ho
 // goInstallUpgrade runs `go install <importPath>@v<version>`.
 //
 // Generic Go-managed tools retain the post-install warning because the new
-// binary was genuinely written. Windows gentle-ai self-upgrades are different:
+// binary was genuinely written. Windows agent-smith self-upgrades are different:
 // they must prove that Go owns the active executable before writing, or skip to
 // a manual recovery instead of creating a second PATH-visible binary.
 func goInstallUpgrade(ctx context.Context, r update.UpdateResult, profile system.PlatformProfile, preflightDestination string) error {
@@ -585,7 +585,7 @@ func goInstallUpgrade(ctx context.Context, r update.UpdateResult, profile system
 }
 
 func preflightWindowsGentleAIGoInstall(r update.UpdateResult, profile system.PlatformProfile) (string, error) {
-	if profile.OS != "windows" || r.Tool.Name != "gentle-ai" {
+	if profile.OS != "windows" || r.Tool.Name != "agent-smith" {
 		return "", nil
 	}
 	destDir, destErr := goInstallDestinationDir()
@@ -603,7 +603,7 @@ func firstString(values []string) string {
 }
 
 func preflightWindowsGentleAIGoInstallWithDestination(r update.UpdateResult, profile system.PlatformProfile, destDir string, destErr error) error {
-	if profile.OS != "windows" || r.Tool.Name != "gentle-ai" {
+	if profile.OS != "windows" || r.Tool.Name != "agent-smith" {
 		return nil
 	}
 	if destErr != nil {
@@ -626,9 +626,9 @@ func gentleAIWindowsGoInstallProvenanceHint(r update.UpdateResult, destination, 
 	details := "could not determine the Go installation destination"
 	switch {
 	case destination != "" && active == "":
-		details = fmt.Sprintf("could not resolve the active gentle-ai executable before Go would write to %s", destination)
+		details = fmt.Sprintf("could not resolve the active agent-smith executable before Go would write to %s", destination)
 	case destination != "" && active != "":
-		details = fmt.Sprintf("resolves gentle-ai to %s, but Go would write to %s", active, destination)
+		details = fmt.Sprintf("resolves agent-smith to %s, but Go would write to %s", active, destination)
 	}
 
 	hint := fmt.Sprintf("Windows self-upgrade %s. No files were changed. ", details)
@@ -644,18 +644,18 @@ func gentleAIWindowsGoInstallProvenanceHint(r update.UpdateResult, destination, 
 		}
 		hint += command
 	} else {
-		hint += update.GentleAISourceInstallCommand(r.LatestVersion)
+		hint += update.AgentSmithSourceInstallCommand(r.LatestVersion)
 	}
 	if destination != "" {
-		hint += fmt.Sprintf("\nAfter a successful migration, ensure only %s resolves for gentle-ai on PATH.", destination)
+		hint += fmt.Sprintf("\nAfter a successful migration, ensure only %s resolves for agent-smith on PATH.", destination)
 	}
 	return hint
 }
 
 func isBetaGentleAIUpgrade(r update.UpdateResult) bool {
-	return r.Tool.Name == "gentle-ai" &&
-		strings.EqualFold(r.Tool.Owner, "Gentleman-Programming") &&
-		r.Tool.Repo == "gentle-ai" &&
+	return r.Tool.Name == "agent-smith" &&
+		strings.EqualFold(r.Tool.Owner, "jonsanchezr") &&
+		r.Tool.Repo == "agent-smith" &&
 		strings.HasPrefix(strings.TrimSpace(r.LatestVersion), "main@")
 }
 
@@ -734,7 +734,7 @@ func prependGoPattern(existing, pattern string) string {
 // works on all platforms including Windows. Other Windows binary upgrades return
 // ManualFallbackError so the executor surfaces them as UpgradeSkipped.
 func binaryUpgrade(ctx context.Context, r update.UpdateResult, profile system.PlatformProfile) error {
-	if profile.OS == "windows" && r.Tool.Name == "gentle-ai" {
+	if profile.OS == "windows" && r.Tool.Name == "agent-smith" {
 		return &ManualFallbackError{Hint: gentleAIWindowsSourceInstallHint(r)}
 	}
 
@@ -750,7 +750,7 @@ func binaryUpgrade(ctx context.Context, r update.UpdateResult, profile system.Pl
 		// with an actionable hint — NOT as UpgradeFailed.
 		hint := r.UpdateHint
 		if hint == "" {
-			hint = fmt.Sprintf("Download manually from https://github.com/Gentleman-Programming/%s/releases", r.Tool.Repo)
+			hint = fmt.Sprintf("Download manually from https://github.com/jonsanchezr/%s/releases", r.Tool.Repo)
 		}
 		return &ManualFallbackError{
 			Hint: fmt.Sprintf("upgrade %q on Windows requires manual update: %s", r.Tool.Name, hint),
@@ -775,7 +775,7 @@ func gentleAISourceCommandForResult(r update.UpdateResult) string {
 		}
 		return command
 	}
-	return update.GentleAISourceInstallCommand(r.LatestVersion)
+	return update.AgentSmithSourceInstallCommand(r.LatestVersion)
 }
 
 // engramBinaryUpgrade downloads or installs the latest engram binary.
@@ -909,7 +909,7 @@ func scriptUpgrade(ctx context.Context, r update.UpdateResult, profile system.Pl
 // ggaMkdirTemp is the function used to create a temporary directory for GGA git clone.
 // Package-level var for testability — swapped in tests to control the temp dir path.
 var ggaMkdirTemp = func() (string, error) {
-	return os.MkdirTemp("", "gentle-ai-gga-*")
+	return os.MkdirTemp("", "agent-smith-gga-*")
 }
 
 // ggaScriptUpgrade upgrades GGA by cloning its repository and running install.sh
@@ -984,3 +984,4 @@ func ggaScriptUpgradeForOS(ctx context.Context, r update.UpdateResult, osName st
 
 	return nil
 }
+

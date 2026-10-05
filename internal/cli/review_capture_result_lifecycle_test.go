@@ -10,7 +10,7 @@ import (
 	"strconv"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/reviewtransaction"
+	"github.com/jonsanchezr/agent-smith/v4/internal/reviewtransaction"
 )
 
 // startHighRiskCLIReview freezes a candidate the native tier assessment rates
@@ -113,3 +113,4 @@ func TestCurrentCaptureResultClosesApprovedLineage(t *testing.T) {
 
 	assertApprovedCompactAuthorityBurned(t, store, started.LineageID)
 }
+

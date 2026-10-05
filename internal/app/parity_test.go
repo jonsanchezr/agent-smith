@@ -8,11 +8,11 @@ import (
 	"testing"
 
 	tea "github.com/charmbracelet/bubbletea"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/cli"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/planner"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/system"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/tui"
+	"github.com/jonsanchezr/agent-smith/v4/internal/cli"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
+	"github.com/jonsanchezr/agent-smith/v4/internal/planner"
+	"github.com/jonsanchezr/agent-smith/v4/internal/system"
+	"github.com/jonsanchezr/agent-smith/v4/internal/tui"
 )
 
 func TestInstallDefaultsMatchTUIModelDefaults(t *testing.T) {
@@ -242,7 +242,7 @@ func TestRunArgsSyncHelpIncludesBackgroundFlag(t *testing.T) {
 	}
 }
 
-// TestRunArgsSyncNoAgentsIsNoOp verifies that `gentle-ai sync` with no
+// TestRunArgsSyncNoAgentsIsNoOp verifies that `agent-smith sync` with no
 // agents flag and an empty home dir (no config dirs) completes as a no-op
 // and does NOT return an error.
 func TestRunArgsSyncNoAgentsIsNoOp(t *testing.T) {
@@ -388,3 +388,4 @@ func TestInstallPlannerParityLinuxPreservesComponentOrder(t *testing.T) {
 		t.Fatalf("review mismatch\ncli=%#v\nplanner=%#v", result.Review, wantReview)
 	}
 }
+

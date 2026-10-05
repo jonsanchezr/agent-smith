@@ -15,23 +15,23 @@ import (
 	"testing"
 	"time"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/agents/claude"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/agents/codex"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/agents/opencode"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/agents/pi"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/assets"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/backup"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/components/communitytool"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/components/engram"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/components/gga"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/components/opencodedefault"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/components/skills"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/components/telemetryruntime"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
-	opencodeactivation "github.com/gentleman-programming/gentle-ai/v4/internal/opencode"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/reviewtransaction"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/state"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/statecoord"
+	"github.com/jonsanchezr/agent-smith/v4/internal/agents/claude"
+	"github.com/jonsanchezr/agent-smith/v4/internal/agents/codex"
+	"github.com/jonsanchezr/agent-smith/v4/internal/agents/opencode"
+	"github.com/jonsanchezr/agent-smith/v4/internal/agents/pi"
+	"github.com/jonsanchezr/agent-smith/v4/internal/assets"
+	"github.com/jonsanchezr/agent-smith/v4/internal/backup"
+	"github.com/jonsanchezr/agent-smith/v4/internal/components/communitytool"
+	"github.com/jonsanchezr/agent-smith/v4/internal/components/engram"
+	"github.com/jonsanchezr/agent-smith/v4/internal/components/gga"
+	"github.com/jonsanchezr/agent-smith/v4/internal/components/opencodedefault"
+	"github.com/jonsanchezr/agent-smith/v4/internal/components/skills"
+	"github.com/jonsanchezr/agent-smith/v4/internal/components/telemetryruntime"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
+	opencodeactivation "github.com/jonsanchezr/agent-smith/v4/internal/opencode"
+	"github.com/jonsanchezr/agent-smith/v4/internal/reviewtransaction"
+	"github.com/jonsanchezr/agent-smith/v4/internal/state"
+	"github.com/jonsanchezr/agent-smith/v4/internal/statecoord"
 )
 
 func TestUninstallOpenCodeFamilyManagedAgents(t *testing.T) {
@@ -57,7 +57,7 @@ func TestUninstallOpenCodeFamilyManagedAgents(t *testing.T) {
 				"jd-judge-b":          map[string]any{"mode": "subagent", "hidden": true, "description": "Judgment Day blind adversarial reviewer B. Read-only; independently reports findings and does not fix code.", "prompt": prompt, "permission": map[string]any{"write": "deny", "edit": "deny", "task": "deny"}, "model": "custom"},
 				"jd-judge-a":          map[string]any{"prompt": "user modified"},
 				"my-agent":            map[string]any{"prompt": "mine"},
-				"gentle-orchestrator": map[string]any{"prompt": "<!-- gentle-ai:orchestrator -->\nmanaged\n<!-- /gentle-ai:orchestrator -->\n", "permission": map[string]any{"task": map[string]any{"jd-judge-b": "allow", "jd-judge-a": "allow", "my-agent": "allow"}}},
+				"agent-smith-orchestrator": map[string]any{"prompt": "<!-- agent-smith:orchestrator -->\nmanaged\n<!-- /agent-smith:orchestrator -->\n", "permission": map[string]any{"task": map[string]any{"jd-judge-b": "allow", "jd-judge-a": "allow", "my-agent": "allow"}}},
 			}
 			if agent == model.AgentKilocode {
 				agents["gentleman"] = map[string]any{"mode": "primary", "description": "Senior Architect mentor - helpful first, challenging when it matters", "prompt": "{file:./AGENTS.md}", "tools": map[string]any{"write": true, "edit": true}}
@@ -91,7 +91,7 @@ func TestUninstallOpenCodeFamilyManagedAgents(t *testing.T) {
 				if remaining["jd-judge-a"] == nil || remaining["my-agent"] == nil {
 					t.Fatalf("user agents lost: %s", body)
 				}
-				if orchestrator, ok := remaining["gentle-orchestrator"].(map[string]any); ok {
+				if orchestrator, ok := remaining["agent-smith-orchestrator"].(map[string]any); ok {
 					task := orchestrator["permission"].(map[string]any)["task"].(map[string]any)
 					if _, ok := task["jd-judge-b"]; ok {
 						t.Fatalf("managed task retained: %s", body)
@@ -131,7 +131,7 @@ func TestCompleteUninstallLegacyOpenCodeDefaultOwnership(t *testing.T) {
 				t.Fatal(err)
 			}
 			record := opencodedefault.OwnershipPath(settings)
-			metadata := `{"schema":"gentle-ai.opencode-default-agent","version":1,"state":"managed","previous_state":"value","previous_default":"build"}`
+			metadata := `{"schema":"agent-smith.opencode-default-agent","version":1,"state":"managed","previous_state":"value","previous_default":"build"}`
 			if err := os.WriteFile(record, []byte(metadata), 0600); err != nil {
 				t.Fatal(err)
 			}
@@ -689,7 +689,7 @@ func TestBuildPlanSnapshotsPiManifestAndOwnedOverlay(t *testing.T) {
 }
 
 // TestExecutePlanRetiresStalePiSystemPromptBlocks covers issue #4057: a Pi
-// install made before SupportsSystemPrompt()==false for Pi left gentle-ai
+// install made before SupportsSystemPrompt()==false for Pi left agent-smith
 // managed blocks in ~/.pi/agent/APPEND_SYSTEM.md. Since adapter.SupportsSystemPrompt()
 // is false, componentOperations() never queues a rewrite op for that file, so
 // uninstall must retire the stale blocks directly.
@@ -705,7 +705,7 @@ func TestExecutePlanRetiresStalePiSystemPromptBlocks(t *testing.T) {
 	if err := os.MkdirAll(filepath.Dir(promptPath), 0o755); err != nil {
 		t.Fatal(err)
 	}
-	stale := "user text\n\n<!-- gentle-ai:sdd-orchestrator -->\nSDD body\n<!-- /gentle-ai:sdd-orchestrator -->\n"
+	stale := "user text\n\n<!-- agent-smith:sdd-orchestrator -->\nSDD body\n<!-- /agent-smith:sdd-orchestrator -->\n"
 	if err := os.WriteFile(promptPath, []byte(stale), 0o644); err != nil {
 		t.Fatal(err)
 	}
@@ -775,7 +775,7 @@ func TestExecutePlanPiUninstallPreservesPreexistingMarkedUserChildAndUserMCP(t *
 	svc.snapshotter = stubSnapshotter{}
 	mcpPath := filepath.Join(homeDir, ".pi", "agent", "mcp.json")
 	childPath := filepath.Join(homeDir, ".pi", "agent", "subagents", "worker.md")
-	preexisting := "---\ntools: bash, mcp\n---\nuser instructions\n\n<!-- gentle-ai:pi-codegraph-tool -->\npreexisting tool guidance\n<!-- /gentle-ai:pi-codegraph -->\n\n<!-- gentle-ai:pi-codegraph-guidance -->\npreexisting lazy-init guidance\n<!-- /gentle-ai:pi-codegraph -->\n"
+	preexisting := "---\ntools: bash, mcp\n---\nuser instructions\n\n<!-- agent-smith:pi-codegraph-tool -->\npreexisting tool guidance\n<!-- /agent-smith:pi-codegraph -->\n\n<!-- agent-smith:pi-codegraph-guidance -->\npreexisting lazy-init guidance\n<!-- /agent-smith:pi-codegraph -->\n"
 	if err := os.MkdirAll(filepath.Dir(mcpPath), 0o755); err != nil {
 		t.Fatal(err)
 	}
@@ -866,10 +866,10 @@ func TestPartialUninstallPiReportsRetainedResourcesAndOptionalCleanup(t *testing
 	retainedPaths := []string{
 		filepath.Join(homeDir, ".pi", "agent", "agents"),
 		filepath.Join(homeDir, ".pi", "agent", "chains"),
-		filepath.Join(homeDir, ".pi", "agent", "gentle-ai"),
+		filepath.Join(homeDir, ".pi", "agent", "agent-smith"),
 		filepath.Join(homeDir, ".pi", "agent", "subagents.json"),
-		filepath.Join(homeDir, ".pi", "gentle-ai"),
-		filepath.Join(workspaceDir, ".pi", "gentle-ai"),
+		filepath.Join(homeDir, ".pi", "agent-smith"),
+		filepath.Join(workspaceDir, ".pi", "agent-smith"),
 	}
 	for _, path := range retainedPaths {
 		if filepath.Ext(path) == ".json" {
@@ -928,7 +928,7 @@ func TestPartialUninstallPiDoesNotReportAbsentRetainedResources(t *testing.T) {
 		t.Fatalf("RetainedPiResources = %v, want none for absent paths", result.RetainedPiResources)
 	}
 	t.Run("dangling link", func(t *testing.T) {
-		path := filepath.Join(svc.homeDir, ".pi", "gentle-ai")
+		path := filepath.Join(svc.homeDir, ".pi", "agent-smith")
 		if err := os.MkdirAll(filepath.Dir(path), 0o755); err != nil {
 			t.Fatal(err)
 		}
@@ -956,7 +956,7 @@ func TestCompleteUninstallKeepsExecutableRemovalAction(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	want := "To completely remove gentle-ai from your system, delete the executable (e.g., rm -f $(which gentle-ai))"
+	want := "To completely remove agent-smith from your system, delete the executable (e.g., rm -f $(which agent-smith))"
 	if !slices.Contains(result.ManualActions, want) {
 		t.Fatalf("ManualActions = %v, want %q", result.ManualActions, want)
 	}
@@ -1175,7 +1175,7 @@ func TestExecutePlanReportsManualCleanupForNonEmptyDirectory(t *testing.T) {
 		t.Fatalf("WriteFile() error = %v", err)
 	}
 
-	statePath := filepath.Join(homeDir, ".gentle-ai", "state.json")
+	statePath := filepath.Join(homeDir, ".agent-smith", "state.json")
 	if err := os.MkdirAll(filepath.Dir(statePath), 0o755); err != nil {
 		t.Fatalf("MkdirAll(state dir) error = %v", err)
 	}
@@ -1454,7 +1454,7 @@ func TestPartialUninstallOpenCodePluginsAndModelVariantsWithoutSDD(t *testing.T)
 		t.Fatalf("WriteFile(%q) error = %v", thirdPartyPluginPath, err)
 	}
 
-	cacheDir := filepath.Join(homeDir, ".gentle-ai", "cache")
+	cacheDir := filepath.Join(homeDir, ".agent-smith", "cache")
 	if err := os.MkdirAll(cacheDir, 0o755); err != nil {
 		t.Fatalf("MkdirAll(cacheDir) error = %v", err)
 	}
@@ -1753,7 +1753,7 @@ func TestFullAgentClaudeRemovesSkillRegistryHook(t *testing.T) {
       {
         "matcher": "",
         "hooks": [
-          {"type": "command", "command": "gentle-ai skill-registry refresh --quiet --no-gitignore --cwd \"${CLAUDE_PROJECT_DIR:-$PWD}\" || true"},
+          {"type": "command", "command": "agent-smith skill-registry refresh --quiet --no-gitignore --cwd \"${CLAUDE_PROJECT_DIR:-$PWD}\" || true"},
           {"type": "command", "command": "echo keep"}
         ]
       }
@@ -1767,7 +1767,7 @@ func TestFullAgentClaudeRemovesSkillRegistryHook(t *testing.T) {
     "SubagentStop": [
       {
         "hooks": [
-          {"type": "command", "command": "gentle-ai telemetry runtime codex --json", "async": true},
+          {"type": "command", "command": "agent-smith telemetry runtime codex --json", "async": true},
           {"type": "command", "command": "echo subagent keep"}
         ]
       }
@@ -1775,7 +1775,7 @@ func TestFullAgentClaudeRemovesSkillRegistryHook(t *testing.T) {
     "Stop": [
       {
         "hooks": [
-          {"type": "command", "command": "gentle-ai telemetry runtime codex --json", "async": true},
+          {"type": "command", "command": "agent-smith telemetry runtime codex --json", "async": true},
           {"type": "command", "command": "echo stop keep"}
         ]
       }
@@ -1803,7 +1803,7 @@ func TestFullAgentClaudeRemovesSkillRegistryHook(t *testing.T) {
 		t.Fatal(err)
 	}
 	text := string(raw)
-	if strings.Contains(text, "gentle-ai skill-registry refresh") || strings.Contains(text, "gentle-ai telemetry runtime codex") {
+	if strings.Contains(text, "agent-smith skill-registry refresh") || strings.Contains(text, "agent-smith telemetry runtime codex") {
 		t.Fatalf("managed hook should be removed:\n%s", text)
 	}
 	if !strings.Contains(text, "echo keep") || !strings.Contains(text, "echo pre") || !strings.Contains(text, "echo subagent keep") || !strings.Contains(text, "echo stop keep") {
@@ -1833,7 +1833,7 @@ func TestFullAgentClaudeRemovesReviewAndPreflightHooks(t *testing.T) {
       {
         "matcher": "",
         "hooks": [
-          {"type": "command", "command": "gentle-ai review stop-hook --agent claude-code", "timeout": 60},
+          {"type": "command", "command": "agent-smith review stop-hook --agent claude-code", "timeout": 60},
           {"type": "command", "command": "echo keep"}
         ]
       }
@@ -1842,7 +1842,7 @@ func TestFullAgentClaudeRemovesReviewAndPreflightHooks(t *testing.T) {
       {
         "matcher": "startup|resume|clear|compact",
         "hooks": [
-          {"type": "command", "command": "gentle-ai review stop-hook --agent claude-code", "timeout": 30},
+          {"type": "command", "command": "agent-smith review stop-hook --agent claude-code", "timeout": 30},
           {"type": "command", "command": "echo custom session-start"}
         ]
       }
@@ -1854,14 +1854,14 @@ func TestFullAgentClaudeRemovesReviewAndPreflightHooks(t *testing.T) {
       },
       {
         "matcher": "Agent",
-        "hooks": [{"type": "command", "command": "gentle-ai sdd-preflight-hook --agent claude-code"}]
+        "hooks": [{"type": "command", "command": "agent-smith sdd-preflight-hook --agent claude-code"}]
       }
     ],
     "PostToolUse": [
       {
         "matcher": "AskUserQuestion",
         "hooks": [
-          {"type": "command", "command": "gentle-ai sdd-preflight-hook --agent claude-code"},
+          {"type": "command", "command": "agent-smith sdd-preflight-hook --agent claude-code"},
           {"type": "command", "command": "echo post keep"}
         ]
       }
@@ -1869,7 +1869,7 @@ func TestFullAgentClaudeRemovesReviewAndPreflightHooks(t *testing.T) {
     "SessionEnd": [
       {
         "matcher": "",
-        "hooks": [{"type": "command", "command": "gentle-ai sdd-preflight-hook --agent claude-code"}]
+        "hooks": [{"type": "command", "command": "agent-smith sdd-preflight-hook --agent claude-code"}]
       }
     ]
   }
@@ -1895,7 +1895,7 @@ func TestFullAgentClaudeRemovesReviewAndPreflightHooks(t *testing.T) {
 		t.Fatal(err)
 	}
 	text := string(raw)
-	if strings.Contains(text, "gentle-ai review stop-hook") || strings.Count(text, "gentle-ai sdd-preflight-hook") != 3 {
+	if strings.Contains(text, "agent-smith review stop-hook") || strings.Count(text, "agent-smith sdd-preflight-hook") != 3 {
 		t.Fatalf("review hooks should be removed; unmarked legacy hooks preserved:\n%s", text)
 	}
 	if !strings.Contains(text, "echo keep") || !strings.Contains(text, "echo pre") || !strings.Contains(text, "echo post keep") || !strings.Contains(text, "echo custom session-start") {
@@ -1914,7 +1914,7 @@ func TestFullAgentClaudeRemovesTelemetryHooks(t *testing.T) {
 	if err := os.MkdirAll(filepath.Dir(settingsPath), 0o755); err != nil {
 		t.Fatal(err)
 	}
-	initial := `{"hooks":{"Stop":[{"matcher":"","hooks":[{"type":"command","command":"gentle-ai telemetry runtime claude --json","async":true},{"type":"command","command":"echo keep"}]}],"SubagentStop":[{"matcher":"","hooks":[{"type":"command","command":"gentle-ai telemetry runtime claude --json","async":true}]}]}}`
+	initial := `{"hooks":{"Stop":[{"matcher":"","hooks":[{"type":"command","command":"agent-smith telemetry runtime claude --json","async":true},{"type":"command","command":"echo keep"}]}],"SubagentStop":[{"matcher":"","hooks":[{"type":"command","command":"agent-smith telemetry runtime claude --json","async":true}]}]}}`
 	if err := os.WriteFile(settingsPath, []byte(initial), 0o644); err != nil {
 		t.Fatal(err)
 	}
@@ -1961,7 +1961,7 @@ func TestFullAgentCodexRemovesSkillRegistryHook(t *testing.T) {
       {
         "matcher": "startup|resume|clear|compact",
         "hooks": [
-          {"type": "command", "command": "gentle-ai skill-registry refresh --quiet --no-gitignore --cwd \"$PWD\" || true"},
+          {"type": "command", "command": "agent-smith skill-registry refresh --quiet --no-gitignore --cwd \"$PWD\" || true"},
           {"type": "command", "command": "echo keep"}
         ]
       }
@@ -1995,7 +1995,7 @@ func TestFullAgentCodexRemovesSkillRegistryHook(t *testing.T) {
 		t.Fatal(err)
 	}
 	text := string(raw)
-	if strings.Contains(text, "gentle-ai skill-registry refresh") {
+	if strings.Contains(text, "agent-smith skill-registry refresh") {
 		t.Fatalf("managed hook should be removed:\n%s", text)
 	}
 	if !strings.Contains(text, "echo keep") || !strings.Contains(text, "echo pre") {
@@ -2208,3 +2208,4 @@ func TestUninstallSkillsRemovesLegacySharedMarkerAfterUpgrade(t *testing.T) {
 		})
 	}
 }
+

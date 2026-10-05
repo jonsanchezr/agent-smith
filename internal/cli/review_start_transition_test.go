@@ -9,7 +9,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/reviewtransaction"
+	"github.com/jonsanchezr/agent-smith/v4/internal/reviewtransaction"
 )
 
 func TestNegotiatedStatusStartLineageSelection(t *testing.T) {
@@ -208,7 +208,7 @@ func TestNegotiatedV2FreshStatusIncludesExactConsentRelay(t *testing.T) {
 	if consent != (ReviewTransitionArgument{Name: "consent", Value: "relay", Token: "--consent=relay"}) {
 		t.Fatalf("v2 START consent argument = %#v", consent)
 	}
-	wantCommand := "gentle-ai review start" +
+	wantCommand := "agent-smith review start" +
 		" " + reviewTransitionShellWord("--cwd="+repo) +
 		" --contract=" + ReviewIntegrationContractV2 +
 		" --target=" + status.TargetIdentity +
@@ -468,3 +468,4 @@ func negotiatedStartTarget(started ReviewIntegrationStartResult) string {
 	}
 	return ""
 }
+

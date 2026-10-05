@@ -4,7 +4,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
 )
 
 func TestRenderKiroModelPicker_ShowsRequestedCopy(t *testing.T) {
@@ -135,3 +135,4 @@ func TestNewKiroModelPickerStateFromAssignments_PreservesLegacyAliases(t *testin
 		t.Fatalf("saved legacy alias = %q, want sonnet", got)
 	}
 }
+

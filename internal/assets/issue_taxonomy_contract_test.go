@@ -52,7 +52,7 @@ func TestIssueTaxonomyForms(t *testing.T) {
 
 func TestIssueTaxonomyCatalog(t *testing.T) {
 	text := taxonomyRead(t, "CONTRIBUTING.md")
-	taxonomyTerms(t, text, "github.com/Gentleman-Programming/gentle-ai", "inventory is not permission", "untrusted data", "zero or one", "exactly one", "Preserve every existing", "human review", "separate label-creation authority", "Classification does not grant status or priority authority")
+	taxonomyTerms(t, text, "github.com/jonsanchezr/agent-smith", "inventory is not permission", "untrusted data", "zero or one", "exactly one", "Preserve every existing", "human review", "separate label-creation authority", "Classification does not grant status or priority authority")
 	for _, label := range []string{"type:bug", "type:feature", "type:docs", "type:refactor", "type:chore", "type:breaking-change", "status:needs-review", "status:approved", "status:needs-design", "status:needs-info", "priority:high", "priority:medium", "priority:low", "good first issue", "help wanted", "up-for-grabs", "size:exception", "no-merge", "duplicate", "wontfix", "gentle-report", "source:guided-report", "rc-feedback"} {
 		taxonomyTerms(t, text, "`"+label+"`")
 	}
@@ -72,7 +72,7 @@ func TestIssueTaxonomyShippedContract(t *testing.T) {
 	taxonomyTerms(t, canonical, `version: "1.6"`, "reviewed policy requires a catalog", "missing required catalog", "unknown label", "inventory is not permission", "untrusted data", "other repositories", "Classification does not grant status or priority authority", "runtime version/digest enforcement", "external control center")
 	reference := MustRead("skills/issue-creation/references/delegated-workflow-actions.md")
 	taxonomyTerms(t, reference, "approved catalog", "Preserve every existing", "multiple type labels", "human", "Before any generic `$LABEL`", "MAINTAIN", "ADMIN")
-	for _, path := range []string{"skills/systemic-issue-triage/SKILL.md", "internal/assets/skills/systemic-issue-triage/SKILL.md", "skills/issue-root-resolution/SKILL.md", "skills/gentle-ai-collab-perfect/SKILL.md", "skills/branch-pr/SKILL.md", "internal/assets/skills/branch-pr/SKILL.md"} {
+	for _, path := range []string{"skills/systemic-issue-triage/SKILL.md", "internal/assets/skills/systemic-issue-triage/SKILL.md", "skills/issue-root-resolution/SKILL.md", "skills/agent-smith-collab-perfect/SKILL.md", "skills/branch-pr/SKILL.md", "internal/assets/skills/branch-pr/SKILL.md"} {
 		t.Run(path, func(t *testing.T) {
 			taxonomyTerms(t, taxonomyRead(t, path), "CONTRIBUTING.md", "internal/assets/skills/issue-creation/SKILL.md", "inventory is not permission")
 		})
@@ -117,7 +117,7 @@ func TestIssueTaxonomyHumanReclassification(t *testing.T) {
 	for _, kind := range []string{"issue", "pr"} {
 		taxonomyTerms(t, reference, "gh "+kind+" edit \"$NUMBER\" --repo \"$TARGET\" --add-label \"$ADD_TYPES\" --remove-label \"$REMOVE_TYPES\"")
 	}
-	for _, path := range []string{"CONTRIBUTING.md", "skills/systemic-issue-triage/SKILL.md", "internal/assets/skills/systemic-issue-triage/SKILL.md", "skills/issue-root-resolution/SKILL.md", "skills/gentle-ai-collab-perfect/SKILL.md", "skills/branch-pr/SKILL.md", "internal/assets/skills/branch-pr/SKILL.md"} {
+	for _, path := range []string{"CONTRIBUTING.md", "skills/systemic-issue-triage/SKILL.md", "internal/assets/skills/systemic-issue-triage/SKILL.md", "skills/issue-root-resolution/SKILL.md", "skills/agent-smith-collab-perfect/SKILL.md", "skills/branch-pr/SKILL.md", "internal/assets/skills/branch-pr/SKILL.md"} {
 		t.Run(path, func(t *testing.T) {
 			taxonomyTerms(t, taxonomyRead(t, path), "automatic classification", "human-authorized type correction")
 		})
@@ -141,3 +141,4 @@ func taxonomyTerms(t *testing.T, text string, terms ...string) {
 		}
 	}
 }
+

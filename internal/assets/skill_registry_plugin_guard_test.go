@@ -9,11 +9,11 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/skillregistry"
+	"github.com/jonsanchezr/agent-smith/v4/internal/skillregistry"
 )
 
 // TestSkillRegistryPluginSkipsNonProjectDirectories runs the real plugin
-// under node with a fake `gentle-ai` on PATH that records its argv. OpenCode
+// under node with a fake `agent-smith` on PATH that records its argv. OpenCode
 // resolves a brand-new non-project directory to "/" (or another markerless
 // location); the plugin must skip those without spawning, and spawn exactly
 // once for a real project root.
@@ -98,3 +98,4 @@ func TestSkillRegistryPluginMarkersMatchCLIGuard(t *testing.T) {
 		t.Fatalf("plugin PROJECT_MARKERS = %v, want the CLI guard's markers %v", got, want)
 	}
 }
+

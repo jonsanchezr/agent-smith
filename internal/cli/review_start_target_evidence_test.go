@@ -8,7 +8,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/reviewtransaction"
+	"github.com/jonsanchezr/agent-smith/v4/internal/reviewtransaction"
 )
 
 // Issue #4494: the consent answer re-enters negotiated START, which rebuilds
@@ -441,3 +441,4 @@ func TestReviewNegotiatedStaleIdentityOnlyDriftStopsInsteadOfRetrying(t *testing
 		t.Fatal("an identity-only drift must not record the consent-stale marker")
 	}
 }
+

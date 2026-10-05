@@ -5,8 +5,8 @@ import (
 	"maps"
 	"strings"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/tui/styles"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
+	"github.com/jonsanchezr/agent-smith/v4/internal/tui/styles"
 )
 
 type KiroModelPreset string
@@ -267,3 +267,4 @@ func kiroAliasTag(alias model.KiroModelAlias) string {
 		return styles.SuccessStyle.Render("[sonnet]")
 	}
 }
+

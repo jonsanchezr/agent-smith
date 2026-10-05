@@ -5,8 +5,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/system"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
+	"github.com/jonsanchezr/agent-smith/v4/internal/system"
 )
 
 func TestBuildReviewPayloadIncludesPlatformDecision(t *testing.T) {
@@ -313,3 +313,4 @@ func TestBuildReviewPayloadOmitsNotesForWritableAgents(t *testing.T) {
 		t.Fatalf("writable selection produced review notes %#v, want none", payload.AgentNotes)
 	}
 }
+

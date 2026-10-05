@@ -1,6 +1,6 @@
 package catalog
 
-import "github.com/gentleman-programming/gentle-ai/v4/internal/model"
+import "github.com/jonsanchezr/agent-smith/v4/internal/model"
 
 type Component struct {
 	ID          model.ComponentID
@@ -25,3 +25,4 @@ func MVPComponents() []Component {
 	copy(components, mvpComponents)
 	return components
 }
+

@@ -6,10 +6,10 @@ import (
 	"testing"
 
 	tea "github.com/charmbracelet/bubbletea"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/backup"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/system"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/tui/screens"
+	"github.com/jonsanchezr/agent-smith/v4/internal/backup"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
+	"github.com/jonsanchezr/agent-smith/v4/internal/system"
+	"github.com/jonsanchezr/agent-smith/v4/internal/tui/screens"
 )
 
 func screenName(s Screen) string { return fmt.Sprintf("Screen#%d", int(s)) }
@@ -119,3 +119,4 @@ func TestAsyncCompletionCannotReenterAbandonedFlow(t *testing.T) {
 		t.Fatalf("late restore changed abandoned flow: screen=%v err=%v", got.Screen, got.RestoreErr)
 	}
 }
+

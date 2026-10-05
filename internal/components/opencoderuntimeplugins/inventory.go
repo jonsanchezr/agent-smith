@@ -2,7 +2,7 @@
 // OpenCode-compatible runtime plugins. Filesystem lifecycle remains with callers.
 package opencoderuntimeplugins
 
-import "github.com/gentleman-programming/gentle-ai/v4/internal/model"
+import "github.com/jonsanchezr/agent-smith/v4/internal/model"
 
 const LegacyOpenCodeReviewPluginName = "review-result-artifacts.ts"
 
@@ -34,3 +34,4 @@ func OpenCodePluginLifecycleNames(agent model.AgentID) []string {
 func AgentReceivesManagedOpenCodePlugins(agent model.AgentID) bool {
 	return agent == model.AgentOpenCode || agent == model.AgentKilocode
 }
+

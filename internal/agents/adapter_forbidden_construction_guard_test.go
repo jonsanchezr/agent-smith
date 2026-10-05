@@ -24,7 +24,7 @@ import (
 //  3. Target / lineage identity identifiers
 //     (LineageID, lineage_id, TargetIdentity, target_identity).
 //  4. Binding JSON shapes
-//     (ReviewBinding, binding.json, gentle-ai.sdd-review-binding).
+//     (ReviewBinding, binding.json, agent-smith.sdd-review-binding).
 //
 // Scope: this guard covers only the in-repo Go adapter dispatch surfaces
 // (CON-09/10/11). The retired bundled OpenCode plugin asset and the
@@ -53,7 +53,7 @@ var adapterForbiddenConstructionPatterns = []struct {
 	{"target/lineage identity", "target_identity"},
 	{"binding JSON", "ReviewBinding"},
 	{"binding JSON", "binding.json"},
-	{"binding JSON", "gentle-ai.sdd-review-binding"},
+	{"binding JSON", "agent-smith.sdd-review-binding"},
 }
 
 // adapterForbiddenConstructionPackageDirs are the CON-09/10/11 in-repo Go
@@ -192,3 +192,4 @@ func scanAdapterForbiddenConstructionsFile(path string) ([]string, error) {
 	}
 	return scanAdapterForbiddenConstructions(path, src), nil
 }
+

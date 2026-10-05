@@ -7,8 +7,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/assets"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
+	"github.com/jonsanchezr/agent-smith/v4/internal/assets"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
 )
 
 // embeddedSharedFileNames returns the names of every file embedded under
@@ -63,3 +63,4 @@ func TestComponentPathsSDDCoversEveryEmbeddedSharedFile(t *testing.T) {
 		t.Fatalf("retained skill not tracked: %s", want)
 	}
 }
+

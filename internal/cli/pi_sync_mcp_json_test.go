@@ -7,7 +7,7 @@ import (
 	"runtime"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
 )
 
 // setupPiSyncHost isolates a Pi sync run in a temporary home with stubbed
@@ -139,3 +139,4 @@ func TestPiEngramMCPConfigIsBackedUpButNotVerified(t *testing.T) {
 		t.Fatalf("Engram verification paths = %v, want %q excluded (Pi Engram is native-only)", verified, mcpPath)
 	}
 }
+

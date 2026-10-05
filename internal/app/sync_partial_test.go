@@ -10,10 +10,10 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/cli"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/opencode"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/state"
+	"github.com/jonsanchezr/agent-smith/v4/internal/cli"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
+	"github.com/jonsanchezr/agent-smith/v4/internal/opencode"
+	"github.com/jonsanchezr/agent-smith/v4/internal/state"
 )
 
 // undetectableOpenCodeHome isolates HOME and the workspace for a sync of
@@ -54,7 +54,7 @@ func TestRunArgsSyncPrintsPartialReportAndFails(t *testing.T) {
 	if !errors.As(err, &partial) {
 		t.Fatalf("RunArgs(sync) error = %v, want *cli.PartialSyncError so the exit code is non-zero", err)
 	}
-	for _, want := range []string{"Agents synced: claude-code", "Agents skipped: opencode", "opencode --version", "gentle-ai sync"} {
+	for _, want := range []string{"Agents synced: claude-code", "Agents skipped: opencode", "opencode --version", "agent-smith sync"} {
 		if !strings.Contains(out.String(), want) {
 			t.Errorf("sync output missing %q:\n%s", want, out.String())
 		}
@@ -131,3 +131,4 @@ func TestTUIPartialSyncKeepsOpenCodeInPersistedSelection(t *testing.T) {
 		})
 	}
 }
+

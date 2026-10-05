@@ -9,7 +9,7 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/reviewtransaction"
+	"github.com/jonsanchezr/agent-smith/v4/internal/reviewtransaction"
 )
 
 // invalidatedRecoverySelfDerivationPredecessor starts a pristine review and
@@ -265,3 +265,4 @@ func TestReviewRecoverSelfDerivationNoDriftElectiveResetStillRefuses(t *testing.
 		t.Fatalf("rejected recovery created a successor: %v", statErr)
 	}
 }
+

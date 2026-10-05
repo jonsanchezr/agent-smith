@@ -11,10 +11,10 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/assets"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/reviewtransaction"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/state"
+	"github.com/jonsanchezr/agent-smith/v4/internal/assets"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
+	"github.com/jonsanchezr/agent-smith/v4/internal/reviewtransaction"
+	"github.com/jonsanchezr/agent-smith/v4/internal/state"
 )
 
 func TestManagedReviewerAssetProvenanceAuthorityBoundary(t *testing.T) {
@@ -121,7 +121,7 @@ func TestNegotiatedReviewStartClassifiesStaleManagedAssetsBeforeAuthority(t *tes
 	// #3299, #4170: the failure names the exact candidate-preserving sync
 	// continuation instead of leaving the caller to guess "run sync" from the
 	// cause prose. #4434: the command is anchored to the invoking executable,
-	// so it cannot resolve to a different `gentle-ai` through PATH.
+	// so it cannot resolve to a different `agent-smith` through PATH.
 	if failure.Continuation == nil || failure.Continuation.Operation != "sync" ||
 		failure.Continuation.Command != managedAssetsTestContinuationCommand(t, "opencode") || failure.Continuation.Agent != "opencode" ||
 		len(failure.Continuation.StaleAssets) != 1 || failure.Continuation.StaleAssets[0] != "sha256:stale" {
@@ -354,7 +354,7 @@ func TestManagedAssetsStopTransitionCarriesExactlyOneSignal(t *testing.T) {
 	// caller reading both would not know which one to trust.
 	executeWithContinuation := converged
 	bogusTransition := *converged.NextTransition
-	bogusTransition.Continuation = &ReviewStopContinuation{Operation: "sync", Command: "gentle-ai sync --agent opencode", Agent: "opencode"}
+	bogusTransition.Continuation = &ReviewStopContinuation{Operation: "sync", Command: "agent-smith sync --agent opencode", Agent: "opencode"}
 	executeWithContinuation.NextTransition = &bogusTransition
 	if err := executeWithContinuation.Validate(); err == nil {
 		t.Fatal("STATUS accepted a sync continuation attached to an executable START transition")
@@ -362,8 +362,8 @@ func TestManagedAssetsStopTransitionCarriesExactlyOneSignal(t *testing.T) {
 }
 
 // TestManagedAssetsContinuationUsesInvokingExecutable is the RED-first proof
-// for #4434: a STATUS or START refusal produced by one Gentle AI binary must
-// offer a continuation that runs THAT binary, not whatever `gentle-ai` happens
+// for #4434: a STATUS or START refusal produced by one Agent Smith binary must
+// offer a continuation that runs THAT binary, not whatever `agent-smith` happens
 // to resolve to on PATH. The continuation used to hard-code the unqualified
 // executable name while describing itself as the exact runnable recovery, so
 // with a different global binary first on PATH the offered sync wrote that
@@ -405,7 +405,7 @@ func TestManagedAssetsContinuationUsesInvokingExecutable(t *testing.T) {
 	// with single quotes (no POSIX shell expands anything inside them, so $ and
 	// backticks survive literally), Windows paths quote with double quotes
 	// (cmd.exe command syntax), a path over the safe bare class stays bare, and
-	// an unresolvable executable keeps the historical bare `gentle-ai` form
+	// an unresolvable executable keeps the historical bare `agent-smith` form
 	// instead of guessing a path it cannot prove.
 	for name, tc := range map[string]struct {
 		executable func() (string, error)
@@ -413,29 +413,29 @@ func TestManagedAssetsContinuationUsesInvokingExecutable(t *testing.T) {
 		want       string
 	}{
 		"windows path with spaces uses double quotes": {
-			executable: func() (string, error) { return `C:\Program Files\gentle-ai\gentle-ai.exe`, nil },
+			executable: func() (string, error) { return `C:\Program Files\agent-smith\agent-smith.exe`, nil },
 			goos:       "windows",
-			want:       `"C:\Program Files\gentle-ai\gentle-ai.exe" sync --agent opencode`,
+			want:       `"C:\Program Files\agent-smith\agent-smith.exe" sync --agent opencode`,
 		},
 		"posix path with shell expansion uses single quotes": {
-			executable: func() (string, error) { return `/opt/$HOME/gentle-ai`, nil },
+			executable: func() (string, error) { return `/opt/$HOME/agent-smith`, nil },
 			goos:       "linux",
-			want:       `'/opt/$HOME/gentle-ai' sync --agent opencode`,
+			want:       `'/opt/$HOME/agent-smith' sync --agent opencode`,
 		},
 		"posix path with an embedded single quote escapes it": {
-			executable: func() (string, error) { return `/opt/o'brien/gentle-ai`, nil },
+			executable: func() (string, error) { return `/opt/o'brien/agent-smith`, nil },
 			goos:       "linux",
-			want:       `'/opt/o'\''brien/gentle-ai' sync --agent opencode`,
+			want:       `'/opt/o'\''brien/agent-smith' sync --agent opencode`,
 		},
 		"posix path over the safe bare class stays bare": {
-			executable: func() (string, error) { return `/opt/gentle-ai/bin/gentle-ai`, nil },
+			executable: func() (string, error) { return `/opt/agent-smith/bin/agent-smith`, nil },
 			goos:       "linux",
-			want:       `/opt/gentle-ai/bin/gentle-ai sync --agent opencode`,
+			want:       `/opt/agent-smith/bin/agent-smith sync --agent opencode`,
 		},
 		"unresolvable executable keeps the bare fallback": {
 			executable: func() (string, error) { return "", errors.New("unresolvable") },
 			goos:       "linux",
-			want:       `gentle-ai sync --agent opencode`,
+			want:       `agent-smith sync --agent opencode`,
 		},
 	} {
 		t.Run(name, func(t *testing.T) {
@@ -451,7 +451,7 @@ func TestManagedAssetsContinuationUsesInvokingExecutable(t *testing.T) {
 			})
 			// Keep these renderer cases focused on os.Executable. A relative
 			// argv[0] remains only the final compatibility fallback.
-			os.Args = append([]string{"gentle-ai"}, os.Args[1:]...)
+			os.Args = append([]string{"agent-smith"}, os.Args[1:]...)
 			continuation := managedAssetsContinuation("opencode", []string{"sha256:stale"})
 			if continuation.Command != tc.want {
 				t.Fatalf("continuation command = %q, want %q", continuation.Command, tc.want)
@@ -463,9 +463,9 @@ func TestManagedAssetsContinuationUsesInvokingExecutable(t *testing.T) {
 	}
 
 	// The published contract itself must refuse a shell-significant bare
-	// executable token: `/opt/$HOME/gentle-ai sync` unquoted is exactly the
+	// executable token: `/opt/$HOME/agent-smith sync` unquoted is exactly the
 	// shape a POSIX shell would expand into the wrong binary.
-	if validManagedAssetsContinuationCommand(`/opt/$HOME/gentle-ai sync --agent pi`) {
+	if validManagedAssetsContinuationCommand(`/opt/$HOME/agent-smith sync --agent pi`) {
 		t.Fatal("published pattern accepted a shell-significant bare executable token")
 	}
 
@@ -478,13 +478,13 @@ func TestManagedAssetsContinuationUsesInvokingExecutable(t *testing.T) {
 		path string
 		goos string
 	}{
-		"posix safe path":                {`/opt/gentle-ai/bin/gentle-ai`, "linux"},
-		"posix path with expansion":      {`/opt/$HOME/gentle-ai`, "linux"},
-		"posix path with apostrophe":     {`/opt/o'brien/gentle-ai`, "linux"},
-		"posix path with backslashes":    {`/opt/we ird\x\gentle-ai`, "linux"},
-		"windows path with spaces":       {`C:\Program Files\gentle-ai\gentle-ai.exe`, "windows"},
-		"quoted UNC path with spaces":    {`\\server\gentle tools\gentle-ai.exe`, "windows"},
-		"quoted UNC path without spaces": {`\\server\share\gentle-ai.exe`, "windows"},
+		"posix safe path":                {`/opt/agent-smith/bin/agent-smith`, "linux"},
+		"posix path with expansion":      {`/opt/$HOME/agent-smith`, "linux"},
+		"posix path with apostrophe":     {`/opt/o'brien/agent-smith`, "linux"},
+		"posix path with backslashes":    {`/opt/we ird\x\agent-smith`, "linux"},
+		"windows path with spaces":       {`C:\Program Files\agent-smith\agent-smith.exe`, "windows"},
+		"quoted UNC path with spaces":    {`\\server\gentle tools\agent-smith.exe`, "windows"},
+		"quoted UNC path without spaces": {`\\server\share\agent-smith.exe`, "windows"},
 	} {
 		t.Run("round-trip "+name, func(t *testing.T) {
 			previousGOOS := reviewManagedAssetsGOOS
@@ -500,7 +500,7 @@ func TestManagedAssetsContinuationUsesInvokingExecutable(t *testing.T) {
 
 	// End to end: a stale-assets STATUS stop produced by THIS (test) binary
 	// names THIS binary's own path in its continuation, so running the exact
-	// advertised command cannot reach a different `gentle-ai` through PATH.
+	// advertised command cannot reach a different `agent-smith` through PATH.
 	home, repo := reviewEnabledHome(t), initReviewCLIRepo(t)
 	writeReviewStartCandidate(t, repo, "docs/invoking-executable.md", "# Candidate\n", 0o644)
 	staleManagedReviewerAssets(t, home)
@@ -567,7 +567,7 @@ func TestManagedAssetsContinuationUsesInvokingExecutable(t *testing.T) {
 }
 
 func TestManagedAssetsContinuationRejectsUnsafeExecutableIdentities(t *testing.T) {
-	absoluteArgvZero := filepath.Join(t.TempDir(), "gentle-ai")
+	absoluteArgvZero := filepath.Join(t.TempDir(), "agent-smith")
 	for _, test := range []struct {
 		name       string
 		executable string
@@ -591,13 +591,13 @@ func TestManagedAssetsContinuationRejectsUnsafeExecutableIdentities(t *testing.T
 			name:       "multiline argv zero falls through to canonical fallback",
 			resolveErr: errors.New("executable unavailable"),
 			argvZero:   filepath.Join(t.TempDir(), "gentle\rai"),
-			want:       "gentle-ai sync --agent opencode",
+			want:       "agent-smith sync --agent opencode",
 		},
 		{
 			name:       "relative argv zero falls through to canonical fallback",
 			resolveErr: errors.New("executable unavailable"),
-			argvZero:   "gentle-ai",
-			want:       "gentle-ai sync --agent opencode",
+			argvZero:   "agent-smith",
+			want:       "agent-smith sync --agent opencode",
 		},
 	} {
 		t.Run(test.name, func(t *testing.T) {
@@ -758,3 +758,4 @@ func requireManagedAssetProvenanceError(t *testing.T, err error, want string) {
 		t.Fatalf("delivery error = %v, want %q", err, want)
 	}
 }
+

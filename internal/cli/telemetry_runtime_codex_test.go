@@ -11,8 +11,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/state"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/telemetry"
+	"github.com/jonsanchezr/agent-smith/v4/internal/state"
+	"github.com/jonsanchezr/agent-smith/v4/internal/telemetry"
 )
 
 func TestTelemetryRuntimeCodexDirectSend(t *testing.T) {
@@ -48,7 +48,7 @@ func TestTelemetryRuntimeCodexDirectSend(t *testing.T) {
 			if bytes.Contains(body, []byte("PRIVATE")) || bytes.Contains(body, []byte(transcript)) {
 				t.Fatalf("private data leaked: %s", body)
 			}
-			return &http.Response{StatusCode: http.StatusOK, Body: io.NopCloser(strings.NewReader(`{"schema":"gentle-ai.telemetry-runtime-delivery/v1","decision":"stored"}`))}, nil
+			return &http.Response{StatusCode: http.StatusOK, Body: io.NopCloser(strings.NewReader(`{"schema":"agent-smith.telemetry-runtime-delivery/v1","decision":"stored"}`))}, nil
 		})}
 	}
 	t.Cleanup(func() { runtimeHTTPClient = oldClient })
@@ -75,7 +75,7 @@ func TestTelemetryRuntimeCodexProcessesHeldOpenHookStdin(t *testing.T) {
 	runtimeHTTPClient = func() *http.Client {
 		return &http.Client{Transport: codexCLIRoundTrip(func(*http.Request) (*http.Response, error) {
 			requests++
-			return &http.Response{StatusCode: http.StatusOK, Body: io.NopCloser(strings.NewReader(`{"schema":"gentle-ai.telemetry-runtime-delivery/v1","decision":"stored"}`))}, nil
+			return &http.Response{StatusCode: http.StatusOK, Body: io.NopCloser(strings.NewReader(`{"schema":"agent-smith.telemetry-runtime-delivery/v1","decision":"stored"}`))}, nil
 		})}
 	}
 	t.Cleanup(func() { runtimeHTTPClient = oldClient })
@@ -126,3 +126,4 @@ func equalCodexCLIDisk(a, b map[string]string) bool {
 	}
 	return true
 }
+

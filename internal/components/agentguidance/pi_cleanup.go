@@ -5,13 +5,13 @@ import (
 	"os"
 	"strings"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/agents"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/components/filemerge"
+	"github.com/jonsanchezr/agent-smith/v4/internal/agents"
+	"github.com/jonsanchezr/agent-smith/v4/internal/components/filemerge"
 )
 
 // legacyPiSystemPromptSectionIDs are the only marker pairs this cleanup owns.
 // Pi's package owns APPEND_SYSTEM.md, so unmarked and non-allowlisted content
-// must never be interpreted as Gentle AI content.
+// must never be interpreted as Agent Smith content.
 var legacyPiSystemPromptSectionIDs = []string{
 	"persona", "engram-protocol", "sdd-orchestrator", "strict-tdd-mode",
 	"agent-routing", "trigger-rules", "codegraph-guidance",
@@ -57,8 +57,8 @@ func RetirePiSystemPromptBlocks(homeDir string, adapter agents.Adapter) (Result,
 func removePiManagedSections(content string) (string, bool) {
 	removed := false
 	for _, sectionID := range legacyPiSystemPromptSectionIDs {
-		open := "<!-- gentle-ai:" + sectionID + " -->"
-		close := "<!-- /gentle-ai:" + sectionID + " -->"
+		open := "<!-- agent-smith:" + sectionID + " -->"
+		close := "<!-- /agent-smith:" + sectionID + " -->"
 		for search := 0; ; {
 			start := strings.Index(content[search:], open)
 			if start < 0 {
@@ -78,3 +78,4 @@ func removePiManagedSections(content string) (string, bool) {
 	}
 	return content, removed
 }
+

@@ -5,18 +5,18 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/agents"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/assets"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/catalog"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/components/agentguidance"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/components/opencodedefault"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/components/reviewassets"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
+	"github.com/jonsanchezr/agent-smith/v4/internal/agents"
+	"github.com/jonsanchezr/agent-smith/v4/internal/assets"
+	"github.com/jonsanchezr/agent-smith/v4/internal/catalog"
+	"github.com/jonsanchezr/agent-smith/v4/internal/components/agentguidance"
+	"github.com/jonsanchezr/agent-smith/v4/internal/components/opencodedefault"
+	"github.com/jonsanchezr/agent-smith/v4/internal/components/reviewassets"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
 )
 
 const (
-	orchestratorOpenMarker       = "<!-- gentle-ai:orchestrator -->"
-	legacyOrchestratorOpenMarker = "<!-- gentle-ai:sdd-orchestrator -->"
+	orchestratorOpenMarker       = "<!-- agent-smith:orchestrator -->"
+	legacyOrchestratorOpenMarker = "<!-- agent-smith:sdd-orchestrator -->"
 )
 
 // orchestratorRuntimesForInstall lists every runtime whose installed prompt
@@ -80,7 +80,7 @@ func TestInstallAndSyncSelectGenericOrchestratorVariant(t *testing.T) {
 				selection := model.Selection{Agents: []model.AgentID{agent}}
 				if route != "fresh" {
 					path := systemPromptFileFor(t, home, agent)
-					legacy := "User prefix\n" + legacyOrchestratorOpenMarker + "\n" + asset + "\n<!-- /gentle-ai:sdd-orchestrator -->\nUser suffix\n"
+					legacy := "User prefix\n" + legacyOrchestratorOpenMarker + "\n" + asset + "\n<!-- /agent-smith:sdd-orchestrator -->\nUser suffix\n"
 					mustWriteFile(t, path, []byte(legacy))
 				}
 				if route == "sync-upgrade" {
@@ -154,9 +154,9 @@ func TestInstallAndSyncDeliverOrchestratorOnceForEveryRuntime(t *testing.T) {
 			rdd := model.SupportsReceiptDrivenDevelopment(agent)
 			for _, marker := range []string{
 				"Native Compact Review Orchestration",
-				"Gentle AI Provider Defect Handoff",
+				"Agent Smith Provider Defect Handoff",
 				"Receipt-driven development is user-owned",
-				"gentle-ai review mode enable|disable|status",
+				"agent-smith review mode enable|disable|status",
 				"The native RDD refuter owns native review claims",
 			} {
 				if got := strings.Contains(prompt, marker); got != rdd {
@@ -164,7 +164,7 @@ func TestInstallAndSyncDeliverOrchestratorOnceForEveryRuntime(t *testing.T) {
 				}
 			}
 			if !rdd {
-				for _, forbidden := range []string{"gentle-ai review", "RDD", "receipt", "refuter", "native review"} {
+				for _, forbidden := range []string{"agent-smith review", "RDD", "receipt", "refuter", "native review"} {
 					if strings.Contains(prompt, forbidden) {
 						t.Errorf("non-RDD runtime prompt carries %q", forbidden)
 					}
@@ -205,8 +205,8 @@ func TestInstallUpgradesV370OrchestratorBlockAndKeepsUserText(t *testing.T) {
 			home := t.TempDir()
 			promptPath := systemPromptFileFor(t, home, model.AgentClaudeCode)
 			legacy := "# My own rules\n\nAlways answer briefly.\n\n" +
-				legacyOrchestratorOpenMarker + "\n# Agent Teams Lite — Orchestrator Instructions\n\n### SDD Workflow\n\nArtifact Store Mode\n<!-- /gentle-ai:sdd-orchestrator -->\n\n" +
-				"<!-- gentle-ai:agent-routing -->\nstale routing\n<!-- /gentle-ai:agent-routing -->\n\n" +
+				legacyOrchestratorOpenMarker + "\n# Agent Teams Lite — Orchestrator Instructions\n\n### SDD Workflow\n\nArtifact Store Mode\n<!-- /agent-smith:sdd-orchestrator -->\n\n" +
+				"<!-- agent-smith:agent-routing -->\nstale routing\n<!-- /agent-smith:agent-routing -->\n\n" +
 				"User footer.\n"
 			mustWriteFile(t, promptPath, []byte(legacy))
 			selection := model.Selection{Agents: []model.AgentID{model.AgentClaudeCode}}
@@ -236,3 +236,4 @@ func TestInstallUpgradesV370OrchestratorBlockAndKeepsUserText(t *testing.T) {
 		})
 	}
 }
+

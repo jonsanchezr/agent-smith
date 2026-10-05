@@ -6,12 +6,12 @@ import (
 	"strings"
 	"unicode"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/tui/styles"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
+	"github.com/jonsanchezr/agent-smith/v4/internal/tui/styles"
 )
 
 // CodexModelPreset represents a named effort-tier preset for Codex per-phase
-// reasoning_effort assignments. Efforts are Gentle AI workload policy, not Codex defaults.
+// reasoning_effort assignments. Efforts are Agent Smith workload policy, not Codex defaults.
 type CodexModelPreset string
 
 const (
@@ -645,3 +645,4 @@ func CodexPresetLabel(preset CodexModelPreset) string {
 func CodexPresetDescription(preset CodexModelPreset) string {
 	return codexPresetDescriptions[preset]
 }
+

@@ -10,7 +10,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/reviewtransaction"
+	"github.com/jonsanchezr/agent-smith/v4/internal/reviewtransaction"
 )
 
 func TestOrdinaryMarkdownLowRiskLifecycleNeedsNoExternalEvidence(t *testing.T) {
@@ -177,3 +177,4 @@ func TestMediumReviewClosesOnCapturedEvidence(t *testing.T) {
 		t.Fatalf("captured medium evidence retained compact authority state: %v", err)
 	}
 }
+

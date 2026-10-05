@@ -154,7 +154,7 @@ func TestRARWindowsOwnerOnlyDescriptorRoundTrips(t *testing.T) {
 			t.Fatal(err)
 		}
 		if mismatch := privateRARSecurityDescriptorMismatch(descriptor, directory); mismatch != "" {
-			t.Fatalf("the descriptor gentle-ai writes (directory=%t) is refused by its own rule: %s",
+			t.Fatalf("the descriptor agent-smith writes (directory=%t) is refused by its own rule: %s",
 				directory, mismatch)
 		}
 		if !privateRARSecurityDescriptorSafe(descriptor, directory) {
@@ -447,3 +447,4 @@ func TestRARWindowsAuthorityFilesystemClassifierFS5WorktreeOnExFAT(t *testing.T)
 		t.Fatalf("classifier was called for trusted-owner path: calls=%v", stub.calls)
 	}
 }
+

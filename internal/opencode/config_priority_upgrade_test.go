@@ -11,8 +11,8 @@ func TestManagedConfigPriorityAfterOpenCodeAgentMigration(t *testing.T) {
 		name, content string
 		want          int
 	}{
-		{"legacy marker", `{"agent":{"sdd-apply":{"__managed_by":"gentle-ai/sdd"}}}`, 2},
-		{"migrated parity only", `{"agent":{"gentle-ai-worker":{"hidden":true,"prompt":"worker","permission":{"task":"deny"}}}}`, 1},
+		{"legacy marker", `{"agent":{"sdd-apply":{"__managed_by":"agent-smith/sdd"}}}`, 2},
+		{"migrated parity only", `{"agent":{"agent-smith-worker":{"hidden":true,"prompt":"worker","permission":{"task":"deny"}}}}`, 1},
 		{"fresh review lens", `{"agent":{"review-risk":{"hidden":true,"prompt":"risk","permission":{"write":"deny"}}}}`, 1},
 		{"unmanaged", `{"agent":{"general":{"hidden":true,"prompt":"custom","permission":{}}}}`, 0},
 	} {
@@ -27,3 +27,4 @@ func TestManagedConfigPriorityAfterOpenCodeAgentMigration(t *testing.T) {
 		})
 	}
 }
+

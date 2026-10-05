@@ -11,10 +11,10 @@ const (
 	captureEvidenceDescriptorNormalLineage     = "capture-evidence-v5-normal"
 	captureEvidenceDescriptorCorrectionLineage = "capture-evidence-v5-correction"
 	targetedInspectionLineage                  = "targeted-validator-inspection"
-	statusSchemaV6                             = "gentle-ai.review-integration.status/v6"
-	statusSchemaV9                             = "gentle-ai.review-integration.status/v9"
-	verificationEvidenceSchemaV1               = "https://gentle-ai.dev/schema/review/verification-evidence/v1"
-	verificationEvidenceRecordSchemaV2         = "gentle-ai.review-verification-evidence/v2"
+	statusSchemaV6                             = "agent-smith.review-integration.status/v6"
+	statusSchemaV9                             = "agent-smith.review-integration.status/v9"
+	verificationEvidenceSchemaV1               = "https://agent-smith.dev/schema/review/verification-evidence/v1"
+	verificationEvidenceRecordSchemaV2         = "agent-smith.review-verification-evidence/v2"
 )
 
 var captureEvidenceDescriptorCapability = &Capability{Verb: []string{"review", "capture-evidence"},
@@ -323,3 +323,4 @@ func inspectJ95CorrectedCandidate(r *journeyRun) error {
 	}
 	return writeCorrectedCandidate(r.sandbox)
 }
+

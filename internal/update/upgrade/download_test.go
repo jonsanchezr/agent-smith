@@ -16,8 +16,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/system"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/update"
+	"github.com/jonsanchezr/agent-smith/v4/internal/system"
+	"github.com/jonsanchezr/agent-smith/v4/internal/update"
 )
 
 // --- test helpers ---
@@ -77,8 +77,8 @@ func TestAssetURLResolution(t *testing.T) {
 	}{
 		{
 			name:       "darwin amd64",
-			owner:      "Gentleman-Programming",
-			repo:       "gentle-ai",
+			owner:      "jonsanchezr",
+			repo:       "agent-smith",
 			version:    "1.5.0",
 			goos:       "darwin",
 			goarch:     "amd64",
@@ -86,8 +86,8 @@ func TestAssetURLResolution(t *testing.T) {
 		},
 		{
 			name:       "darwin arm64",
-			owner:      "Gentleman-Programming",
-			repo:       "gentle-ai",
+			owner:      "jonsanchezr",
+			repo:       "agent-smith",
 			version:    "1.5.0",
 			goos:       "darwin",
 			goarch:     "arm64",
@@ -95,7 +95,7 @@ func TestAssetURLResolution(t *testing.T) {
 		},
 		{
 			name:       "linux amd64",
-			owner:      "Gentleman-Programming",
+			owner:      "jonsanchezr",
 			repo:       "gga",
 			version:    "2.0.0",
 			goos:       "linux",
@@ -104,8 +104,8 @@ func TestAssetURLResolution(t *testing.T) {
 		},
 		{
 			name:       "contains version",
-			owner:      "Gentleman-Programming",
-			repo:       "gentle-ai",
+			owner:      "jonsanchezr",
+			repo:       "agent-smith",
 			version:    "1.5.0",
 			goos:       "darwin",
 			goarch:     "amd64",
@@ -246,9 +246,9 @@ func TestDownload_WindowsAlwaysManualFallback(t *testing.T) {
 
 	r := update.UpdateResult{
 		Tool: update.ToolInfo{
-			Name:          "gentle-ai",
-			Owner:         "Gentleman-Programming",
-			Repo:          "gentle-ai",
+			Name:          "agent-smith",
+			Owner:         "jonsanchezr",
+			Repo:          "agent-smith",
 			InstallMethod: update.InstallBinary,
 		},
 		LatestVersion: "1.5.0",
@@ -279,7 +279,7 @@ func TestFindBinaryInTar(t *testing.T) {
 		content []byte
 	}{
 		{"README.md", []byte("readme content")},
-		{"gentle-ai_1.5.0_darwin_arm64/gentle-ai", content}, // binary in subdir
+		{"agent-smith_1.5.0_darwin_arm64/agent-smith", content}, // binary in subdir
 	}
 
 	for _, e := range entries {
@@ -291,7 +291,7 @@ func TestFindBinaryInTar(t *testing.T) {
 	f.Close()
 
 	tarContent, _ := os.ReadFile(tarPath)
-	outPath := filepath.Join(t.TempDir(), "gentle-ai")
+	outPath := filepath.Join(t.TempDir(), "agent-smith")
 
 	// Use an httptest server to serve the tar.
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -304,7 +304,7 @@ func TestFindBinaryInTar(t *testing.T) {
 	t.Cleanup(func() { httpClient = origHTTPClient })
 	httpClient = server.Client()
 
-	err := downloadBinary(context.Background(), server.URL+"/release.tar.gz", "gentle-ai", outPath)
+	err := downloadBinary(context.Background(), server.URL+"/release.tar.gz", "agent-smith", outPath)
 	if err != nil {
 		t.Fatalf("downloadBinary: %v", err)
 	}
@@ -320,8 +320,8 @@ func TestFindBinaryInTar(t *testing.T) {
 func TestExpectedChecksumFor(t *testing.T) {
 	firstDigest := strings.Repeat("a", sha256.Size*2)
 	secondDigest := strings.Repeat("b", sha256.Size*2)
-	content := firstDigest + "  gentle-ai_1.0.0_darwin_arm64.tar.gz\n" +
-		secondDigest + "  gentle-ai_1.0.0_linux_amd64.tar.gz\n"
+	content := firstDigest + "  agent-smith_1.0.0_darwin_arm64.tar.gz\n" +
+		secondDigest + "  agent-smith_1.0.0_linux_amd64.tar.gz\n"
 
 	tests := []struct {
 		name     string
@@ -333,25 +333,25 @@ func TestExpectedChecksumFor(t *testing.T) {
 		{
 			name:     "found first entry",
 			content:  content,
-			filename: "gentle-ai_1.0.0_darwin_arm64.tar.gz",
+			filename: "agent-smith_1.0.0_darwin_arm64.tar.gz",
 			want:     firstDigest,
 		},
 		{
 			name:     "found second entry",
 			content:  content,
-			filename: "gentle-ai_1.0.0_linux_amd64.tar.gz",
+			filename: "agent-smith_1.0.0_linux_amd64.tar.gz",
 			want:     secondDigest,
 		},
 		{
 			name:     "not found returns error",
 			content:  content,
-			filename: "gentle-ai_1.0.0_windows_amd64.zip",
+			filename: "agent-smith_1.0.0_windows_amd64.zip",
 			wantErr:  true,
 		},
 		{
 			name:     "empty content returns error",
 			content:  "",
-			filename: "gentle-ai_1.0.0_darwin_arm64.tar.gz",
+			filename: "agent-smith_1.0.0_darwin_arm64.tar.gz",
 			wantErr:  true,
 		},
 	}
@@ -372,7 +372,7 @@ func TestExpectedChecksumFor(t *testing.T) {
 // --- TestFetchChecksums ---
 
 func TestFetchChecksums(t *testing.T) {
-	const fakeContent = "abc123  gentle-ai_1.0.0_darwin_arm64.tar.gz\n"
+	const fakeContent = "abc123  agent-smith_1.0.0_darwin_arm64.tar.gz\n"
 
 	t.Run("success returns content", func(t *testing.T) {
 		server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -599,3 +599,4 @@ func (d dummyReadCloser) Close() error { return nil }
 
 // Suppress unused import warnings in case fmt is needed.
 var _ = fmt.Sprintf
+

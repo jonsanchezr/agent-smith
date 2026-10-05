@@ -6,10 +6,10 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/backup"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/state"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/system"
+	"github.com/jonsanchezr/agent-smith/v4/internal/backup"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
+	"github.com/jonsanchezr/agent-smith/v4/internal/state"
+	"github.com/jonsanchezr/agent-smith/v4/internal/system"
 )
 
 // claudeCommandSkillCollisions lists command names shadowed by skill directories.
@@ -81,3 +81,4 @@ func TestRunSyncPreservesUserEditedLegacyClaudeCommandWithoutReinstallingSDD(t *
 		t.Fatalf("~/.claude/commands files shadowed by same-named ~/.claude/skills directories: %v", collisions)
 	}
 }
+

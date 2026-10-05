@@ -8,8 +8,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/agents"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
+	"github.com/jonsanchezr/agent-smith/v4/internal/agents"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
 )
 
 // rddAgentNames are the native agents receipt-driven development owns.
@@ -99,7 +99,7 @@ func TestFreshInstallOnNonRDDRuntimesInstallsNoReviewAgents(t *testing.T) {
 
 // TestUpgradeRemovesOwnedRetiredReviewAgents seeds what an earlier release
 // installed on runtimes without receipt-driven development and proves the
-// upgrade removes only what Gentle AI owns.
+// upgrade removes only what Agent Smith owns.
 func TestUpgradeRemovesOwnedRetiredReviewAgents(t *testing.T) {
 	t.Parallel()
 
@@ -134,13 +134,13 @@ func TestUpgradeRemovesOwnedRetiredReviewAgents(t *testing.T) {
 				return content
 			}
 
-			// Recorded in the ledger with the bytes Gentle AI installed.
+			// Recorded in the ledger with the bytes Agent Smith installed.
 			ledgerOwned := write("review-risk.md", "review-risk as an earlier release rendered it\n")
 			// Unrecorded, but byte-identical to the managed asset.
 			assetOwned := write("review-refuter.md", managed("review-refuter.md"))
 			// Recorded, then edited by the user.
 			userEdited := write("review-reliability.md", "user edited review-reliability\n")
-			// Never installed by Gentle AI.
+			// Never installed by Agent Smith.
 			userOwned := write("review-readability.md", "my own review-readability agent\n")
 
 			ledger := ownershipLedger{Version: ownershipVersion, Files: map[string]string{
@@ -308,3 +308,4 @@ func containsName(names []string, want string) bool {
 	}
 	return false
 }
+

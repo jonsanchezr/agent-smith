@@ -12,7 +12,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/reviewtransaction"
+	"github.com/jonsanchezr/agent-smith/v4/internal/reviewtransaction"
 )
 
 func TestFlatReviewStartRejectsBeforeCreatingLegacyAuthority(t *testing.T) {
@@ -26,7 +26,7 @@ func TestFlatReviewStartRejectsBeforeCreatingLegacyAuthority(t *testing.T) {
 		"--cwd", repo, "--lineage", "flat-start-read-only", "--policy-file", policy,
 		"--machine-transaction-out", mirror,
 	}, io.Discard)
-	if !errors.Is(err, reviewtransaction.ErrLegacyReadOnly) || !strings.Contains(err.Error(), "gentle-ai review start") {
+	if !errors.Is(err, reviewtransaction.ErrLegacyReadOnly) || !strings.Contains(err.Error(), "agent-smith review start") {
 		t.Fatalf("flat review-start error = %v", err)
 	}
 	store, storeErr := reviewtransaction.AuthoritativeStore(context.Background(), repo, "flat-start-read-only")
@@ -299,7 +299,7 @@ func writeReviewCLIJSON(t *testing.T, path string, value any) {
 func reviewCLIAuthorityRoot(t *testing.T, repo string) string {
 	t.Helper()
 	commonDir := filepath.Clean(strings.TrimSpace(runReviewCLIGit(t, repo, "rev-parse", "--path-format=absolute", "--git-common-dir")))
-	return filepath.Join(commonDir, "gentle-ai", "review-transactions")
+	return filepath.Join(commonDir, "agent-smith", "review-transactions")
 }
 
 // writeReconcileCLIRecord persists one compact-v2 record directly to disk
@@ -311,7 +311,7 @@ func writeReconcileCLIRecord(t *testing.T, repo string, state reviewtransaction.
 	if err != nil {
 		t.Fatal(err)
 	}
-	record := reviewtransaction.CompactRecord{Schema: "gentle-ai.review-state-record/v2", Revision: revision, State: state}
+	record := reviewtransaction.CompactRecord{Schema: "agent-smith.review-state-record/v2", Revision: revision, State: state}
 	payload, err := json.MarshalIndent(record, "", "  ")
 	if err != nil {
 		t.Fatal(err)
@@ -325,3 +325,4 @@ func writeReconcileCLIRecord(t *testing.T, repo string, state reviewtransaction.
 	}
 	return revision
 }
+

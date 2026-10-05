@@ -4,8 +4,8 @@ import (
 	"strings"
 	"testing"
 
-	componentuninstall "github.com/gentleman-programming/gentle-ai/v4/internal/components/uninstall"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
+	componentuninstall "github.com/jonsanchezr/agent-smith/v4/internal/components/uninstall"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
 )
 
 // A batch that failed for one agent must not open with "complete". The user
@@ -69,3 +69,4 @@ func TestRenderUninstallReportDistinguishesRetainedPiResourcesAndCommands(t *tes
 		}
 	}
 }
+

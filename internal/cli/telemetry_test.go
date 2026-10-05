@@ -14,7 +14,7 @@ import (
 
 	jsonschema "github.com/santhosh-tekuri/jsonschema/v6"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/telemetry"
+	"github.com/jonsanchezr/agent-smith/v4/internal/telemetry"
 )
 
 func TestTelemetryPolicyReadOnly(t *testing.T) {
@@ -65,7 +65,7 @@ func TestTelemetryPolicyReadOnly(t *testing.T) {
 			if err := json.Unmarshal(out.Bytes(), &got); err != nil {
 				t.Fatal(err)
 			}
-			if len(got) != 5 || got["schema"] != "gentle-ai.telemetry-policy/v1" || got["operation"] != "policy" || got["enabled"] != tt.enabled || got["source"] != tt.source || got["reason"] != tt.reason {
+			if len(got) != 5 || got["schema"] != "agent-smith.telemetry-policy/v1" || got["operation"] != "policy" || got["enabled"] != tt.enabled || got["source"] != tt.source || got["reason"] != tt.reason {
 				t.Fatalf("policy = %s", &out)
 			}
 			if tt.state == "" {
@@ -192,12 +192,12 @@ func compileTelemetrySchema(t *testing.T, name string) *jsonschema.Schema {
 		if err := json.Unmarshal(payload, &document); err != nil {
 			t.Fatal(err)
 		}
-		location := "https://gentle-ai.dev/contracts/telemetry/v1/schemas/" + entry.Name()
+		location := "https://agent-smith.dev/contracts/telemetry/v1/schemas/" + entry.Name()
 		if err := compiler.AddResource(location, document); err != nil {
 			t.Fatal(err)
 		}
 	}
-	schema, err := compiler.Compile("https://gentle-ai.dev/contracts/telemetry/v1/schemas/" + name)
+	schema, err := compiler.Compile("https://agent-smith.dev/contracts/telemetry/v1/schemas/" + name)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -687,7 +687,7 @@ func TestTelemetryRecordReviewOutcomeStateDisabledSkipsAfterRead(t *testing.T) {
 
 // TestTelemetryRecordReviewOutcomeTriggersAtMostOneHeartbeatPerDay is the
 // direct regression test for the Gentle Pi scenario: a host that drives
-// gentle-ai only through `review ...` must still get a heartbeat, but no
+// agent-smith only through `review ...` must still get a heartbeat, but no
 // more than the ordinary 24h limit already enforces. It seeds an install
 // already past enrollment and its one-time install send, with a heartbeat
 // window that has already expired, so the very first review closure below
@@ -742,3 +742,4 @@ func TestTelemetryRecordReviewOutcomeTriggersAtMostOneHeartbeatPerDay(t *testing
 }
 
 // --- sdd_phase_runs (finding 3) --------------------------------------------
+

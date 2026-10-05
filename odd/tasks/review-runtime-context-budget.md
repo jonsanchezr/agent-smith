@@ -1,4 +1,4 @@
-# Review runtime context budget — #4680
+﻿# Review runtime context budget â€” #4680
 
 ## Authority and tasks
 User authorized ODD/TDD/RDD/TEAR/KISS, conservative200KiB runtime input policy, local review-unit commits and A/B/C split. Git/output ceilings4MiB unchanged. Scope frozen; no new features or size-only refactors. NO push/PR/merge/auto-merge or paid runtime experiments. Parent owns this log and full mirror odd/review-runtime-context-budget/tasks; .codegraph excluded.
@@ -14,7 +14,7 @@ User authorized ODD/TDD/RDD/TEAR/KISS, conservative200KiB runtime input policy, 
 ## Local commits and per-slice evidence
 Baseline712ebdc78ebe57005c8f9364e21ed4b2d392ca5b. Feature branch barbatdev/bug-review-start-accepts-a-candidate-whose-4-mib, restored at tip b6b11687 after reviewing A attempt. No tracked local diff; untracked .codegraph/ and odd/ retained.
 A6f502172: frozen snapshot representation/compatibility, +314/-15=329. Staged tree exported/tested before commit: transaction targeted25.744s and CLI lens19.712s PASS.
-B0cfc423f: truthful generated metadata summaries, +467/-5=472. Explicit B size exception; larger than forecast414–434, no hidden savings. Isolated CLI lens/history/refusal-ratchet PASS16.019s.
+B0cfc423f: truthful generated metadata summaries, +467/-5=472. Explicit B size exception; larger than forecast414â€“434, no hidden savings. Isolated CLI lens/history/refusal-ratchet PASS16.019s.
 C1 6c09bb1f: runtime admission/materialization policy, +290/-11=301. Isolated CLI runtime/lens/history/refusal PASS18.558s, provider0.007s.
 C2 b6b11687: complete role prompts/retries, +311/-16=327. Isolated CLI provider/role/refuter/validator/runtime PASS26.255s, provider0.007s. C split naturally into two commits to avoid628-line unit. Total1429 authored changed lines; tests retained. Every staged tree verified in git-archive export, not added worktree. No push/PR/merge.
 
@@ -28,10 +28,10 @@ For A, detached HEAD6f502172, gentle_review inspect(untrackedScope=exclude) retu
 One START idempotencyKey issue4680-slice-a-6f502172 with input {mode:ordinary,baseRef:712ebdc78ebe57005c8f9364e21ed4b2d392ca5b,committedOnly:true} returned native-operation-failed, diagnostics.code=candidate-target-projection-drift, lineage_created:false, mutation_performed:false, mutation_outcome:none, reset_eligible:false.
 Read-only inspect with explicit base input still offered stale f654764e. No START replay, no alternate lineage, raw commands, resets/recovery, receipt or acknowledgement. Returned feature branch tip b6b11687. No active review authority created. Do not substitute offered aggregate stale-base review for per-unit candidate.
 
-CORRECTED ATTRIBUTION (evidence, 2026-09-17): the string candidate-target-projection-drift does not exist anywhere in gentle-ai. It is raised by the Pi client at gentle-pi/extensions/gentle-ai.ts:3595 in assertNativeStartCandidateBinding, which requires exact equality between the frozen immutable CandidateView and target.projection (projection=="workspace", baseTree, initialReviewTree, currentCandidateTree, paths, intendedUntracked). The failure is a pre-authority client-side assertion: lineage_created:false, mutation_performed:false, nothing corrupted. Earlier notes wrongly directed the fix at native committed-range projection. The exact mismatching field is still unproven and requires read-only instrumentation on the Pi side. This is a separate tooling defect and does not block delivery of #4680; RDD is opt-in and user-owned, and delivery follows ordinary repository policy.
+CORRECTED ATTRIBUTION (evidence, 2026-09-17): the string candidate-target-projection-drift does not exist anywhere in agent-smith. It is raised by the Pi client at gentle-pi/extensions/agent-smith.ts:3595 in assertNativeStartCandidateBinding, which requires exact equality between the frozen immutable CandidateView and target.projection (projection=="workspace", baseTree, initialReviewTree, currentCandidateTree, paths, intendedUntracked). The failure is a pre-authority client-side assertion: lineage_created:false, mutation_performed:false, nothing corrupted. Earlier notes wrongly directed the fix at native committed-range projection. The exact mismatching field is still unproven and requires read-only instrumentation on the Pi side. This is a separate tooling defect and does not block delivery of #4680; RDD is opt-in and user-owned, and delivery follows ordinary repository policy.
 
 ## Bounded follow-up verification
-Parent read original timeout lines202–205: package deadline10m fired while TestTargetedValidatorCaptureRejectsOutcomeOnlyTerminalFailureBeforeAuthorityMutation was listed at0s. This is not proof of a deadlock or root cause.
+Parent read original timeout lines202â€“205: package deadline10m fired while TestTargetedValidatorCaptureRejectsOutcomeOnlyTerminalFailureBeforeAuthorityMutation was listed at0s. This is not proof of a deadlock or root cause.
 Exact corrected command via verifier: env -u OPENCODE_CONFIG_DIR TMPDIR="$(python3 -c 'import os; print(os.path.realpath(os.environ.get("TMPDIR", "/tmp")))')" go test ./internal/cli -run '^TestTargetedValidatorCaptureRejectsOutcomeOnlyTerminalFailureBeforeAuthorityMutation$' -count=1 -timeout=120s. PASS1.117s, exit0. This closes only isolated reproduction; full-suite completion remains unverified.
 Verifier initially deviated: used empty env rather than unset, reported checkout/baseline whole-suite run despite explicit prohibition, and unsupported root-cause claims. Those conclusions were rejected. Parent confirmed feature branch tipb6b11687 with no tracked changes afterwards. No more baseline/full-suite runs authorized in this follow-up. RDD not retried or disabled; source unchanged.
 
@@ -112,7 +112,7 @@ entirely the user's decision under ordinary repository policy.
 
 Two roles run against the branch tip. CI at the time: 17/17 green.
 
-FALSIFIED — "a recovered over-budget lineage keeps `review invalidate` as its
+FALSIFIED â€” "a recovered over-budget lineage keeps `review invalidate` as its
 exit" was written as an invariant and is only true on arrival. Two independent
 breaks, both proven by execution:
 
@@ -140,7 +140,7 @@ FixFindings/FixClassifications bounded only by ResultLimit 4<<20 against a
 200 KiB budget. Executed: the floor shape is admitted at 110408 bytes while the
 real shape is refused with lens_context_budget_exceeded. Since validator and
 refuter run only after lens results are persisted, that path reaches a
-non-pristine, un-invalidatable lineage — the #4680 dead-end relocated to the
+non-pristine, un-invalidatable lineage â€” the #4680 dead-end relocated to the
 correction path rather than closed there. The code deliberately declares the
 refuter-Claims omission; the corrected-evidence and FixFindings gap is
 undeclared.
@@ -150,7 +150,7 @@ SURVIVES: no additional unguarded authority creator beyond recover
 introduce a larger candidate; repair/reclaim mint nothing). Recovery
 inheritance does not break the pristine predicate. Generation 3 still
 invalidates. snapshotsEqual holds right after recover. RuntimeContextBudget
-cannot fail open — both branches return the same constant, which also makes its
+cannot fail open â€” both branches return the same constant, which also makes its
 "fails closed" comment vacuous until a per-runtime cap exists.
 
 ## Correction-stage dead-end closed (2026-09-18)
@@ -182,7 +182,7 @@ Shipped:
   reason code `correction_context_budget_exceeded` -- deliberately NOT the lens
   code, whose narration says no authority needs abandoning, which is the
   opposite of this case.
-- Narration names `gentle-ai review abandon` with concrete values from
+- Narration names `agent-smith review abandon` with concrete values from
   InspectCompactPristineAbandonment, and says so honestly when eligibility says
   no instead of printing a command that would be refused.
 - Capture-time errors wrap through reviewPreflightRefusal so the typed code
@@ -206,7 +206,7 @@ Still NOT closed and still tracked separately: `review capture-result --input`
 never consults any budget guard, so a hand-built result still admits on an
 over-budget candidate; and `review invalidate` refuses under worktree drift.
 
-Open follow-up, tracked separately from this issue: instrument the Pi-side assertion at gentle-pi/extensions/gentle-ai.ts:3595 read-only to identify the exact drifting projection field. Do not repair the harness from inside this source change and do not disable RDD as a workaround.
+Open follow-up, tracked separately from this issue: instrument the Pi-side assertion at gentle-pi/extensions/agent-smith.ts:3595 read-only to identify the exact drifting projection field. Do not repair the harness from inside this source change and do not disable RDD as a workaround.
 Pre-existing environment failure TestEngramPathGuidanceDefault is a separate concern; it reproduces on untouched main.
 
 ## Post-review corrections (CodeRabbit on tip 2a47684d)
@@ -220,7 +220,7 @@ TDD: enabled. Source: existing branch practice, every work unit here observed
 RED before GREEN. Runner: `go test ./internal/...` with `env -u
 OPENCODE_CONFIG_DIR` and a canonical `TMPDIR`.
 
-- [x] **T-C1 — Pi cannot release an over-budget corrected lineage.**
+- [x] **T-C1 â€” Pi cannot release an over-budget corrected lineage.**
   Route: delegated writer (writer trigger: stop constructor + shipped Pi
   ledger + tests).
   The `correction_context_budget_exceeded` row in
@@ -230,12 +230,12 @@ OPENCODE_CONFIG_DIR` and a canonical `TMPDIR`.
   ReasonCode, so Continuation is nil and is omitted from the serialized
   response; only `reviewManagedAssetsStopTransition` populates it. The Pi
   contract never mentions `abandon` at all, and `validPiFacadeLifecycle`
-  (`providercontractbundle/bundle.go:202`) forbids the raw `gentle-ai review `
+  (`providercontractbundle/bundle.go:202`) forbids the raw `agent-smith review `
   route, so Pi is told to release authority with no way to do it. Introduced by
   93c4c607 while making the row satisfy the facade-only contract.
   Fix: populate the stop's continuation following the managed-assets
   precedent, so the row points at something that exists.
-  NOT the fix CodeRabbit proposed: writing `gentle-ai review abandon` into the
+  NOT the fix CodeRabbit proposed: writing `agent-smith review abandon` into the
   Pi ledger fails `validPiFacadeLifecycle` and reintroduces the build failure
   93c4c607 closed.
   Acceptance: Pi obtains the exact release command from the stop; the bundle
@@ -264,7 +264,7 @@ OPENCODE_CONFIG_DIR` and a canonical `TMPDIR`.
   golden and no ledger cost baseline moved: the baselines measure
   review-ledger-contract.md, which this change does not touch.
 
-- [x] **T-C2 — The block terminator is written outside the budget.**
+- [x] **T-C2 â€” The block terminator is written outside the budget.**
   Route: direct inline (one mechanical file, already understood).
   `reviewLensContextBlock` sets `budget := reviewLensContextRuntimeBudget(runtime) - block.Len()`
   and decrements per section, then writes `reviewLensContextTerminator + "\n"`
@@ -293,3 +293,4 @@ OPENCODE_CONFIG_DIR` and a canonical `TMPDIR`.
   itself, which this change does not touch.
 
 Checked off only on observed outcome. Neither is started yet.
+

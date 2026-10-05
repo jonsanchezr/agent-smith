@@ -10,13 +10,13 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/components/filemerge"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/opencode"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/telemetry"
+	"github.com/jonsanchezr/agent-smith/v4/internal/components/filemerge"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
+	"github.com/jonsanchezr/agent-smith/v4/internal/opencode"
+	"github.com/jonsanchezr/agent-smith/v4/internal/telemetry"
 )
 
-const OpenCodeSchema = "gentle-ai.telemetry-opencode/v1"
+const OpenCodeSchema = "agent-smith.telemetry-opencode/v1"
 const openCodeConfigMaxBytes = 1 << 20
 
 var errEnvelope = errors.New("invalid OpenCode runtime envelope")
@@ -99,7 +99,7 @@ func sendOpenCode(ctx context.Context, home string, getenv func(string) string, 
 	}
 	d = json.NewDecoder(bytes.NewReader(data))
 	d.DisallowUnknownFields()
-	if d.Decode(&envelope) != nil || (envelope.Schema != OpenCodeSchema && envelope.Schema != "gentle-ai.telemetry-opencode/v2") {
+	if d.Decode(&envelope) != nil || (envelope.Schema != OpenCodeSchema && envelope.Schema != "agent-smith.telemetry-opencode/v2") {
 		return "", errEnvelope
 	}
 	if envelope.Schema == OpenCodeSchema && envelope.Info.SelectedEffort != nil {
@@ -264,3 +264,4 @@ func strictObjectKeys(d *json.Decoder, depth int) error {
 	_, err = d.Token()
 	return err
 }
+

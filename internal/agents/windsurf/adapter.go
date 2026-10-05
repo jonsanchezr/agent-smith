@@ -6,9 +6,9 @@ import (
 	"path/filepath"
 	"runtime"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/agents/capabilitymanifest"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/system"
+	"github.com/jonsanchezr/agent-smith/v4/internal/agents/capabilitymanifest"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
+	"github.com/jonsanchezr/agent-smith/v4/internal/system"
 )
 
 type statResult struct {
@@ -196,3 +196,4 @@ func defaultStat(path string) statResult {
 	}
 	return statResult{isDir: info.IsDir()}
 }
+

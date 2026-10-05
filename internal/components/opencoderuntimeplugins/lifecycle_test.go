@@ -7,9 +7,9 @@ import (
 	"strings"
 	"testing"
 
-	agent "github.com/gentleman-programming/gentle-ai/v4/internal/agents/opencode"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/assets"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/opencode"
+	agent "github.com/jonsanchezr/agent-smith/v4/internal/agents/opencode"
+	"github.com/jonsanchezr/agent-smith/v4/internal/assets"
+	"github.com/jonsanchezr/agent-smith/v4/internal/opencode"
 )
 
 func TestInstallRefusesNonregularPluginBeforeWrites(t *testing.T) {
@@ -151,3 +151,4 @@ func TestManagedOpenCodePluginLifecycle(t *testing.T) {
 		t.Fatalf("idempotent install: %+v %v", again, err)
 	}
 }
+

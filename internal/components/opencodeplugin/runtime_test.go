@@ -6,8 +6,8 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/opencode"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
+	"github.com/jonsanchezr/agent-smith/v4/internal/opencode"
 )
 
 func init() {
@@ -53,3 +53,4 @@ func TestLogoUnknownRuntimeStillRefuses(t *testing.T) {
 		t.Fatal("unknown runtime wrote files")
 	}
 }
+

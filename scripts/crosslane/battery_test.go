@@ -110,7 +110,7 @@ func TestPiLastEventClosureAdmitsAndReentersCorrection(t *testing.T) {
 		os.Exit(0)
 	}
 	t.Setenv("GO_WANT_PI_RELAY_STATUS", "1")
-	closureJSON := `{"schema":"gentle-ai.review-last-event-closure/v1","state":"correction_required","lineage_id":"provider-lineage","status_continuation":{"operation":"review.status","arguments":[{"token":"--lineage=provider-lineage"},{"token":"--cursor=provider-owned"}]}}`
+	closureJSON := `{"schema":"agent-smith.review-last-event-closure/v1","state":"correction_required","lineage_id":"provider-lineage","status_continuation":{"operation":"review.status","arguments":[{"token":"--lineage=provider-lineage"},{"token":"--cursor=provider-owned"}]}}`
 	closure := (&battery{}).record("result-artifact", []byte(closureJSON))
 	b := &battery{binary: os.Args[0]}
 	if !admittedCapture(closure) || !b.hostCorrectionReentry("test", "lifecycle correction re-entry", t.TempDir(), nil, closure) {
@@ -153,3 +153,4 @@ func TestCommittedMediumCandidateFailsWhenBaseWriteFails(t *testing.T) {
 		t.Fatalf("base write failure = %#v, want committed process base FAIL", failure)
 	}
 }
+

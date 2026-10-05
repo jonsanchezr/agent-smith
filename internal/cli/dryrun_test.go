@@ -4,8 +4,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/planner"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
+	"github.com/jonsanchezr/agent-smith/v4/internal/planner"
 )
 
 func TestRenderDryRunIncludesPlatformDecision(t *testing.T) {
@@ -32,3 +32,4 @@ func TestRenderDryRunIncludesPlatformDecision(t *testing.T) {
 		t.Fatalf("RenderDryRun() missing platform decision\noutput=%s", output)
 	}
 }
+

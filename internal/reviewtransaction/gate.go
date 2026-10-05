@@ -15,7 +15,7 @@ import (
 	"strings"
 )
 
-const GateRequestSchema = "gentle-ai.review-gate-request/v1"
+const GateRequestSchema = "agent-smith.review-gate-request/v1"
 
 type GateRequest struct {
 	Schema           string                      `json:"schema"`
@@ -747,3 +747,4 @@ const EscalationAccountingReasonTemplate = "compact review authority is escalate
 // BaseRelationshipValid is gated to pre-pr/release only (receipt.go:304),
 // with the identical compatible_base_advance exemption; release evidence is
 // gated to release only (receipt.go:307-314).
+

@@ -8,7 +8,7 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/system"
+	"github.com/jonsanchezr/agent-smith/v4/internal/system"
 )
 
 func TestDetect(t *testing.T) {
@@ -151,3 +151,4 @@ func TestConfigPathsCrossPlatform(t *testing.T) {
 		t.Fatalf("SystemPromptFile() = %q, want %q", got, filepath.Join(home, ".gemini", "GEMINI.md"))
 	}
 }
+

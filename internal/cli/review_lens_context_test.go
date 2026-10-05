@@ -16,8 +16,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/reviewtransaction"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
+	"github.com/jonsanchezr/agent-smith/v4/internal/reviewtransaction"
 )
 
 // lensContextArgv renders the closed lens-context command form from the flags
@@ -233,7 +233,7 @@ func TestNegotiatedStartRefusesOverBudgetCandidateWithoutPersistingAuthority(t *
 		t.Fatalf("over-budget START envelope does not report a refusal that wrote nothing: %#v", failure.Failure)
 	}
 	if !strings.Contains(failure.Failure.Cause, "chained sequence of smaller reviewable commits") ||
-		!strings.Contains(failure.Failure.Cause, "gentle-ai review status") {
+		!strings.Contains(failure.Failure.Cause, "agent-smith review status") {
 		t.Fatalf("over-budget START cause does not name the runnable continuation: %q", failure.Failure.Cause)
 	}
 	if strings.Contains(output.String(), "GENTLE_AI_REVIEW_") {
@@ -1173,3 +1173,4 @@ func TestLensContextBlockOnTheCapStaysWithinTheCap(t *testing.T) {
 			len(block), len(block)-budget, budget, len(reviewLensContextTerminator)+1)
 	}
 }
+

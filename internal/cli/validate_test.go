@@ -4,9 +4,9 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/catalog"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/system"
+	"github.com/jonsanchezr/agent-smith/v4/internal/catalog"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
+	"github.com/jonsanchezr/agent-smith/v4/internal/system"
 )
 
 // TestAsAgentIDsRejectsUnsupportedAgent closes install/sync surface audit
@@ -47,7 +47,7 @@ func TestAsAgentIDsAcceptsEverySupportedAgent(t *testing.T) {
 }
 
 // TestNormalizeInstallFlagsRejectsUnsupportedAgent proves the install path
-// (`gentle-ai install --agent <typo>`) rejects an unknown agent instead of
+// (`agent-smith install --agent <typo>`) rejects an unknown agent instead of
 // silently resolving to an empty agent list.
 func TestNormalizeInstallFlagsRejectsUnsupportedAgent(t *testing.T) {
 	_, err := NormalizeInstallFlags(InstallFlags{Agents: []string{"cluade"}}, system.DetectionResult{})
@@ -71,3 +71,4 @@ func TestNormalizeInstallFlagsAcceptsSupportedAgent(t *testing.T) {
 		t.Fatalf("Selection.Agents = %v, want [claude-code]", input.Selection.Agents)
 	}
 }
+

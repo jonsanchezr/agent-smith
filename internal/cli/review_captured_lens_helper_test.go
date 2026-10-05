@@ -11,7 +11,7 @@ import (
 	"strconv"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/reviewtransaction"
+	"github.com/jonsanchezr/agent-smith/v4/internal/reviewtransaction"
 )
 
 // captureReviewCLIResultFiles admits one reviewer result per selected lens,
@@ -78,3 +78,4 @@ func captureReviewCLIResultFile(t *testing.T, root string, state reviewtransacti
 	writeReviewCLIJSON(t, boundPath, result)
 	return RunReviewCaptureResult(append(binding, "--input", boundPath), io.Discard)
 }
+

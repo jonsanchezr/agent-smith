@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/components/communitytool"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/tui/styles"
+	"github.com/jonsanchezr/agent-smith/v4/internal/components/communitytool"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
+	"github.com/jonsanchezr/agent-smith/v4/internal/tui/styles"
 )
 
 func RenderCommunityToolResult(results []communitytool.Result, err error) string {
@@ -76,3 +76,4 @@ func toolName(id model.CommunityToolID) string {
 	}
 	return string(id)
 }
+

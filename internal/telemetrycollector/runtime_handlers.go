@@ -6,7 +6,7 @@ import (
 	"io"
 	"net/http"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/telemetry"
+	"github.com/jonsanchezr/agent-smith/v4/internal/telemetry"
 )
 
 // Runtime-store modes for Server.RuntimeStore. See its doc comment.
@@ -104,3 +104,4 @@ func (s *Server) handleMetrics(w http.ResponseWriter, r *http.Request) {
 	}
 	_, _ = s.Metrics.WriteTo(w)
 }
+

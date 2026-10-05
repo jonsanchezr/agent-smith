@@ -6,7 +6,7 @@ import (
 	"runtime"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/state"
+	"github.com/jonsanchezr/agent-smith/v4/internal/state"
 )
 
 func TestLockPathResolvesHomeSymlink(t *testing.T) {
@@ -32,3 +32,4 @@ func TestLockPathResolvesHomeSymlink(t *testing.T) {
 		t.Fatalf("LockPath() = %q, want %q", got, want)
 	}
 }
+

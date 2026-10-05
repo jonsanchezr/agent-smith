@@ -5,8 +5,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/system"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
+	"github.com/jonsanchezr/agent-smith/v4/internal/system"
 )
 
 func TestNormalizePersonaRemapsGentlemanNeutralArtifacts(t *testing.T) {
@@ -51,3 +51,4 @@ func TestNormalizeInstallFlagsPrintsAliasRemapNotice(t *testing.T) {
 		t.Fatalf("notice not printed; got %q", buf.String())
 	}
 }
+

@@ -3,8 +3,8 @@ package screens
 import (
 	"strings"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/reviewtransaction"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/tui/styles"
+	"github.com/jonsanchezr/agent-smith/v4/internal/reviewtransaction"
+	"github.com/jonsanchezr/agent-smith/v4/internal/tui/styles"
 )
 
 func InstallReviewModeOptions(err error) []string {
@@ -49,3 +49,4 @@ func installReviewModeStatusLabel(status reviewtransaction.RDDModeStatus) string
 		return "No global RDD preference is configured. RDD defaults to ON; choose Disable RDD to opt out."
 	}
 }
+

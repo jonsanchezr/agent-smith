@@ -30,7 +30,7 @@ class HostVersionTests(unittest.TestCase):
                     self.assertEqual(host.validate_host_version('opencode v' + version + '\n', selector), version)
         for output in ('opencode v1.0.18', 'opencode v3.0.0', 'unknown', '', '2.0.18',
                        'opencode v2.0', 'opencode v2.0.19-dev', 'opencode v2.0.19 extra',
-                       'warning\nopencode v2.0.19', 'opencode v2.０.19'):
+                       'warning\nopencode v2.0.19', 'opencode v2.ï¼.19'):
             with self.subTest(output=output), self.assertRaisesRegex(RuntimeError, 'host version'):
                 host.validate_host_version(output, '2.x')
         with self.assertRaisesRegex(RuntimeError, 'host version'):
@@ -274,9 +274,9 @@ class InstalledActivationTests(unittest.TestCase):
         package = config / 'node_modules/@opencode/plugin'
         package.mkdir(parents=True)
         (package / 'package.json').write_text('{"version":"2.0.4"}')
-        (config / 'opencode.json').write_text('{"default_agent":"gentle-orchestrator"}')
+        (config / 'opencode.json').write_text('{"default_agent":"agent-smith-orchestrator"}')
         for name in host.PLUGIN_IDS:
-            (config / 'plugins' / (name.removeprefix('gentle-ai.') + '.ts')).write_text(name)
+            (config / 'plugins' / (name.removeprefix('agent-smith.') + '.ts')).write_text(name)
         binary = root / 'host'
         binary.touch()
         return [str(binary), str(config / 'node_modules'), '--host-version', '2.x',
@@ -302,7 +302,7 @@ class InstalledActivationTests(unittest.TestCase):
                     self.assertEqual(host.urllib.parse.parse_qs(path.query), {'location[directory]': [str(root / 'workspace')]})
                     reply = {'location': {'directory': str(root / 'workspace')}, 'data': [
                         {'id': name, 'state': {'status': 'active'}, 'source': {'type': 'local',
-                         'path': str(config / 'plugins' / (name.removeprefix('gentle-ai.') + '.ts'))}}
+                         'path': str(config / 'plugins' / (name.removeprefix('agent-smith.') + '.ts'))}}
                         for name in host.PLUGIN_IDS]}
                 response = io.StringIO(json.dumps(reply))
                 response.status = 200
@@ -371,7 +371,7 @@ class InstalledActivationTests(unittest.TestCase):
                             return {'source': None}
                         return {'source': {'type': 'package' if failure == 'package-source' else 'local',
                                 'path': '/wrong' if failure == 'source' else str(root / 'config/opencode/plugins' /
-                                         (name.removeprefix('gentle-ai.') + '.ts'))}}
+                                         (name.removeprefix('agent-smith.') + '.ts'))}}
                     return {'location': {'directory': '/wrong' if failure == 'location' else str(root / 'workspace')},
                             'data': [{'id': name, 'state': {'status': 'active'}, **source(name)}
                                 for name in host.PLUGIN_IDS]}
@@ -521,7 +521,7 @@ class InstalledRestartAndMissingSDKTests(unittest.TestCase):
     fixture = InstalledActivationTests.fixture
 
     def source(self, root, name):
-        return str(Path(root).resolve() / 'config/opencode/plugins' / (name.removeprefix('gentle-ai.') + '.ts'))
+        return str(Path(root).resolve() / 'config/opencode/plugins' / (name.removeprefix('agent-smith.') + '.ts'))
 
     def run_main(self, args, request, extra_patches=()):
         with patch.object(host, 'network_prefix', return_value=['sandbox']), \
@@ -567,7 +567,7 @@ class InstalledRestartAndMissingSDKTests(unittest.TestCase):
     def test_restart_detects_installed_input_change_between_launches(self):
         with tempfile.TemporaryDirectory() as directory:
             args = self.fixture(directory)
-            plugin = Path(self.source(directory, 'gentle-ai.skill-registry'))
+            plugin = Path(self.source(directory, 'agent-smith.skill-registry'))
             def replies(n):
                 if n == 2:
                     plugin.write_text('replaced during restart')
@@ -651,7 +651,7 @@ class InstalledRestartAndMissingSDKTests(unittest.TestCase):
 
 
 class MissingSDKRefusalPollTests(unittest.TestCase):
-    expected = {'/fixture/one.ts': 'gentle-ai.one', '/fixture/two.ts': 'gentle-ai.two'}
+    expected = {'/fixture/one.ts': 'agent-smith.one', '/fixture/two.ts': 'agent-smith.two'}
 
     def poll(self, replies):
         now = [0]
@@ -673,10 +673,10 @@ class MissingSDKRefusalPollTests(unittest.TestCase):
                  self.entry('/other/plugin.ts', 'failed')]}
         failed = self.poll([cold, done])
         self.assertEqual(set(failed), set(self.expected.values()))
-        self.assertEqual(failed['gentle-ai.one']['ref'], 'err_one')
+        self.assertEqual(failed['agent-smith.one']['ref'], 'err_one')
 
     def test_active_managed_plugin_is_never_a_refusal(self):
-        for item in (self.entry('/fixture/two.ts', 'active'), {'id': 'gentle-ai.two', 'state': {'status': 'active'}}):
+        for item in (self.entry('/fixture/two.ts', 'active'), {'id': 'agent-smith.two', 'state': {'status': 'active'}}):
             with self.subTest(item=item), self.assertRaisesRegex(RuntimeError, 'active without the installed SDK'):
                 self.poll([{'data': [self.entry('/fixture/one.ts', 'failed'), item]}])
 
@@ -921,29 +921,29 @@ class ReviewStepCheckTests(unittest.TestCase):
 class ReviewModeArgumentTests(unittest.TestCase):
     def test_review_mode_requires_existing_absolute_inputs(self):
         with tempfile.TemporaryDirectory() as root:
-            scenario, shim, project = Path(root) / "s.json", Path(root) / "gentle-ai", Path(root) / "host"
+            scenario, shim, project = Path(root) / "s.json", Path(root) / "agent-smith", Path(root) / "host"
             scenario.write_text("{}")
             shim.write_text("#!/bin/sh\n")
             project.mkdir()
             base = ["host", "deps", "--host-version", "2.x", "--temp-root", root]
-            args = host.parse_args(base + ["--review-scenario", str(scenario), "--gentle-ai", str(shim),
+            args = host.parse_args(base + ["--review-scenario", str(scenario), "--agent-smith", str(shim),
                                            "--host-project", str(project), "--evidence", str(Path(root) / "e.json")])
             self.assertEqual(args.host_project, project.resolve())
             for extra in (["--review-scenario", str(scenario)],
-                          ["--gentle-ai", str(shim), "--host-project", str(project)],
-                          ["--review-scenario", "relative.json", "--gentle-ai", str(shim), "--host-project", str(project), "--evidence", str(Path(root) / "e.json")],
-                          ["--review-scenario", str(scenario), "--gentle-ai", str(shim), "--host-project", str(project), "--evidence", str(Path(root) / "e.json"), "--generic-task-only"]):
+                          ["--agent-smith", str(shim), "--host-project", str(project)],
+                          ["--review-scenario", "relative.json", "--agent-smith", str(shim), "--host-project", str(project), "--evidence", str(Path(root) / "e.json")],
+                          ["--review-scenario", str(scenario), "--agent-smith", str(shim), "--host-project", str(project), "--evidence", str(Path(root) / "e.json"), "--generic-task-only"]):
                 with self.subTest(extra=extra), patch("sys.stderr", new_callable=io.StringIO), self.assertRaises(SystemExit):
                     host.parse_args(base + extra)
 
     def test_capability_gate_label_is_review_only_and_defaults_to_stubbed(self):
         with tempfile.TemporaryDirectory() as root:
-            scenario, shim, project = Path(root) / "s.json", Path(root) / "gentle-ai", Path(root) / "host"
+            scenario, shim, project = Path(root) / "s.json", Path(root) / "agent-smith", Path(root) / "host"
             scenario.write_text("{}")
             shim.write_text("#!/bin/sh\n")
             project.mkdir()
             base = ["host", "deps", "--host-version", "2.x", "--temp-root", root]
-            review = ["--review-scenario", str(scenario), "--gentle-ai", str(shim), "--host-project", str(project),
+            review = ["--review-scenario", str(scenario), "--agent-smith", str(shim), "--host-project", str(project),
                       "--evidence", str(Path(root) / "e.json")]
             self.assertEqual(host.parse_args(base + review).capability_gate, "stubbed")
             self.assertEqual(host.parse_args(base + review + ["--capability-gate", "real"]).capability_gate, "real")
@@ -956,3 +956,4 @@ class ReviewModeArgumentTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+

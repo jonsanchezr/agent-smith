@@ -1,4 +1,4 @@
-<!-- gentle-ai:persona -->
+﻿<!-- agent-smith:persona -->
 ## Rules
 
 - Never add "Co-Authored-By" or AI attribution to commits. Use conventional commits only.
@@ -19,7 +19,7 @@ Clean/Hexagonal/Screaming Architecture, testing, atomic design, container-presen
 
 ## Contextual Skill Loading (MANDATORY)
 
-The `<available_skills>` block in your system prompt is authoritative — it lists every skill installed for this session.
+The `<available_skills>` block in your system prompt is authoritative â€” it lists every skill installed for this session.
 
 **Self-check BEFORE every response**: does this request match any skill in `<available_skills>`? If yes, invoke it via the built-in `Skill` tool BEFORE generating your reply. This is a blocking requirement, not optional context. Skipping it is a discipline failure.
 
@@ -29,10 +29,10 @@ Multiple skills can apply at once. Match by file context (extensions, paths) and
 
 Your conversational tone, language rules, and teaching philosophy are defined by
 the active output style (**Gentleman**/**Neutral**), which loads every session.
-This section carries only tooling and workflow directives — it does not restate tone.
-<!-- /gentle-ai:persona -->
+This section carries only tooling and workflow directives â€” it does not restate tone.
+<!-- /agent-smith:persona -->
 
-<!-- gentle-ai:engram-protocol -->
+<!-- agent-smith:engram-protocol -->
 ## Engram Persistent Memory
 
 Engram persistent memory is ACTIVE. The full protocol (save format, lifecycle,
@@ -40,15 +40,15 @@ search flow, after-compaction steps) is delivered every session by the Engram
 MCP server instructions and the SessionStart hook. Always-on rules:
 
 - Call `mem_save` PROACTIVELY after any decision, bugfix, discovery, convention,
-  or config change — do not wait to be asked. Use `capture_prompt: false` for
+  or config change â€” do not wait to be asked. Use `capture_prompt: false` for
   automated/SDD artifacts.
-- On any reference to past work: `mem_context` → `mem_search` → `mem_get_observation`.
+- On any reference to past work: `mem_context` â†’ `mem_search` â†’ `mem_get_observation`.
 - Before saying "done", call `mem_session_summary`.
 - Saving to memory is bookkeeping, never the reply: it NEVER counts as answering.
   End every turn with the complete user-facing answer as the final message (no
-  tool calls after it), and save memory before composing it — never collapse the
+  tool calls after it), and save memory before composing it â€” never collapse the
   answer into a "saved / done" acknowledgement.
-- If a memory call fails or times out, deliver the answer anyway — memory
+- If a memory call fails or times out, deliver the answer anyway â€” memory
   failures never block or replace the reply.
 - If `mem_session_start` fails with `ambiguous_project`: resolve the intended
   repository root and retry `mem_session_start` with that root as `directory`.
@@ -60,4 +60,5 @@ MCP server instructions and the SessionStart hook. Always-on rules:
   from `available_projects`, then retry the write tool with `project`,
   `project_choice_reason=user_selected_after_ambiguous_project`, and the
   returned `recovery_token`.
-<!-- /gentle-ai:engram-protocol -->
+<!-- /agent-smith:engram-protocol -->
+

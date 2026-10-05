@@ -6,10 +6,10 @@ import (
 	"testing"
 
 	tea "github.com/charmbracelet/bubbletea"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/reviewtransaction"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/system"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/tui/screens"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
+	"github.com/jonsanchezr/agent-smith/v4/internal/reviewtransaction"
+	"github.com/jonsanchezr/agent-smith/v4/internal/system"
+	"github.com/jonsanchezr/agent-smith/v4/internal/tui/screens"
 )
 
 type flowAction struct {
@@ -310,7 +310,7 @@ Review Skills
 
 Foundation Skills
   [x] Go Testing
-  [x] Gentle AI Bench
+  [x] Agent Smith Bench
   [x] Skill Creator
   [x] Skill Improver
   [x] Branch & PR
@@ -363,3 +363,4 @@ func presetCursor(t *testing.T, preset model.PresetID) int {
 	t.Fatalf("preset %q not found", preset)
 	return 0
 }
+

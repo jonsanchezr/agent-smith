@@ -4,8 +4,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/components/communitytool"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
+	"github.com/jonsanchezr/agent-smith/v4/internal/components/communitytool"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
 )
 
 func TestRenderCommunityToolsShowsCodeGraph(t *testing.T) {
@@ -61,3 +61,4 @@ func TestRenderCommunityToolResultShowsPartialContextOnError(t *testing.T) {
 type assertErr string
 
 func (e assertErr) Error() string { return string(e) }
+

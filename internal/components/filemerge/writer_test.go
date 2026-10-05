@@ -118,7 +118,7 @@ func TestWriteFileAtomicCreatesAndIsIdempotent(t *testing.T) {
 	}
 }
 
-// TestWriteFileAtomicPreservesExistingModeByDefault pins gentle-ai#5006(F5):
+// TestWriteFileAtomicPreservesExistingModeByDefault pins agent-smith#5006(F5):
 // rewriting an existing file must never widen its permissions, even when the
 // caller passes a wider perm literal — the common case across ~76 call sites
 // that pass a literal 0o644.
@@ -218,7 +218,7 @@ func TestWriteFileAtomicModeForcesRequestedPermOnExistingFile(t *testing.T) {
 }
 
 // TestWriteFileAtomicModeEnforcesPermOnIdenticalContent pins the gga runtime
-// case named in gentle-ai#5006(F5): an existing script whose content already
+// case named in agent-smith#5006(F5): an existing script whose content already
 // matches the embedded asset but whose mode drifted (e.g. 0644) must still be
 // forced to the intended mode (0755) by the forced API. That mode-only repair
 // mutates the file, so it reports Changed=true (#5022).
@@ -483,7 +483,7 @@ func TestWriteFileAtomicPreservesOriginalOnRenameFailure(t *testing.T) {
 		t.Fatalf("read dir: %v", err)
 	}
 	for _, entry := range entries {
-		if strings.HasPrefix(entry.Name(), ".gentle-ai-") {
+		if strings.HasPrefix(entry.Name(), ".agent-smith-") {
 			t.Fatalf("temp file %q left behind after failed rename", entry.Name())
 		}
 	}
@@ -511,3 +511,4 @@ func TestWriteFileAtomicModeZeroNeverWidens(t *testing.T) {
 		t.Fatalf("mode = %v, want no wider than 0600", got)
 	}
 }
+

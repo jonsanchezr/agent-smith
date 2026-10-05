@@ -1,8 +1,8 @@
-{
+﻿{
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://gentle-ai.dev/contracts/telemetry/v1/schemas/status.schema.json",
-  "title": "gentle-ai.telemetry-status/v1",
-  "description": "Answer to `gentle-ai telemetry status|enable|disable`: whether sending is enabled, which source decided it, and the persisted send history.",
+  "$id": "https://agent-smith.dev/contracts/telemetry/v1/schemas/status.schema.json",
+  "title": "agent-smith.telemetry-status/v1",
+  "description": "Answer to `agent-smith telemetry status|enable|disable`: whether sending is enabled, which source decided it, and the persisted send history.",
   "type": "object",
   "additionalProperties": false,
   "required": [
@@ -17,7 +17,7 @@
   ],
   "properties": {
     "schema": {
-      "const": "gentle-ai.telemetry-status/v1"
+      "const": "agent-smith.telemetry-status/v1"
     },
     "operation": {
       "type": "string",
@@ -75,3 +75,4 @@
     }
   }
 }
+

@@ -6,7 +6,7 @@ import (
 	"github.com/charmbracelet/lipgloss"
 )
 
-// logoLines contains the ASCII art for the Gentle-AI neon rose logo.
+// logoLines contains the ASCII art for the agent-smith neon rose logo.
 var logoLines = []string{
 	"             ⣠⣾⣷⣶⣦⣤⣤⣄⣠⣄⣀  ⢀⣀⣀",
 	"          ⢀⣴⣿⣿⠿⣋⣭⣭⣯⣭⣍⣭⣿⣟⠛⠛⠿⠿⣿⣷⣄",
@@ -62,3 +62,4 @@ func RenderLogo() string {
 
 	return b.String()
 }
+

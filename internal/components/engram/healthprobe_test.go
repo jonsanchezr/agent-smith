@@ -580,7 +580,7 @@ func TestStdioHandshake_TerminalOutcomes(t *testing.T) {
 }
 
 func TestStdioHandshake_MissingBinary(t *testing.T) {
-	if err := stdioHandshake(context.Background(), stdioProbeTimeout, "gentle-ai-test-no-such-binary"); err == nil {
+	if err := stdioHandshake(context.Background(), stdioProbeTimeout, "agent-smith-test-no-such-binary"); err == nil {
 		t.Fatal("stdioHandshake() expected error for a missing binary")
 	}
 }
@@ -819,3 +819,4 @@ func TestReadPersistedStdioCommands_PreservesConfiguredCommandAndArguments(t *te
 		})
 	}
 }
+

@@ -1,12 +1,12 @@
 // Package telemetrycollector implements the self-hosted collector for
-// gentle-ai's anonymous telemetry events: HTTP handlers, SQLite storage,
+// agent-smith's anonymous telemetry events: HTTP handlers, SQLite storage,
 // daily rollups, retention, and the summary endpoint.
 //
-// The wire contract is gentle-ai.telemetry-event/v1, defined by the client
+// The wire contract is agent-smith.telemetry-event/v1, defined by the client
 // branch under contracts/telemetry/v1/schemas/event.schema.json. Until that
 // branch lands, the schema is defined locally at
 // internal/telemetrycollector/schema/event.schema.json, byte-identical to
-// the contract described in Gentleman-Programming/gentle-ai#4310. Once the
+// the contract described in jonsanchezr/agent-smith#4310. Once the
 // canonical copy is published, this local copy should be replaced by a
 // reference to it rather than kept as a second source of truth.
 package telemetrycollector
@@ -24,7 +24,7 @@ import (
 )
 
 // SchemaID is the "schema" discriminator every event must carry.
-const SchemaID = "gentle-ai.telemetry-event/v1"
+const SchemaID = "agent-smith.telemetry-event/v1"
 
 // EventInstall and EventHeartbeat are the two event kinds the contract
 // allows.
@@ -40,7 +40,7 @@ const MaxEventBodyBytes = 4 * 1024
 //go:embed schema/event.schema.json
 var eventSchemaJSON []byte
 
-const eventSchemaResourceID = "https://schemas.gentle-ai.dev/telemetry/v1/event.schema.json"
+const eventSchemaResourceID = "https://schemas.agent-smith.dev/telemetry/v1/event.schema.json"
 
 var (
 	compileOnce    sync.Once
@@ -80,7 +80,7 @@ type Counters struct {
 	ReviewsEscalated  int `json:"reviews_escalated"`
 }
 
-// Event is the decoded, validated form of a gentle-ai.telemetry-event/v1
+// Event is the decoded, validated form of a agent-smith.telemetry-event/v1
 // payload. It never carries the sender's IP address; nothing in this type
 // or its JSON tags corresponds to network origin.
 type Event struct {
@@ -122,7 +122,7 @@ func invalid(format string, args ...any) error {
 	return &ValidationError{Code: ErrInvalid, Message: fmt.Sprintf(format, args...)}
 }
 
-// ParseEvent validates raw against the gentle-ai.telemetry-event/v1 schema
+// ParseEvent validates raw against the agent-smith.telemetry-event/v1 schema
 // (rejecting unknown fields, bad enums, and schema-id mismatches) and
 // decodes it into an Event. It never reads more than MaxEventBodyBytes+1
 // bytes of intent from raw's length: callers are expected to have already
@@ -178,3 +178,4 @@ func isDevBuildVersion(version string) bool {
 func (e Event) NormalizedInstallID() string {
 	return strings.ToLower(strings.TrimSpace(e.InstallID))
 }
+

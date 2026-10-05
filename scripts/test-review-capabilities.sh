@@ -1,22 +1,22 @@
-#!/usr/bin/env bash
+﻿#!/usr/bin/env bash
 set -euo pipefail
 
 repo_root="$(git rev-parse --show-toplevel)"
 tmp_root="$(mktemp -d)"
 trap 'rm -rf "$tmp_root"' EXIT
 
-binary="$tmp_root/gentle-ai"
+binary="$tmp_root/agent-smith"
 outside="$tmp_root/outside-repository"
 result="$tmp_root/capabilities.json"
 mkdir -p "$outside"
 
 (
   cd "$repo_root"
-  go build -o "$binary" ./cmd/gentle-ai
+  go build -o "$binary" ./cmd/agent-smith
 )
 (
   cd "$outside"
-  "$binary" review capabilities --contract gentle-ai.review-integration/v1 >"$result"
+  "$binary" review capabilities --contract agent-smith.review-integration/v1 >"$result"
 )
 
 python3 - "$result" "$outside" <<'PY'
@@ -29,8 +29,8 @@ result_path = pathlib.Path(sys.argv[1])
 outside = pathlib.Path(sys.argv[2])
 document = json.loads(result_path.read_text(encoding="utf-8"))
 
-assert document["schema"] == "gentle-ai.review-integration.capabilities/v1.5"
-assert document["contract"] == "gentle-ai.review-integration/v1"
+assert document["schema"] == "agent-smith.review-integration.capabilities/v1.5"
+assert document["contract"] == "agent-smith.review-integration/v1"
 assert document["protocol"] == {"major": 1, "minor": 5}
 assert document["gates"] == ["post-apply", "pre-commit", "pre-push", "pre-pr", "release"]
 assert document["projections"] == ["staged", "workspace"]
@@ -73,11 +73,11 @@ assert features["validating_result_reopen"] == {
     "supported": True,
     "requires": ["compact_v2_authority", "provider_artifact_admission"],
 }
-assert "gentle-ai.review-artifact-subject/v1" in document["schemas"]
-assert "gentle-ai.review-admitted-result/v1" in document["schemas"]
-assert "gentle-ai.review-targeted-validation-request/v1" in document["schemas"]
-assert "gentle-ai.review-authority-repair-assessment/v1" in document["schemas"]
-assert "gentle-ai.review-integration.repair/v1" in document["schemas"]
+assert "agent-smith.review-artifact-subject/v1" in document["schemas"]
+assert "agent-smith.review-admitted-result/v1" in document["schemas"]
+assert "agent-smith.review-targeted-validation-request/v1" in document["schemas"]
+assert "agent-smith.review-authority-repair-assessment/v1" in document["schemas"]
+assert "agent-smith.review-integration.repair/v1" in document["schemas"]
 assert "review.repair" in document["operations"]
 assert list(outside.iterdir()) == []
 
@@ -96,3 +96,4 @@ for forbidden in ("model", "provider", "profile", "cwd", "repository", "store_pa
 PY
 
 printf 'review capabilities outside-repository harness: PASS\n'
+

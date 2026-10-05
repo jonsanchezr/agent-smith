@@ -12,11 +12,11 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/agents"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/assets"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/components/opencodedefault"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/system"
+	"github.com/jonsanchezr/agent-smith/v4/internal/agents"
+	"github.com/jonsanchezr/agent-smith/v4/internal/assets"
+	"github.com/jonsanchezr/agent-smith/v4/internal/components/opencodedefault"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
+	"github.com/jonsanchezr/agent-smith/v4/internal/system"
 )
 
 // sharedReferencePattern matches a `_shared/<file>.md` reference in installed
@@ -159,7 +159,7 @@ func readJSONObject(t *testing.T, path string) map[string]any {
 }
 
 // TestOpenCodeInstallOwnsDefaultAgentAndShare mirrors v3.7.0: install sets
-// default_agent to gentle-orchestrator and records the previous value for
+// default_agent to agent-smith-orchestrator and records the previous value for
 // uninstall, and disables session sharing only when the user never chose it.
 func TestOpenCodeInstallOwnsDefaultAgentAndShare(t *testing.T) {
 	for _, tt := range []struct {
@@ -195,7 +195,7 @@ func TestOpenCodeInstallOwnsDefaultAgentAndShare(t *testing.T) {
 			}
 			ownerPath := opencodedefault.OwnershipPath(settingsPath)
 			owner := readJSONObject(t, ownerPath)
-			if owner["schema"] != "gentle-ai.opencode-default-agent" || owner["state"] != "managed" || owner["previous_state"] != tt.wantPrevState {
+			if owner["schema"] != "agent-smith.opencode-default-agent" || owner["state"] != "managed" || owner["previous_state"] != tt.wantPrevState {
 				t.Fatalf("ownership record = %v", owner)
 			}
 			if pd, _ := owner["previous_default"].(string); pd != tt.wantPD {
@@ -244,7 +244,7 @@ func TestOpenCodeInstallOwnsDefaultAgentAndShare(t *testing.T) {
 }
 
 // TestUninstallRemovesRestoredSharedAndCommandFiles proves uninstall removes
-// only the restored files gentle-ai owns and keeps user-authored neighbors.
+// only the restored files agent-smith owns and keeps user-authored neighbors.
 func TestUninstallRemovesRestoredSharedAndCommandFiles(t *testing.T) {
 	home := installFullGentleman(t, model.AgentOpenCode)
 	adapter, err := agents.NewAdapter(model.AgentOpenCode)
@@ -405,3 +405,4 @@ func TestUninstallRemovesEmptiedSkillsDirectory(t *testing.T) {
 		})
 	}
 }
+

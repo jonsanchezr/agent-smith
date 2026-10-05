@@ -5,9 +5,9 @@ import (
 	"strings"
 	"unicode/utf8"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/tui/styles"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/update"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/update/upgrade"
+	"github.com/jonsanchezr/agent-smith/v4/internal/tui/styles"
+	"github.com/jonsanchezr/agent-smith/v4/internal/update"
+	"github.com/jonsanchezr/agent-smith/v4/internal/update/upgrade"
 )
 
 // spinnerFrames are the unicode spinner animation frames used across screens.
@@ -183,9 +183,9 @@ func renderUpgradeResult(b *strings.Builder, report *upgrade.UpgradeReport, widt
 		b.WriteString(styles.WarningStyle.Render("⚠ Backup warning: " + report.BackupWarning))
 	}
 
-	if reportUpgradedGentleAI(report) {
+	if reportUpgradedAgentSmith(report) {
 		b.WriteString("\n")
-		b.WriteString(styles.WarningStyle.Render("⚠ gentle-ai was upgraded. Restart gentle-ai before running sync or continuing."))
+		b.WriteString(styles.WarningStyle.Render("⚠ agent-smith was upgraded. Restart agent-smith before running sync or continuing."))
 	}
 
 	b.WriteString("\n\n")
@@ -223,14 +223,15 @@ func writeWrappedManualHintLine(b *strings.Builder, indent string, text string, 
 	}
 }
 
-func reportUpgradedGentleAI(report *upgrade.UpgradeReport) bool {
+func reportUpgradedAgentSmith(report *upgrade.UpgradeReport) bool {
 	if report == nil {
 		return false
 	}
 	for _, result := range report.Results {
-		if result.ToolName == "gentle-ai" && result.Status == upgrade.UpgradeSucceeded {
+		if result.ToolName == "agent-smith" && result.Status == upgrade.UpgradeSucceeded {
 			return true
 		}
 	}
 	return false
 }
+

@@ -6,17 +6,17 @@ import (
 	"reflect"
 	"strings"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/reviewtransaction"
+	"github.com/jonsanchezr/agent-smith/v4/internal/reviewtransaction"
 )
 
-const ReviewIntegrationStartSchemaV1 = "gentle-ai.review-integration.start/v1"
-const ReviewIntegrationStartSchemaIDV1 = "https://gentle-ai.dev/contracts/review-integration/v1/schemas/start.schema.json"
-const ReviewIntegrationStartSchemaV2 = "gentle-ai.review-integration.start/v2"
-const ReviewIntegrationStartSchemaIDV2 = "https://gentle-ai.dev/contracts/review-integration/v1/schemas/start-v2.schema.json"
-const ReviewIntegrationStartSchemaV3 = "gentle-ai.review-integration.start/v3"
-const ReviewIntegrationStartSchemaIDV3 = "https://gentle-ai.dev/contracts/review-integration/v2/schemas/start.schema.json"
-const ReviewIntegrationStartSchemaV4 = "gentle-ai.review-integration.start/v4"
-const ReviewIntegrationStartSchemaIDV4 = "https://gentle-ai.dev/contracts/review-integration/v2/schemas/start-v4.schema.json"
+const ReviewIntegrationStartSchemaV1 = "agent-smith.review-integration.start/v1"
+const ReviewIntegrationStartSchemaIDV1 = "https://agent-smith.dev/contracts/review-integration/v1/schemas/start.schema.json"
+const ReviewIntegrationStartSchemaV2 = "agent-smith.review-integration.start/v2"
+const ReviewIntegrationStartSchemaIDV2 = "https://agent-smith.dev/contracts/review-integration/v1/schemas/start-v2.schema.json"
+const ReviewIntegrationStartSchemaV3 = "agent-smith.review-integration.start/v3"
+const ReviewIntegrationStartSchemaIDV3 = "https://agent-smith.dev/contracts/review-integration/v2/schemas/start.schema.json"
+const ReviewIntegrationStartSchemaV4 = "agent-smith.review-integration.start/v4"
+const ReviewIntegrationStartSchemaIDV4 = "https://agent-smith.dev/contracts/review-integration/v2/schemas/start-v4.schema.json"
 const ReviewIntegrationStartSchema = ReviewIntegrationStartSchemaV4
 const ReviewIntegrationStartSchemaID = ReviewIntegrationStartSchemaIDV4
 
@@ -450,3 +450,4 @@ func reviewStartSupportedLens(lens string) bool {
 		return false
 	}
 }
+

@@ -10,7 +10,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/assets"
+	"github.com/jonsanchezr/agent-smith/v4/internal/assets"
 )
 
 func TestEnsureRuntimeAssetsCreatesPRModeWhenMissing(t *testing.T) {
@@ -116,7 +116,7 @@ func TestEnsureRuntimeAssetsIsNoOpWhenContentMatches(t *testing.T) {
 }
 
 // TestEnsureRuntimeAssetsForcesExecutableModeWhenContentAlreadyMatches pins
-// gentle-ai#5006(F5): pr_mode.sh must stay executable even when its content
+// agent-smith#5006(F5): pr_mode.sh must stay executable even when its content
 // already matches the embedded asset but its mode drifted to non-executable
 // (e.g. extracted by a tool that does not preserve exec bits).
 func TestEnsureRuntimeAssetsForcesExecutableModeWhenContentAlreadyMatches(t *testing.T) {
@@ -502,3 +502,4 @@ func TestAssetGGAPS1IsEmbeddedAndReadable(t *testing.T) {
 		t.Fatalf("embedded gga.ps1 missing expected content, got: %s", content)
 	}
 }
+

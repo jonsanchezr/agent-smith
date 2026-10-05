@@ -23,7 +23,7 @@ const (
 	declineCandidateLineage    = "wave-one-candidate-decline"
 	declineCandidatePath       = "scripts/deploy.sh"
 	declineCandidateContents   = "#!/bin/sh\necho deploy\n"
-	reviewContractV2           = "gentle-ai.review-integration/v2"
+	reviewContractV2           = "agent-smith.review-integration/v2"
 )
 
 var startNamedCapability = &Capability{Verb: []string{"review", "start"}, Flags: []string{"--cwd", "--lineage"}}
@@ -407,7 +407,7 @@ func recoverStagedCorrection(r *journeyRun) error {
 		return fmt.Errorf("staged recovery was not negotiated: %+v", probe)
 	}
 	const actor, reason = "bench-maintainer", "authorize staged correction scope expansion"
-	authorization := "gentle-ai.review-recovery-authorization/v1\npredecessor_lineage=" + stagedRecoveryLineage +
+	authorization := "agent-smith.review-recovery-authorization/v1\npredecessor_lineage=" + stagedRecoveryLineage +
 		"\npredecessor_revision=" + probe.Authority.Revision + "\ntarget_identity=" + probe.TargetIdentity +
 		"\nsuccessor_lineage=" + stagedSuccessorLineage + "\nactor=" + actor + "\nreason=" + reason
 	authorized := append(selectors, "--recovery-successor-lineage", stagedSuccessorLineage, "--recovery-reason", reason,
@@ -985,7 +985,7 @@ func retryFinalVerification(r *journeyRun) error {
 	const actor = "bench-maintainer"
 	const reason = "retry after provider tooling failure"
 	authorization := strings.Join([]string{
-		"gentle-ai.review-final-verification-retry-authorization/v1",
+		"agent-smith.review-final-verification-retry-authorization/v1",
 		"predecessor_lineage=" + status.Authority.LineageID,
 		"predecessor_revision=" + status.Authority.Revision,
 		"successor_lineage=" + retrySuccessorLineage,
@@ -1413,3 +1413,4 @@ func waveOneJourneys() []Journey {
 // -- lives in bench/journeys_wave5.go
 // (j61-pre-pr-multi-segment-delivery-denies-without-composition), per task
 // 6.7.
+

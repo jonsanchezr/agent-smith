@@ -24,7 +24,7 @@ func TestCommandEnvAddsHomebrewNoAutoUpdateForBrewInstall(t *testing.T) {
 
 func TestCommandEnvAddsHomebrewNoAutoUpdateForResolvedBrewPath(t *testing.T) {
 	base := []string{"HOME=/home/dev"}
-	got := commandEnv("/opt/homebrew/bin/brew", []string{"tap", "Gentleman-Programming/homebrew-tap"}, base)
+	got := commandEnv("/opt/homebrew/bin/brew", []string{"tap", "jonsanchezr/homebrew-tap"}, base)
 	want := []string{"HOME=/home/dev", "HOMEBREW_NO_AUTO_UPDATE=1", "HOMEBREW_NO_INSTALL_CLEANUP=1"}
 	if !reflect.DeepEqual(got, want) {
 		t.Fatalf("commandEnv(resolved brew path, ...) = %v, want %v", got, want)

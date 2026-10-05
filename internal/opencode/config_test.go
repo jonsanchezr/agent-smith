@@ -248,8 +248,8 @@ func TestResolveEffectiveConfigSelectsOpenCodeConfigFile(t *testing.T) {
 	}
 
 	// Regression for CodeRabbit r3952255572: when JSON has a user-owned agent
-	// with the managed shape (hidden + prompt + permission) but no Gentle AI
-	// ownership marker, and JSONC has the real Gentle AI-managed config with
+	// with the managed shape (hidden + prompt + permission) but no Agent Smith
+	// ownership marker, and JSONC has the real Agent Smith-managed config with
 	// the marker, the resolver must select JSONC.
 	t.Run("json user-owned managed shape without marker selects jsonc with marker", func(t *testing.T) {
 		home := t.TempDir()
@@ -266,7 +266,7 @@ func TestResolveEffectiveConfigSelectsOpenCodeConfigFile(t *testing.T) {
 		}
 		if err := os.WriteFile(jsonPath, []byte(`{
   "agent": {
-    "gentle-orchestrator": {
+    "agent-smith-orchestrator": {
       "mode": "primary",
       "hidden": true,
       "prompt": "my custom orchestrator",
@@ -278,15 +278,15 @@ func TestResolveEffectiveConfigSelectsOpenCodeConfigFile(t *testing.T) {
 		}
 
 		jsoncPath := filepath.Join(projectDir, "opencode.jsonc")
-		// Real Gentle AI managed config with the ownership marker.
+		// Real Agent Smith managed config with the ownership marker.
 		if err := os.WriteFile(jsoncPath, []byte(`{
   "agent": {
-    "gentle-orchestrator": {
+    "agent-smith-orchestrator": {
       "mode": "primary",
       "hidden": true,
-      "prompt": "managed by Gentle AI",
+      "prompt": "managed by Agent Smith",
       "permission": {},
-      "__managed_by": "gentle-ai/sdd"
+      "__managed_by": "agent-smith/sdd"
     }
   }
 }`), 0o600); err != nil {
@@ -339,7 +339,7 @@ func TestRuntimeConfigPreservesWriteAuthorityAndLayeredReads(t *testing.T) {
 	jsoncPath := filepath.Join(project, "opencode.jsonc")
 	writeOpenCodeConfigFixture(t, jsonPath, true)
 	for _, path := range []string{jsoncPath, filepath.Join(override, "opencode.jsonc")} {
-		if err := os.WriteFile(path, []byte(`{"agent":{"gentle-orchestrator":{"model":"custom/override"}},"provider":{"custom":{"name":"Higher priority","models":{"__replace__":{}}}}}`), 0o600); err != nil {
+		if err := os.WriteFile(path, []byte(`{"agent":{"agent-smith-orchestrator":{"model":"custom/override"}},"provider":{"custom":{"name":"Higher priority","models":{"__replace__":{}}}}}`), 0o600); err != nil {
 			t.Fatal(err)
 		}
 	}
@@ -350,13 +350,13 @@ func TestRuntimeConfigPreservesWriteAuthorityAndLayeredReads(t *testing.T) {
 	if snapshot.WritePath != jsonPath || snapshot.Path != filepath.Join(override, "opencode.jsonc") {
 		t.Fatalf("read/write paths = %q / %q", snapshot.Path, snapshot.WritePath)
 	}
-	if snapshot.Assignments["gentle-orchestrator"].Assignment.ModelID != "override" || snapshot.Providers["custom"].Name != "Higher priority" || len(snapshot.Providers["custom"].Models) != 1 || len(snapshot.Providers["fixture"].Models) != 1 || len(snapshot.Diagnostics) == 0 {
+	if snapshot.Assignments["agent-smith-orchestrator"].Assignment.ModelID != "override" || snapshot.Providers["custom"].Name != "Higher priority" || len(snapshot.Providers["custom"].Models) != 1 || len(snapshot.Providers["fixture"].Models) != 1 || len(snapshot.Diagnostics) == 0 {
 		t.Fatalf("missing layered reads or conflict warning: %+v", snapshot)
 	}
 	// The same directory's JSONC wins without the additive config directory.
 	t.Setenv("OPENCODE_CONFIG_DIR", "")
 	snapshot, err = ResolveEffectiveConfig(project)
-	if err != nil || snapshot.Path != jsoncPath || snapshot.WritePath != jsonPath || snapshot.Assignments["gentle-orchestrator"].Assignment.ModelID != "override" {
+	if err != nil || snapshot.Path != jsoncPath || snapshot.WritePath != jsonPath || snapshot.Assignments["agent-smith-orchestrator"].Assignment.ModelID != "override" {
 		t.Fatalf("JSONC precedence: %+v, %v", snapshot, err)
 	}
 	for _, path := range []string{jsoncPath, jsonPath} {
@@ -378,10 +378,10 @@ func writeOpenCodeConfigFixture(t *testing.T, path string, managed bool) {
 	if managed {
 		content = `{
   "agent": {
-    "gentle-orchestrator": {
+    "agent-smith-orchestrator": {
       "mode": "primary",
       "hidden": true,
-      "prompt": "managed by Gentle AI",
+      "prompt": "managed by Agent Smith",
       "permission": {}
     }
   }
@@ -508,3 +508,4 @@ func TestConfiguredModelsExtractsCostLimitVariants(t *testing.T) {
 		t.Errorf("model-empty-extras Variants = %v, want empty", empty.Variants)
 	}
 }
+

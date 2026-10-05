@@ -1,6 +1,6 @@
 package agentguidance
 
-import "github.com/gentleman-programming/gentle-ai/v4/internal/model"
+import "github.com/jonsanchezr/agent-smith/v4/internal/model"
 
 // Test-only seams. Production callers always pass the review contract source
 // explicitly through RoutingOptions.ReviewContract / RenderOrchestratorWithSource;
@@ -34,3 +34,4 @@ func SetReviewContractSource(source ReviewContractSource) {
 func RenderOrchestrator(agent model.AgentID) (string, error) {
 	return RenderOrchestratorWithSource(agent, nil, "")
 }
+

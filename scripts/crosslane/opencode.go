@@ -291,7 +291,7 @@ func (b *battery) driveCorrectionToValidation(repo, fixedBase string, closure ma
 }
 
 // prepareHookHarness materializes the node harness directory: the REAL plugin
-// bytes, the hook emulator, and a PATH shim so the plugin's spawn("gentle-ai")
+// bytes, the hook emulator, and a PATH shim so the plugin's spawn("agent-smith")
 // resolves to the binary under test.
 func (b *battery) prepareHookHarness() (string, error) {
 	if _, err := exec.LookPath("node"); err != nil {
@@ -312,7 +312,7 @@ func (b *battery) prepareHookHarness() (string, error) {
 		return "", err
 	}
 	shim := "#!/bin/sh\nexec \"" + b.binary + "\" \"$@\"\n"
-	if err := os.WriteFile(filepath.Join(dir, "bin", "gentle-ai"), []byte(shim), 0o755); err != nil {
+	if err := os.WriteFile(filepath.Join(dir, "bin", "agent-smith"), []byte(shim), 0o755); err != nil {
 		return "", err
 	}
 	return dir, nil
@@ -354,7 +354,7 @@ func (b *battery) checkValidatorInspectionRecipe(repo, childPrompt string) {
 		b.fail(openCodeLane, name, "child prompt Input is not decodable JSON: "+err.Error())
 		return
 	}
-	if !strings.Contains(childPrompt, "gentle-ai review inspect-candidate") {
+	if !strings.Contains(childPrompt, "agent-smith review inspect-candidate") {
 		b.fail(openCodeLane, name, "child prompt never names the immutable inspection command")
 		return
 	}
@@ -401,7 +401,7 @@ func (b *battery) runHookCase(harnessDir string, c harnessCase) (harnessResult, 
 	}
 	command := exec.Command("node", filepath.Join(harnessDir, "harness.mts"), configPath)
 	command.Dir = c.Directory
-	// The harness spawns gentle-ai itself, so it has to inherit the battery's
+	// The harness spawns agent-smith itself, so it has to inherit the battery's
 	// sandbox HOME too. Without it the transport child resolves the operator's
 	// own review mode instead of the battery's, and on any machine that never
 	// opted in the lane fails as an unavailable materialization rather than
@@ -453,3 +453,4 @@ func providerTask(input map[string]any) (agent, prompt string, ok bool) {
 	prompt, _ = task["prompt"].(string)
 	return agent, prompt, agent != "" && prompt != ""
 }
+

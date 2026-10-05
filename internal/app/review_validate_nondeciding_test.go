@@ -48,7 +48,7 @@ func TestRunArgsReviewValidateEnabledUsesUnmanagedDeliveryForEveryGate(t *testin
 			if err := json.Unmarshal(output.Bytes(), &result); err != nil {
 				t.Fatalf("decode output: %v\n%s", err, output.String())
 			}
-			if result.Schema != "gentle-ai.review-gate-result/v1" || result.Result != "invalidated" || result.Allowed ||
+			if result.Schema != "agent-smith.review-gate-result/v1" || result.Result != "invalidated" || result.Allowed ||
 				result.Action != "repository-policy" || result.Delivery != "unmanaged" {
 				t.Fatalf("non-deciding gate result = %#v\n%s", result, output.String())
 			}
@@ -83,7 +83,7 @@ func TestRunArgsReviewValidateNonDecidingNegotiatedAndLegacyRoutes(t *testing.T)
 		t.Fatal(err)
 	}
 
-	for _, contract := range []string{"gentle-ai.review-integration/v1", "gentle-ai.review-integration/v2"} {
+	for _, contract := range []string{"agent-smith.review-integration/v1", "agent-smith.review-integration/v2"} {
 		t.Run(contract, func(t *testing.T) {
 			var output bytes.Buffer
 			if err := RunArgs([]string{"review", "validate", "--contract", contract, "--cwd", repo, "--gate", "pre-commit"}, &output); err != nil {
@@ -167,7 +167,7 @@ func TestRunArgsReviewValidateDoesNotReadOrMutateAuthority(t *testing.T) {
 	}
 	baseline := invoke(t)
 
-	lockPath := filepath.Join(repo, ".git", "gentle-ai", "review-transactions", "v2", "LOCK")
+	lockPath := filepath.Join(repo, ".git", "agent-smith", "review-transactions", "v2", "LOCK")
 	if err := os.MkdirAll(filepath.Dir(lockPath), 0o755); err != nil {
 		t.Fatal(err)
 	}
@@ -234,7 +234,7 @@ func TestRunArgsReviewValidateAllGatesRoutesAgreeAndMatchPublishedSchema(t *test
 				t.Fatalf("empty/no-upstream pre-push result = %s", plain.String())
 			}
 
-			for _, contract := range []string{"gentle-ai.review-integration/v1", "gentle-ai.review-integration/v2"} {
+			for _, contract := range []string{"agent-smith.review-integration/v1", "agent-smith.review-integration/v2"} {
 				t.Run(contract, func(t *testing.T) {
 					var output bytes.Buffer
 					if err := RunArgs([]string{"review", "validate", "--contract", contract, "--cwd", repo, "--gate", gate}, &output); err != nil {
@@ -353,3 +353,4 @@ func initAppReviewGateRepository(t *testing.T) string {
 	}
 	return repo
 }
+

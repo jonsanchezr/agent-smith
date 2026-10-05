@@ -12,11 +12,11 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/components/communitytool"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/pipeline"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/planner"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/system"
+	"github.com/jonsanchezr/agent-smith/v4/internal/components/communitytool"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
+	"github.com/jonsanchezr/agent-smith/v4/internal/pipeline"
+	"github.com/jonsanchezr/agent-smith/v4/internal/planner"
+	"github.com/jonsanchezr/agent-smith/v4/internal/system"
 )
 
 func TestInstallRuntimeStagePlanAddsCommunityToolStepsInSelectionOrder(t *testing.T) {
@@ -109,7 +109,7 @@ func TestInstallRuntimeStagePlanDeselectionCleansOwnedPiIntegration(t *testing.T
 	if runtime.state.piCodeGraph == nil || !runtime.state.piCodeGraph.Changed {
 		t.Fatalf("pipeline Pi result = %#v, want reported cleanup", runtime.state.piCodeGraph)
 	}
-	if _, err := os.Stat(filepath.Join(home, ".gentle-ai", "pi-codegraph.json")); !os.IsNotExist(err) {
+	if _, err := os.Stat(filepath.Join(home, ".agent-smith", "pi-codegraph.json")); !os.IsNotExist(err) {
 		t.Fatalf("manifest remains after pipeline deselection: %v", err)
 	}
 }
@@ -117,7 +117,7 @@ func TestInstallRuntimeStagePlanDeselectionCleansOwnedPiIntegration(t *testing.T
 func TestBackupTargetsSnapshotPiManifestOverlayDuringDeselection(t *testing.T) {
 	home := t.TempDir()
 	overlay := filepath.Join(home, ".pi", "agent", "subagents", "package.md")
-	manifest := filepath.Join(home, ".gentle-ai", "pi-codegraph.json")
+	manifest := filepath.Join(home, ".agent-smith", "pi-codegraph.json")
 	writePiInstallFixture(t, home)
 	if err := os.MkdirAll(filepath.Dir(manifest), 0o755); err != nil {
 		t.Fatal(err)
@@ -352,7 +352,7 @@ func TestSuccessfulCodeGraphReconciliationStillRegistersOpenCodePlugin(t *testin
 func TestPiCodeGraphReconcileStepRollbackRemovesDynamicPackageOverlay(t *testing.T) {
 	home := t.TempDir()
 	overlay := filepath.Join(home, ".pi", "agent", "subagents", "package.md")
-	manifest := filepath.Join(home, ".gentle-ai", "pi-codegraph.json")
+	manifest := filepath.Join(home, ".agent-smith", "pi-codegraph.json")
 	writePiInstallFixture(t, home)
 	mustWriteFile(t, overlay, []byte("owned overlay\n"))
 	if err := os.MkdirAll(filepath.Dir(manifest), 0o700); err != nil {
@@ -438,9 +438,9 @@ func TestNativeReviewCodeGraphGuidanceMarkdownOnlyWhenSelected(t *testing.T) {
 			setupHome: func(t *testing.T, home string) {
 				mustWriteFile(t, filepath.Join(home, ".claude", "CLAUDE.md"), []byte(strings.Join([]string{
 					"existing Claude guidance",
-					"<!-- gentle-ai:codegraph-guidance -->",
-					"CodeGraph guidance with `gentle-ai codegraph init --cwd <project-root>`",
-					"<!-- /gentle-ai:codegraph-guidance -->",
+					"<!-- agent-smith:codegraph-guidance -->",
+					"CodeGraph guidance with `agent-smith codegraph init --cwd <project-root>`",
+					"<!-- /agent-smith:codegraph-guidance -->",
 				}, "\n")))
 			},
 			lookPath: func(string) (string, error) { return "/bin/codegraph", nil },
@@ -488,7 +488,7 @@ func TestNativeReviewCodeGraphGuidanceMarkdownOnlyWhenSelected(t *testing.T) {
 				}
 				return
 			}
-			if !strings.Contains(got, "gentle-ai codegraph init --cwd <project-root>") {
+			if !strings.Contains(got, "agent-smith codegraph init --cwd <project-root>") {
 				t.Fatalf("CodeGraph guidance missing search-order rule:\n%s", got)
 			}
 		})
@@ -754,7 +754,7 @@ func assertOpenCodeSharedPromptCodeGraphGuidance(t *testing.T, home string, want
 	if !strings.Contains(text, "user-owned OpenCode instructions") {
 		t.Fatalf("user-owned OpenCode guidance was overwritten: %s", text)
 	}
-	hasGuidance := strings.Contains(text, "<!-- gentle-ai:codegraph-guidance -->") && strings.Contains(text, "gentle-ai codegraph init --cwd <project-root>")
+	hasGuidance := strings.Contains(text, "<!-- agent-smith:codegraph-guidance -->") && strings.Contains(text, "agent-smith codegraph init --cwd <project-root>")
 	if hasGuidance != want {
 		t.Fatalf("CodeGraph guidance present = %v, want %v in %s", hasGuidance, want, promptPath)
 	}
@@ -782,3 +782,4 @@ func installFakeCodeGraphMCP(t *testing.T, tools string) {
 	}
 	t.Setenv("PATH", binDir+string(os.PathListSeparator)+os.Getenv("PATH"))
 }
+

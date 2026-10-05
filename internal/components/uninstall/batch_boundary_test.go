@@ -9,8 +9,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/state"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
+	"github.com/jonsanchezr/agent-smith/v4/internal/state"
 )
 
 // TestPartialUninstallCommitsSucceededAgentsWhenAnotherAgentFails reproduces
@@ -25,7 +25,7 @@ func TestPartialUninstallCommitsSucceededAgentsWhenAnotherAgentFails(t *testing.
 
 	writeBatchFile(t, claudeSettings, `{"theme":"gentleman","outputStyle":"gentleman","env":{"MY_VAR":"1"}}`)
 	writeBatchFile(t, hermesConfig, "providers:\n  - name: hermes\n")
-	writeBatchFile(t, hermesSoul, "<!-- gentle-ai:persona -->\nmanaged\n<!-- /gentle-ai:persona -->\n")
+	writeBatchFile(t, hermesSoul, "<!-- agent-smith:persona -->\nmanaged\n<!-- /agent-smith:persona -->\n")
 	if err := state.Write(home, state.InstallState{InstalledAgents: []string{"claude-code", "hermes"}}); err != nil {
 		t.Fatal(err)
 	}
@@ -224,3 +224,4 @@ func writeBatchFile(t *testing.T, path, content string) {
 		t.Fatal(err)
 	}
 }
+

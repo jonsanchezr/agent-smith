@@ -6,7 +6,7 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/system"
+	"github.com/jonsanchezr/agent-smith/v4/internal/system"
 )
 
 // openCodeAgentConfigAllowedKeys is the explicit allowlist of OpenCode
@@ -26,7 +26,7 @@ var openCodeAgentConfigAllowedKeys = map[string]bool{
 // ported from Gentle Shell's global agents, plus the two review provider
 // roles retained across the SDD retirement.
 var openCodeParityAgentNames = []string{
-	"gentle-ai-explore", "gentle-ai-verify", "gentle-ai-worker",
+	"agent-smith-explore", "agent-smith-verify", "agent-smith-worker",
 	"jd-judge-a", "jd-judge-b", "jd-fix-agent",
 	"review-risk", "review-readability", "review-reliability", "review-resilience",
 	"review-refuter", "review-validator",
@@ -78,19 +78,19 @@ func TestOpenCodeInstallWritesParityAgentsWithoutManagedByMarker(t *testing.T) {
 		}
 	}
 
-	orchestrator, ok := config.Agent["gentle-orchestrator"]
+	orchestrator, ok := config.Agent["agent-smith-orchestrator"]
 	if !ok {
-		t.Fatal("opencode.json missing gentle-orchestrator")
+		t.Fatal("opencode.json missing agent-smith-orchestrator")
 	}
 	permission, _ := orchestrator["permission"].(map[string]any)
 	task, _ := permission["task"].(map[string]any)
 	for _, name := range []string{
-		"gentle-ai-explore", "gentle-ai-verify", "gentle-ai-worker",
+		"agent-smith-explore", "agent-smith-verify", "agent-smith-worker",
 		"jd-judge-a", "jd-judge-b", "jd-fix-agent",
 		"review-risk", "review-readability", "review-reliability", "review-resilience",
 	} {
 		if task[name] != "allow" {
-			t.Fatalf("gentle-orchestrator does not allow delegating to parity agent %q: %#v", name, task)
+			t.Fatalf("agent-smith-orchestrator does not allow delegating to parity agent %q: %#v", name, task)
 		}
 	}
 }
@@ -124,3 +124,4 @@ func TestOpenCodeInstallParityAgentsAreIdempotent(t *testing.T) {
 		t.Fatalf("re-running parity agent install changed opencode.json:\nfirst:\n%s\nsecond:\n%s", first, second)
 	}
 }
+

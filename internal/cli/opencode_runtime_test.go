@@ -6,8 +6,8 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/assets"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/opencode"
+	"github.com/jonsanchezr/agent-smith/v4/internal/assets"
+	"github.com/jonsanchezr/agent-smith/v4/internal/opencode"
 )
 
 func TestOpenCodeTelemetryStepUsesDetectedMajor(t *testing.T) {
@@ -39,3 +39,4 @@ func TestOpenCodeTelemetryStepUsesDetectedMajor(t *testing.T) {
 		})
 	}
 }
+

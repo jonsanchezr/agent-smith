@@ -10,7 +10,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/telemetry"
+	"github.com/jonsanchezr/agent-smith/v4/internal/telemetry"
 )
 
 // SendClaude handles one Claude Code hook in memory and sends at most once.
@@ -111,3 +111,4 @@ func withinClaudeHome(home, candidate string) bool {
 	rel, err := filepath.Rel(home, candidate)
 	return err == nil && rel != ".." && !strings.HasPrefix(rel, ".."+string(filepath.Separator)) && !filepath.IsAbs(rel)
 }
+

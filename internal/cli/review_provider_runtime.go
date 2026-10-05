@@ -6,9 +6,9 @@ import (
 	"slices"
 	"strings"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/reviewerprovider"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/state"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
+	"github.com/jonsanchezr/agent-smith/v4/internal/reviewerprovider"
+	"github.com/jonsanchezr/agent-smith/v4/internal/state"
 )
 
 // reviewProviderAdapter resolves a compiled runtime only after the role's
@@ -145,3 +145,4 @@ func reviewProviderCaptureRuntime(agent model.AgentID) bool {
 func reviewProviderHostRelayMaterializeRuntime(agent model.AgentID) bool {
 	return reviewImmutableRuntimeCapability(agent).Transport == reviewImmutableTransportPiHostRelay
 }
+

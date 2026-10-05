@@ -13,10 +13,10 @@ import (
 	"strings"
 	"time"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/components/engram"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/doctor"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/state"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/storage"
+	"github.com/jonsanchezr/agent-smith/v4/internal/components/engram"
+	"github.com/jonsanchezr/agent-smith/v4/internal/doctor"
+	"github.com/jonsanchezr/agent-smith/v4/internal/state"
+	"github.com/jonsanchezr/agent-smith/v4/internal/storage"
 )
 
 type CheckStatus = doctor.Status
@@ -29,11 +29,11 @@ const (
 	CheckStatusFail = doctor.StatusFail
 )
 
-// coreTools are ecosystem-level binaries that gentle-ai always requires
+// coreTools are ecosystem-level binaries that agent-smith always requires
 // regardless of which agents the user installed. Agent-specific binaries are
 // derived from state.json's InstalledAgents field (see #709) so the doctor
 // only reports missing agents the user actually selected.
-var coreTools = []string{"gentle-ai", "gga", "engram"}
+var coreTools = []string{"agent-smith", "gga", "engram"}
 
 // agentToolBinaries maps an agent ID from state.json's InstalledAgents to the
 // CLI binary name exec.LookPath should resolve. An empty string means "no CLI
@@ -176,9 +176,9 @@ func checkOneTool(tool string, pathDirs []string) CheckResult {
 		// PATH lookup succeeding). doctorInvokedGentleAIClause("") names it
 		// without fabricating a comparison that has nothing to compare
 		// against (organic-dx recovery: the clause must render on every
-		// derivable gentle-ai branch, not only the healthy one).
+		// derivable agent-smith branch, not only the healthy one).
 		detail := tool + " not found in PATH"
-		if tool == "gentle-ai" {
+		if tool == "agent-smith" {
 			detail += doctorInvokedGentleAIClause(resolved)
 		}
 		return CheckResult{
@@ -195,7 +195,7 @@ func checkOneTool(tool string, pathDirs []string) CheckResult {
 		// is running is guaranteed, so this is the branch that most needs
 		// the invoked-executable clause -- it must not be dropped here.
 		detail := fmt.Sprintf("%s resolved to %s but %d copies found in PATH: %s", tool, resolved, len(copies), strings.Join(copies, ", "))
-		if tool == "gentle-ai" {
+		if tool == "agent-smith" {
 			detail += doctorInvokedGentleAIClause(resolved)
 		}
 		return CheckResult{
@@ -210,7 +210,7 @@ func checkOneTool(tool string, pathDirs []string) CheckResult {
 	if shim != "" {
 		detail += " (" + shim + ")"
 	}
-	if tool == "gentle-ai" {
+	if tool == "agent-smith" {
 		detail += doctorInvokedGentleAIClause(resolved)
 	}
 	return CheckResult{
@@ -221,16 +221,16 @@ func checkOneTool(tool string, pathDirs []string) CheckResult {
 }
 
 // doctorInvokedGentleAIClause names the exact executable and version that is
-// running THIS doctor check, alongside the PATH-resolved gentle-ai reported
-// above. An RC tester who invokes gentle-ai by an absolute path may have a
-// different gentle-ai earlier on PATH; without this, doctor would report only
+// running THIS doctor check, alongside the PATH-resolved agent-smith reported
+// above. An RC tester who invokes agent-smith by an absolute path may have a
+// different agent-smith earlier on PATH; without this, doctor would report only
 // that other, unexercised copy as healthy, leaving the report ambiguous about
 // which build was actually under test (organic-dx Phase 3f task 3f.5).
 //
-// It must render on every gentle-ai branch where it is derivable -- not only
+// It must render on every agent-smith branch where it is derivable -- not only
 // the healthy one -- since PATH duplicates are exactly the situation where
 // knowing which build is actually running matters most. pathResolved may be
-// "" when the tool check has no PATH-resolved copy to name (e.g. gentle-ai
+// "" when the tool check has no PATH-resolved copy to name (e.g. agent-smith
 // itself is not found on PATH); in that case the clause still names the
 // invoked executable but skips the comparison, since there is honestly
 // nothing to compare it against.
@@ -299,7 +299,7 @@ func doctorToolCopies(tool string, pathDirs []string) []string {
 
 // executableExtensions returns the filename suffixes to probe when scanning a
 // PATH directory for a tool binary. On Windows it mirrors exec.LookPath, which
-// resolves a bare name like "gentle-ai" to "gentle-ai.exe"/".cmd" via PATHEXT;
+// resolves a bare name like "agent-smith" to "agent-smith.exe"/".cmd" via PATHEXT;
 // on other platforms the bare name is used as-is. Without this, the duplicate
 // scan never matches real Windows binaries and PATH shadowing goes unreported.
 func executableExtensions() []string {
@@ -332,7 +332,7 @@ func executableExtensionsFor(goos, pathext string) []string {
 // exec.LookPath (used for the resolved path). On non-Windows platforms the
 // candidate must also have at least one execute bit set — files without the
 // execute bit (or directories whose name happens to match a tool, e.g. a
-// PATH entry named "gentle-ai") are not counted as binaries (#709).
+// PATH entry named "agent-smith") are not counted as binaries (#709).
 //
 // Windows executable resolution (#177, PATHEXT gaps) is intentionally out of
 // scope here; an extension match is treated as sufficient on Windows because
@@ -373,7 +373,7 @@ func appendUniqueExt(exts []string, ext string) []string {
 	return append(exts, ext)
 }
 
-// checkStateJSON validates ~/.gentle-ai/state.json and agent config dirs.
+// checkStateJSON validates ~/.agent-smith/state.json and agent config dirs.
 func checkStateJSON(homeDir string) CheckResult {
 	const id = doctor.CheckStateJSON
 	statePath := state.Path(homeDir)
@@ -385,14 +385,14 @@ func checkStateJSON(homeDir string) CheckResult {
 				Name:   id,
 				Status: CheckStatusWarn,
 				Detail: "state file not found at " + statePath + " (expected for first-time install)",
-				Remedy: doctor.NewRemedy(doctor.RemedyInstall, "Run 'gentle-ai install' to create initial state"),
+				Remedy: doctor.NewRemedy(doctor.RemedyInstall, "Run 'agent-smith install' to create initial state"),
 			}
 		}
 		return CheckResult{
 			Name:   id,
 			Status: CheckStatusFail,
 			Detail: "failed to parse " + statePath + ": " + err.Error(),
-			Remedy: doctor.NewRemedy(doctor.RemedyRepairState, "Delete or repair "+statePath+", then re-run 'gentle-ai install'"),
+			Remedy: doctor.NewRemedy(doctor.RemedyRepairState, "Delete or repair "+statePath+", then re-run 'agent-smith install'"),
 		}
 	}
 
@@ -401,7 +401,7 @@ func checkStateJSON(homeDir string) CheckResult {
 			Name:   id,
 			Status: CheckStatusWarn,
 			Detail: "state file found at " + statePath + " with no installed agents",
-			Remedy: doctor.NewRemedy(doctor.RemedyInstall, "Run 'gentle-ai install' to configure agents"),
+			Remedy: doctor.NewRemedy(doctor.RemedyInstall, "Run 'agent-smith install' to configure agents"),
 		}
 	}
 
@@ -420,7 +420,7 @@ func checkStateJSON(homeDir string) CheckResult {
 					return CheckResult{
 						Name:   id,
 						Status: CheckStatusWarn,
-						Detail: fmt.Sprintf("managed config path %s could not be inspected: %v; inspect or repair it manually, then re-run 'gentle-ai doctor'", dir, ancestorErr),
+						Detail: fmt.Sprintf("managed config path %s could not be inspected: %v; inspect or repair it manually, then re-run 'agent-smith doctor'", dir, ancestorErr),
 					}
 				}
 				if ancestor != "" {
@@ -434,21 +434,21 @@ func checkStateJSON(homeDir string) CheckResult {
 				return CheckResult{
 					Name:   id,
 					Status: CheckStatusWarn,
-					Detail: fmt.Sprintf("managed config path %s could not be inspected: %v; inspect or repair it manually, then re-run 'gentle-ai doctor'", dir, lstatErr),
+					Detail: fmt.Sprintf("managed config path %s could not be inspected: %v; inspect or repair it manually, then re-run 'agent-smith doctor'", dir, lstatErr),
 				}
 			}
 			if info.Mode()&os.ModeSymlink != 0 {
 				if _, statErr := os.Stat(dir); os.IsNotExist(statErr) {
 					dangling = append(dangling, dir)
 				} else if statErr != nil {
-					return CheckResult{Name: id, Status: CheckStatusWarn, Detail: fmt.Sprintf("managed config symlink target %s could not be inspected: %v; inspect or repair it manually, then re-run 'gentle-ai doctor'", dir, statErr)}
+					return CheckResult{Name: id, Status: CheckStatusWarn, Detail: fmt.Sprintf("managed config symlink target %s could not be inspected: %v; inspect or repair it manually, then re-run 'agent-smith doctor'", dir, statErr)}
 				}
 			}
 		}
 	}
 
 	if len(dangling) > 0 {
-		detail := fmt.Sprintf("state lists %d agent(s) whose managed config paths are dangling symlinks: %s; inspect or repair these paths manually, then re-run 'gentle-ai doctor'", len(dangling), strings.Join(dangling, ", "))
+		detail := fmt.Sprintf("state lists %d agent(s) whose managed config paths are dangling symlinks: %s; inspect or repair these paths manually, then re-run 'agent-smith doctor'", len(dangling), strings.Join(dangling, ", "))
 		if len(missing) > 0 {
 			detail += "; genuinely absent config dirs: " + strings.Join(missing, ", ")
 		}
@@ -460,7 +460,7 @@ func checkStateJSON(homeDir string) CheckResult {
 			Name:   id,
 			Status: CheckStatusWarn,
 			Detail: fmt.Sprintf("state lists %d agent(s) whose config dirs are missing: %s", len(missing), strings.Join(missing, ", ")),
-			Remedy: doctor.NewRemedy(doctor.RemedySync, "Run 'gentle-ai sync' to restore missing config files"),
+			Remedy: doctor.NewRemedy(doctor.RemedySync, "Run 'agent-smith sync' to restore missing config files"),
 		}
 	}
 
@@ -476,7 +476,7 @@ func checkStateJSON(homeDir string) CheckResult {
 // is missing. It returns "" when every existing ancestor resolves (the path is
 // then genuinely missing) and an error when an ancestor exists but cannot be
 // inspected, mirroring the unreadable treatment of the final path. Ancestors
-// at or above homeDir are never inspected: they are not managed by gentle-ai,
+// at or above homeDir are never inspected: they are not managed by agent-smith,
 // and a broken home directory would have failed the state read already.
 func danglingAncestor(homeDir, path string) (string, error) {
 	home := filepath.Clean(homeDir)
@@ -497,7 +497,7 @@ func danglingAncestor(homeDir, path string) (string, error) {
 			// sync cannot mkdir below a regular file. POSIX surfaces this as
 			// ENOTDIR at the final lstat, but Windows reports it as not-exist,
 			// which is how the walk gets here.
-			return "", fmt.Errorf("ancestor %s is not a directory", ancestor) // refusal:by-design world-action: the caller embeds this cause in a warn that already names the continuation (inspect or repair the path, re-run 'gentle-ai doctor'); the repair itself happens on the filesystem, not through a command
+			return "", fmt.Errorf("ancestor %s is not a directory", ancestor) // refusal:by-design world-action: the caller embeds this cause in a warn that already names the continuation (inspect or repair the path, re-run 'agent-smith doctor'); the repair itself happens on the filesystem, not through a command
 		}
 		if _, err := os.Stat(ancestor); os.IsNotExist(err) {
 			return ancestor, nil
@@ -549,13 +549,13 @@ func checkEngramReachable(ctx context.Context, homeDir string, installedAgents [
 			Name:   id,
 			Status: CheckStatusFail,
 			Detail: "engram MCP persisted configuration is invalid: " + err.Error(),
-			Remedy: doctor.NewRemedy(doctor.RemedyInspectEngram, "Repair the persisted Engram MCP configuration, then run 'gentle-ai sync'"),
+			Remedy: doctor.NewRemedy(doctor.RemedyInspectEngram, "Repair the persisted Engram MCP configuration, then run 'agent-smith sync'"),
 		}
 	}
 	if len(commands) == 0 {
 		// Engram on Pi runs through gentle-engram's native tools, not an MCP
 		// server, so a Pi-only host has no Engram MCP entry by design and
-		// 'gentle-ai sync' would never create one.
+		// 'agent-smith sync' would never create one.
 		if onlyNativeEngramAgents(installedAgents) {
 			return CheckResult{
 				Name:   id,
@@ -567,7 +567,7 @@ func checkEngramReachable(ctx context.Context, homeDir string, installedAgents [
 			Name:   id,
 			Status: CheckStatusWarn,
 			Detail: "engram MCP not probed: no persisted MCP configuration found for installed agents",
-			Remedy: doctor.NewRemedy(doctor.RemedySync, "Run 'gentle-ai sync' to restore the Engram MCP configuration"),
+			Remedy: doctor.NewRemedy(doctor.RemedySync, "Run 'agent-smith sync' to restore the Engram MCP configuration"),
 		}
 	}
 
@@ -658,10 +658,10 @@ func checkEngramHTTP(id doctor.CheckID, baseURL string) CheckResult {
 	}
 }
 
-// checkDiskSpace reports free space on the ~/.gentle-ai filesystem.
+// checkDiskSpace reports free space on the ~/.agent-smith filesystem.
 func checkDiskSpace(homeDir string) CheckResult {
 	const id = doctor.CheckDiskSpace
-	dir := filepath.Join(homeDir, ".gentle-ai")
+	dir := filepath.Join(homeDir, ".agent-smith")
 
 	free, err := availableBytesFn(dir)
 	if err != nil {
@@ -707,7 +707,7 @@ func renderDoctorReport(w io.Writer, report DoctorReport) {
 		}
 	}
 
-	fmt.Fprintln(w, "gentle-ai doctor — system health check")
+	fmt.Fprintln(w, "agent-smith doctor — system health check")
 	fmt.Fprintln(w, "=======================================")
 	fmt.Fprintln(w)
 
@@ -760,7 +760,7 @@ func checkInstalledAssetVersion(homeDir string) CheckResult {
 	if s.InstalledBinaryVersion != AppVersion {
 		return CheckResult{
 			Status: CheckStatusWarn,
-			Detail: fmt.Sprintf("installed assets were configured by gentle-ai %s, but running binary is %s — run 'gentle-ai sync' to update installed assets", s.InstalledBinaryVersion, AppVersion),
+			Detail: fmt.Sprintf("installed assets were configured by agent-smith %s, but running binary is %s — run 'agent-smith sync' to update installed assets", s.InstalledBinaryVersion, AppVersion),
 		}
 	}
 	return CheckResult{
@@ -768,3 +768,4 @@ func checkInstalledAssetVersion(homeDir string) CheckResult {
 		Detail: fmt.Sprintf("installed assets match running binary version (%s)", AppVersion),
 	}
 }
+

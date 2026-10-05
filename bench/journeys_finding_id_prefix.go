@@ -129,7 +129,7 @@ func captureDisclosedFindingIDPrefixes(r *journeyRun, lineage string) error {
 		if err := json.Unmarshal([]byte(strings.TrimSpace(observation.Stdout)), &captured); err != nil {
 			return fmt.Errorf("decode mapped-ID capture for %q: %w", lens, err)
 		}
-		if captured.Schema == "gentle-ai.review-last-event-closure/v1" {
+		if captured.Schema == "agent-smith.review-last-event-closure/v1" {
 			if round != 3 || captured.Operation != "review/capture-result" ||
 				captured.LineageID != lineage || captured.State != "approved" {
 				return fmt.Errorf("terminal mapped-ID acknowledgement capture for %q = %+v", lens, captured)
@@ -142,3 +142,4 @@ func captureDisclosedFindingIDPrefixes(r *journeyRun, lineage string) error {
 	}
 	return fmt.Errorf("mapped finding-ID captures never produced terminal last-event closure")
 }
+

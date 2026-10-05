@@ -5,8 +5,8 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/components/filemerge"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
+	"github.com/jonsanchezr/agent-smith/v4/internal/components/filemerge"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
 )
 
 func TestExistingNativeEngramCommand(t *testing.T) {
@@ -45,3 +45,4 @@ func TestNativeEngramOverlayPreservesUserSettings(t *testing.T) {
 		t.Fatalf("unrelated legacy server modified: %v", got)
 	}
 }
+

@@ -70,7 +70,7 @@ func TestHandleEvents_RejectsUnknownAgentID(t *testing.T) {
 	server, _ := newTestServer(t, 60)
 	mux := server.NewMux()
 
-	body := `{"schema":"gentle-ai.telemetry-event/v1","event":"install","install_id":"550e8400-e29b-41d4-a716-446655440000","sent_at":"2026-09-01T12:00:00Z","version":"1.0.0","os":"darwin","arch":"arm64","agents":["not-a-real-agent"],"components":[],"rdd_enabled":true}`
+	body := `{"schema":"agent-smith.telemetry-event/v1","event":"install","install_id":"550e8400-e29b-41d4-a716-446655440000","sent_at":"2026-09-01T12:00:00Z","version":"1.0.0","os":"darwin","arch":"arm64","agents":["not-a-real-agent"],"components":[],"rdd_enabled":true}`
 	req := httptest.NewRequest(http.MethodPost, "/v1/events", strings.NewReader(body))
 	req.RemoteAddr = "203.0.113.10:54321"
 	rec := httptest.NewRecorder()
@@ -362,3 +362,4 @@ func TestHandleEvents_LogsErrorTextOnStorageFailure(t *testing.T) {
 		t.Errorf("log missing the underlying error text: %s", logBuf.String())
 	}
 }
+

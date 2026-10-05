@@ -7,7 +7,7 @@ import (
 )
 
 const validInstallEvent = `{
-	"schema": "gentle-ai.telemetry-event/v1",
+	"schema": "agent-smith.telemetry-event/v1",
 	"event": "install",
 	"install_id": "550e8400-e29b-41d4-a716-446655440000",
 	"sent_at": "2026-09-01T12:00:00Z",
@@ -20,7 +20,7 @@ const validInstallEvent = `{
 }`
 
 const validHeartbeatEvent = `{
-	"schema": "gentle-ai.telemetry-event/v1",
+	"schema": "agent-smith.telemetry-event/v1",
 	"event": "heartbeat",
 	"install_id": "550e8400-e29b-41d4-a716-446655440000",
 	"sent_at": "2026-09-01T12:00:00Z",
@@ -85,59 +85,59 @@ func TestParseEvent_RejectsInvalidPayloads(t *testing.T) {
 	}{
 		{
 			name: "unknown top-level field",
-			body: `{"schema":"gentle-ai.telemetry-event/v1","event":"install","install_id":"550e8400-e29b-41d4-a716-446655440000","sent_at":"2026-09-01T12:00:00Z","version":"1.0.0","os":"darwin","arch":"arm64","agents":[],"components":[],"rdd_enabled":true,"hostname":"laptop"}`,
+			body: `{"schema":"agent-smith.telemetry-event/v1","event":"install","install_id":"550e8400-e29b-41d4-a716-446655440000","sent_at":"2026-09-01T12:00:00Z","version":"1.0.0","os":"darwin","arch":"arm64","agents":[],"components":[],"rdd_enabled":true,"hostname":"laptop"}`,
 		},
 		{
 			name: "unknown counters field",
-			body: `{"schema":"gentle-ai.telemetry-event/v1","event":"heartbeat","install_id":"550e8400-e29b-41d4-a716-446655440000","sent_at":"2026-09-01T12:00:00Z","version":"1.0.0","os":"darwin","arch":"arm64","agents":[],"components":[],"rdd_enabled":true,"counters":{"syncs":1,"sdd_phase_runs":0,"reviews_approved":0,"reviews_correction":0,"reviews_escalated":0,"prompt_tokens":1}}`,
+			body: `{"schema":"agent-smith.telemetry-event/v1","event":"heartbeat","install_id":"550e8400-e29b-41d4-a716-446655440000","sent_at":"2026-09-01T12:00:00Z","version":"1.0.0","os":"darwin","arch":"arm64","agents":[],"components":[],"rdd_enabled":true,"counters":{"syncs":1,"sdd_phase_runs":0,"reviews_approved":0,"reviews_correction":0,"reviews_escalated":0,"prompt_tokens":1}}`,
 		},
 		{
 			name: "wrong schema id",
-			body: `{"schema":"gentle-ai.telemetry-event/v2","event":"install","install_id":"550e8400-e29b-41d4-a716-446655440000","sent_at":"2026-09-01T12:00:00Z","version":"1.0.0","os":"darwin","arch":"arm64","agents":[],"components":[],"rdd_enabled":true}`,
+			body: `{"schema":"agent-smith.telemetry-event/v2","event":"install","install_id":"550e8400-e29b-41d4-a716-446655440000","sent_at":"2026-09-01T12:00:00Z","version":"1.0.0","os":"darwin","arch":"arm64","agents":[],"components":[],"rdd_enabled":true}`,
 		},
 		{
 			name: "bad event enum value",
-			body: `{"schema":"gentle-ai.telemetry-event/v1","event":"uninstall","install_id":"550e8400-e29b-41d4-a716-446655440000","sent_at":"2026-09-01T12:00:00Z","version":"1.0.0","os":"darwin","arch":"arm64","agents":[],"components":[],"rdd_enabled":true}`,
+			body: `{"schema":"agent-smith.telemetry-event/v1","event":"uninstall","install_id":"550e8400-e29b-41d4-a716-446655440000","sent_at":"2026-09-01T12:00:00Z","version":"1.0.0","os":"darwin","arch":"arm64","agents":[],"components":[],"rdd_enabled":true}`,
 		},
 		{
 			name: "bad os enum value",
-			body: `{"schema":"gentle-ai.telemetry-event/v1","event":"install","install_id":"550e8400-e29b-41d4-a716-446655440000","sent_at":"2026-09-01T12:00:00Z","version":"1.0.0","os":"plan9","arch":"arm64","agents":[],"components":[],"rdd_enabled":true}`,
+			body: `{"schema":"agent-smith.telemetry-event/v1","event":"install","install_id":"550e8400-e29b-41d4-a716-446655440000","sent_at":"2026-09-01T12:00:00Z","version":"1.0.0","os":"plan9","arch":"arm64","agents":[],"components":[],"rdd_enabled":true}`,
 		},
 		{
 			name: "install event with counters",
-			body: `{"schema":"gentle-ai.telemetry-event/v1","event":"install","install_id":"550e8400-e29b-41d4-a716-446655440000","sent_at":"2026-09-01T12:00:00Z","version":"1.0.0","os":"darwin","arch":"arm64","agents":[],"components":[],"rdd_enabled":true,"counters":{"syncs":1,"sdd_phase_runs":0,"reviews_approved":0,"reviews_correction":0,"reviews_escalated":0}}`,
+			body: `{"schema":"agent-smith.telemetry-event/v1","event":"install","install_id":"550e8400-e29b-41d4-a716-446655440000","sent_at":"2026-09-01T12:00:00Z","version":"1.0.0","os":"darwin","arch":"arm64","agents":[],"components":[],"rdd_enabled":true,"counters":{"syncs":1,"sdd_phase_runs":0,"reviews_approved":0,"reviews_correction":0,"reviews_escalated":0}}`,
 		},
 		{
 			name: "malformed json",
-			body: `{"schema": "gentle-ai.telemetry-event/v1",`,
+			body: `{"schema": "agent-smith.telemetry-event/v1",`,
 		},
 		{
 			name: "not an object",
-			body: `["gentle-ai.telemetry-event/v1"]`,
+			body: `["agent-smith.telemetry-event/v1"]`,
 		},
 		{
 			name: "missing required field",
-			body: `{"schema":"gentle-ai.telemetry-event/v1","event":"install","install_id":"550e8400-e29b-41d4-a716-446655440000","sent_at":"2026-09-01T12:00:00Z","os":"darwin","arch":"arm64","agents":[],"components":[],"rdd_enabled":true}`,
+			body: `{"schema":"agent-smith.telemetry-event/v1","event":"install","install_id":"550e8400-e29b-41d4-a716-446655440000","sent_at":"2026-09-01T12:00:00Z","os":"darwin","arch":"arm64","agents":[],"components":[],"rdd_enabled":true}`,
 		},
 		{
 			name: "malformed install id",
-			body: `{"schema":"gentle-ai.telemetry-event/v1","event":"install","install_id":"not-a-uuid","sent_at":"2026-09-01T12:00:00Z","version":"1.0.0","os":"darwin","arch":"arm64","agents":[],"components":[],"rdd_enabled":true}`,
+			body: `{"schema":"agent-smith.telemetry-event/v1","event":"install","install_id":"not-a-uuid","sent_at":"2026-09-01T12:00:00Z","version":"1.0.0","os":"darwin","arch":"arm64","agents":[],"components":[],"rdd_enabled":true}`,
 		},
 		{
 			name: "unknown agent id",
-			body: `{"schema":"gentle-ai.telemetry-event/v1","event":"install","install_id":"550e8400-e29b-41d4-a716-446655440000","sent_at":"2026-09-01T12:00:00Z","version":"1.0.0","os":"darwin","arch":"arm64","agents":["totally-made-up-agent"],"components":[],"rdd_enabled":true}`,
+			body: `{"schema":"agent-smith.telemetry-event/v1","event":"install","install_id":"550e8400-e29b-41d4-a716-446655440000","sent_at":"2026-09-01T12:00:00Z","version":"1.0.0","os":"darwin","arch":"arm64","agents":["totally-made-up-agent"],"components":[],"rdd_enabled":true}`,
 		},
 		{
 			name: "unknown component id",
-			body: `{"schema":"gentle-ai.telemetry-event/v1","event":"install","install_id":"550e8400-e29b-41d4-a716-446655440000","sent_at":"2026-09-01T12:00:00Z","version":"1.0.0","os":"darwin","arch":"arm64","agents":[],"components":["totally-made-up-component"],"rdd_enabled":true}`,
+			body: `{"schema":"agent-smith.telemetry-event/v1","event":"install","install_id":"550e8400-e29b-41d4-a716-446655440000","sent_at":"2026-09-01T12:00:00Z","version":"1.0.0","os":"darwin","arch":"arm64","agents":[],"components":["totally-made-up-component"],"rdd_enabled":true}`,
 		},
 		{
 			name: "unknown arch",
-			body: `{"schema":"gentle-ai.telemetry-event/v1","event":"install","install_id":"550e8400-e29b-41d4-a716-446655440000","sent_at":"2026-09-01T12:00:00Z","version":"1.0.0","os":"darwin","arch":"not-a-real-arch","agents":[],"components":[],"rdd_enabled":true}`,
+			body: `{"schema":"agent-smith.telemetry-event/v1","event":"install","install_id":"550e8400-e29b-41d4-a716-446655440000","sent_at":"2026-09-01T12:00:00Z","version":"1.0.0","os":"darwin","arch":"not-a-real-arch","agents":[],"components":[],"rdd_enabled":true}`,
 		},
 		{
 			name: "free-text version is rejected",
-			body: `{"schema":"gentle-ai.telemetry-event/v1","event":"install","install_id":"550e8400-e29b-41d4-a716-446655440000","sent_at":"2026-09-01T12:00:00Z","version":"whatever I feel like","os":"darwin","arch":"arm64","agents":[],"components":[],"rdd_enabled":true}`,
+			body: `{"schema":"agent-smith.telemetry-event/v1","event":"install","install_id":"550e8400-e29b-41d4-a716-446655440000","sent_at":"2026-09-01T12:00:00Z","version":"whatever I feel like","os":"darwin","arch":"arm64","agents":[],"components":[],"rdd_enabled":true}`,
 		},
 	}
 
@@ -160,7 +160,7 @@ func TestParseEvent_RejectsInvalidPayloads(t *testing.T) {
 
 func TestParseEvent_RejectsOversizeBody(t *testing.T) {
 	huge := strings.Repeat("a", MaxEventBodyBytes+1)
-	body := `{"schema":"gentle-ai.telemetry-event/v1","event":"install","install_id":"550e8400-e29b-41d4-a716-446655440000","sent_at":"2026-09-01T12:00:00Z","version":"` + huge + `","os":"darwin","arch":"arm64","agents":[],"components":[],"rdd_enabled":true}`
+	body := `{"schema":"agent-smith.telemetry-event/v1","event":"install","install_id":"550e8400-e29b-41d4-a716-446655440000","sent_at":"2026-09-01T12:00:00Z","version":"` + huge + `","os":"darwin","arch":"arm64","agents":[],"components":[],"rdd_enabled":true}`
 
 	_, err := ParseEvent([]byte(body))
 	if err == nil {
@@ -177,13 +177,14 @@ func TestParseEvent_RejectsOversizeBody(t *testing.T) {
 
 func TestParseEventRejectsDevBuildVersions(t *testing.T) {
 	for _, version := range []string{"dev", "0.0.0-dev", "0.0.0-dev+local"} {
-		raw := []byte(`{"schema":"gentle-ai.telemetry-event/v1","event":"install","install_id":"0f6a9c4e-7b2d-4e8a-9c31-2d7f5b8a1c3e","sent_at":"2026-09-08T08:00:00Z","version":"` + version + `","os":"linux","arch":"amd64","agents":[],"components":[],"rdd_enabled":false}`)
+		raw := []byte(`{"schema":"agent-smith.telemetry-event/v1","event":"install","install_id":"0f6a9c4e-7b2d-4e8a-9c31-2d7f5b8a1c3e","sent_at":"2026-09-08T08:00:00Z","version":"` + version + `","os":"linux","arch":"amd64","agents":[],"components":[],"rdd_enabled":false}`)
 		if _, err := ParseEvent(raw); err == nil {
 			t.Fatalf("version %q: want rejection", version)
 		}
 	}
-	raw := []byte(`{"schema":"gentle-ai.telemetry-event/v1","event":"install","install_id":"0f6a9c4e-7b2d-4e8a-9c31-2d7f5b8a1c3e","sent_at":"2026-09-08T08:00:00Z","version":"2.7.1-0.20260908070514-a12e1321eea8","os":"linux","arch":"amd64","agents":[],"components":[],"rdd_enabled":false}`)
+	raw := []byte(`{"schema":"agent-smith.telemetry-event/v1","event":"install","install_id":"0f6a9c4e-7b2d-4e8a-9c31-2d7f5b8a1c3e","sent_at":"2026-09-08T08:00:00Z","version":"2.7.1-0.20260908070514-a12e1321eea8","os":"linux","arch":"amd64","agents":[],"components":[],"rdd_enabled":false}`)
 	if _, err := ParseEvent(raw); err != nil {
 		t.Fatalf("pseudo-version must be accepted: %v", err)
 	}
 }
+

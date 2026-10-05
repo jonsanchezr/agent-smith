@@ -7,10 +7,10 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/agents"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/assets"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/components/filemerge"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
+	"github.com/jonsanchezr/agent-smith/v4/internal/agents"
+	"github.com/jonsanchezr/agent-smith/v4/internal/assets"
+	"github.com/jonsanchezr/agent-smith/v4/internal/components/filemerge"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
 )
 
 // skillFiles drops the support files (skills/_shared references and skill
@@ -190,3 +190,4 @@ func TestInjectDirectoryWithWriterRemovesLegacySharedMarker(t *testing.T) {
 		t.Fatalf("second refresh changed=%v files=%v, want idempotent", again.Changed, again.Files)
 	}
 }
+

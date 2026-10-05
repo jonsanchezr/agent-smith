@@ -8,8 +8,8 @@ import "testing"
 // file URLs, emails, and every other environment assignment (#3443).
 func TestReviewScrubDefectReportFieldKeepsPublicIdentifiersAndRedactsTheRest(t *testing.T) {
 	cases := []struct{ name, in, want string }{
-		{"contract id survives", "run gentle-ai review status --contract gentle-ai.review-integration/v2 --agent pi", "run gentle-ai review status --contract gentle-ai.review-integration/v2 --agent pi"},
-		{"schema id survives", "schema gentle-ai.review-integration.status/v7 required", "schema gentle-ai.review-integration.status/v7 required"},
+		{"contract id survives", "run agent-smith review status --contract agent-smith.review-integration/v2 --agent pi", "run agent-smith review status --contract agent-smith.review-integration/v2 --agent pi"},
+		{"schema id survives", "schema agent-smith.review-integration.status/v7 required", "schema agent-smith.review-integration.status/v7 required"},
 		{"relay contract survives", "declares gentle-pi.review-relay/v1 exactly", "declares gentle-pi.review-relay/v1 exactly"},
 		{"exact relay handshake survives", "export GENTLE_PI_REVIEW_RELAY_CONTRACT=gentle-pi.review-relay/v1 and re-run", "export GENTLE_PI_REVIEW_RELAY_CONTRACT=gentle-pi.review-relay/v1 and re-run"},
 		{"other assignments still redact", "export GENTLE_PI_REVIEW_RELAY_CONTRACT=gentle-pi.review-relay/v9 and GITHUB_TOKEN=abc", "export <redacted> and <redacted>"},
@@ -18,7 +18,7 @@ func TestReviewScrubDefectReportFieldKeepsPublicIdentifiersAndRedactsTheRest(t *
 		{"file url still redacts", "see file:///Users/alan/x", "see fil<redacted>"},
 		{"windows path still redacts", `path C:\Users\alan\repo\x.go missing`, "path <redacted> missing"},
 		{"email still redacts", "by alan@example.com", "by <redacted>"},
-		{"identifier next to a path keeps only the identifier", "gentle-ai.review-integration/v2 at /tmp/x", "gentle-ai.review-integration/v2 at <redacted>"},
+		{"identifier next to a path keeps only the identifier", "agent-smith.review-integration/v2 at /tmp/x", "agent-smith.review-integration/v2 at <redacted>"},
 	}
 	for _, tc := range cases {
 		t.Run(tc.name, func(t *testing.T) {
@@ -28,3 +28,4 @@ func TestReviewScrubDefectReportFieldKeepsPublicIdentifiersAndRedactsTheRest(t *
 		})
 	}
 }
+

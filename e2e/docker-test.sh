@@ -1,5 +1,5 @@
-#!/usr/bin/env bash
-# docker-test.sh — Build & run E2E tests across all supported Linux platforms.
+﻿#!/usr/bin/env bash
+# docker-test.sh â€” Build & run E2E tests across all supported Linux platforms.
 #
 # Usage:
 #   ./e2e/docker-test.sh                      # Tier 1 only (default)
@@ -8,8 +8,8 @@
 #   RUN_FULL_E2E=1 RUN_BACKUP_TESTS=1 ./e2e/docker-test.sh  # All tiers
 #
 # Exit codes:
-#   0 — all platforms passed
-#   1 — at least one platform failed
+#   0 â€” all platforms passed
+#   1 â€” at least one platform failed
 set -uo pipefail
 
 # ---------------------------------------------------------------------------
@@ -66,31 +66,31 @@ echo ""
 
 for entry in "${PLATFORMS[@]}"; do
     IFS=':' read -r name dockerfile <<< "$entry"
-    image_tag="gentle-ai-e2e-${name}"
+    image_tag="agent-smith-e2e-${name}"
 
     TOTAL=$((TOTAL + 1))
-    printf "${YELLOW}[BUILD]${NC} %s — building from %s\n" "$name" "$dockerfile"
+    printf "${YELLOW}[BUILD]${NC} %s â€” building from %s\n" "$name" "$dockerfile"
 
     if run_with_timeout docker build \
         -f "$SCRIPT_DIR/$dockerfile" \
         -t "$image_tag" \
         "$PROJECT_ROOT" 2>&1; then
-        printf "${GREEN}[BUILD]${NC} %s — image built successfully\n" "$name"
+        printf "${GREEN}[BUILD]${NC} %s â€” image built successfully\n" "$name"
     else
-        printf "${RED}[BUILD]${NC} %s — build FAILED\n" "$name"
+        printf "${RED}[BUILD]${NC} %s â€” build FAILED\n" "$name"
         FAIL=$((FAIL + 1))
         FAILED_PLATFORMS="$FAILED_PLATFORMS $name"
         continue
     fi
 
-    printf "${YELLOW}[RUN]${NC}   %s — running tests\n" "$name"
+    printf "${YELLOW}[RUN]${NC}   %s â€” running tests\n" "$name"
 
     # shellcheck disable=SC2086
     if run_with_timeout docker run --rm $ENV_FLAGS "$image_tag" 2>&1; then
-        printf "${GREEN}[RUN]${NC}   %s — PASSED\n" "$name"
+        printf "${GREEN}[RUN]${NC}   %s â€” PASSED\n" "$name"
         PASS=$((PASS + 1))
     else
-        printf "${RED}[RUN]${NC}   %s — FAILED\n" "$name"
+        printf "${RED}[RUN]${NC}   %s â€” FAILED\n" "$name"
         FAIL=$((FAIL + 1))
         FAILED_PLATFORMS="$FAILED_PLATFORMS $name"
     fi
@@ -118,3 +118,4 @@ if [ "$FAIL" -gt 0 ]; then
 fi
 
 exit 0
+

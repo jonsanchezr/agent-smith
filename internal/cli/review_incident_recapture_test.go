@@ -12,7 +12,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/reviewtransaction"
+	"github.com/jonsanchezr/agent-smith/v4/internal/reviewtransaction"
 )
 
 // envelopelessReviewerPayload is the community-reported failure shape: the
@@ -305,3 +305,4 @@ func TestReviewCaptureResultRecapturesSameLensAfterPreInspectionAccessFailure(t 
 		t.Fatalf("STATUS-mediated recapture did not return the record-backed opaque artifact reference: %#v", artifact)
 	}
 }
+

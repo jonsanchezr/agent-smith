@@ -13,25 +13,25 @@ import (
 	"strings"
 	"time"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/agents"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/agents/claude"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/agents/pi"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/assets"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/backup"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/components/agentguidance"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/components/communitytool"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/components/engram"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/components/filemerge"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/components/gga"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/components/opencodedefault"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/components/opencoderuntimeplugins"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/components/skills"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/components/telemetryruntime"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/components/theme"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
-	opencodeactivation "github.com/gentleman-programming/gentle-ai/v4/internal/opencode"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/state"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/statecoord"
+	"github.com/jonsanchezr/agent-smith/v4/internal/agents"
+	"github.com/jonsanchezr/agent-smith/v4/internal/agents/claude"
+	"github.com/jonsanchezr/agent-smith/v4/internal/agents/pi"
+	"github.com/jonsanchezr/agent-smith/v4/internal/assets"
+	"github.com/jonsanchezr/agent-smith/v4/internal/backup"
+	"github.com/jonsanchezr/agent-smith/v4/internal/components/agentguidance"
+	"github.com/jonsanchezr/agent-smith/v4/internal/components/communitytool"
+	"github.com/jonsanchezr/agent-smith/v4/internal/components/engram"
+	"github.com/jonsanchezr/agent-smith/v4/internal/components/filemerge"
+	"github.com/jonsanchezr/agent-smith/v4/internal/components/gga"
+	"github.com/jonsanchezr/agent-smith/v4/internal/components/opencodedefault"
+	"github.com/jonsanchezr/agent-smith/v4/internal/components/opencoderuntimeplugins"
+	"github.com/jonsanchezr/agent-smith/v4/internal/components/skills"
+	"github.com/jonsanchezr/agent-smith/v4/internal/components/telemetryruntime"
+	"github.com/jonsanchezr/agent-smith/v4/internal/components/theme"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
+	opencodeactivation "github.com/jonsanchezr/agent-smith/v4/internal/opencode"
+	"github.com/jonsanchezr/agent-smith/v4/internal/state"
+	"github.com/jonsanchezr/agent-smith/v4/internal/statecoord"
 )
 
 type Manager interface {
@@ -133,7 +133,7 @@ func NewService(homeDir, workspaceDir, appVersion string) (*Service, error) {
 		return nil, fmt.Errorf("create adapter registry: %w", err)
 	}
 
-	backupRoot := filepath.Join(homeDir, ".gentle-ai", "backups")
+	backupRoot := filepath.Join(homeDir, ".agent-smith", "backups")
 	if err := os.MkdirAll(backupRoot, 0o755); err != nil {
 		return nil, fmt.Errorf("create backup root %q: %w", backupRoot, err)
 	}
@@ -391,7 +391,7 @@ func (s *Service) CompleteUninstall() (Result, error) {
 		return result, err
 	}
 
-	result.ManualActions = append(result.ManualActions, "To completely remove gentle-ai from your system, delete the executable (e.g., rm -f $(which gentle-ai))")
+	result.ManualActions = append(result.ManualActions, "To completely remove agent-smith from your system, delete the executable (e.g., rm -f $(which agent-smith))")
 	return result, nil
 }
 
@@ -608,7 +608,7 @@ func (s *Service) executePlan(p plan, agentsToRemove []model.AgentID) (Result, e
 
 		// Pi's SupportsSystemPrompt() gate keeps componentOperations() from
 		// ever queuing a rewrite for its SystemPromptFile, so a stale
-		// gentle-ai block left there by an older install is never cleaned up
+		// agent-smith block left there by an older install is never cleaned up
 		// by the generic persona rewrite ops above. Retire it directly.
 		if piAdapter, ok := s.registry.Get(model.AgentPi); ok {
 			promptPath := piAdapter.SystemPromptFile(s.homeDir)
@@ -741,9 +741,9 @@ func failureManualActions(failures []operationFailure, batch []model.AgentID, ho
 		if location == "" {
 			location = homeDir
 		}
-		command := "gentle-ai uninstall --all --yes"
+		command := "agent-smith uninstall --all --yes"
 		if len(retry) > 0 {
-			command = "gentle-ai uninstall " + strings.Join(retry, " ") + " --yes"
+			command = "agent-smith uninstall " + strings.Join(retry, " ") + " --yes"
 		}
 		actions = append(actions, fmt.Sprintf(
 			"Uninstall did not complete for %s at %s: %v. Those agents are still recorded in %s. Resolve the file, then rerun `%s`.",
@@ -769,18 +769,18 @@ func firstOrEmpty(items []string) string {
 }
 
 // retainedPiResources returns existing Pi-owned runtime and configuration paths
-// that gentle-ai deliberately leaves intact because they can be shared with Pi,
+// that agent-smith deliberately leaves intact because they can be shared with Pi,
 // gentle-pi packages, or user-managed configuration.
 func retainedPiResources(homeDir, workspaceDir string) []string {
 	paths := []string{
 		filepath.Join(homeDir, ".pi", "agent", "agents"),
 		filepath.Join(homeDir, ".pi", "agent", "chains"),
-		filepath.Join(homeDir, ".pi", "agent", "gentle-ai"),
+		filepath.Join(homeDir, ".pi", "agent", "agent-smith"),
 		filepath.Join(homeDir, ".pi", "agent", "subagents.json"),
-		filepath.Join(homeDir, ".pi", "gentle-ai"),
+		filepath.Join(homeDir, ".pi", "agent-smith"),
 	}
 	if workspaceDir != "" {
-		paths = append(paths, filepath.Join(workspaceDir, ".pi", "gentle-ai"))
+		paths = append(paths, filepath.Join(workspaceDir, ".pi", "agent-smith"))
 	}
 
 	retained := make([]string, 0, len(paths))
@@ -1247,11 +1247,11 @@ func rewriteSkillRegistryHook(path string) operation {
 
 // Only exact installed commands are removed; arbitrary user commands remain intact.
 func managedRetainedHookCommand(cmd string) bool {
-	return cmd == `gentle-ai skill-registry refresh --quiet --no-gitignore --cwd "${CLAUDE_PROJECT_DIR:-$PWD}" || true` ||
-		cmd == `gentle-ai skill-registry refresh --quiet --no-gitignore --cwd "$PWD" || true` ||
-		cmd == "gentle-ai review stop-hook --agent "+string(model.AgentClaudeCode) ||
-		cmd == "gentle-ai telemetry runtime claude --json" ||
-		cmd == "gentle-ai telemetry runtime codex --json"
+	return cmd == `agent-smith skill-registry refresh --quiet --no-gitignore --cwd "${CLAUDE_PROJECT_DIR:-$PWD}" || true` ||
+		cmd == `agent-smith skill-registry refresh --quiet --no-gitignore --cwd "$PWD" || true` ||
+		cmd == "agent-smith review stop-hook --agent "+string(model.AgentClaudeCode) ||
+		cmd == "agent-smith telemetry runtime claude --json" ||
+		cmd == "agent-smith telemetry runtime codex --json"
 }
 
 func removeSkillRegistryHook(raw []byte) ([]byte, bool, error) {
@@ -1357,7 +1357,7 @@ func retainedOpenCodePluginOperations(adapter agents.Adapter, homeDir string) []
 		ops = append(ops, removeEmbeddedOpenCodePlugin(path, name))
 	}
 	ops = append(ops, removeDirIfEmpty(pluginDir))
-	for _, path := range modelVariantsCachePaths(filepath.Join(homeDir, ".gentle-ai", "cache")) {
+	for _, path := range modelVariantsCachePaths(filepath.Join(homeDir, ".agent-smith", "cache")) {
 		op := removeFile(path)
 		op.agents = []model.AgentID{model.AgentOpenCode}
 		ops = append(ops, op)
@@ -1828,3 +1828,4 @@ func updateStateAfterUninstall(homeDir string, toRemove []model.AgentID) ([]mode
 	}
 	return removed, nil
 }
+

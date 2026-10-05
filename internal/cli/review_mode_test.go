@@ -12,8 +12,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/reviewtransaction"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/state"
+	"github.com/jonsanchezr/agent-smith/v4/internal/reviewtransaction"
+	"github.com/jonsanchezr/agent-smith/v4/internal/state"
 )
 
 func TestReviewModeCloneEnableExplainsExplicitGlobalOff(t *testing.T) {
@@ -27,7 +27,7 @@ func TestReviewModeCloneEnableExplainsExplicitGlobalOff(t *testing.T) {
 	if err := RunReviewMode([]string{"enable", "--scope", "clone", "--cwd", repo}, &output); !errors.Is(err, reviewtransaction.ErrRDDDisabled) {
 		t.Fatalf("clone enable must preserve explicit global OFF, got %v", err)
 	}
-	for _, want := range []string{"receipt-driven development: off (decided by global)", "gentle-ai review mode enable --scope global"} {
+	for _, want := range []string{"receipt-driven development: off (decided by global)", "agent-smith review mode enable --scope global"} {
 		if !strings.Contains(output.String(), want) {
 			t.Errorf("clone enable missing %q: %s", want, output.String())
 		}
@@ -39,7 +39,7 @@ func TestReviewModeHelpDescribesDefaultOnAndOptOut(t *testing.T) {
 	if err := RunReviewMode([]string{"help"}, &output); err != nil {
 		t.Fatal(err)
 	}
-	for _, want := range []string{"on by default", "opt out", "gentle-ai review mode disable", "Any off wins", "status is read-only"} {
+	for _, want := range []string{"on by default", "opt out", "agent-smith review mode disable", "Any off wins", "status is read-only"} {
 		if !strings.Contains(output.String(), want) {
 			t.Errorf("help missing %q: %s", want, output.String())
 		}
@@ -79,7 +79,7 @@ func TestReviewModeStatusReportsBothSourcesWithoutMutating(t *testing.T) {
 	if err != nil || !bytes.Equal(after, before) {
 		t.Fatalf("status changed global user state: err=%v before=%q after=%q", err, before, after)
 	}
-	if _, err := os.Lstat(filepath.Join(repo, ".git", "gentle-ai")); !errors.Is(err, os.ErrNotExist) {
+	if _, err := os.Lstat(filepath.Join(repo, ".git", "agent-smith")); !errors.Is(err, os.ErrNotExist) {
 		t.Fatalf("status created repository state: %v", err)
 	}
 }
@@ -333,7 +333,7 @@ func TestReviewModeCloneScopeEnableIsIdempotentWhenGlobalOn(t *testing.T) {
 		result.Status.Source != reviewtransaction.RDDModeSourceGlobal || result.Status.Revision != "" {
 		t.Fatalf("clone enable result = %#v", result.Status)
 	}
-	if _, err := os.Lstat(filepath.Join(repo, ".git", "gentle-ai")); !errors.Is(err, os.ErrNotExist) {
+	if _, err := os.Lstat(filepath.Join(repo, ".git", "agent-smith")); !errors.Is(err, os.ErrNotExist) {
 		t.Fatalf("idempotent clone enable created repository state: %v", err)
 	}
 }
@@ -357,7 +357,7 @@ func TestReviewModeCloneScopeEnableMigratesLegacyRevision(t *testing.T) {
 	if err != nil {
 		t.Fatalf("read current record: %v", err)
 	}
-	legacyRoot := filepath.Join(repo, ".git", "gentle-ai", "review-transactions")
+	legacyRoot := filepath.Join(repo, ".git", "agent-smith", "review-transactions")
 	// The seeding write publishes into both locations, because the switch is
 	// machine state rather than build state (#3284). This fixture is the clone
 	// that only ever had the pre-relocation one, so its mirror is dropped
@@ -365,10 +365,10 @@ func TestReviewModeCloneScopeEnableMigratesLegacyRevision(t *testing.T) {
 	if err := os.RemoveAll(legacyRoot); err != nil {
 		t.Fatalf("drop the mirrored fixture copy: %v", err)
 	}
-	if err := os.Rename(filepath.Join(repo, ".git", "gentle-ai", "review-mode"), legacyRoot); err != nil {
+	if err := os.Rename(filepath.Join(repo, ".git", "agent-smith", "review-mode"), legacyRoot); err != nil {
 		t.Fatalf("relocate secure legacy fixture: %v", err)
 	}
-	if _, err := os.Lstat(filepath.Join(repo, ".git", "gentle-ai", "review-mode")); !errors.Is(err, os.ErrNotExist) {
+	if _, err := os.Lstat(filepath.Join(repo, ".git", "agent-smith", "review-mode")); !errors.Is(err, os.ErrNotExist) {
 		t.Fatalf("legacy fixture left a separately created private directory: %v", err)
 	}
 	legacy := filepath.Join(legacyRoot, "rar-authority", "v1", "rdd-mode", filepath.Base(current))
@@ -408,14 +408,14 @@ func TestReviewModeCloneScopeEnableRejectsGlobalOffWithoutLocalOverride(t *testi
 		disabled.Source != reviewtransaction.RDDModeSourceGlobal {
 		t.Fatalf("clone enable error = %v, want global typed disabled error", err)
 	}
-	if !strings.Contains(err.Error(), "gentle-ai review mode enable --scope=global") {
+	if !strings.Contains(err.Error(), "agent-smith review mode enable --scope=global") {
 		t.Fatalf("clone enable error does not name the global continuation: %v", err)
 	}
 	if result := decodeReviewModeResult(t, output.Bytes()); result.Status.Effective != reviewtransaction.RDDModeOff ||
 		result.Status.Source != reviewtransaction.RDDModeSourceGlobal || result.Status.Revision != "" {
 		t.Fatalf("clone enable result = %#v", result.Status)
 	}
-	if _, err := os.Lstat(filepath.Join(repo, ".git", "gentle-ai")); !errors.Is(err, os.ErrNotExist) {
+	if _, err := os.Lstat(filepath.Join(repo, ".git", "agent-smith")); !errors.Is(err, os.ErrNotExist) {
 		t.Fatalf("rejected clone enable created repository state: %v", err)
 	}
 }
@@ -494,7 +494,7 @@ func TestReviewModeCloneScopeEnableRejectsExplicitOffWhileGlobalOff(t *testing.T
 		blocked.Source != reviewtransaction.RDDModeSourceGlobal {
 		t.Fatalf("explicit-off clone enable error = %v, want global typed disabled error", err)
 	}
-	if !strings.Contains(err.Error(), "gentle-ai review mode enable --scope=global") {
+	if !strings.Contains(err.Error(), "agent-smith review mode enable --scope=global") {
 		t.Fatalf("explicit-off clone enable error does not name the global continuation: %v", err)
 	}
 	result := decodeReviewModeResult(t, output.Bytes())
@@ -911,7 +911,7 @@ func assertReviewConsentPrompt(t *testing.T, prompt, reason string) string {
 		"result safer",
 		"1) Review this change",
 		"2) Skip this time",
-		"gentle-ai review mode disable",
+		"agent-smith review mode disable",
 	} {
 		if !strings.Contains(prompt, want) {
 			t.Fatalf("consent prompt missing %q:\n%s", want, prompt)
@@ -925,7 +925,7 @@ func assertReviewConsentPrompt(t *testing.T, prompt, reason string) string {
 			t.Fatalf("consent prompt still offers a permanent disable %q:\n%s", forbidden, prompt)
 		}
 	}
-	for _, forbidden := range []string{"gentle-ai.", "sha256:", "lineage", "schema", "contract", "lens"} {
+	for _, forbidden := range []string{"agent-smith.", "sha256:", "lineage", "schema", "contract", "lens"} {
 		if strings.Contains(prompt, forbidden) {
 			t.Fatalf("consent prompt leaked internal vocabulary %q:\n%s", forbidden, prompt)
 		}
@@ -956,7 +956,7 @@ func reviewModeHome(t *testing.T) string {
 
 // reviewEnabledHome supplies an explicit global ON for lifecycle tests so
 // their preconditions remain independent of the ON default. It writes the same
-// global opinion that `gentle-ai review mode enable` persists.
+// global opinion that `agent-smith review mode enable` persists.
 //
 // The opinion lives in the user's home directory, which is process-wide state
 // reached through t.Setenv. Go forbids t.Setenv in a test that also calls
@@ -1023,13 +1023,13 @@ func TestReviewModeCloneScopeEnableInheritsDefaultOnWhileGlobalUnset(t *testing.
 		switch key {
 		case "schema", "global", "clone_local", "effective", "source", "revision", "reach":
 		default:
-			t.Fatalf("status envelope grew a field %q; gentle-pi decodes gentle-ai.rdd-mode-status/v1 as an exact object", key)
+			t.Fatalf("status envelope grew a field %q; gentle-pi decodes agent-smith.rdd-mode-status/v1 as an exact object", key)
 		}
 	}
 	if strings.Contains(output.String(), "--scope global") {
 		t.Fatalf("the JSON envelope must stay unchanged; the exit is derived from source=default:\n%s", output.String())
 	}
-	if _, err := os.Lstat(filepath.Join(repo, ".git", "gentle-ai")); !errors.Is(err, os.ErrNotExist) {
+	if _, err := os.Lstat(filepath.Join(repo, ".git", "agent-smith")); !errors.Is(err, os.ErrNotExist) {
 		t.Fatalf("no-op clone enable created repository state: %v", err)
 	}
 
@@ -1046,3 +1046,4 @@ func TestReviewModeCloneScopeEnableInheritsDefaultOnWhileGlobalUnset(t *testing.
 		t.Fatalf("clone enable while global is on must report on without a note:\n%s", got)
 	}
 }
+

@@ -8,7 +8,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/telemetrycollector"
+	"github.com/jonsanchezr/agent-smith/v4/internal/telemetrycollector"
 )
 
 func TestTelemetryRuntimeCollectorCompatibility(t *testing.T) {
@@ -33,3 +33,4 @@ func TestTelemetryRuntimeCollectorCompatibility(t *testing.T) {
 		t.Fatal("wrong request count or client disk mutation")
 	}
 }
+

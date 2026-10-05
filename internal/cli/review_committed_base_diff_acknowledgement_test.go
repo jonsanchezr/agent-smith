@@ -6,7 +6,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/reviewtransaction"
+	"github.com/jonsanchezr/agent-smith/v4/internal/reviewtransaction"
 )
 
 // TestSelectorlessStatusResumesCommittedRangeApprovedAcknowledgement pins
@@ -106,3 +106,4 @@ func TestSelectorlessStatusResumesCommittedRangeApprovedAcknowledgement(t *testi
 	}
 	assertApprovedCompactAuthorityBurned(t, store, lineage)
 }
+

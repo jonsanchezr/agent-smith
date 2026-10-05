@@ -19,17 +19,17 @@ import (
 	"time"
 
 	tea "github.com/charmbracelet/bubbletea"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/agents/codex"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/backup"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
-	opencodeactivation "github.com/gentleman-programming/gentle-ai/v4/internal/opencode"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/pipeline"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/planner"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/state"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/system"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/tui"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/update"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/update/upgrade"
+	"github.com/jonsanchezr/agent-smith/v4/internal/agents/codex"
+	"github.com/jonsanchezr/agent-smith/v4/internal/backup"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
+	opencodeactivation "github.com/jonsanchezr/agent-smith/v4/internal/opencode"
+	"github.com/jonsanchezr/agent-smith/v4/internal/pipeline"
+	"github.com/jonsanchezr/agent-smith/v4/internal/planner"
+	"github.com/jonsanchezr/agent-smith/v4/internal/state"
+	"github.com/jonsanchezr/agent-smith/v4/internal/system"
+	"github.com/jonsanchezr/agent-smith/v4/internal/tui"
+	"github.com/jonsanchezr/agent-smith/v4/internal/update"
+	"github.com/jonsanchezr/agent-smith/v4/internal/update/upgrade"
 )
 
 func TestClaudeNativeReviewAssignmentsPersistThroughAppStateConversion(t *testing.T) {
@@ -55,7 +55,7 @@ func TestClaudeNativeReviewAssignmentsPersistThroughAppStateConversion(t *testin
 // newest-first by CreatedAt timestamp, matching the spec "newest first" ordering.
 func TestListBackupsNewestFirst(t *testing.T) {
 	home := t.TempDir()
-	backupRoot := filepath.Join(home, ".gentle-ai", "backups")
+	backupRoot := filepath.Join(home, ".agent-smith", "backups")
 
 	older := backup.Manifest{
 		ID:        "older",
@@ -103,7 +103,7 @@ func TestListBackupsNewestFirst(t *testing.T) {
 // with Source metadata intact, so display labels can use the source field.
 func TestListBackupsWithSourceMetadata(t *testing.T) {
 	home := t.TempDir()
-	backupRoot := filepath.Join(home, ".gentle-ai", "backups")
+	backupRoot := filepath.Join(home, ".agent-smith", "backups")
 
 	m := backup.Manifest{
 		ID:          "test-with-source",
@@ -139,7 +139,7 @@ func TestListBackupsWithSourceMetadata(t *testing.T) {
 	}
 }
 
-// TestRunArgsRestoreListIsDispatched verifies that `gentle-ai restore --list`
+// TestRunArgsRestoreListIsDispatched verifies that `agent-smith restore --list`
 // is correctly dispatched through RunArgs and produces a meaningful response
 // (either a backup list or a "no backups" message — never "unknown command").
 func TestRunArgsRestoreListIsDispatched(t *testing.T) {
@@ -167,7 +167,7 @@ func TestRunArgsRestoreListIsDispatched(t *testing.T) {
 // through app.RunArgs.
 func TestRunArgsRestoreByIDWithYes(t *testing.T) {
 	home := t.TempDir()
-	backupRoot := filepath.Join(home, ".gentle-ai", "backups")
+	backupRoot := filepath.Join(home, ".agent-smith", "backups")
 
 	// Create a backup with a real file entry so restore can succeed.
 	sourceFile := filepath.Join(home, "config.md")
@@ -320,7 +320,7 @@ func TestRunArgsRestoreHelpBypassesSystemDetection(t *testing.T) {
 			}
 			out := buf.String()
 			for _, want := range []string{
-				"gentle-ai restore [--list | latest | <id>] [--yes]",
+				"agent-smith restore [--list | latest | <id>] [--yes]",
 				"list available backups without restoring",
 				"skip confirmation prompt",
 			} {
@@ -404,7 +404,7 @@ func TestRunArgsReviewSubcommandHelpExitsSuccessfully(t *testing.T) {
 			if err := RunArgs([]string{command, "--help"}, &output); err != nil {
 				t.Fatalf("RunArgs(%s --help) error = %v", command, err)
 			}
-			if !strings.Contains(output.String(), "Usage: gentle-ai "+command+" [flags]") {
+			if !strings.Contains(output.String(), "Usage: agent-smith "+command+" [flags]") {
 				t.Fatalf("RunArgs(%s --help) output:\n%s", command, output.String())
 			}
 		})
@@ -443,7 +443,7 @@ func TestRunArgsDispatchesReviewModeBeforePlatformValidation(t *testing.T) {
 	if err := RunArgs([]string{"review", "mode", "--help"}, &output); err != nil {
 		t.Fatalf("RunArgs(review mode --help) error = %v", err)
 	}
-	if !strings.Contains(output.String(), "gentle-ai review mode <enable|disable|status>") {
+	if !strings.Contains(output.String(), "agent-smith review mode <enable|disable|status>") {
 		t.Fatalf("review mode help missing:\n%s", output.String())
 	}
 
@@ -460,7 +460,7 @@ func TestRunArgsDispatchesReviewModeBeforePlatformValidation(t *testing.T) {
 func TestListBackupsFallsBackGracefullyForOldManifests(t *testing.T) {
 	_ = fmt.Sprintf // Ensure fmt is used.
 	home := t.TempDir()
-	backupRoot := filepath.Join(home, ".gentle-ai", "backups")
+	backupRoot := filepath.Join(home, ".agent-smith", "backups")
 
 	// Write a manifest with no Source/Description.
 	m := backup.Manifest{
@@ -725,7 +725,7 @@ func TestTUIExecuteWithBackgroundPreservesConcurrentCLIStateMutation(t *testing.
 
 func buildAppCandidateBinary(t *testing.T) string {
 	t.Helper()
-	binary := filepath.Join(t.TempDir(), "gentle-ai")
+	binary := filepath.Join(t.TempDir(), "agent-smith")
 	if runtime.GOOS == "windows" {
 		binary += ".exe"
 	}
@@ -733,7 +733,7 @@ func buildAppCandidateBinary(t *testing.T) string {
 	// 30s; the cap only guards against a hung toolchain, not build speed.
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Minute)
 	defer cancel()
-	command := exec.CommandContext(ctx, "go", "build", "-o", binary, "../../cmd/gentle-ai")
+	command := exec.CommandContext(ctx, "go", "build", "-o", binary, "../../cmd/agent-smith")
 	if output, err := command.CombinedOutput(); err != nil {
 		t.Fatalf("build candidate binary: %v\n%s", err, output)
 	}
@@ -785,7 +785,7 @@ func TestTuiInstallOnThenSyncPreservesAndRefreshesOpenCodeActivation(t *testing.
 	if err != nil {
 		t.Fatalf("ReadFile(OpenCode settings): %v", err)
 	}
-	if !strings.Contains(string(settings), `\u003c!-- gentle-ai:opencode-background-subagents --\u003e`) {
+	if !strings.Contains(string(settings), `\u003c!-- agent-smith:opencode-background-subagents --\u003e`) {
 		t.Fatalf("TUI sync did not preserve OpenCode background policy in SDD settings")
 	}
 	persisted, err := state.Read(home)
@@ -879,7 +879,7 @@ func TestTuiSyncModelConfigPropagatesAssignmentWriteFailure(t *testing.T) {
 	}
 
 	statePath := state.Path(home)
-	stateTarget := filepath.Join(home, ".gentle-ai", "persisted-state.json")
+	stateTarget := filepath.Join(home, ".agent-smith", "persisted-state.json")
 	if err := os.Rename(statePath, stateTarget); err != nil {
 		t.Fatalf("Rename: %v", err)
 	}
@@ -1359,7 +1359,7 @@ func TestPersistAssignmentsNoOpWhenEmpty(t *testing.T) {
 		t.Fatalf("state.Write: %v", err)
 	}
 
-	statePath := filepath.Join(home, ".gentle-ai", "state.json")
+	statePath := filepath.Join(home, ".agent-smith", "state.json")
 	infoBefore, _ := os.Stat(statePath)
 
 	selection := model.Selection{} // empty assignments
@@ -1408,7 +1408,7 @@ func TestLoadPersistedAssignmentsWiresEffort(t *testing.T) {
 	}
 }
 
-// TestVersionBeforeSystemGuards verifies that `gentle-ai version` returns the
+// TestVersionBeforeSystemGuards verifies that `agent-smith version` returns the
 // version string without going through system detection or platform guards.
 func TestVersionBeforeSystemGuards(t *testing.T) {
 	var buf bytes.Buffer
@@ -1416,8 +1416,8 @@ func TestVersionBeforeSystemGuards(t *testing.T) {
 	if err != nil {
 		t.Fatalf("version should not fail: %v", err)
 	}
-	if !strings.Contains(buf.String(), "gentle-ai") {
-		t.Error("version output should contain 'gentle-ai'")
+	if !strings.Contains(buf.String(), "agent-smith") {
+		t.Error("version output should contain 'agent-smith'")
 	}
 }
 
@@ -1442,15 +1442,15 @@ func TestHelpCommand(t *testing.T) {
 }
 
 // TestUnknownCommandSuggestsHelp verifies that an unrecognised command returns
-// an error whose message suggests running 'gentle-ai help'.
+// an error whose message suggests running 'agent-smith help'.
 func TestUnknownCommandSuggestsHelp(t *testing.T) {
 	var buf bytes.Buffer
 	err := RunArgs([]string{"notacommand"}, &buf)
 	if err == nil {
 		t.Fatal("unknown command should return error")
 	}
-	if !strings.Contains(err.Error(), "gentle-ai help") {
-		t.Error("unknown command error should suggest 'gentle-ai help'")
+	if !strings.Contains(err.Error(), "agent-smith help") {
+		t.Error("unknown command error should suggest 'agent-smith help'")
 	}
 }
 
@@ -1516,7 +1516,7 @@ func TestRunArgs_UpdateSkipsSelfUpdate(t *testing.T) {
 	updateCheckAll = func(context.Context, string, system.PlatformProfile) []update.UpdateResult {
 		return []update.UpdateResult{
 			{
-				Tool:             update.ToolInfo{Name: "gentle-ai"},
+				Tool:             update.ToolInfo{Name: "agent-smith"},
 				InstalledVersion: "1.0.0",
 				LatestVersion:    "1.0.0",
 				Status:           update.UpToDate,
@@ -1562,7 +1562,7 @@ func TestRunArgs_UpgradeSkipsSelfUpdate(t *testing.T) {
 	updateCheckFiltered = func(context.Context, string, system.PlatformProfile, []string) []update.UpdateResult {
 		return []update.UpdateResult{
 			{
-				Tool:             update.ToolInfo{Name: "gentle-ai", InstallMethod: update.InstallBinary},
+				Tool:             update.ToolInfo{Name: "agent-smith", InstallMethod: update.InstallBinary},
 				InstalledVersion: "1.0.0",
 				LatestVersion:    "1.0.0",
 				Status:           update.UpToDate,
@@ -1714,7 +1714,7 @@ func TestTUIExecuteReturnsStatePersistenceFailure(t *testing.T) {
 		t.Fatalf("pre-install config read error = %v, want absent", err)
 	}
 	statePath := state.Path(home)
-	target := filepath.Join(home, ".gentle-ai", "persisted-state.json")
+	target := filepath.Join(home, ".agent-smith", "persisted-state.json")
 	if err := os.Rename(statePath, target); err != nil {
 		t.Fatal(err)
 	}
@@ -1733,7 +1733,7 @@ func TestTUIExecuteReturnsStatePersistenceFailure(t *testing.T) {
 	if _, readErr := os.ReadFile(configPath); !os.IsNotExist(readErr) {
 		t.Fatalf("config after failed TUI install read error = %v, want absent", readErr)
 	}
-	if _, readErr := os.Stat(filepath.Join(home, ".gentle-ai", "bin", "opencode")); !os.IsNotExist(readErr) {
+	if _, readErr := os.Stat(filepath.Join(home, ".agent-smith", "bin", "opencode")); !os.IsNotExist(readErr) {
 		t.Fatalf("launcher after failed TUI install stat error = %v, want absent", readErr)
 	}
 	finalState, readErr := os.ReadFile(target)
@@ -1767,7 +1767,7 @@ func TestTUIExecuteRollsBackOnMalformedState(t *testing.T) {
 		t.Fatalf("tuiExecute() error = %v, want state read failure", result.Err)
 	}
 
-	if _, err := os.Stat(filepath.Join(home, ".gentle-ai", "bin", "opencode")); !os.IsNotExist(err) {
+	if _, err := os.Stat(filepath.Join(home, ".agent-smith", "bin", "opencode")); !os.IsNotExist(err) {
 		t.Fatalf("launcher after failed TUI install stat error = %v, want absent", err)
 	}
 	if _, err := os.Stat(filepath.Join(home, ".config", "opencode", "opencode.json")); !os.IsNotExist(err) {
@@ -2106,7 +2106,7 @@ func writeAppSDDStatusFile(t *testing.T, path string, content string) {
 }
 
 // TestRunArgs_TUIRestartsAfterGentleAIUpgradeResult verifies that when the TUI
-// reports a successful gentle-ai upgrade, RunArgs calls restartAfterGentleAIUpgrade
+// reports a successful agent-smith upgrade, RunArgs calls restartAfterGentleAIUpgrade
 // which (after task 4.6) prints the restart guidance message instead of re-execing.
 func TestRunArgs_TUIRestartsAfterGentleAIUpgradeResult(t *testing.T) {
 	assumeInteractiveTTY(t)
@@ -2127,7 +2127,7 @@ func TestRunArgs_TUIRestartsAfterGentleAIUpgradeResult(t *testing.T) {
 	}
 
 	report := upgrade.UpgradeReport{Results: []upgrade.ToolUpgradeResult{
-		{ToolName: "gentle-ai", Status: upgrade.UpgradeSucceeded, NewVersion: "v1.40.0"},
+		{ToolName: "agent-smith", Status: upgrade.UpgradeSucceeded, NewVersion: "v1.40.0"},
 	}}
 	runTUI = func(m tea.Model, _ ...tea.ProgramOption) (tea.Model, error) {
 		model := m.(tui.Model)
@@ -2140,7 +2140,7 @@ func TestRunArgs_TUIRestartsAfterGentleAIUpgradeResult(t *testing.T) {
 		t.Fatalf("RunArgs(TUI) error = %v", err)
 	}
 	// After task 4.6: restart message is printed, no re-exec occurs.
-	if !strings.Contains(buf.String(), "restart gentle-ai") {
+	if !strings.Contains(buf.String(), "restart agent-smith") {
 		t.Fatalf("output missing restart notice:\n%s", buf.String())
 	}
 }
@@ -2295,7 +2295,7 @@ func TestRunArgs_PendingSync_ClearWriteFailureIsLogged(t *testing.T) {
 
 	// Keep state readable through a symlink while making atomic replacement refuse it.
 	stateFilePath := state.Path(home)
-	stateTargetPath := filepath.Join(home, ".gentle-ai", "persisted-state.json")
+	stateTargetPath := filepath.Join(home, ".agent-smith", "persisted-state.json")
 	if err := os.Rename(stateFilePath, stateTargetPath); err != nil {
 		t.Fatalf("Rename: %v", err)
 	}
@@ -2449,7 +2449,7 @@ func TestRunArgs_PendingSync_PrintsDoctorAdvisory(t *testing.T) {
 	}
 
 	out := buf.String()
-	if !strings.Contains(out, "Run 'gentle-ai doctor' to verify ecosystem health after upgrade") {
+	if !strings.Contains(out, "Run 'agent-smith doctor' to verify ecosystem health after upgrade") {
 		t.Errorf("stdout = %q, want doctor advisory when PendingSync=true on launch", out)
 	}
 }
@@ -2503,7 +2503,7 @@ func TestRunArgs_PendingSync_PrintsDoctorAdvisoryEvenOnSyncFailure(t *testing.T)
 	}
 
 	out := buf.String()
-	if !strings.Contains(out, "Run 'gentle-ai doctor' to verify ecosystem health after upgrade") {
+	if !strings.Contains(out, "Run 'agent-smith doctor' to verify ecosystem health after upgrade") {
 		t.Errorf("stdout = %q, want doctor advisory even when deferred sync fails", out)
 	}
 }
@@ -2704,3 +2704,4 @@ func writeFakeOpenCodeRuntime(t *testing.T) string {
 	}
 	return binDir
 }
+

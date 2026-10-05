@@ -7,8 +7,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/agents"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
+	"github.com/jonsanchezr/agent-smith/v4/internal/agents"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
 )
 
 func TestInstallCodexTelemetry(t *testing.T) {
@@ -40,7 +40,7 @@ func TestInstallCodexTelemetry(t *testing.T) {
 			t.Fatalf("%s: %+v", event, entries)
 		}
 		hook := entries[0].Hooks[0]
-		if hook["type"] != "command" || hook["command"] != "gentle-ai telemetry runtime codex --json" || hook["async"] != true || hook["timeout"] != float64(4) {
+		if hook["type"] != "command" || hook["command"] != "agent-smith telemetry runtime codex --json" || hook["async"] != true || hook["timeout"] != float64(4) {
 			t.Fatalf("%s: %+v", event, hook)
 		}
 	}
@@ -94,3 +94,4 @@ func TestInstallCodexTelemetryRejectsUnsafePathsAndShapes(t *testing.T) {
 		})
 	}
 }
+

@@ -8,7 +8,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/system"
+	"github.com/jonsanchezr/agent-smith/v4/internal/system"
 )
 
 type ownershipProbe struct {
@@ -99,3 +99,4 @@ func TestCheckSingleToolHomebrewBoundary(t *testing.T) {
 		}
 	}
 }
+

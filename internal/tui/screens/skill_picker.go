@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/components/skills"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/tui/styles"
+	"github.com/jonsanchezr/agent-smith/v4/internal/components/skills"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
+	"github.com/jonsanchezr/agent-smith/v4/internal/tui/styles"
 )
 
 // skillLabels maps each SkillID to a human-readable display label.
@@ -27,7 +27,7 @@ var additionalSkillLabels = map[model.SkillID]string{
 	model.SkillWorkUnitCommits:     "Work Unit Commits",
 	model.SkillRDDDefectWorkflow:   "RDD Defect Workflow",
 	model.SkillSystemicIssueTriage: "Systemic Issue Triage",
-	model.SkillGentleAIBench:       "Gentle AI Bench",
+	model.SkillAgentSmithBench:       "Agent Smith Bench",
 }
 
 // SkillPickerOptions returns the action buttons shown after the skill checkboxes.
@@ -113,3 +113,4 @@ func skillLabelFor(id model.SkillID) string {
 	}
 	return string(id)
 }
+

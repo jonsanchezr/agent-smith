@@ -3,24 +3,24 @@ package agents
 import (
 	"fmt"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/agents/antigravity"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/agents/claude"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/agents/codex"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/agents/conductor"
-	cursoradapter "github.com/gentleman-programming/gentle-ai/v4/internal/agents/cursor"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/agents/gemini"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/agents/hermes"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/agents/kilocode"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/agents/kimi"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/agents/kiro"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/agents/openclaw"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/agents/opencode"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/agents/pi"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/agents/qwen"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/agents/trae"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/agents/vscode"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/agents/windsurf"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
+	"github.com/jonsanchezr/agent-smith/v4/internal/agents/antigravity"
+	"github.com/jonsanchezr/agent-smith/v4/internal/agents/claude"
+	"github.com/jonsanchezr/agent-smith/v4/internal/agents/codex"
+	"github.com/jonsanchezr/agent-smith/v4/internal/agents/conductor"
+	cursoradapter "github.com/jonsanchezr/agent-smith/v4/internal/agents/cursor"
+	"github.com/jonsanchezr/agent-smith/v4/internal/agents/gemini"
+	"github.com/jonsanchezr/agent-smith/v4/internal/agents/hermes"
+	"github.com/jonsanchezr/agent-smith/v4/internal/agents/kilocode"
+	"github.com/jonsanchezr/agent-smith/v4/internal/agents/kimi"
+	"github.com/jonsanchezr/agent-smith/v4/internal/agents/kiro"
+	"github.com/jonsanchezr/agent-smith/v4/internal/agents/openclaw"
+	"github.com/jonsanchezr/agent-smith/v4/internal/agents/opencode"
+	"github.com/jonsanchezr/agent-smith/v4/internal/agents/pi"
+	"github.com/jonsanchezr/agent-smith/v4/internal/agents/qwen"
+	"github.com/jonsanchezr/agent-smith/v4/internal/agents/trae"
+	"github.com/jonsanchezr/agent-smith/v4/internal/agents/vscode"
+	"github.com/jonsanchezr/agent-smith/v4/internal/agents/windsurf"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
 )
 
 var defaultAgentIDs = []model.AgentID{
@@ -123,3 +123,4 @@ func NewMVPRegistry() (*Registry, error) {
 
 	return registry, nil
 }
+

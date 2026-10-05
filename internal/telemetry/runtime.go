@@ -11,7 +11,7 @@ import (
 	"strings"
 )
 
-const RuntimeSchema = "gentle-ai.telemetry-runtime-aggregate/v1"
+const RuntimeSchema = "agent-smith.telemetry-runtime-aggregate/v1"
 const RuntimeMaxBytes = 16384
 
 // Public package categories, not proof of runtime authority or agent-name identity.
@@ -464,3 +464,4 @@ func runtimeAllowed(home string, getenv func(string) string) bool {
 	policy, err := LoadPolicyState(home)
 	return err == nil && policy.NoticeShown && Decide(getenv, policy).Enabled
 }
+

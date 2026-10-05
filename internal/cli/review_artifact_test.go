@@ -15,7 +15,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/reviewtransaction"
+	"github.com/jonsanchezr/agent-smith/v4/internal/reviewtransaction"
 )
 
 func TestReviewCaptureResultStrictBindingTerminalCapture(t *testing.T) {
@@ -753,7 +753,7 @@ func TestReviewCaptureResultUnavailableInspectionStatusIsRefusedIncomplete(t *te
 	if !strings.Contains(err.Error(), "reviewer artifact admission incomplete") ||
 		!strings.Contains(err.Error(), "inspection unavailable") ||
 		!strings.Contains(err.Error(), "the immutable inspection command timed out") ||
-		!strings.Contains(err.Error(), "gentle-ai review capture-result") {
+		!strings.Contains(err.Error(), "agent-smith review capture-result") {
 		t.Fatalf("unavailable-inspection rejection = %v", err)
 	}
 }
@@ -821,7 +821,7 @@ func TestReviewCaptureResultCompletedStatusWithReadFailureEvidenceIsRefusedByBac
 	if !strings.Contains(err.Error(), "reviewer artifact admission incomplete") ||
 		!strings.Contains(err.Error(), "could not be "+"inspected") ||
 		!strings.Contains(err.Error(), "inspection.status: \"unavailable\"") ||
-		!strings.Contains(err.Error(), "gentle-ai review capture-result") {
+		!strings.Contains(err.Error(), "agent-smith review capture-result") {
 		t.Fatalf("read-failure backstop rejection = %v", err)
 	}
 }
@@ -1030,3 +1030,4 @@ func TestReviewCaptureResultRejectsNestedEnvelope(t *testing.T) {
 		t.Fatalf("expected nested_envelope in error, got: %v", err)
 	}
 }
+

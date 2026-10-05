@@ -1,10 +1,10 @@
-/**
+﻿/**
  * model-variants
- * Exports per-model variant (effort level) data for gentle-ai.
+ * Exports per-model variant (effort level) data for agent-smith.
  *
  * On OpenCode startup, fetches the provider list via the in-process SDK client,
  * extracts variant keys per model, and writes a minimal JSON cache to
- * ~/.gentle-ai/cache/model-variants.json. gentle-ai reads this file
+ * ~/.agent-smith/cache/model-variants.json. agent-smith reads this file
  * to populate the effort level picker without needing a live API connection.
  */
 
@@ -49,7 +49,7 @@ export const ModelVariantsPlugin: Plugin = async (input) => {
         }
       }
 
-      const cacheDir = path.join(homedir(), ".gentle-ai", "cache")
+      const cacheDir = path.join(homedir(), ".agent-smith", "cache")
       await mkdir(cacheDir, { recursive: true })
 
       // Always write through a per-invocation tmp file before renaming, so
@@ -69,7 +69,7 @@ export const ModelVariantsPlugin: Plugin = async (input) => {
     }
   }
 
-  // Don't await — server isn't ready during plugin init. Fire and forget.
+  // Don't await â€” server isn't ready during plugin init. Fire and forget.
   refreshVariantsCache().catch((err) => {
     console.error("[model-variants] unexpected refresh error:", err)
   })
@@ -78,3 +78,4 @@ export const ModelVariantsPlugin: Plugin = async (input) => {
 }
 
 export default ModelVariantsPlugin
+

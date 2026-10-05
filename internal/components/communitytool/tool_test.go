@@ -12,11 +12,11 @@ import (
 	"testing"
 	"time"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/agents"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/agents/claude"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/agents/opencode"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/testenv"
+	"github.com/jonsanchezr/agent-smith/v4/internal/agents"
+	"github.com/jonsanchezr/agent-smith/v4/internal/agents/claude"
+	"github.com/jonsanchezr/agent-smith/v4/internal/agents/opencode"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
+	"github.com/jonsanchezr/agent-smith/v4/internal/testenv"
 )
 
 // TestMain neutralizes ambient agent runtime-dir overrides (PI_CODING_AGENT_DIR,
@@ -253,7 +253,7 @@ func TestInstallWithHomeReportsWorkspaceChildAndOwnershipTarget(t *testing.T) {
 	if result.PiCodeGraph == nil || len(result.PiCodeGraph.Children) != 1 || result.PiCodeGraph.Children[0].Target != target {
 		t.Fatalf("workspace Pi result = %#v, want target %q", result.PiCodeGraph, target)
 	}
-	manifestData, err := os.ReadFile(filepath.Join(home, ".gentle-ai", "pi-codegraph.json"))
+	manifestData, err := os.ReadFile(filepath.Join(home, ".agent-smith", "pi-codegraph.json"))
 	var manifest piCodeGraphManifest
 	if err != nil || json.Unmarshal(manifestData, &manifest) != nil {
 		t.Fatalf("ownership manifest = %q, err=%v", manifestData, err)
@@ -325,8 +325,8 @@ func TestCodeGraphGuidanceContainsLazyInitAndUsageRules(t *testing.T) {
 		"Do not initialize CodeGraph in `$HOME`, temporary directories, or non-project folders",
 		"<project-root>/.codegraph/",
 		"before any broad Read/Glob/Grep filesystem exploration",
-		"immediately run `gentle-ai codegraph init --cwd <project-root>`",
-		"gentle-ai codegraph init --cwd <project-root>",
+		"immediately run `agent-smith codegraph init --cwd <project-root>`",
+		"agent-smith codegraph init --cwd <project-root>",
 		"codegraph_explore",
 		"call paths, and blast-radius context",
 		"invoke the upstream CLI directly",
@@ -339,7 +339,7 @@ func TestCodeGraphGuidanceContainsLazyInitAndUsageRules(t *testing.T) {
 		"`codegraph callees`",
 		"`codegraph impact`",
 		"`codegraph affected`",
-		"Do not use `gentle-ai codegraph` as a general proxy",
+		"Do not use `agent-smith codegraph` as a general proxy",
 		"Never run or recommend destructive or administrative lifecycle commands",
 		"`codegraph uninit`",
 		"`codegraph install`",
@@ -397,7 +397,7 @@ func TestCodeGraphGuidanceInjectsForRepresentativeAgents(t *testing.T) {
 			t.Fatalf("ReadFile(%q) error = %v", path, err)
 		}
 		text := string(content)
-		if !strings.Contains(text, "<!-- gentle-ai:codegraph-guidance -->") || !strings.Contains(text, "gentle-ai codegraph init --cwd <project-root>") {
+		if !strings.Contains(text, "<!-- agent-smith:codegraph-guidance -->") || !strings.Contains(text, "agent-smith codegraph init --cwd <project-root>") {
 			t.Fatalf("%q missing CodeGraph guidance:\n%s", path, text)
 		}
 	}
@@ -439,7 +439,7 @@ func TestCodeGraphGuidanceInjectRemovesLegacySkipBlock(t *testing.T) {
 			t.Fatalf("legacy CodeGraph guidance %q was not removed:\n%s", stale, text)
 		}
 	}
-	for _, want := range []string{"custom notes", "more notes", "<!-- gentle-ai:codegraph-guidance -->", "gentle-ai codegraph init --cwd <project-root>"} {
+	for _, want := range []string{"custom notes", "more notes", "<!-- agent-smith:codegraph-guidance -->", "agent-smith codegraph init --cwd <project-root>"} {
 		if !strings.Contains(text, want) {
 			t.Fatalf("updated guidance missing %q:\n%s", want, text)
 		}
@@ -486,7 +486,7 @@ func TestCodeGraphGuidanceInjectRemovesUnmarkedUpstreamDuplicateBlock(t *testing
 			t.Fatalf("unmarked upstream CodeGraph guidance %q was not removed:\n%s", stale, text)
 		}
 	}
-	for _, want := range []string{"custom notes", "## CodeGraph manual notes", "This manual section is unrelated and must stay.", "more notes", "<!-- gentle-ai:codegraph-guidance -->", "gentle-ai codegraph init --cwd <project-root>"} {
+	for _, want := range []string{"custom notes", "## CodeGraph manual notes", "This manual section is unrelated and must stay.", "more notes", "<!-- agent-smith:codegraph-guidance -->", "agent-smith codegraph init --cwd <project-root>"} {
 		if !strings.Contains(text, want) {
 			t.Fatalf("updated guidance missing %q:\n%s", want, text)
 		}
@@ -533,7 +533,7 @@ func TestCodeGraphGuidanceInjectPreservesManualNotesInsideUnmarkedCodeGraphSecti
 			t.Fatalf("unmarked upstream CodeGraph guidance %q was not removed:\n%s", stale, text)
 		}
 	}
-	for _, want := range []string{"custom notes", "Manual note: keep CodeGraph indexes outside throwaway directories.", "Manual note: rerun `codegraph sync` after large refactors.", "more notes", "<!-- gentle-ai:codegraph-guidance -->", "gentle-ai codegraph init --cwd <project-root>"} {
+	for _, want := range []string{"custom notes", "Manual note: keep CodeGraph indexes outside throwaway directories.", "Manual note: rerun `codegraph sync` after large refactors.", "more notes", "<!-- agent-smith:codegraph-guidance -->", "agent-smith codegraph init --cwd <project-root>"} {
 		if !strings.Contains(text, want) {
 			t.Fatalf("updated guidance missing %q:\n%s", want, text)
 		}
@@ -587,7 +587,7 @@ func TestCodeGraphGuidanceInjectPreservesManualNoteBoundaryBeforeNextHeading(t *
 			t.Fatalf("manual note boundary contains invalid separator %q:\n%s", broken, text)
 		}
 	}
-	for _, want := range []string{"custom notes", "This section must remain separate.", "<!-- gentle-ai:codegraph-guidance -->", "gentle-ai codegraph init --cwd <project-root>"} {
+	for _, want := range []string{"custom notes", "This section must remain separate.", "<!-- agent-smith:codegraph-guidance -->", "agent-smith codegraph init --cwd <project-root>"} {
 		if !strings.Contains(text, want) {
 			t.Fatalf("updated guidance missing %q:\n%s", want, text)
 		}
@@ -634,7 +634,7 @@ func TestCodeGraphGuidanceInjectPreservesManualNotesBeforeUnmarkedUpstreamDuplic
 			t.Fatalf("unmarked upstream CodeGraph guidance %q was not removed:\n%s", stale, text)
 		}
 	}
-	for _, want := range []string{"custom notes", "Manual note: always inspect the project root before using generated indexes.", "Manual note: never initialize CodeGraph in scratch directories.", "more notes", "<!-- gentle-ai:codegraph-guidance -->", "gentle-ai codegraph init --cwd <project-root>"} {
+	for _, want := range []string{"custom notes", "Manual note: always inspect the project root before using generated indexes.", "Manual note: never initialize CodeGraph in scratch directories.", "more notes", "<!-- agent-smith:codegraph-guidance -->", "agent-smith codegraph init --cwd <project-root>"} {
 		if !strings.Contains(text, want) {
 			t.Fatalf("updated guidance missing %q:\n%s", want, text)
 		}
@@ -680,7 +680,7 @@ func TestCodeGraphGuidanceInjectPreservesManualNotesInterleavedWithUnmarkedUpstr
 			t.Fatalf("unmarked upstream CodeGraph guidance %q was not removed:\n%s", stale, text)
 		}
 	}
-	for _, want := range []string{"custom notes", "Manual note: prefer the MCP tool when it returns exact source.", "Manual note: shell fallback is okay after CodeGraph initialization fails.", "more notes", "<!-- gentle-ai:codegraph-guidance -->", "gentle-ai codegraph init --cwd <project-root>"} {
+	for _, want := range []string{"custom notes", "Manual note: prefer the MCP tool when it returns exact source.", "Manual note: shell fallback is okay after CodeGraph initialization fails.", "more notes", "<!-- agent-smith:codegraph-guidance -->", "agent-smith codegraph init --cwd <project-root>"} {
 		if !strings.Contains(text, want) {
 			t.Fatalf("updated guidance missing %q:\n%s", want, text)
 		}
@@ -778,12 +778,12 @@ func TestDetectStatusReportsCLIAndPerAgentWiring(t *testing.T) {
 	mustWrite(t, filepath.Join(home, ".claude.json"), `{"mcpServers":{"codegraph":{"command":"codegraph"}}}`)
 	mustWrite(t, filepath.Join(home, ".claude", "CLAUDE.md"), strings.Join([]string{
 		"existing Claude guidance",
-		"<!-- gentle-ai:codegraph-guidance -->",
-		"CodeGraph guidance with `gentle-ai codegraph init --cwd <project-root>`",
-		"<!-- /gentle-ai:codegraph-guidance -->",
+		"<!-- agent-smith:codegraph-guidance -->",
+		"CodeGraph guidance with `agent-smith codegraph init --cwd <project-root>`",
+		"<!-- /agent-smith:codegraph-guidance -->",
 	}, "\n"))
 	mustWrite(t, filepath.Join(home, ".config", "opencode", "opencode.json"), `{}`)
-	mustWrite(t, filepath.Join(home, ".config", "opencode", "AGENTS.md"), "<!-- gentle-ai:codegraph-guidance -->\nmanaged\n<!-- /gentle-ai:codegraph-guidance -->\n")
+	mustWrite(t, filepath.Join(home, ".config", "opencode", "AGENTS.md"), "<!-- agent-smith:codegraph-guidance -->\nmanaged\n<!-- /agent-smith:codegraph-guidance -->\n")
 
 	status := DetectStatus(model.CommunityToolCodeGraph, home, DetectorFunc(func(name string) (string, error) {
 		if name != "codegraph" {
@@ -814,7 +814,7 @@ func TestDetectStatusRecognizesOpenCodeJSONCWiring(t *testing.T) {
   // user comment
   "mcp": {"codegraph": {"type": "local", "command": ["codegraph", "serve", "--mcp"], "enabled": true,},},
 }`)
-	mustWrite(t, filepath.Join(home, ".config", "opencode", "AGENTS.md"), "<!-- gentle-ai:codegraph-guidance -->\nmanaged\n<!-- /gentle-ai:codegraph-guidance -->\n")
+	mustWrite(t, filepath.Join(home, ".config", "opencode", "AGENTS.md"), "<!-- agent-smith:codegraph-guidance -->\nmanaged\n<!-- /agent-smith:codegraph-guidance -->\n")
 
 	status := DetectStatus(model.CommunityToolCodeGraph, home, DetectorFunc(func(string) (string, error) {
 		return "/bin/codegraph", nil
@@ -828,7 +828,7 @@ func TestDetectStatusRecognizesOpenCodeJSONCWiring(t *testing.T) {
 func TestDetectStatusRejectsDisabledOpenCodeWiring(t *testing.T) {
 	home := t.TempDir()
 	mustWrite(t, filepath.Join(home, ".config", "opencode", "opencode.json"), `{"mcp":{"codegraph":{"type":"local","command":["codegraph","serve","--mcp"],"enabled":false}}}`)
-	mustWrite(t, filepath.Join(home, ".config", "opencode", "AGENTS.md"), "<!-- gentle-ai:codegraph-guidance -->\nmanaged\n<!-- /gentle-ai:codegraph-guidance -->\n")
+	mustWrite(t, filepath.Join(home, ".config", "opencode", "AGENTS.md"), "<!-- agent-smith:codegraph-guidance -->\nmanaged\n<!-- /agent-smith:codegraph-guidance -->\n")
 
 	status := DetectStatus(model.CommunityToolCodeGraph, home, DetectorFunc(func(string) (string, error) {
 		return "/bin/codegraph", nil
@@ -1011,7 +1011,7 @@ func TestInstallRecordsTargetedOpenCodeReconciliation(t *testing.T) {
 	settingsPath := filepath.Join(home, ".config", "opencode", "opencode.json")
 	mustWrite(t, settingsPath, `{}`)
 	mustWrite(t, filepath.Join(home, ".claude.json"), `{"mcpServers":{"codegraph":{"command":"codegraph","args":["serve","--mcp"]}}}`)
-	mustWrite(t, filepath.Join(home, ".claude", "CLAUDE.md"), "<!-- gentle-ai:codegraph-guidance -->\nmanaged\n<!-- /gentle-ai:codegraph-guidance -->\n")
+	mustWrite(t, filepath.Join(home, ".claude", "CLAUDE.md"), "<!-- agent-smith:codegraph-guidance -->\nmanaged\n<!-- /agent-smith:codegraph-guidance -->\n")
 
 	result, err := InstallWithHome(model.CommunityToolCodeGraph, "/work/project", home, RunnerFunc(func(string, ...string) error {
 		mustWrite(t, settingsPath, `{"mcp":{"codegraph":{"type":"local","command":["codegraph","serve","--mcp"],"enabled":true}}}`)
@@ -1090,7 +1090,7 @@ func TestDetectStatusReportsPiRuntimeMissingWhenAppendSystemHasNoMarker(t *testi
 	if !pi.Detected || pi.Configured || pi.Status != AgentStatusMissing {
 		t.Fatalf("Pi status = %#v, want detected missing", pi)
 	}
-	if pi.Path != filepath.Join(home, ".gentle-ai", "pi-codegraph.json") {
+	if pi.Path != filepath.Join(home, ".agent-smith", "pi-codegraph.json") {
 		t.Fatalf("Pi path = %q, want ownership manifest path", pi.Path)
 	}
 }
@@ -1099,9 +1099,9 @@ func TestDetectStatusRejectsPiParentMarkerAsCapabilityEvidence(t *testing.T) {
 	home := t.TempDir()
 	mustWrite(t, filepath.Join(home, ".pi", "agent", "APPEND_SYSTEM.md"), strings.Join([]string{
 		"existing Pi guidance",
-		"<!-- gentle-ai:codegraph-guidance -->",
-		"CodeGraph guidance with `gentle-ai codegraph init --cwd <project-root>`",
-		"<!-- /gentle-ai:codegraph-guidance -->",
+		"<!-- agent-smith:codegraph-guidance -->",
+		"CodeGraph guidance with `agent-smith codegraph init --cwd <project-root>`",
+		"<!-- /agent-smith:codegraph-guidance -->",
 	}, "\n"))
 
 	status := DetectStatus(model.CommunityToolCodeGraph, home, DetectorFunc(func(string) (string, error) {
@@ -1214,9 +1214,9 @@ func TestInstallRefreshesOldCodeGraphGuidanceMarker(t *testing.T) {
 	mustWrite(t, filepath.Join(home, ".config", "opencode", "opencode.json"), `{}`)
 	mustWrite(t, agentsPath, strings.Join([]string{
 		"user content",
-		"<!-- gentle-ai:codegraph-guidance -->",
+		"<!-- agent-smith:codegraph-guidance -->",
 		"old CodeGraph prompt",
-		"<!-- /gentle-ai:codegraph-guidance -->",
+		"<!-- /agent-smith:codegraph-guidance -->",
 	}, "\n"))
 
 	result, err := InstallWithHome(model.CommunityToolCodeGraph, "/work/project", home, RunnerFunc(func(string, ...string) error {
@@ -1240,7 +1240,7 @@ func TestInstallRefreshesOldCodeGraphGuidanceMarker(t *testing.T) {
 	if strings.Contains(text, "old CodeGraph prompt") {
 		t.Fatalf("old guidance was not replaced:\n%s", text)
 	}
-	if !strings.Contains(text, "immediately run `gentle-ai codegraph init --cwd <project-root>`") || !strings.Contains(text, "user content") {
+	if !strings.Contains(text, "immediately run `agent-smith codegraph init --cwd <project-root>`") || !strings.Contains(text, "user content") {
 		t.Fatalf("latest guidance/user content missing after refresh:\n%s", text)
 	}
 }
@@ -1466,3 +1466,4 @@ func findAgentStatus(t *testing.T, status Status, id model.AgentID) AgentStatus 
 	t.Fatalf("agent %s not found in %#v", id, status.Agents)
 	return AgentStatus{}
 }
+

@@ -11,7 +11,7 @@ import (
 )
 
 // OwnershipLedgerFilename identifies the native rendered-agent ownership record.
-const OwnershipLedgerFilename = ".gentle-ai-native-agent-ownership.json"
+const OwnershipLedgerFilename = ".agent-smith-native-agent-ownership.json"
 
 const ownershipVersion = 1
 
@@ -82,3 +82,4 @@ func nativeFile(path string) ([]byte, bool, error) {
 }
 
 func ledgerPath(dir string) string { return filepath.Join(dir, OwnershipLedgerFilename) }
+

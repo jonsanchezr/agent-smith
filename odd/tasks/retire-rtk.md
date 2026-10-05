@@ -1,4 +1,4 @@
-# Retire RTK
+﻿# Retire RTK
 
 ## Objective
 
@@ -32,88 +32,88 @@ A complete retirement is safer and easier to understand than a partially disable
 
 ## Tasks
 
-- [x] **T-01 — Reconcile the existing retirement candidate**
+- [x] **T-01 â€” Reconcile the existing retirement candidate**
   - Route: delegated read-only exploration.
   - Trigger: the candidate spans 21 source, test, and documentation paths, exceeding the four-file mapping threshold.
   - Outcome: inventory remaining active RTK references, accidental removals, stale fixtures, compile hazards, and exact correction surfaces.
   - Checks: repository-wide tracked/untracked reference scan; candidate diff review against the authorized scope.
   - Evidence: delegated mapper returned `COMPLETE` structurally. No active RTK references or RTK-named product paths remain outside this progress artifact; no stale RTK fixtures, docs, source, acquisition paths, or obvious static compile hazards were found. Generic Community Tools and CodeGraph remain present.
 
-- [x] **T-02 — Apply bounded retirement corrections**
+- [x] **T-02 â€” Apply bounded retirement corrections**
   - Route: delegated writer if T-01 identifies any correction; otherwise close as not needed with evidence.
   - Trigger: any correction is expected to span multiple non-trivial product surfaces.
   - Outcome: active RTK UI, installation, sync, status, source/acquisition, tests, and docs are absent while generic Community Tools and CodeGraph remain intact.
   - Checks: writer-owned focused tests and formatting for exact corrected surfaces.
   - Evidence: no correction was needed; the mapper recommended no edit surfaces.
 
-- [x] **T-03A — Diagnose verification blockers**
+- [x] **T-03A â€” Diagnose verification blockers**
   - Route: delegated read-only command diagnosis.
   - Trigger: the first verification hit a scan-glob defect and two 120-second harness timeouts, requiring a separate incident diagnosis before verification resumes.
   - Outcome: exclude the worktree `.git` pointer correctly and identify which affected Go packages complete or time out under bounded individual runs.
   - Checks: corrected RTK scan; one bounded, non-cached test command per previously unverified affected package; focused failing-test isolation; clean base snapshot reproduction if needed for attribution.
   - Evidence: corrected RTK scan passed. Community Tool (17.510s), uninstall (1.372s), and TUI (2.883s) packages passed. The two implicated candidate review tests passed independently in 0.768s and 6.272s. A temporary clean snapshot of base `9ec0cf443622f20fe511815ff5a83088c7467bff` reproduced a material `internal/cli` review-assessment timeout at 90.136s. The exact timed-out test varied, proving pre-existing package-level timeout behavior rather than a candidate-specific RTK retirement failure. Temporary cleanup succeeded.
 
-- [x] **T-03B — Bound verification to candidate-causal surfaces**
+- [x] **T-03B â€” Bound verification to candidate-causal surfaces**
   - Route: delegated read-only mapping followed by delegated focused verification.
   - Trigger: exhaustive repository shards exposed numerous unrelated-path timeouts and environment-sensitive failures, so candidate-causal checks must be mapped explicitly rather than treating the red baseline as an RTK defect.
   - Outcome: map every surviving changed function/behavior to exact focused tests and classify whether any broad-shard failure intersects the RTK retirement surfaces.
   - Checks: changed-function-to-test map for CLI, Community Tool, model/state, TUI, and docs; exact bounded test regexes; no source edits.
   - Evidence: mapping found complete surviving coverage for generic Community Tools, CodeGraph install/status/sync/backup/persisted restoration, model/state round trips, and TUI selection/install/rendering. No source or test correction is required. Broad failures in review/refuter/maintenance, SDD status, update, OpenCode, app, and review-transaction code do not intersect changed RTK retirement surfaces; only the review timeout class has clean-base attribution, while the remaining broad failures stay outside changed surfaces and unattributed.
 
-- [x] **T-03 — Verify the atomic removal**
+- [x] **T-03 â€” Verify the atomic removal**
   - Route: delegated verification.
   - Trigger: command-running verification must use the verification worker.
   - Outcome: focused checks demonstrate that the candidate compiles, no active RTK references remain, and generic Community Tools/CodeGraph behavior is preserved; unavailable broad gates are recorded with causal evidence.
   - Checks: status/diff inventory, untracked inventory, corrected repository-wide RTK scan, formatting, candidate-causal affected tests, `go vet ./...`, and explicit broad-suite limitations.
   - Evidence: final verdict `PASS-WITH-LIMITATION`. All 13 candidate-causal commands passed: diff check, 21-path inventory, corrected RTK scan, formatting, focused vet, Community Tool tests (17.686s), CLI tests (7.641s), model tests (0.267s), state tests (0.280s), TUI tests (0.205s), TUI screen tests (0.467s), documentation scan, and final status. No active RTK references remain; generic Community Tools and CodeGraph remain tested and documented. The monolithic CLI timeout class reproduces on clean base; other broad-suite failures remain outside changed surfaces and unattributed. The parent spot-check reran `git diff --check` successfully and confirmed the expected candidate status.
 
-- [x] **T-04 — Close the work unit and record review/delivery evidence**
+- [x] **T-04 â€” Close the work unit and record review/delivery evidence**
   - Route: parent orchestration plus native assessment/review when an authorized commit or PR-slice candidate exists.
   - Outcome: verification evidence, authored line count, rollback boundary, review outcome, and commit identity are recorded.
   - Checks: work-unit checklist; no commit, push, PR, label, or merge without separate authorization.
   - Evidence: the user authorized and Git created atomic work-unit commit `c6987cbcbb4e78599ea5ac163d2a851a9a134f18` (`refactor(community-tools): retire RTK integration`). Native assessment classified the committed range from `9ec0cf443622f20fe511815ff5a83088c7467bff` as high risk because `internal/cli/run.go` crosses a process boundary. The required independent post-commit verifier returned `PASS-WITH-LIMITATION`: all 14 commands passed against exact HEAD and the exact 22-path range. Native review lineage `review-a7f645c28ac89f24` ran all four high-tier lenses, approved the committed candidate, and its acknowledgement was consumed at revision `sha256:30f1b8e7be92ccbb4d2fd1fd83cd04f0586994def59732043d080d9b30b8e68d`; authority is burned. Two informational findings remain separate later work: `R2-dead-agent-scope` and `R4-orphaned-rtk-upgrade`. Push, PR, labels, and merge remain separately gated.
 
-- [x] **T-05 — Create the RTK retirement issue**
-  - Route: issue-creation workflow against `github.com/Gentleman-Programming/gentle-ai`.
+- [x] **T-05 â€” Create the RTK retirement issue**
+  - Route: issue-creation workflow against `github.com/jonsanchezr/agent-smith`.
   - Outcome: publish the user-confirmed Feature Request titled `refactor(community-tools)!: retire RTK integration` with the exact form body and create-time labels `enhancement` and `status:needs-review`.
   - Checks: open-and-closed duplicate search; exact form validation; explicit pre-flight affirmations; privacy scan; one create attempt; target-host readback.
-  - Evidence: the user selected `Other`, affirmed both required checkboxes, and confirmed the exact draft. The first publication preflight stopped before `gh issue create` because the Python Windows alias was unavailable. The later create attempt produced issue #4763 but lost its local identity output and published an empty body because of a Windows temp-path namespace mismatch. After the user explicitly authorized repair of exact target `github.com/Gentleman-Programming/gentle-ai#4763`, one bounded body update and target-host readback returned `confirmed`: https://github.com/Gentleman-Programming/gentle-ai/issues/4763 is OPEN, body-exact, and retains `enhancement` plus `status:needs-review`.
+  - Evidence: the user selected `Other`, affirmed both required checkboxes, and confirmed the exact draft. The first publication preflight stopped before `gh issue create` because the Python Windows alias was unavailable. The later create attempt produced issue #4763 but lost its local identity output and published an empty body because of a Windows temp-path namespace mismatch. After the user explicitly authorized repair of exact target `github.com/jonsanchezr/agent-smith#4763`, one bounded body update and target-host readback returned `confirmed`: https://github.com/jonsanchezr/agent-smith/issues/4763 is OPEN, body-exact, and retains `enhancement` plus `status:needs-review`.
 
-- [x] **T-05A — Resolve the uncertain issue identity**
+- [x] **T-05A â€” Resolve the uncertain issue identity**
   - Route: human-provided target-host observation.
   - Outcome: establish either the exact created issue number/URL or authoritative confirmation that no issue exists.
-  - Checks: validate any supplied issue identity against `github.com/Gentleman-Programming/gentle-ai` before continuing.
+  - Checks: validate any supplied issue identity against `github.com/jonsanchezr/agent-smith` before continuing.
   - Evidence: the user explicitly authorized an exact-title `gh` lookup. It resolved one issue, #4763; readback showed the expected title and empty body. The authorized repair then confirmed the exact body and preserved labels/state, resolving the uncertainty.
 
-- [x] **T-06 — Approve the RTK retirement issue**
-  - Route: protected-label workflow for exact target `github.com/Gentleman-Programming/gentle-ai#4763`.
+- [x] **T-06 â€” Approve the RTK retirement issue**
+  - Route: protected-label workflow for exact target `github.com/jonsanchezr/agent-smith#4763`.
   - Outcome: replace `status:needs-review` with `status:approved` while preserving unrelated labels and state.
   - Checks: direct exact user authorization; authenticated actor identity; target-host `MAINTAIN` or `ADMIN`; existing-label discovery; exact pre-read; one atomic mutation; exact post-read.
   - Evidence: the user authorized the exact protected-label action. Authenticated actor `dnlrsls` had `MAINTAIN`. One atomic mutation returned `confirmed`; issue #4763 remains OPEN with labels `enhancement` and `status:approved`.
 
-- [x] **T-07 — Publish the RTK retirement pull request**
+- [x] **T-07 â€” Publish the RTK retirement pull request**
   - Route: branch/PR workflow with the accepted single-PR `size:exception` strategy.
-  - Outcome: commit final progress evidence, push HEAD to fork ref `refactor/retire-rtk`, and open a PR to `Gentleman-Programming/gentle-ai:main` linked with `Closes #4763` and declared `type:breaking-change`.
+  - Outcome: commit final progress evidence, push HEAD to fork ref `refactor/retire-rtk`, and open a PR to `jonsanchezr/agent-smith:main` linked with `Closes #4763` and declared `type:breaking-change`.
   - Checks: exact issue approval readback; no existing remote branch/PR; Conventional Commit; no co-author trailer; full PR template; documented 1,843-line size-exception rationale; target-host PR readback.
-  - Evidence: issue #4763 is OPEN with `status:approved`. The user explicitly authorized the exact evidence commit, push, and PR creation. Commit `34372216373ab6ca9ef3e59d1af62f442a0dd809` passed independent docs-only verification; exact two-commit HEAD passed four-lens native review and acknowledgement. Fork ref `refactor/retire-rtk` was pushed and matched HEAD. PR #4764 was created and exact target-host readback returned `confirmed`: https://github.com/Gentleman-Programming/gentle-ai/pull/4764 is OPEN, targets `main`, has 22 files with 175 additions and 1,668 deletions, and its body is exact. It currently has no labels.
+  - Evidence: issue #4763 is OPEN with `status:approved`. The user explicitly authorized the exact evidence commit, push, and PR creation. Commit `34372216373ab6ca9ef3e59d1af62f442a0dd809` passed independent docs-only verification; exact two-commit HEAD passed four-lens native review and acknowledgement. Fork ref `refactor/retire-rtk` was pushed and matched HEAD. PR #4764 was created and exact target-host readback returned `confirmed`: https://github.com/jonsanchezr/agent-smith/pull/4764 is OPEN, targets `main`, has 22 files with 175 additions and 1,668 deletions, and its body is exact. It currently has no labels.
 
-- [x] **T-08 — Apply required PR labels**
-  - Route: exact-target delegated workflow actions on `github.com/Gentleman-Programming/gentle-ai#4764`.
+- [x] **T-08 â€” Apply required PR labels**
+  - Route: exact-target delegated workflow actions on `github.com/jonsanchezr/agent-smith#4764`.
   - Outcome: apply exactly one ordinary type label, `type:breaking-change`, and protected `size:exception` with the documented 1,843-line atomic-retirement rationale.
   - Checks: separate direct user authorization for each label; current target-host permission; exact pre-state and post-state; one bounded mutation per authorized action; preserve all unrelated labels/state.
   - Evidence: the user authorized both exact actions. One ordinary mutation added `type:breaking-change` and readback returned `confirmed`. A separate protected-label mutation revalidated actor `dnlrsls` with `MAINTAIN`, added `size:exception`, and readback returned `confirmed`. PR #4764 remains OPEN with exactly those two labels.
 
-- [x] **T-09 — Rebase the conflicting PR branch**
+- [x] **T-09 â€” Rebase the conflicting PR branch**
   - Route: authorized history maintenance on fork branch `refactor/retire-rtk` only.
   - Outcome: rebase the two RTK retirement commits onto current upstream `main` and update the fork branch with `--force-with-lease`, without merging.
   - Checks: explicit user authorization for rebase and force-with-lease; fetch exact upstream main; conflict diagnosis; rerun applicable focused verification; fresh native review for the rebased candidate; remote SHA readback.
-  - Evidence: the user authorized rebase and `--force-with-lease`. Rebase onto `5b82c00dce937bae079ac50c3891bf41724bd012` found four RTK-only modify/delete conflicts and one upstream stale `CommunityToolRTK` test reference. The four files were deleted, `TestOpenClawConfigDoesNotRedirectProjectToolRuntimeCwd` was corrected for CodeGraph-only selection, focused verification passed, and rebase completed as commits `110f1371…` and `c9e3bdaf…`. The runtime blocked force-with-lease twice despite explicit authorization, so the user selected the safe replacement-PR route instead.
+  - Evidence: the user authorized rebase and `--force-with-lease`. Rebase onto `5b82c00dce937bae079ac50c3891bf41724bd012` found four RTK-only modify/delete conflicts and one upstream stale `CommunityToolRTK` test reference. The four files were deleted, `TestOpenClawConfigDoesNotRedirectProjectToolRuntimeCwd` was corrected for CodeGraph-only selection, focused verification passed, and rebase completed as commits `110f1371â€¦` and `c9e3bdafâ€¦`. The runtime blocked force-with-lease twice despite explicit authorization, so the user selected the safe replacement-PR route instead.
 
-- [x] **T-10 — Publish the rebased replacement PR**
+- [x] **T-10 â€” Publish the rebased replacement PR**
   - Route: non-destructive replacement delivery without force-push.
   - Outcome: push rebased HEAD to a new fork ref, open a replacement PR, close superseded PR #4764, and apply required labels to the replacement.
   - Checks: exact rebased verification; fresh four-lens native review; remote SHA readback; exact PR body; direct authorization for close and labels; target-host post-readbacks.
-  - Evidence: fork ref `refactor/retire-rtk-rebased` points to exact HEAD `c9e3bdafc255df7bc05cc96e9814a140a04892eb`. Replacement PR #4766 is OPEN and MERGEABLE: https://github.com/Gentleman-Programming/gentle-ai/pull/4766. It targets `main`, contains 23 files with 178 additions and 1,671 deletions, and has `type:breaking-change` plus protected `size:exception`. Superseded PR #4764 is CLOSED and was never merged. Required CI remains in progress; historical pre-label failures are followed by successful label/cognitive-load checks.
+  - Evidence: fork ref `refactor/retire-rtk-rebased` points to exact HEAD `c9e3bdafc255df7bc05cc96e9814a140a04892eb`. Replacement PR #4766 is OPEN and MERGEABLE: https://github.com/jonsanchezr/agent-smith/pull/4766. It targets `main`, contains 23 files with 178 additions and 1,671 deletions, and has `type:breaking-change` plus protected `size:exception`. Superseded PR #4764 is CLOSED and was never merged. Required CI remains in progress; historical pre-label failures are followed by successful label/cognitive-load checks.
 
 ## Acceptance Criteria
 
@@ -173,3 +173,4 @@ Use commit `110f1371b39ae24bf8207782a9bff7acb5c6ae75` as the exact rollback boun
 ## Next Step
 
 Monitor CI and reviewer feedback on PR #4766. Do not merge. The worktree is clean, and all published progress evidence through the latest reviewer corrections is committed to the PR branch.
+

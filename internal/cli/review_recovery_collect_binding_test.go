@@ -8,7 +8,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/reviewtransaction"
+	"github.com/jonsanchezr/agent-smith/v4/internal/reviewtransaction"
 )
 
 // recoveryCollectBindingFixture is the #3099/#2910 shape: an escalated
@@ -68,7 +68,7 @@ func recoveryCollectBindingFixture(t *testing.T, lineage string) (string, []stri
 	binding := status.NextTransition.Execute.Binding
 	bound := map[string]string{"lineage": binding.LineageID, "expected-revision": binding.Revision, "target": binding.TargetIdentity, "disposition": string(status.ActionDisposition)}
 	return repo, selectors, bound, strings.Join([]string{
-		"gentle-ai.review-recovery-authorization/v1",
+		"agent-smith.review-recovery-authorization/v1",
 		"predecessor_lineage=" + bound["lineage"],
 		"predecessor_revision=" + bound["expected-revision"],
 		"target_identity=" + bound["target"],
@@ -118,7 +118,7 @@ func TestRecoveryCollectBindingRefusalNamesARunnableRecover(t *testing.T) {
 	}
 	message := err.Error()
 	_, continuation, named := strings.Cut(message, "re-run: ")
-	if !named || !strings.HasPrefix(continuation, "gentle-ai review recover ") || !strings.Contains(message, "key=value") {
+	if !named || !strings.HasPrefix(continuation, "agent-smith review recover ") || !strings.Contains(message, "key=value") {
 		t.Fatalf("refusal names no runnable recover: %s", message)
 	}
 	if strings.Contains(message, repo) {
@@ -144,3 +144,4 @@ func TestRecoveryCollectBindingRefusalNamesARunnableRecover(t *testing.T) {
 		t.Fatalf("printed continuation = %#v, want a reviewing successor of %s", result, bound["lineage"])
 	}
 }
+

@@ -5,9 +5,9 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/agents"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/components/filemerge"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
+	"github.com/jonsanchezr/agent-smith/v4/internal/agents"
+	"github.com/jonsanchezr/agent-smith/v4/internal/components/filemerge"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
 )
 
 // InstallRetainedClaudeHooks installs review and telemetry hooks independently of SDD.
@@ -46,7 +46,7 @@ func InstallRetainedClaudeHooks(homeDir string, adapter agents.Adapter) (Result,
 	if !ok {
 		hooks = map[string]any{}
 	}
-	command := fmt.Sprintf("gentle-ai review stop-hook --agent %s", adapter.Agent())
+	command := fmt.Sprintf("agent-smith review stop-hook --agent %s", adapter.Agent())
 	entries := []struct {
 		key, matcher, command string
 		timeout               int
@@ -54,8 +54,8 @@ func InstallRetainedClaudeHooks(homeDir string, adapter agents.Adapter) (Result,
 	}{
 		{"Stop", "", command, 60, false},
 		{"SessionStart", "startup|resume|clear|compact", command, 30, false},
-		{"SubagentStop", "", "gentle-ai telemetry runtime claude --json", 5, true},
-		{"Stop", "", "gentle-ai telemetry runtime claude --json", 5, true},
+		{"SubagentStop", "", "agent-smith telemetry runtime claude --json", 5, true},
+		{"Stop", "", "agent-smith telemetry runtime claude --json", 5, true},
 	}
 	changed := false
 	for _, e := range entries {
@@ -108,3 +108,4 @@ func claudeHookListContains(entries []any, command string) bool {
 	}
 	return false
 }
+

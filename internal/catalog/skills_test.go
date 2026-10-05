@@ -1,10 +1,11 @@
 package catalog
 
 import (
+	"strings"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/components/skills"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
+	"github.com/jonsanchezr/agent-smith/v4/internal/components/skills"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
 )
 
 // TestMVPSkillsCoverAllPresetSkills ensures every skill that presets.go would
@@ -48,7 +49,7 @@ func TestMVPSkillsIncludeRequestedBundledSkillsWithCanonicalNames(t *testing.T) 
 		model.SkillImprover:            "skill-improver",
 		model.SkillRDDDefectWorkflow:   "rdd-defect-workflow",
 		model.SkillSystemicIssueTriage: "systemic-issue-triage",
-		model.SkillGentleAIBench:       "gentle-ai-bench",
+		model.SkillAgentSmithBench:       "agent-smith-bench",
 	}
 
 	found := make(map[model.SkillID]string)
@@ -69,3 +70,44 @@ func TestMVPSkillsIncludeRequestedBundledSkillsWithCanonicalNames(t *testing.T) 
 		}
 	}
 }
+
+// TestMVPSkillsIncludeSpecKitSkills verifies all 9 spec-kit skills are registered.
+func TestMVPSkillsIncludeSpecKitSkills(t *testing.T) {
+	specKitSkills := []model.SkillID{
+		model.SkillSpecKitConstitution,
+		model.SkillSpecKitSpecify,
+		model.SkillSpecKitClarify,
+		model.SkillSpecKitPlan,
+		model.SkillSpecKitChecklist,
+		model.SkillSpecKitTasks,
+		model.SkillSpecKitAnalyze,
+		model.SkillSpecKitImplement,
+		model.SkillSpecKitConverge,
+	}
+
+	found := make(map[model.SkillID]bool)
+	for _, skill := range MVPSkills() {
+		found[skill.ID] = true
+	}
+
+	for _, id := range specKitSkills {
+		if !found[id] {
+			t.Errorf("MVPSkills() missing spec-kit skill %q", id)
+		}
+	}
+}
+
+// TestSpecKitSkillsHaveCorrectCategory verifies all spec-kit skills have spec-kit category.
+func TestSpecKitSkillsHaveCorrectCategory(t *testing.T) {
+	for _, skill := range MVPSkills() {
+		if strings.HasPrefix(string(skill.ID), "speckit-") {
+			if skill.Category != "spec-kit" {
+				t.Errorf("spec-kit skill %q has category %q, want spec-kit", skill.ID, skill.Category)
+			}
+			if skill.Priority != "p0" {
+				t.Errorf("spec-kit skill %q has priority %q, want p0", skill.ID, skill.Priority)
+			}
+		}
+	}
+}
+

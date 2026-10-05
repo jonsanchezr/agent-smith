@@ -241,7 +241,7 @@ func TestRARAuthorityRepositoryRejectsReplacedGitIdentityWithoutPublishing(
 	}
 	replacementRoot := filepath.Join(
 		originalGit,
-		"gentle-ai",
+		"agent-smith",
 		"review-transactions",
 		rarAuthorityDirectory,
 		rarAuthorityVersion,
@@ -915,3 +915,4 @@ func rarPlanAuthoritiesEqual(left, right RARPlanAuthority) bool {
 		reflect.DeepEqual(left.Plan, right.Plan) &&
 		reflect.DeepEqual(left.Effects, right.Effects)
 }
+

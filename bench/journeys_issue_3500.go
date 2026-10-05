@@ -15,7 +15,7 @@ func issue3500SeedExternalOpenCodePrompt(sandbox *Sandbox) error {
 	if err := os.MkdirAll(filepath.Dir(path), 0o755); err != nil {
 		return err
 	}
-	settings := map[string]any{"theme": "external-theme", "agent": map[string]any{"gentle-orchestrator": map[string]any{"prompt": issue3500ExternalPrompt}}}
+	settings := map[string]any{"theme": "external-theme", "agent": map[string]any{"agent-smith-orchestrator": map[string]any{"prompt": issue3500ExternalPrompt}}}
 	content, err := json.Marshal(settings)
 	if err != nil {
 		return err
@@ -40,7 +40,7 @@ func issue3500PreservedPrompt(sandbox *Sandbox) (string, error) {
 	if settings.Theme != "external-theme" {
 		return "", fmt.Errorf("unrelated OpenCode theme changed: %q", settings.Theme)
 	}
-	return settings.Agent["gentle-orchestrator"].Prompt, nil
+	return settings.Agent["agent-smith-orchestrator"].Prompt, nil
 }
 
 func issue3500AssertFirstSync(sandbox *Sandbox, observation Observation) error {

@@ -5,7 +5,7 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
 )
 
 // AdapterInfo pairs an AgentID with the path to its skills directory.
@@ -80,3 +80,4 @@ func markAllFailed(results []InstallResult) {
 		results[i].Success = false
 	}
 }
+

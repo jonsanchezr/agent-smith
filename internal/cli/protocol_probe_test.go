@@ -7,15 +7,15 @@ import (
 	"os"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/agents/claude"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/agents/gemini"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/agents/kilocode"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/agents/openclaw"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/agents/opencode"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/agents/qwen"
-	runtimeopencode "github.com/gentleman-programming/gentle-ai/v4/internal/opencode"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/telemetry"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/testenv"
+	"github.com/jonsanchezr/agent-smith/v4/internal/agents/claude"
+	"github.com/jonsanchezr/agent-smith/v4/internal/agents/gemini"
+	"github.com/jonsanchezr/agent-smith/v4/internal/agents/kilocode"
+	"github.com/jonsanchezr/agent-smith/v4/internal/agents/openclaw"
+	"github.com/jonsanchezr/agent-smith/v4/internal/agents/opencode"
+	"github.com/jonsanchezr/agent-smith/v4/internal/agents/qwen"
+	runtimeopencode "github.com/jonsanchezr/agent-smith/v4/internal/opencode"
+	"github.com/jonsanchezr/agent-smith/v4/internal/telemetry"
+	"github.com/jonsanchezr/agent-smith/v4/internal/testenv"
 )
 
 // telemetryTestSpawnRecorder is the RecordingSpawner installed as
@@ -41,7 +41,7 @@ var telemetryTestSpawnRecorder *telemetry.RecordingSpawner
 // run_integration_test.go).
 //
 // It does the same for claude/opencode/gemini/qwen/kilocode/openclaw's own
-// LookPathOverride: since gentle-ai now refuses instead of installing a
+// LookPathOverride: since agent-smith now refuses instead of installing a
 // missing agent runtime (agentInstallStep in run.go), the many tests in this
 // package whose real target is protocol forwarding, engram provisioning,
 // workspace resolution, or config injection — not install/detection
@@ -134,7 +134,7 @@ func TestMain(m *testing.M) {
 	if err := os.Unsetenv("GENTLE_AI_CHANNEL"); err != nil {
 		panic(err)
 	}
-	testHome, err := os.MkdirTemp("", "gentle-ai-cli-test-home-*")
+	testHome, err := os.MkdirTemp("", "agent-smith-cli-test-home-*")
 	if err != nil {
 		panic(err)
 	}
@@ -183,3 +183,4 @@ func TestMain(m *testing.M) {
 	_ = os.RemoveAll(testHome)
 	os.Exit(code)
 }
+

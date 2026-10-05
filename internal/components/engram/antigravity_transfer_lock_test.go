@@ -10,8 +10,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/components/filemerge"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/filecoord"
+	"github.com/jonsanchezr/agent-smith/v4/internal/components/filemerge"
+	"github.com/jonsanchezr/agent-smith/v4/internal/filecoord"
 )
 
 // ─── #1635 B: cooperative single-writer coordination lock ────────────────────
@@ -93,8 +93,8 @@ func TestAntigravityCoordinationLockResolvesMissingLeafThroughExistingAncestor(t
 	if err := os.Symlink(home, alias); err != nil {
 		t.Fatalf("Symlink(%q) error = %v", alias, err)
 	}
-	missing := filepath.Join(home, ".gemini", "antigravity-cli", "plugins", "gentle-ai-engram")
-	missingAlias := filepath.Join(alias, ".gemini", "antigravity-cli", "plugins", "gentle-ai-engram")
+	missing := filepath.Join(home, ".gemini", "antigravity-cli", "plugins", "agent-smith-engram")
+	missingAlias := filepath.Join(alias, ".gemini", "antigravity-cli", "plugins", "agent-smith-engram")
 	homeTarget, err := antigravityLockTarget(missing)
 	if err != nil {
 		t.Fatalf("antigravityLockTarget(existing home) error = %v", err)
@@ -213,3 +213,4 @@ func TestInjectAntigravityReleasesLockAfterFailure(t *testing.T) {
 		t.Fatalf("retry injection must report its mutations")
 	}
 }
+

@@ -5,10 +5,10 @@ import (
 	"fmt"
 	"io"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/reviewtransaction"
+	"github.com/jonsanchezr/agent-smith/v4/internal/reviewtransaction"
 )
 
-const ReviewInspectAuthoritySchema = "gentle-ai.review-authority-inspection/v1"
+const ReviewInspectAuthoritySchema = "agent-smith.review-authority-inspection/v1"
 
 type ReviewInspectAuthorityResult struct {
 	Schema           string                                             `json:"schema"`
@@ -64,3 +64,4 @@ func runReviewInspectAuthority(ctx context.Context, args []string, stdout io.Wri
 		SanctionedExits:  exits,
 	})
 }
+

@@ -13,8 +13,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/reviewerprovider"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/reviewtransaction"
+	"github.com/jonsanchezr/agent-smith/v4/internal/reviewerprovider"
+	"github.com/jonsanchezr/agent-smith/v4/internal/reviewtransaction"
 )
 
 // This file is the opt-in real-host E2E for OpenCode 2.x reviewer transport.
@@ -152,8 +152,8 @@ func openCodeV2HostE2EInputs(t *testing.T) openCodeV2HostInputs {
 	return in
 }
 
-// openCodeV2HostShim puts this test binary on the host PATH as gentle-ai. The
-// plugin spawns `gentle-ai review opencode-transport`; the stand-in routes it
+// openCodeV2HostShim puts this test binary on the host PATH as agent-smith. The
+// plugin spawns `agent-smith review opencode-transport`; the stand-in routes it
 // to the real RunReview with the review-enabled HOME of this test. For the real
 // gate, the relay PATH also resolves `opencode` to the real V2 host binary.
 func openCodeV2HostShim(t *testing.T, in openCodeV2HostInputs, gate openCodeV2Gate) string {
@@ -178,7 +178,7 @@ func openCodeV2HostShim(t *testing.T, in openCodeV2HostInputs, gate openCodeV2Ga
 		}
 		path = runtimeDir + ":" + path
 	}
-	shim := filepath.Join(t.TempDir(), "gentle-ai")
+	shim := filepath.Join(t.TempDir(), "agent-smith")
 	script := "#!/bin/sh\nexec /usr/bin/env HOME=" + quote(os.Getenv("HOME")) +
 		" GENTLE_AI_TEST_CLI_STANDIN=1 DO_NOT_TRACK=1" + gateEnvironment + " PATH=" + quote(path) +
 		" " + quote(executable) + " \"$@\"\n"
@@ -238,7 +238,7 @@ func runOpenCodeV2HostScenarioWithGate(t *testing.T, in openCodeV2HostInputs, re
 	}
 	cmd := exec.CommandContext(ctx, in.python, "-E", "-s", "-B", in.harness, in.host, in.sdk,
 		"--host-version", "2.x", "--temp-root", directory, "--review-scenario", scenario,
-		"--gentle-ai", openCodeV2HostShim(t, in, gate), "--host-project", host, "--evidence", evidencePath,
+		"--agent-smith", openCodeV2HostShim(t, in, gate), "--host-project", host, "--evidence", evidencePath,
 		"--capability-gate", gateArgument)
 	cmd.Dir = directory
 	cmd.Env = []string{"HOME=" + os.Getenv("HOME"), "TMPDIR=" + directory, "PATH=/usr/bin:/bin"}
@@ -532,3 +532,4 @@ func TestOpenCodeV2RealHostUnstubbedGateRefusesWithoutDetectedRuntime(t *testing
 		{Name: "gate-refuses-undetected-runtime", Agent: task.Agent, Prompt: task.Prompt, Child: payload, Expect: "refused", Reason: "capability_unavailable", ChildRequests: openCodeV2Count(0)},
 	})
 }
+

@@ -8,8 +8,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/system"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/update"
+	"github.com/jonsanchezr/agent-smith/v4/internal/system"
+	"github.com/jonsanchezr/agent-smith/v4/internal/update"
 )
 
 // TestEffectiveMethodWindowsPrecedenceIsUnchanged pins the rules that run before
@@ -35,20 +35,20 @@ func TestEffectiveMethodWindowsPrecedenceIsUnchanged(t *testing.T) {
 		},
 		{
 			name:          "brew-owned package wins over go-install on Windows",
-			tool:          update.ToolInfo{Name: "gentle-ai", InstallMethod: update.InstallBinary, GoImportPath: "github.com/gentleman-programming/gentle-ai/v3/cmd/gentle-ai"},
+			tool:          update.ToolInfo{Name: "agent-smith", InstallMethod: update.InstallBinary, GoImportPath: "github.com/jonsanchezr/agent-smith/v3/cmd/agent-smith"},
 			profile:       system.PlatformProfile{OS: "windows", PackageManager: "brew", GoAvailable: true},
 			brewInstalled: true,
 			want:          update.InstallBrew,
 		},
 		{
 			name:    "no Go on Windows keeps the declared method",
-			tool:    update.ToolInfo{Name: "gentle-ai", InstallMethod: update.InstallBinary, GoImportPath: "github.com/gentleman-programming/gentle-ai/v3/cmd/gentle-ai"},
+			tool:    update.ToolInfo{Name: "agent-smith", InstallMethod: update.InstallBinary, GoImportPath: "github.com/jonsanchezr/agent-smith/v3/cmd/agent-smith"},
 			profile: system.PlatformProfile{OS: "windows", PackageManager: "winget", GoAvailable: false},
 			want:    update.InstallBinary,
 		},
 		{
 			name:    "no import path on Windows keeps the declared method",
-			tool:    update.ToolInfo{Name: "gentle-ai", InstallMethod: update.InstallBinary},
+			tool:    update.ToolInfo{Name: "agent-smith", InstallMethod: update.InstallBinary},
 			profile: system.PlatformProfile{OS: "windows", PackageManager: "winget", GoAvailable: true},
 			want:    update.InstallBinary,
 		},
@@ -64,23 +64,23 @@ func TestEffectiveMethodWindowsPrecedenceIsUnchanged(t *testing.T) {
 	}
 }
 
-// gentleAIImportPath is the module path gentle-ai publishes its command under.
+// gentleAIImportPath is the module path agent-smith publishes its command under.
 // It is asserted against the registry below so the tests and the shipped
 // declaration cannot drift apart. The /vN suffix is not stored here; it is
 // derived at composition time via update.ModulePathForVersion.
-const gentleAIImportPath = "github.com/gentleman-programming/gentle-ai/cmd/gentle-ai"
+const gentleAIImportPath = "github.com/jonsanchezr/agent-smith/cmd/agent-smith"
 
-// registryGentleAI returns the shipped gentle-ai registry entry. Routing tests
+// registryGentleAI returns the shipped agent-smith registry entry. Routing tests
 // use the real declaration rather than a hand-built ToolInfo so a regression in
 // registry.go cannot hide behind a synthetic fixture.
 func registryGentleAI(t *testing.T) update.ToolInfo {
 	t.Helper()
 	for _, tool := range update.Tools {
-		if tool.Name == "gentle-ai" {
+		if tool.Name == "agent-smith" {
 			return tool
 		}
 	}
-	t.Fatal("gentle-ai is missing from the tool registry")
+	t.Fatal("agent-smith is missing from the tool registry")
 	return update.ToolInfo{}
 }
 
@@ -89,7 +89,7 @@ func registryGentleAI(t *testing.T) update.ToolInfo {
 // install from and falls back to the source-install refusal.
 func TestRegistryDeclaresGentleAIGoImportPath(t *testing.T) {
 	if got := registryGentleAI(t).GoImportPath; got != gentleAIImportPath {
-		t.Fatalf("gentle-ai GoImportPath = %q, want %q", got, gentleAIImportPath)
+		t.Fatalf("agent-smith GoImportPath = %q, want %q", got, gentleAIImportPath)
 	}
 }
 
@@ -165,9 +165,9 @@ func TestGentleAILegacyScriptDeclarationNeverReachesScriptUpgradeOnWindows(t *te
 	for _, tc := range tests {
 		t.Run(tc.name, func(t *testing.T) {
 			tool := update.ToolInfo{
-				Name:          "gentle-ai",
-				Owner:         "Gentleman-Programming",
-				Repo:          "gentle-ai",
+				Name:          "agent-smith",
+				Owner:         "jonsanchezr",
+				Repo:          "agent-smith",
 				InstallMethod: update.InstallScript,
 				GoImportPath:  tc.goImportPath,
 			}
@@ -198,10 +198,10 @@ func TestGentleAIUpgradeWindowsPreservesResolvedAppDataDestination(t *testing.T)
 	t.Cleanup(func() { detectOS = origDetectOS })
 	detectOS = func() string { return "windows" }
 
-	appDataBin := filepath.Join(t.TempDir(), "AppData", "Local", "gentle-ai", "bin")
-	active := writeFakeBinary(t, appDataBin, "gentle-ai.exe")
+	appDataBin := filepath.Join(t.TempDir(), "AppData", "Local", "agent-smith", "bin")
+	active := writeFakeBinary(t, appDataBin, "agent-smith.exe")
 	goPath := t.TempDir()
-	destination := filepath.Join(goPath, "bin", "gentle-ai.exe")
+	destination := filepath.Join(goPath, "bin", "agent-smith.exe")
 
 	var goInstallCalls int
 	origExecCommand := execCommand
@@ -256,7 +256,7 @@ func TestGentleAIUpgradeWindowsPreservesResolvedAppDataDestination(t *testing.T)
 	if report.BackupID != "" || report.BackupWarning != "" {
 		t.Errorf("manual fallback created a backup result: %#v", report)
 	}
-	backupRoot := filepath.Join(homeDir, ".gentle-ai", "backups")
+	backupRoot := filepath.Join(homeDir, ".agent-smith", "backups")
 	if _, err := os.Stat(backupRoot); !os.IsNotExist(err) {
 		t.Errorf("manual fallback created or pruned backup tree %s: %v", backupRoot, err)
 	}
@@ -277,7 +277,7 @@ func TestGentleAIUpgradeWindowsAllowsResolvedGoDestination(t *testing.T) {
 	detectOS = func() string { return "windows" }
 
 	goPath := t.TempDir()
-	destination := writeFakeBinary(t, filepath.Join(goPath, "bin"), "gentle-ai.exe")
+	destination := writeFakeBinary(t, filepath.Join(goPath, "bin"), "agent-smith.exe")
 	var goInstallCalls int
 	goEnvCalls := map[string]int{}
 	origExecCommand := execCommand
@@ -334,7 +334,7 @@ func TestGentleAIUpgradeWindowsRefusesUnresolvedGoProvenance(t *testing.T) {
 		wantHint      string
 	}{
 		{name: "Go destination", goEnvFails: true, wantHint: "could not determine the Go installation destination"},
-		{name: "active executable", lookPathFails: true, wantHint: "could not resolve the active gentle-ai executable"},
+		{name: "active executable", lookPathFails: true, wantHint: "could not resolve the active agent-smith executable"},
 	}
 
 	for _, tt := range tests {
@@ -376,7 +376,7 @@ func TestGentleAIUpgradeWindowsRefusesUnresolvedGoProvenance(t *testing.T) {
 				if tt.lookPathFails {
 					return "", exec.ErrNotFound
 				}
-				return filepath.Join(t.TempDir(), "gentle-ai.exe"), nil
+				return filepath.Join(t.TempDir(), "agent-smith.exe"), nil
 			}
 
 			homeDir := t.TempDir()
@@ -401,7 +401,7 @@ func TestGentleAIUpgradeWindowsRefusesUnresolvedGoProvenance(t *testing.T) {
 			if report.BackupID != "" || report.BackupWarning != "" {
 				t.Errorf("manual fallback created a backup result: %#v", report)
 			}
-			backupRoot := filepath.Join(homeDir, ".gentle-ai", "backups")
+			backupRoot := filepath.Join(homeDir, ".agent-smith", "backups")
 			if _, err := os.Stat(backupRoot); !os.IsNotExist(err) {
 				t.Errorf("manual fallback created or pruned backup tree %s: %v", backupRoot, err)
 			}
@@ -428,11 +428,11 @@ func TestGentleAIWindowsWithoutGoNamesRunnableSourceInstall(t *testing.T) {
 
 	r := update.UpdateResult{
 		Tool: update.ToolInfo{
-			Name:          "gentle-ai",
-			Owner:         "Gentleman-Programming",
-			Repo:          "gentle-ai",
+			Name:          "agent-smith",
+			Owner:         "jonsanchezr",
+			Repo:          "agent-smith",
 			InstallMethod: update.InstallBinary,
-			GoImportPath:  "github.com/gentleman-programming/gentle-ai/v3/cmd/gentle-ai",
+			GoImportPath:  "github.com/jonsanchezr/agent-smith/v3/cmd/agent-smith",
 		},
 		LatestVersion: "2.2.0",
 		Status:        update.UpdateAvailable,
@@ -449,7 +449,7 @@ func TestGentleAIWindowsWithoutGoNamesRunnableSourceInstall(t *testing.T) {
 	}
 	for _, required := range []string{
 		"Windows binary distribution and Scoop are temporarily unavailable",
-		"go install " + update.ModulePathForVersion(gentleAIImportPath, "gentle-ai", "2.2.0") + "@v2.2.0",
+		"go install " + update.ModulePathForVersion(gentleAIImportPath, "agent-smith", "2.2.0") + "@v2.2.0",
 	} {
 		if !strings.Contains(result.ManualHint, required) {
 			t.Errorf("manual hint is missing %q: %s", required, result.ManualHint)
@@ -459,3 +459,4 @@ func TestGentleAIWindowsWithoutGoNamesRunnableSourceInstall(t *testing.T) {
 		t.Errorf("manual hint points at a releases page with no Windows assets: %s", result.ManualHint)
 	}
 }
+

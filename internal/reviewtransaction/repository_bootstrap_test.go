@@ -8,7 +8,7 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/pathidentity"
+	"github.com/jonsanchezr/agent-smith/v4/internal/pathidentity"
 )
 
 func TestPrepareReviewRepositoryRootInitializesOnlyGenuinelyUnversionedWorkspace(t *testing.T) {
@@ -85,3 +85,4 @@ func TestSnapshotBuilderResolveRepositoryRootDoesNotBootstrap(t *testing.T) {
 		t.Fatalf("ResolveRepositoryRoot created metadata: %v", err)
 	}
 }
+

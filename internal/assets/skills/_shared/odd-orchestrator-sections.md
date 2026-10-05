@@ -1,4 +1,4 @@
-# ODD Orchestrator — Shared Sections
+# ODD Orchestrator â€” Shared Sections
 
 Canonical bodies for the orchestrator subsections shared across runtimes.
 
@@ -11,13 +11,13 @@ Canonical bodies for the orchestrator subsections shared across runtimes.
 <!-- sdd-orchestrator-section:Language Domain Contract:end -->
 
 <!-- sdd-orchestrator-section:Delegated Verification Gate (MANDATORY):start -->
-Verification of a delegated writer's work is decided by two inputs the parent reads deterministically: the receipt-driven development (RDD) state for the repository (`on`, `off`, or `unknown`), and the native risk tier from `gentle-ai review assess --cwd <repo> --json` (`gentle-ai.review-assessment/v1`, `risk` one of `passive`, `medium`, `high`). A runtime that already renders an RDD status line reads it from there; otherwise read `gentle-ai review mode status` (read-only) and treat a failure as `unknown`. Any assessment failure or an unrecognized verb is treated as `high`.
+Verification of a delegated writer's work is decided by two inputs the parent reads deterministically: the receipt-driven development (RDD) state for the repository (`on`, `off`, or `unknown`), and the native risk tier from `agent-smith review assess --cwd <repo> --json` (`agent-smith.review-assessment/v1`, `risk` one of `passive`, `medium`, `high`). A runtime that already renders an RDD status line reads it from there; otherwise read `agent-smith review mode status` (read-only) and treat a failure as `unknown`. Any assessment failure or an unrecognized verb is treated as `high`.
 
-The `on` branch below holds only while the native review reaches a terminal outcome for this candidate. When the human declines the consent envelope for this candidate (candidate-scoped; never the kill switch), when receipt-driven development is disabled for the clone after this status was read, or when START or STATUS refuses, the parent follows the RDD off path instead: run `gentle-ai review assess --cwd <repo> --json` over the writer's diff and apply the tier table below. An unknown outcome is treated as not closed, never as terminal.
+The `on` branch below holds only while the native review reaches a terminal outcome for this candidate. When the human declines the consent envelope for this candidate (candidate-scoped; never the kill switch), when receipt-driven development is disabled for the clone after this status was read, or when START or STATUS refuses, the parent follows the RDD off path instead: run `agent-smith review assess --cwd <repo> --json` over the writer's diff and apply the tier table below. An unknown outcome is treated as not closed, never as terminal.
 
-- **RDD on**: the bounded writer runs the parent-authorized `## Verification` commands in the foreground and reports `<command>: <observed result>`; that report is the verification of record, and the native review is the independent check. A separate verifier stays on-demand only — the writer reported `partial` or `blocked`, an expensive or external check the parent wants run on a cheaper profile, or a parent spot check. A passive candidate needs only the parent's structural readback.
-- **RDD off or unknown**: after the writer returns, the parent runs `gentle-ai review assess` over the writer's diff and follows the tier — passive: structural readback only; medium: writer self-verification, with a separate verifier only when the writer ran on a small-model profile (low effort or a mini model); high or unassessable: writer self-verification plus an independent verifier. `unknown` never lowers a tier, and the small-model bias raises the tier by one for verification purposes.
-- The parent spot check — re-running one reported command before delivery — stays in every tier.
+- **RDD on**: the bounded writer runs the parent-authorized `## Verification` commands in the foreground and reports `<command>: <observed result>`; that report is the verification of record, and the native review is the independent check. A separate verifier stays on-demand only â€” the writer reported `partial` or `blocked`, an expensive or external check the parent wants run on a cheaper profile, or a parent spot check. A passive candidate needs only the parent's structural readback.
+- **RDD off or unknown**: after the writer returns, the parent runs `agent-smith review assess` over the writer's diff and follows the tier â€” passive: structural readback only; medium: writer self-verification, with a separate verifier only when the writer ran on a small-model profile (low effort or a mini model); high or unassessable: writer self-verification plus an independent verifier. `unknown` never lowers a tier, and the small-model bias raises the tier by one for verification purposes.
+- The parent spot check â€” re-running one reported command before delivery â€” stays in every tier.
 - The writer receives `## Verification` naming the exact commands to run, and may receive `## Known environmental failures` naming exact test names or command lines already failing on the base as evidence; any other failing required command still forces `partial`.
 - Exploration stays a separate delegation only when the parent needs the map to decide or route; reading that prepares a write belongs to the writer doing that write.
 <!-- sdd-orchestrator-section:Delegated Verification Gate (MANDATORY):end -->
@@ -26,9 +26,9 @@ The `on` branch below holds only while the native review reaches a terminal outc
 Verification of a delegated writer's work is proportionate to the risk of the change, judged from what it touches: **passive** (documentation, images, or comments with no executable effect), **medium** (an ordinary behavior change covered by focused tests), or **high** (any item of the high-risk list in the routing block's Task Size section: data or irreversible effects, security, contracts others consume, concurrency, delivery or environment, or no test that would catch a regression). Count an unclear change as high only when a bounded look cannot tell whether the list applies.
 
 - **Passive**: structural readback only.
-- **Medium**: writer self-verification — the bounded writer runs the parent-authorized `## Verification` commands in the foreground and reports `<command>: <observed result>`. Add a separate verifier only when the writer ran on a small-model profile (low effort or a mini model).
-- **High or unclear**: writer self-verification plus an independent verifier — a fresh read-only worker that re-runs the verification commands and inspects the diff without the writer's context. The small-model bias raises the tier by one for verification purposes.
-- The parent spot check — re-running one reported command before delivery — stays in every tier.
+- **Medium**: writer self-verification â€” the bounded writer runs the parent-authorized `## Verification` commands in the foreground and reports `<command>: <observed result>`. Add a separate verifier only when the writer ran on a small-model profile (low effort or a mini model).
+- **High or unclear**: writer self-verification plus an independent verifier â€” a fresh read-only worker that re-runs the verification commands and inspects the diff without the writer's context. The small-model bias raises the tier by one for verification purposes.
+- The parent spot check â€” re-running one reported command before delivery â€” stays in every tier.
 - The writer receives `## Verification` naming the exact commands to run, and may receive `## Known environmental failures` naming exact test names or command lines already failing on the base as evidence; any other failing required command still forces `partial`.
 - Exploration stays a separate delegation only when the parent needs the map to decide or route; reading that prepares a write belongs to the writer doing that write.
 <!-- sdd-orchestrator-section:Delegated Verification Gate (MANDATORY) (ODD only):end -->
@@ -44,12 +44,12 @@ Verification of a delegated writer's work is proportionate to the risk of the ch
 <!-- sdd-orchestrator-section:Native Checking Contract (ODD only):end -->
 
 <!-- sdd-orchestrator-section:Delegated Verification Gate (Reduced Form):start -->
-This runtime has no subagent delegation mechanism, so there is no separate writer or verifier to gate: the orchestrator itself performs the bounded action and its own verification. The native risk tier from `gentle-ai review assess --cwd <repo> --json` (`gentle-ai.review-assessment/v1`, `risk` one of `passive`, `medium`, `high`; any failure or an unrecognized verb is treated as `high`) still decides whether verification commands run at all:
+This runtime has no subagent delegation mechanism, so there is no separate writer or verifier to gate: the orchestrator itself performs the bounded action and its own verification. The native risk tier from `agent-smith review assess --cwd <repo> --json` (`agent-smith.review-assessment/v1`, `risk` one of `passive`, `medium`, `high`; any failure or an unrecognized verb is treated as `high`) still decides whether verification commands run at all:
 
 - **Passive**: structural readback only; do not run the `## Verification` commands.
 - **Medium or high**: run the exact `## Verification` commands yourself, in the foreground, and report `<command>: <observed result>`.
 
-The parent spot check — re-running one reported command before delivery — still applies. The receipt-driven development state does not change this table: native review remains the independent check on top of whatever verification ran here. That independent check only stands once the native review reaches a terminal outcome for this candidate: a decline of the consent envelope for this candidate (candidate-scoped; never the kill switch), receipt-driven development disabled for the clone after this status was read, or a START or STATUS refusal are all treated as not closed, and never excuse the agent from running the tier's verification commands above.
+The parent spot check â€” re-running one reported command before delivery â€” still applies. The receipt-driven development state does not change this table: native review remains the independent check on top of whatever verification ran here. That independent check only stands once the native review reaches a terminal outcome for this candidate: a decline of the consent envelope for this candidate (candidate-scoped; never the kill switch), receipt-driven development disabled for the clone after this status was read, or a START or STATUS refusal are all treated as not closed, and never excuse the agent from running the tier's verification commands above.
 <!-- sdd-orchestrator-section:Delegated Verification Gate (Reduced Form):end -->
 
 <!-- sdd-orchestrator-section:Organic Driven Development Is The Default Workflow (MANDATORY):start -->
@@ -69,7 +69,7 @@ Keep synthesis short by default: decision, outcome, next action. Expand only whe
 
 ### Mental Model
 
-Gentle AI is an ecosystem configurator and harness layer. After installation, the user should not memorize workflows or manually wire agents. The harness should get out of the way:
+Agent Smith is an ecosystem configurator and harness layer. After installation, the user should not memorize workflows or manually wire agents. The harness should get out of the way:
 
 - Small request: do it directly.
 - Substantial authorized work: use ODD; track feature progress automatically.
@@ -102,7 +102,7 @@ Keep parent bash output bounded to counts, --stat, tail, or summaries. On a larg
 Default balanced pattern for bounded implementation:
 
 ```text
-parent clarifies and checks git → one worker writes when authorized → focused verification → parent reports
+parent clarifies and checks git â†’ one worker writes when authorized â†’ focused verification â†’ parent reports
 ```
 
 ### Canonical Lightweight Workflows
@@ -110,40 +110,40 @@ parent clarifies and checks git → one worker writes when authorized → focuse
 Bugfix with unfamiliar flow:
 
 ```text
-parent git/status + clarify → exploration worker maps flow/files → writer implements authorized fixes + tests → focused verification → parent reports
+parent git/status + clarify â†’ exploration worker maps flow/files â†’ writer implements authorized fixes + tests â†’ focused verification â†’ parent reports
 ```
 
 Conflict or dependency-marker cleanup:
 
 ```text
-parent reproduces/checks conflict → parent or writer resolves inside the active scope → verify markers, package/lock consistency, and repository cleanliness → parent reports
+parent reproduces/checks conflict â†’ parent or writer resolves inside the active scope â†’ verify markers, package/lock consistency, and repository cleanliness â†’ parent reports
 ```
 
 After tooling/worktree incident:
 
 ```text
-stop writes → parent captures git status → diagnose affected repositories/worktrees with no edits → parent applies only confirmed recovery steps
+stop writes â†’ parent captures git status â†’ diagnose affected repositories/worktrees with no edits â†’ parent applies only confirmed recovery steps
 ```
 
 ### Allowed edit surfaces (MANDATORY)
 
 A bounded writer refuses to write outside the exact allowed edit surfaces and stops for interaction when they are missing. The parent owns that input. Deriving it is part of planning the delegation, not something the writer or the human can be left to supply.
 
-Before launching a bounded writer through the runtime's delegation mechanism, derive the allowed edit surface from the task being delegated — the files the planned change must touch, plus the directories where the task authorizes new files — and pass it in the delegated prompt under an `## Allowed edit surfaces` heading, in the same exact-path form as `## Skills to load before work`:
+Before launching a bounded writer through the runtime's delegation mechanism, derive the allowed edit surface from the task being delegated â€” the files the planned change must touch, plus the directories where the task authorizes new files â€” and pass it in the delegated prompt under an `## Allowed edit surfaces` heading, in the same exact-path form as `## Skills to load before work`:
 
 - exact repository-relative paths or narrow globs, one per line; never `.`, a bare repository root, or an absolute path; paths containing whitespace require whole-entry backticks;
 - the section ends at the next Markdown heading; every non-empty line before it must be a valid surface entry, so put explanatory prose under a following heading;
 - pre-existing untracked targets the writer may write, listed explicitly;
 - the directories where new files are authorized, when the task requires new files;
-- nothing beyond the delegated task — a surface wider than the task is the same defect as no surface at all.
+- nothing beyond the delegated task â€” a surface wider than the task is the same defect as no surface at all.
 
-If the surface genuinely cannot be derived, do not launch the writer, and do not ask the human to author paths. Derive a candidate set first — the exact paths this task would touch — and present that enumerated list as an approve/decline choice under the Lossless Blocking Prompts rules. A free-text question asking which paths or globs to authorize is never a valid escalation.
+If the surface genuinely cannot be derived, do not launch the writer, and do not ask the human to author paths. Derive a candidate set first â€” the exact paths this task would touch â€” and present that enumerated list as an approve/decline choice under the Lossless Blocking Prompts rules. A free-text question asking which paths or globs to authorize is never a valid escalation.
 
 Relay a writer's interaction request about edit surfaces the same way: present its derived candidate paths as the choice, and add or drop paths only on the human's explicit instruction.
 
 ### Key Learnings closing block
 
-When delegating to a generic exploration, writer, or verification worker, include the same `## Key Learnings` closing instruction in the delegated prompt: after the worker returns its normal result envelope or handoff, it closes its final response text with a `## Key Learnings` block of 1–5 numbered items, each a standalone factual sentence of at least 20 characters and at least 4 words, omitting the block when there is genuinely no reusable learning. The block layers on after the structured return contract and does not alter its fields. This applies to final response text only — not intermediate tool output. The Engram memory provider extracts and persists these items as passive capture; the worker does not parse the block or invoke passive-capture tools itself. This is separate from explicit `mem_save` persistence. Agents that must return strict JSON never receive this closing instruction; their required output shape remains unchanged.
+When delegating to a generic exploration, writer, or verification worker, include the same `## Key Learnings` closing instruction in the delegated prompt: after the worker returns its normal result envelope or handoff, it closes its final response text with a `## Key Learnings` block of 1â€“5 numbered items, each a standalone factual sentence of at least 20 characters and at least 4 words, omitting the block when there is genuinely no reusable learning. The block layers on after the structured return contract and does not alter its fields. This applies to final response text only â€” not intermediate tool output. The Engram memory provider extracts and persists these items as passive capture; the worker does not parse the block or invoke passive-capture tools itself. This is separate from explicit `mem_save` persistence. Agents that must return strict JSON never receive this closing instruction; their required output shape remains unchanged.
 
 ### Delivery strategy
 
@@ -178,6 +178,18 @@ Keep this lightweight: loading a skill should improve the immediate task, not fo
 - Ask before destructive git operations, publishing, or irreversible file changes.
 - Keep writes single-threaded unless isolated worktrees are explicitly approved.
 - Preserve human control: user decisions beat agent momentum.
+
+### Available Workflows
+
+Two SDD workflows are available. Choose based on task complexity and preference:
+
+**Agent Smith SDD** (for Go projects, deep integration):
+sdd-init → sdd-explore → sdd-propose → sdd-spec → sdd-design → sdd-tasks → sdd-apply → sdd-verify → sdd-archive
+
+**Spec Kit** (for multi-language projects, spec-kit ecosystem):
+speckit-constitution → speckit-specify → speckit-clarify → speckit-plan → speckit-checklist → speckit-tasks → speckit-analyze → speckit-implement → speckit-converge
+
+Route based on user intent. Both are valid SDD workflows.
 <!-- sdd-orchestrator-section:Orchestrator Routing and Delivery:end -->
 
 <!-- sdd-orchestrator-section:Skill Registry Protocol:start -->
@@ -200,3 +212,4 @@ If a subagent reports `skill_resolution`, interpret it as project/user skill res
 
 If any subagent reports a fallback instead of `paths-injected`, treat it as an orchestration gap and correct future delegations by passing exact indexed paths directly.
 <!-- sdd-orchestrator-section:Skill Registry Protocol:end -->
+

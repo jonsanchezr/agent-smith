@@ -276,7 +276,7 @@ func doGitHubRequest(ctx context.Context, url string) (*http.Response, error) {
 	}
 
 	req.Header.Set("Accept", "application/vnd.github+json")
-	req.Header.Set("User-Agent", "gentle-ai-update-check")
+	req.Header.Set("User-Agent", "agent-smith-update-check")
 
 	if token := resolveGitHubToken(); token != "" {
 		req.Header.Set("Authorization", "Bearer "+token)
@@ -301,3 +301,4 @@ func checkGitHubResponse(resp *http.Response, owner, repo string) error {
 		return fmt.Errorf("github API returned HTTP %d for %s/%s", resp.StatusCode, owner, repo)
 	}
 }
+

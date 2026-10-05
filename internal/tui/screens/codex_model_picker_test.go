@@ -4,8 +4,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/tui/screens"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
+	"github.com/jonsanchezr/agent-smith/v4/internal/tui/screens"
 )
 
 func TestCodexPickerPresetRetainsODDEffortPolicy(t *testing.T) {
@@ -655,3 +655,4 @@ func TestCodexCustom_ConfirmReturnsPhaseModelAssignments(t *testing.T) {
 		t.Error("state.CustomConfirmed = false, want true after Confirm row")
 	}
 }
+

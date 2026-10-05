@@ -1,4 +1,4 @@
-# Native Compact Review Orchestration
+﻿# Native Compact Review Orchestration
 
 **When a final capture returns `status_continuation`, execute its operation and ordered argument tokens unchanged. Do not reconstruct lifecycle selectors from retained prose or transcript state.**
 
@@ -6,17 +6,17 @@ The parent orchestrator coordinates one native transaction; reviewers, refuters,
 
 ## Entry rule
 
-Enter this lifecycle once per candidate, after an authorized source-mutating implementation is complete and normalized and before reporting it complete, whenever the user-owned review switch is enabled (`gentle-ai review mode status` reads it without changing it). Run the selectorless STATUS in step 1 and route only from its returned `next_transition`; the START consent envelope lets the human decide this candidate, so never skip the preflight because the user did not ask for a review. Skip it only for a trivial passive documentation-only edit, when the user explicitly left this candidate unreviewed, or while a transaction is already bound to it. A runtime that runs this preflight itself hands the agent the exact returned START tokens and never runs START.
+Enter this lifecycle once per candidate, after an authorized source-mutating implementation is complete and normalized and before reporting it complete, whenever the user-owned review switch is enabled (`agent-smith review mode status` reads it without changing it). Run the selectorless STATUS in step 1 and route only from its returned `next_transition`; the START consent envelope lets the human decide this candidate, so never skip the preflight because the user did not ask for a review. Skip it only for a trivial passive documentation-only edit, when the user explicitly left this candidate unreviewed, or while a transaction is already bound to it. A runtime that runs this preflight itself hands the agent the exact returned START tokens and never runs START.
 
 ## Atomic lifecycle
 
-1. **Preflight only.** Selectorless STATUS only preflights the current worktree candidate and returns one exact START invocation. It never discovers, resumes, recovers, or evaluates ambient authority from another lineage or worktree: `gentle-ai review status --cwd <repo> --contract gentle-ai.review-integration/v2 --agent {{GENTLE_AI_RUNTIME_AGENT_ID}} --next-transition`.
+1. **Preflight only.** Selectorless STATUS only preflights the current worktree candidate and returns one exact START invocation. It never discovers, resumes, recovers, or evaluates ambient authority from another lineage or worktree: `agent-smith review status --cwd <repo> --contract agent-smith.review-integration/v2 --agent {{GENTLE_AI_RUNTIME_AGENT_ID}} --next-transition`.
 
 2. **Freeze once.** Invoke only the returned START operation and its ordered tokens unchanged. START freezes one compact atomic transaction with an explicit lineage, worktree, and target binding. It ignores every other lineage and worktree. Capture the returned lineage, revision, and target tokens. An exact replay of an active START may return `replayed`; a genuinely new START is independent.
 
-3. **Stay bound.** A reviewing START carries `next_transition.execute(review.status)` — the provider-issued re-entry for its frozen binding: run that provider-issued command verbatim, with the repository as process cwd, and satisfy every later STATUS and collection call only with the exact tokens each returned transition names. Route only from that transaction's returned `next_transition`; the root `action` field is informational. Never infer a command from prose, ambient state, a gate, or a stale reply. Do not start another lineage, reuse an acknowledged-and-burned lineage, or perform ambient recovery. For `execute`, run the exact operation and ordered arguments. For `collect`, satisfy only the named inputs and their exact capture operations, then ask STATUS again with the same binding. For `stop`, run no lifecycle operation.
+3. **Stay bound.** A reviewing START carries `next_transition.execute(review.status)` â€” the provider-issued re-entry for its frozen binding: run that provider-issued command verbatim, with the repository as process cwd, and satisfy every later STATUS and collection call only with the exact tokens each returned transition names. Route only from that transaction's returned `next_transition`; the root `action` field is informational. Never infer a command from prose, ambient state, a gate, or a stale reply. Do not start another lineage, reuse an acknowledged-and-burned lineage, or perform ambient recovery. For `execute`, run the exact operation and ordered arguments. For `collect`, satisfy only the named inputs and their exact capture operations, then ask STATUS again with the same binding. For `stop`, run no lifecycle operation.
 
-4. **Acknowledge exactly.** Native Go owns frozen lenses, provider context and admission, refutation, one bounded correction, repository evidence, targeted validation, and approved closure. A final approved capture commits one pending acknowledgement token and returns `review.acknowledge-approved`; restarted STATUS returns the same operation, ordered arguments, token, and live revision. Only that exact invocation burns authority and artifacts, and on success it prints one `gentle-ai.review-acknowledged/v1` envelope; report the burn from that envelope, never from a later STATUS. Wrong, stale, or replayed acknowledgement refuses without creating a receipt, tombstone, witness, mirror, sidecar, or delivery authority. Unrelated transactions survive unchanged.
+4. **Acknowledge exactly.** Native Go owns frozen lenses, provider context and admission, refutation, one bounded correction, repository evidence, targeted validation, and approved closure. A final approved capture commits one pending acknowledgement token and returns `review.acknowledge-approved`; restarted STATUS returns the same operation, ordered arguments, token, and live revision. Only that exact invocation burns authority and artifacts, and on success it prints one `agent-smith.review-acknowledged/v1` envelope; report the burn from that envelope, never from a later STATUS. Wrong, stale, or replayed acknowledgement refuses without creating a receipt, tombstone, witness, mirror, sidecar, or delivery authority. Unrelated transactions survive unchanged.
 
 The final reviewer, refuter, or targeted-validator capture owns closure. A malformed, incomplete, or unavailable capture never reaches acknowledgement: issue one retained target-bound read-only STATUS and relaunch only when it reoffers the same bound slot. Never invent a binding or retry from prose.
 
@@ -47,7 +47,7 @@ A correction is native-scoped. When the final reviewer or refuter capture opens 
 
 ## Consent and immutable inspection
 
-If exact provider-returned START returns the typed `gentle-ai.review-integration.consent/v3` envelope, relay it as a Lossless Blocking Prompt. Global RDD enabled permits review; it never grants consent for this candidate. For medium/high candidates, faithfully translate the headline, reason, `value`, risk evidence, choice labels, every choice `effect`, and the off-path note while preserving original groups/order, selection mode, allowed-answer domain, answer tokens, commands, target IDs, and invocations. Project `value` as benefits and every `effect` as consequences. Do not translate machine answer tokens (`granted`, `declined`). Run exactly the invocation selected by the human; a decline is candidate-scoped and is not the kill switch.
+If exact provider-returned START returns the typed `agent-smith.review-integration.consent/v3` envelope, relay it as a Lossless Blocking Prompt. Global RDD enabled permits review; it never grants consent for this candidate. For medium/high candidates, faithfully translate the headline, reason, `value`, risk evidence, choice labels, every choice `effect`, and the off-path note while preserving original groups/order, selection mode, allowed-answer domain, answer tokens, commands, target IDs, and invocations. Project `value` as benefits and every `effect` as consequences. Do not translate machine answer tokens (`granted`, `declined`). Run exactly the invocation selected by the human; a decline is candidate-scoped and is not the kill switch.
 
 Claude Code, OpenCode, Codex, and Pi use the shared Go provider contract. Go owns frozen evidence, binding, schema, byte bounds, validation, admission, and capture; runtime adapters transport opaque provider output. Claude uses a tool-free fresh reviewer; OpenCode relays one host Task through its live Go transport; Codex uses its provider-bound subprocess; Pi uses its gentle-pi-owned relay. Compiled capability is authoritative before repository, target, authority, collection, or process work.
 
@@ -69,24 +69,24 @@ Reviewers inspect only the provider-bound immutable trees. Never hand candidate 
 
 ### Continue after a stop reason code
 
-A `stop` ends its transition, never approves delivery. Complete atomic inventory: B stays target root; gates stay unmanaged. `D` means `gentle-ai review mode disable --scope clone --cwd <B>`; B ordinary policy decides delivery. `S` means re-query the exact captured target-root STATUS command with lineage and target.
+A `stop` ends its transition, never approves delivery. Complete atomic inventory: B stays target root; gates stay unmanaged. `D` means `agent-smith review mode disable --scope clone --cwd <B>`; B ordinary policy decides delivery. `S` means re-query the exact captured target-root STATUS command with lineage and target.
 
 | Reason codes | Continuation |
 | --- | --- |
-| `captured_artifacts_unverifiable` | Terminal — maintainer inspects B authority, or `D`. |
-| `captured_result_selection_unavailable` | Terminal — maintainer inspects lineage, or `D`. |
-| `missing_authority_binding` | Terminal — file a bounded defect with lineage, or `D`. |
-| `corrupted_or_unverifiable_authority`, `manual_intervention_required`, `native_stop_required` | Terminal — maintainer inspects authority/lineage, or `D`. |
-| `empty_base_diff_bootstrap_required` | Terminal — authorized empty-root bootstrap for a new target, or `D`. |
-| `lens_context_budget_exceeded` | Terminal — reduce B scope and start a new transaction, or `D`. |
-| `correction_context_budget_exceeded` | Release B authority with `gentle-ai review abandon` (run it with no flags for the binding template); `gentle-ai review invalidate` refuses here. Then review B as smaller candidates, or `D`. |
-| `managed_assets_outdated` | Run the `gentle-ai sync` command from the stop's `continuation`, then `S`. |
-| `staged_workspace_overlay_recovery_unavailable` | Terminal — pass `--lineage <id>` to recover, or drop `--workspace-overlay` and start fresh; otherwise `D`. |
+| `captured_artifacts_unverifiable` | Terminal â€” maintainer inspects B authority, or `D`. |
+| `captured_result_selection_unavailable` | Terminal â€” maintainer inspects lineage, or `D`. |
+| `missing_authority_binding` | Terminal â€” file a bounded defect with lineage, or `D`. |
+| `corrupted_or_unverifiable_authority`, `manual_intervention_required`, `native_stop_required` | Terminal â€” maintainer inspects authority/lineage, or `D`. |
+| `empty_base_diff_bootstrap_required` | Terminal â€” authorized empty-root bootstrap for a new target, or `D`. |
+| `lens_context_budget_exceeded` | Terminal â€” reduce B scope and start a new transaction, or `D`. |
+| `correction_context_budget_exceeded` | Release B authority with `agent-smith review abandon` (run it with no flags for the binding template); `agent-smith review invalidate` refuses here. Then review B as smaller candidates, or `D`. |
+| `managed_assets_outdated` | Run the `agent-smith sync` command from the stop's `continuation`, then `S`. |
+| `staged_workspace_overlay_recovery_unavailable` | Terminal â€” pass `--lineage <id>` to recover, or drop `--workspace-overlay` and start fresh; otherwise `D`. |
 | `corrected_candidate_unavailable` | Change B correction candidate, then `S`; do not reuse the pre-correction target. |
-| `recovery_scope_unchanged` | Change B target identity, then retry the exact returned `gentle-ai review recover`. |
-| `unachievable_lens_slot` | A host reported a selected reviewer slot unachievable. If transient, re-run `gentle-ai review capture-unachievable` with the same binding and `--withdraw=true` so B re-offers the slot. If not, reduce B scope and start a new `gentle-ai review start`, or `D`. |
-| `target_already_acknowledged` | Terminal: this exact target was already acknowledged and its review authority burned. No further review action is required; delivery follows ordinary repository policy. Changed targets remain eligible for review. Only when deliberately requesting a new independent review, use `gentle-ai review start`; do not automatically restart this consumed target. |
-| `rdd_disabled` | `--scope clone` only clears a clone-local off; `gentle-ai review mode enable --scope global`, then `S`. |
+| `recovery_scope_unchanged` | Change B target identity, then retry the exact returned `agent-smith review recover`. |
+| `unachievable_lens_slot` | A host reported a selected reviewer slot unachievable. If transient, re-run `agent-smith review capture-unachievable` with the same binding and `--withdraw=true` so B re-offers the slot. If not, reduce B scope and start a new `agent-smith review start`, or `D`. |
+| `target_already_acknowledged` | Terminal: this exact target was already acknowledged and its review authority burned. No further review action is required; delivery follows ordinary repository policy. Changed targets remain eligible for review. Only when deliberately requesting a new independent review, use `agent-smith review start`; do not automatically restart this consumed target. |
+| `rdd_disabled` | `--scope clone` only clears a clone-local off; `agent-smith review mode enable --scope global`, then `S`. |
 
 ## Delivery follows ordinary repository policy
 
@@ -95,3 +95,4 @@ Shipped `review validate` and gate commands are compatibility/informational only
 After exact acknowledgement burns terminal `approved` authority, the review lifecycle stops. Commit, push, PR, and release remain separate human decisions under ordinary repository policy. A review outcome is informational and never authorizes delivery, including when the selected repository is B.
 
 Historical compatibility commands may read older artifacts manually, but they are never the ordinary lifecycle and never restore delivery authority.
+

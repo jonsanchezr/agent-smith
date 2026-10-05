@@ -6,7 +6,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/reviewtransaction"
+	"github.com/jonsanchezr/agent-smith/v4/internal/reviewtransaction"
 )
 
 // TestExcludedUntrackedDeclarationSurvivesReviewingReentry is the #3120 shape:
@@ -54,7 +54,7 @@ func TestExcludedUntrackedDeclarationSurvivesReviewingReentry(t *testing.T) {
 			t.Fatalf("START published no status continuation: %#v", result.NextTransition)
 		}
 		fields := strings.Fields(result.NextTransition.Execute.Command)
-		if len(fields) < 3 || fields[0] != "gentle-ai" || fields[1] != "review" {
+		if len(fields) < 3 || fields[0] != "agent-smith" || fields[1] != "review" {
 			t.Fatalf("continuation command = %q", result.NextTransition.Execute.Command)
 		}
 		return fields[2:]
@@ -71,3 +71,4 @@ func TestExcludedUntrackedDeclarationSurvivesReviewingReentry(t *testing.T) {
 	}
 	assertReentry("replayed START continuation", continuationArgs(replayed))
 }
+

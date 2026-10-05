@@ -10,9 +10,9 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/reviewerprovider"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/reviewtransaction"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
+	"github.com/jonsanchezr/agent-smith/v4/internal/reviewerprovider"
+	"github.com/jonsanchezr/agent-smith/v4/internal/reviewtransaction"
 )
 
 // providerCorrectionReadyOverBudget freezes a one-lens correction whose
@@ -173,3 +173,4 @@ func TestOverBudgetPassedValidatorRefusesBeforeAdmittingAnyRole(t *testing.T) {
 	}
 	assertApprovedCompactAuthorityBurned(t, store, lineage)
 }
+

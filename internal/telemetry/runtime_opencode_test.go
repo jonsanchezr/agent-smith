@@ -83,10 +83,10 @@ func TestOpenCodeRuntimeAgentAttribution(t *testing.T) {
 	}{
 		{"native build agent", "build", "orchestrator", "orchestrator", "build"},
 		{"native plan agent", "plan", "orchestrator", "orchestrator", "plan"},
-		{"gentle ai orchestrator", "gentle-orchestrator", "orchestrator", "orchestrator", "gentle-orchestrator"},
+		{"agent smith orchestrator", "agent-smith-orchestrator", "orchestrator", "orchestrator", "agent-smith-orchestrator"},
 		{"fallback explore agent", "explore", "built_in", "explore", "explore"},
 		{"fallback general agent", "general", "built_in", "worker", "general"},
-		{"named gentle ai agent", "sdd-apply", "built_in", "sdd-apply", "sdd-apply"},
+		{"named agent smith agent", "sdd-apply", "built_in", "sdd-apply", "sdd-apply"},
 		{"custom agent", "team-private-agent", "custom", "unknown", "team-private-agent"},
 		{"missing agent", "", "unknown", "unknown", ""},
 	} {

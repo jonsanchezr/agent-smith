@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+﻿#!/usr/bin/env bash
 set -euo pipefail
 
 die() {
@@ -15,7 +15,7 @@ for name in GITHUB_OUTPUT GITHUB_REF GITHUB_REPOSITORY GITHUB_SHA GH_TOKEN RELEA
   require_env "$name"
 done
 
-[[ "$GITHUB_REPOSITORY" == "Gentleman-Programming/gentle-ai" ]] || die "unexpected repository $GITHUB_REPOSITORY"
+[[ "$GITHUB_REPOSITORY" == "jonsanchezr/agent-smith" ]] || die "unexpected repository $GITHUB_REPOSITORY"
 [[ "$GITHUB_REF" == "refs/heads/main" ]] || die "promotion must run from main"
 [[ "$RELEASE_ENVIRONMENT_POLICY_ID" =~ ^[1-9][0-9]*$ ]] || die "release environment policy ID is invalid"
 
@@ -57,7 +57,7 @@ jq -e --arg tag "$source_tag" \
   die "source prerelease release must be immutable, published, and prerelease"
 
 # shellcheck disable=SC2016 # GraphQL receives its own $tag variable.
-stable_release=$(gh api graphql -f 'query=query($tag: String!) { repository(owner: "Gentleman-Programming", name: "gentle-ai") { release(tagName: $tag) { databaseId } } }' -f "tag=$stable_tag" --jq '.data.repository.release.databaseId // empty')
+stable_release=$(gh api graphql -f 'query=query($tag: String!) { repository(owner: "jonsanchezr", name: "agent-smith") { release(tagName: $tag) { databaseId } } }' -f "tag=$stable_tag" --jq '.data.repository.release.databaseId // empty')
 stable_ref=$(git ls-remote origin "refs/tags/$stable_tag" | awk 'NR == 1 { print $1 }')
 stable_peeled=$(git ls-remote origin "refs/tags/$stable_tag^{}" | awk 'NR == 1 { print $1 }')
 recovery_state=fresh
@@ -73,7 +73,7 @@ else
     if jq -e '.draft == true and (.assets | length) == 0' <<<"$release" >/dev/null; then
       recovery_state=reset-empty-draft
     elif jq -e '.draft == false and .prerelease == false and .immutable == true' <<<"$release" >/dev/null &&
-      diff -u <(printf '%s\n' "gentle-ai_${version}_darwin_amd64.tar.gz" "gentle-ai_${version}_darwin_arm64.tar.gz" "gentle-ai_${version}_linux_amd64.tar.gz" "gentle-ai_${version}_linux_arm64.tar.gz" "gentle-ai-review-provider-contract-${provider_contract_semver}.tar.gz" "gentle-ai-release-provenance-v1.tar.gz" checksums.txt checksums.txt.minisig | LC_ALL=C sort) <(jq -r '.assets[].name' <<<"$release" | LC_ALL=C sort); then
+      diff -u <(printf '%s\n' "agent-smith_${version}_darwin_amd64.tar.gz" "agent-smith_${version}_darwin_arm64.tar.gz" "agent-smith_${version}_linux_amd64.tar.gz" "agent-smith_${version}_linux_arm64.tar.gz" "agent-smith-review-provider-contract-${provider_contract_semver}.tar.gz" "agent-smith-release-provenance-v1.tar.gz" checksums.txt checksums.txt.minisig | LC_ALL=C sort) <(jq -r '.assets[].name' <<<"$release" | LC_ALL=C sort); then
       recovery_state=verify-existing
     else
       die "stable release state is incompatible with safe recovery"
@@ -85,3 +85,4 @@ GITHUB_SHA=$source_sha ./scripts/require-ci-success.sh
 printf 'source_sha=%s\n' "$source_sha" >>"$GITHUB_OUTPUT"
 printf 'recovery_state=%s\n' "$recovery_state" >>"$GITHUB_OUTPUT"
 printf 'stable promotion preflight: %s promotes %s (%s)\n' "$stable_tag" "$source_sha" "$recovery_state"
+

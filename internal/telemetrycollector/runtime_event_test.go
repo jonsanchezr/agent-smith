@@ -7,7 +7,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/telemetry"
+	"github.com/jonsanchezr/agent-smith/v4/internal/telemetry"
 	"github.com/santhosh-tekuri/jsonschema/v6"
 )
 
@@ -18,7 +18,7 @@ func runtimeFixture() []byte {
 		row += `"` + key + `":` + token + `,`
 	}
 	row += `"error_category":"none","duration":{"kind":"message","measured_count":2,"sum_ms":1.25}}`
-	return []byte(`{"schema":"gentle-ai.telemetry-runtime-event/v1","registry":1,"delivery_id":"0123456789abcdef0123456789abcdef","host":"pi","rows":[` + row + `]}`)
+	return []byte(`{"schema":"agent-smith.telemetry-runtime-event/v1","registry":1,"delivery_id":"0123456789abcdef0123456789abcdef","host":"pi","rows":[` + row + `]}`)
 }
 
 func TestRuntimeEventContract(t *testing.T) {
@@ -67,7 +67,7 @@ func TestRuntimeEventContract(t *testing.T) {
 		// paired with a publicly recognized model family id is valid on the wire.
 		{"opencode public family model", strings.Replace(valid, `{"provider":"openai","id":"gpt-5.4"}`, `{"provider":"opencode","id":"gpt-5.4"}`, 1), true},
 		// A generic family-pattern provider/id pair outside the former closed
-		// registry (gentle-ai issue #4536): accepted when the id's family is public.
+		// registry (agent-smith issue #4536): accepted when the id's family is public.
 		{"generic family provider accepted", strings.Replace(valid, `{"provider":"openai","id":"gpt-5.4"}`, `{"provider":"nan","id":"deepseek-v4-flash"}`, 1), true},
 		// A private-looking id embedding a path segment is still rejected: the
 		// wire contract never performs last-segment extraction, only the host
@@ -175,3 +175,4 @@ func TestRuntimeEventDeprecatedAgentClassAliasNormalized(t *testing.T) {
 		}
 	}
 }
+

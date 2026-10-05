@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/tui/styles"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/update"
+	"github.com/jonsanchezr/agent-smith/v4/internal/tui/styles"
+	"github.com/jonsanchezr/agent-smith/v4/internal/update"
 )
 
 // UpdatePromptOptions returns the display labels for the three update-prompt options.
@@ -94,3 +94,4 @@ func RenderUpdatePrompt(results []update.UpdateResult, cursor int, spinnerFrame 
 
 	return styles.FrameStyle.Render(b.String())
 }
+

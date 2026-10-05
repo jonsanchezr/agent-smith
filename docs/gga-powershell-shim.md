@@ -1,11 +1,11 @@
-# GGA PowerShell Shim — Windows Support
+﻿# GGA PowerShell Shim â€” Windows Support
 
 > [!NOTE]
-> These docs track `main`, which may include unreleased changes. For the latest release, see the [v4.0.0 docs](https://github.com/Gentleman-Programming/gentle-ai/tree/v4.0.0/docs).
+> These docs track `main`, which may include unreleased changes. For the latest release, see the [v4.0.0 docs](https://github.com/jonsanchezr/agent-smith/tree/v4.0.0/docs).
 
 ## What This Is
 
-When `gentle-ai` installs GGA on Windows, it now installs a `gga.ps1` wrapper
+When `agent-smith` installs GGA on Windows, it now installs a `gga.ps1` wrapper
 alongside the main bash script. This allows users to run `gga` directly from
 PowerShell without manually switching to Git Bash.
 
@@ -13,37 +13,37 @@ PowerShell without manually switching to Git Bash.
 
 ```
 User types: gga init   (in PowerShell)
-                │
-                ▼
+                â”‚
+                â–¼
      Windows resolves gga.ps1
      (PowerShell understands .ps1 extensions)
-                │
-                ▼
+                â”‚
+                â–¼
      gga.ps1 finds Git Bash via Get-Command git
-                │
-                ▼
+                â”‚
+                â–¼
      Git Bash executes the original gga bash script
-                │
-                ▼
+                â”‚
+                â–¼
      Exit code + output returned to PowerShell
 ```
 
 The shim is installed to the same directory as the `gga` binary
 (`~/.local/share/gga/bin/gga.ps1`) and uses an atomic write with content-equality
-check — re-running `gentle-ai install` is idempotent.
+check â€” re-running `agent-smith install` is idempotent.
 
 ## Requirements
 
 - Git for Windows must be installed (provides Git Bash)
-- The shim is Windows-only — macOS and Linux are unaffected
+- The shim is Windows-only â€” macOS and Linux are unaffected
 
 ## Known Limitations & Future Iterations
 
 The following items were identified during verification and deferred for future work.
-They are not bugs — GGA works correctly for the common case. These are improvements
+They are not bugs â€” GGA works correctly for the common case. These are improvements
 worth revisiting.
 
-### Iteration 1 — Argument forwarding with quoted spaces (W-01)
+### Iteration 1 â€” Argument forwarding with quoted spaces (W-01)
 
 The shim uses:
 ```powershell
@@ -60,10 +60,10 @@ gga commit -m "my message"   # may arrive as: gga commit -m my message
 **Recommended fix**: use `@args` splatting or construct the argument array explicitly
 instead of string interpolation.
 
-### Iteration 2 — Git Bash not-found error surface (W-02)
+### Iteration 2 â€” Git Bash not-found error surface (W-02)
 
 The original spec described surfacing a "Git Bash not found" error **during
-`gentle-ai install`**. In the final design this was moved to **runtime** — the `.ps1`
+`agent-smith install`**. In the final design this was moved to **runtime** â€” the `.ps1`
 shim detects Git Bash when the user first runs `gga`. The spec scenario is now
 inaccurate and should be updated to reflect the runtime detection model.
 
@@ -71,7 +71,7 @@ inaccurate and should be updated to reflect the runtime detection model.
 OpenSpec change is no longer in this repository), and add an integration test
 that exercises the not-found code path at PS runtime.
 
-### Iteration 3 — Non-Windows guard test coverage (W-03)
+### Iteration 3 â€” Non-Windows guard test coverage (W-03)
 
 The call-sites in `internal/cli/run.go` and `internal/cli/sync.go` guard the shim
 with `if runtime.GOOS == "windows"`. This is verified structurally (the guard
@@ -80,3 +80,4 @@ OS and asserts that `EnsurePowerShellShim` is never called.
 
 **Recommended fix**: add a table-driven test that injects a fake `GOOS` value and
 asserts the shim install path is skipped on `linux` and `darwin`.
+

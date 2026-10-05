@@ -121,7 +121,7 @@ func TestReclaimRefusalNamesTheOperationThatAdmitsTheShape(t *testing.T) {
 		_, successor, _ := forgedRecoveryPair(t, repo, "reclaim", "forged reclaim target\n")
 		refusal := reclaim(t, repo, successor.State.LineageID)
 		for _, want := range []string{
-			"gentle-ai review abandon",
+			"agent-smith review abandon",
 			"--lineage \"" + successor.State.LineageID + "\"",
 			"--expected-revision \"" + successor.Revision + "\"",
 			CompactAbandonAuthorizationSchema,
@@ -130,7 +130,7 @@ func TestReclaimRefusalNamesTheOperationThatAdmitsTheShape(t *testing.T) {
 				t.Fatalf("reclaim refusal does not name %q:\n%s", want, refusal)
 			}
 		}
-		if strings.Contains(refusal, "gentle-ai review reconcile-authority") {
+		if strings.Contains(refusal, "agent-smith review reconcile-authority") {
 			t.Fatalf("reclaim names reconcile for an edge reconcile refuses (named dead end):\n%s", refusal)
 		}
 		abandonPerEligibility(t, repo, successor.State.LineageID, "clear the damaged entry")
@@ -164,7 +164,7 @@ func TestReclaimRefusalNamesTheOperationThatAdmitsTheShape(t *testing.T) {
 		})
 		refusal := reclaim(t, repo, successor.State.LineageID)
 		for _, want := range []string{
-			"gentle-ai review abandon",
+			"agent-smith review abandon",
 			CompactAbandonAuthorizationSchema,
 		} {
 			if !strings.Contains(refusal, want) {
@@ -182,16 +182,17 @@ func TestReclaimRefusalNamesTheOperationThatAdmitsTheShape(t *testing.T) {
 		refusal := reclaim(t, repo, successor.State.LineageID)
 		for _, want := range []string{
 			"malformed_compact_state",
-			"gentle-ai review inspect-authority",
+			"agent-smith review inspect-authority",
 		} {
 			if !strings.Contains(refusal, want) {
 				t.Fatalf("reclaim refusal does not carry %q:\n%s", want, refusal)
 			}
 		}
-		for _, deadEnd := range []string{"gentle-ai review abandon", "gentle-ai review reconcile-authority"} {
+		for _, deadEnd := range []string{"agent-smith review abandon", "agent-smith review reconcile-authority"} {
 			if strings.Contains(refusal, deadEnd) {
 				t.Fatalf("reclaim names %q for a record neither can load (named dead end):\n%s", deadEnd, refusal)
 			}
 		}
 	})
 }
+

@@ -1,7 +1,7 @@
 package reviewassets
 
 import (
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
 	"strings"
 )
 
@@ -45,3 +45,4 @@ func InjectCodeGraphToolGrant(prompt string, agentID model.AgentID, guidance str
 	}
 	return prompt
 }
+

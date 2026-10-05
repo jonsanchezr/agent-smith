@@ -10,7 +10,7 @@ import (
 	"slices"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/reviewtransaction"
+	"github.com/jonsanchezr/agent-smith/v4/internal/reviewtransaction"
 )
 
 func TestReviewProviderArtifactV1ContractsArePinned(t *testing.T) {
@@ -196,8 +196,8 @@ func TestReviewProviderArtifactV24IntendedUntrackedContractsArePinned(t *testing
 
 // TestReviewProviderArtifactConformanceSchemasArePinned pins the schemas the
 // cross-lane battery conformance work first published: the delivery gate
-// result (gentle-ai.review-gate-result/v1) and the OpenCode provider-role
-// capture acknowledgement (gentle-ai.opencode-review-provider-role/v1). Both
+// result (agent-smith.review-gate-result/v1) and the OpenCode provider-role
+// capture acknowledgement (agent-smith.opencode-review-provider-role/v1). Both
 // envelopes already shipped on the wire; only their published schemas are new.
 func TestReviewProviderArtifactConformanceSchemasArePinned(t *testing.T) {
 	root := filepath.Join("..", "..", "contracts", "review-integration", "v2")
@@ -241,7 +241,7 @@ func TestReviewProviderArtifactStatusV7ContractsArePinned(t *testing.T) {
 		// issues #3299, #4170: a stale managed-asset digest now fails STATUS's
 		// own preflight, before a START is ever offered, as a typed
 		// managed_assets_outdated "stop" that carries the exact
-		// candidate-preserving `gentle-ai sync` continuation (see
+		// candidate-preserving `agent-smith sync` continuation (see
 		// failure.schema.json#/$defs/managed_assets_continuation). Deliberate,
 		// not drift.
 		// issue #3442: next_transition gained a third oneOf branch for the
@@ -402,13 +402,13 @@ func TestReviewProviderArtifactSchemasAreStrictAndBound(t *testing.T) {
 		name string
 		id   string
 	}{
-		{name: "artifact-subject.schema.json", id: "https://gentle-ai.dev/contracts/review-integration/v1/schemas/artifact-subject.schema.json"},
-		{name: "admitted-result.schema.json", id: "https://gentle-ai.dev/contracts/review-integration/v1/schemas/admitted-result.schema.json"},
+		{name: "artifact-subject.schema.json", id: "https://agent-smith.dev/contracts/review-integration/v1/schemas/artifact-subject.schema.json"},
+		{name: "admitted-result.schema.json", id: "https://agent-smith.dev/contracts/review-integration/v1/schemas/admitted-result.schema.json"},
 		{name: "correction-plan-request.schema.json", id: reviewtransaction.CorrectionPlanRequestSchemaID},
-		{name: "result-artifact-v2.schema.json", id: "https://gentle-ai.dev/contracts/review-integration/v1/schemas/result-artifact-v2.schema.json"},
+		{name: "result-artifact-v2.schema.json", id: "https://agent-smith.dev/contracts/review-integration/v1/schemas/result-artifact-v2.schema.json"},
 		{name: "start-v2.schema.json", id: ReviewIntegrationStartSchemaIDV2},
 		{name: "status-v2.schema.json", id: ReviewIntegrationStatusSchemaIDV2},
-		{name: "transition-execution.schema.json", id: "https://gentle-ai.dev/contracts/review-integration/v1/schemas/transition-execution.schema.json"},
+		{name: "transition-execution.schema.json", id: "https://agent-smith.dev/contracts/review-integration/v1/schemas/transition-execution.schema.json"},
 		{name: "authority-repair-assessment.schema.json", id: reviewtransaction.AuthorityRepairAssessmentSchemaID},
 		{name: "repair.schema.json", id: ReviewIntegrationRepairSchemaID},
 	}
@@ -492,8 +492,8 @@ func TestReviewProviderArtifactSchemasAreStrictAndBound(t *testing.T) {
 		name string
 		id   string
 	}{
-		{name: "artifact-subject.schema.json", id: "https://gentle-ai.dev/contracts/review-integration/v2/schemas/artifact-subject.schema.json"},
-		{name: "admitted-result.schema.json", id: "https://gentle-ai.dev/contracts/review-integration/v2/schemas/admitted-result.schema.json"},
+		{name: "artifact-subject.schema.json", id: "https://agent-smith.dev/contracts/review-integration/v2/schemas/artifact-subject.schema.json"},
+		{name: "admitted-result.schema.json", id: "https://agent-smith.dev/contracts/review-integration/v2/schemas/admitted-result.schema.json"},
 		{name: "start.schema.json", id: ReviewIntegrationStartSchemaIDV3},
 		{name: "start-v4.schema.json", id: ReviewIntegrationStartSchemaIDV4},
 		{name: "status.schema.json", id: ReviewIntegrationStatusSchemaIDV3},
@@ -516,9 +516,9 @@ func TestReviewProviderArtifactSchemasAreStrictAndBound(t *testing.T) {
 		{name: "failure.schema.json", id: ReviewIntegrationFailureSchemaIDV2},
 		{name: "operation.schema.json", id: ReviewIntegrationOperationSchemaIDV2},
 		{name: "repair.schema.json", id: ReviewIntegrationRepairSchemaIDV2},
-		{name: "gate-result.schema.json", id: "https://gentle-ai.dev/contracts/review-integration/v2/schemas/gate-result.schema.json"},
-		{name: "last-event-closure.schema.json", id: "https://gentle-ai.dev/contracts/review-integration/v2/schemas/last-event-closure.schema.json"},
-		{name: "opencode-provider-role.schema.json", id: "https://gentle-ai.dev/contracts/review-integration/v2/schemas/opencode-provider-role.schema.json"},
+		{name: "gate-result.schema.json", id: "https://agent-smith.dev/contracts/review-integration/v2/schemas/gate-result.schema.json"},
+		{name: "last-event-closure.schema.json", id: "https://agent-smith.dev/contracts/review-integration/v2/schemas/last-event-closure.schema.json"},
+		{name: "opencode-provider-role.schema.json", id: "https://agent-smith.dev/contracts/review-integration/v2/schemas/opencode-provider-role.schema.json"},
 	}
 	v2Documents := make(map[string]map[string]any, len(v2Schemas))
 	for _, tt := range v2Schemas {
@@ -638,3 +638,4 @@ func schemaStringArray(t *testing.T, value any) []string {
 	}
 	return result
 }
+

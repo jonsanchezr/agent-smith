@@ -13,7 +13,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/reviewtransaction"
+	"github.com/jonsanchezr/agent-smith/v4/internal/reviewtransaction"
 )
 
 func injectCLIRetiredCompactStateField(t *testing.T, statePath, field string, value any) {
@@ -252,3 +252,4 @@ func TestCurrentCaptureCompletionLeavesHistoricalSiblingBytePreserved(t *testing
 		t.Fatalf("current capture completion rewrote historical authority bytes: %v", err)
 	}
 }
+

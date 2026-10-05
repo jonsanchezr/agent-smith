@@ -13,15 +13,15 @@ import (
 	"time"
 
 	tea "github.com/charmbracelet/bubbletea"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/assets"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/components/telemetryruntime"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/opencode"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/pipeline"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/reviewtransaction"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/state"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/system"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/tui"
+	"github.com/jonsanchezr/agent-smith/v4/internal/assets"
+	"github.com/jonsanchezr/agent-smith/v4/internal/components/telemetryruntime"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
+	"github.com/jonsanchezr/agent-smith/v4/internal/opencode"
+	"github.com/jonsanchezr/agent-smith/v4/internal/pipeline"
+	"github.com/jonsanchezr/agent-smith/v4/internal/reviewtransaction"
+	"github.com/jonsanchezr/agent-smith/v4/internal/state"
+	"github.com/jonsanchezr/agent-smith/v4/internal/system"
+	"github.com/jonsanchezr/agent-smith/v4/internal/tui"
 )
 
 // This exercises the real app/CLI bridge, but deliberately fails Prepare after
@@ -77,7 +77,7 @@ func TestTUIOpenCodeSDKConsentProvisioningIntegration(t *testing.T) {
 				}
 			}
 			assertSDKBridgeMissing(t, log)
-			assertSDKBridgeMissing(t, filepath.Join(home, ".gentle-ai", "backups"))
+			assertSDKBridgeMissing(t, filepath.Join(home, ".agent-smith", "backups"))
 			if tc.decline {
 				updated, cmd = m.Update(tea.KeyMsg{Type: tea.KeyEnter})
 				m = updated.(tui.Model)
@@ -86,7 +86,7 @@ func TestTUIOpenCodeSDKConsentProvisioningIntegration(t *testing.T) {
 				}
 				assertSDKBridgeMissing(t, log)
 				assertSDKBridgeMissing(t, filepath.Join(config, "node_modules"))
-				assertSDKBridgeMissing(t, filepath.Join(home, ".gentle-ai", "backups"))
+				assertSDKBridgeMissing(t, filepath.Join(home, ".agent-smith", "backups"))
 				return
 			}
 			if tc.stale {
@@ -167,7 +167,7 @@ func TestTUIOpenCodeSDKConsentProvisioningIntegration(t *testing.T) {
 				t.Fatalf("custom telemetry changed: %q, %v", data, err)
 			}
 			assertSDKBridgeMissing(t, filepath.Join(config, "opencode.json"))
-			assertSDKBridgeMissing(t, filepath.Join(config, ".gentle-ai-telemetry-runtime.json"))
+			assertSDKBridgeMissing(t, filepath.Join(config, ".agent-smith-telemetry-runtime.json"))
 		})
 	}
 }
@@ -292,7 +292,7 @@ func runSDKFullApplyIntegration(t *testing.T, home, config, log string, realSDK 
 			t.Errorf("managed asset %s differs from embedded V2 bytes", name)
 		}
 	}
-	read(filepath.Join(config, ".gentle-ai-telemetry-runtime.json"))
+	read(filepath.Join(config, ".agent-smith-telemetry-runtime.json"))
 	if err := telemetryruntime.CheckManaged(config); err != nil {
 		t.Fatalf("telemetry ownership is invalid: %v", err)
 	}
@@ -305,7 +305,7 @@ func runSDKFullApplyIntegration(t *testing.T, home, config, log string, realSDK 
 	if err := json.Unmarshal(read(filepath.Join(config, "opencode.json")), &settings); err != nil {
 		t.Fatal(err)
 	}
-	if settings.DefaultAgent != "gentle-orchestrator" || !strings.Contains(settings.Agent["gentle-orchestrator"].Prompt, "gentle-ai:agent-routing") {
+	if settings.DefaultAgent != "agent-smith-orchestrator" || !strings.Contains(settings.Agent["agent-smith-orchestrator"].Prompt, "agent-smith:agent-routing") {
 		t.Fatalf("missing generated default agent or routing: %+v", settings)
 	}
 	persisted, err := state.Read(home)
@@ -839,3 +839,4 @@ func drainSDKBridgeCommands(t *testing.T, m tui.Model, initial tea.Cmd, timeout 
 	t.Fatal("TUI bridge exceeded 128 command/progress messages")
 	return m
 }
+

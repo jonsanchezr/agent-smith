@@ -3,7 +3,7 @@ package kiro
 import (
 	"fmt"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
 )
 
 // AgentNotInstallableError is returned when Kiro IDE cannot be installed automatically.
@@ -16,3 +16,4 @@ type AgentNotInstallableError struct {
 func (e AgentNotInstallableError) Error() string {
 	return fmt.Sprintf("agent %q cannot be auto-installed; download from https://kiro.dev/downloads", e.Agent)
 }
+

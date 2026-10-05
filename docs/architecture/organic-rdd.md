@@ -1,13 +1,13 @@
-# Organic RDD — atomic review architecture
+﻿# Organic RDD â€” atomic review architecture
 
 > [!NOTE]
-> These docs track `main`, which may include unreleased changes. For the latest release, see the [v4.0.0 docs](https://github.com/Gentleman-Programming/gentle-ai/tree/v4.0.0/docs).
+> These docs track `main`, which may include unreleased changes. For the latest release, see the [v4.0.0 docs](https://github.com/jonsanchezr/agent-smith/tree/v4.0.0/docs).
 
-← [Back to README](../../README.md)
+â† [Back to README](../../README.md)
 
 Receipt-Driven Development (RDD) reviews a finished candidate without taking ownership of delivery. It is deliberately small: native code freezes one worktree candidate, coordinates bounded review, burns completed authority, and returns control to the human.
 
-> For why this architecture exists at all — and what it cost to arrive at it — read [The story of fixing RDD](the-organic-rdd-story.md) first. This page is the technical half of that story.
+> For why this architecture exists at all â€” and what it cost to arrive at it â€” read [The story of fixing RDD](the-organic-rdd-story.md) first. This page is the technical half of that story.
 
 ## The model
 
@@ -20,7 +20,7 @@ Receipt-Driven Development (RDD) reviews a finished candidate without taking own
 **The switch is user-owned, and defaults to ON.** RDD is opt-out: unset state
 reports `on` decided by `default`, without persisting a preference. Explicit
 global or clone-local OFF wins. Automation never toggles the mode automatically.
-Use `gentle-ai review mode disable` to opt out; ordinary repository policy
+Use `agent-smith review mode disable` to opt out; ordinary repository policy
 always governs delivery. Enabling RDD revalidates the current
 candidate instead of resuming stale obligations.
 
@@ -71,7 +71,7 @@ Review completion is evidence about the completed transaction, not delivery auth
 
 ## Runtime boundary
 
-The atomic lifecycle is rendered only for Claude Code, OpenCode, Codex, and Pi. Generic and non-RDD runtime guidance keeps ODD routing and makes no review-transport promise. Pi receives the review execution contract through `orchestration/pi.md` in the provider contract bundle, which gentle-pi mirrors and injects at session start; gentle-ai writes nothing into the Pi system prompt.
+The atomic lifecycle is rendered only for Claude Code, OpenCode, Codex, and Pi. Generic and non-RDD runtime guidance keeps ODD routing and makes no review-transport promise. Pi receives the review execution contract through `orchestration/pi.md` in the provider contract bundle, which gentle-pi mirrors and injects at session start; agent-smith writes nothing into the Pi system prompt.
 
 ## Historical compatibility
 
@@ -83,8 +83,8 @@ The organic implementation route, with RDD entering at the end over the frozen c
 
 ```mermaid
 flowchart TD
-    A["User requests a change<br/>(Claude Code · OpenCode · Codex...)"] --> B{"Implementation<br/>route"}
-    B -->|"decide/verify<br/>1–3 files"| C["Direct inline"]
+    A["User requests a change<br/>(Claude Code Â· OpenCode Â· Codex...)"] --> B{"Implementation<br/>route"}
+    B -->|"decide/verify<br/>1â€“3 files"| C["Direct inline"]
     B -->|"4+ file exploration<br/>or 2+ non-trivial writes"| D["Delegated direct<br/>(one bounded worker)"]
     C --> E["Implementation + tests"]
     D --> E
@@ -92,9 +92,9 @@ flowchart TD
     F -->|"off (explicit)"| Z["Ordinary delivery<br/>reports disabled/unmanaged"]
     F -->|"on (default or explicitly enabled)"| G["review status --next-transition<br/>(provider-owned negotiated route)"]
     G --> H{"Risk frozen<br/>at START"}
-    H -->|"low"| I["Structural readback<br/>0 lenses · silent"]
+    H -->|"low"| I["Structural readback<br/>0 lenses Â· silent"]
     H -->|"medium"| J["1 focus lens<br/>+ consent"]
-    H -->|"high"| K["Canonical 4R + consent + forecast<br/>Risk · Resilience · Readability · Reliability"]
+    H -->|"high"| K["Canonical 4R + consent + forecast<br/>Risk Â· Resilience Â· Readability Â· Reliability"]
     J --> L["Reviewers inspect the immutable candidate<br/>(review inspect-candidate)"]
     K --> L
     L --> M{"Severe candidate-caused<br/>findings?"}
@@ -107,9 +107,9 @@ flowchart TD
     P -->|"no access to the diff"| R["Inconclusive: attempt not<br/>consumed, capture again"]
     R --> P
     Q --> S["review recover<br/>(authorized successor)"]
-    N --> AK["review.acknowledge-approved<br/>exact one-time token · only this<br/>burns/closes the lineage"]
+    N --> AK["review.acknowledge-approved<br/>exact one-time token Â· only this<br/>burns/closes the lineage"]
     AK --> T["Ordinary repository policy"]
-    T --> U["Commit → Push → PR"]
+    T --> U["Commit â†’ Push â†’ PR"]
     Z --> U
 
     style N fill:#2D4F67,color:#fff
@@ -119,3 +119,4 @@ flowchart TD
 ```
 
 Native review transitions own repository identity, candidate scope, lifecycle transitions and safe continuations. When scope changes or an operation is interrupted, use provider-owned status and recovery -- never infer authority from agent narration. Compact receipts, `FINALIZE` and delivery gates are retired; `review validate` and gate compatibility surfaces are unmanaged and never govern delivery.
+

@@ -7,7 +7,7 @@ import (
 	"errors"
 	"time"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/telemetry"
+	"github.com/jonsanchezr/agent-smith/v4/internal/telemetry"
 	sqlite "modernc.org/sqlite"
 )
 
@@ -243,3 +243,4 @@ func (s *Storage) InsertRuntimeDeliveryID(ctx context.Context, deliveryID string
 	}
 	return "stored", nil
 }
+

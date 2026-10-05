@@ -7,7 +7,7 @@ import (
 	"sort"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/reviewtransaction"
+	"github.com/jonsanchezr/agent-smith/v4/internal/reviewtransaction"
 )
 
 func sortStrings(values []string) { sort.Strings(values) }
@@ -99,3 +99,4 @@ func TestHistoricalReceiptStatusRemainsReadable(t *testing.T) {
 		t.Fatalf("historical fixture = %#v", fixture.Record)
 	}
 }
+

@@ -1,8 +1,8 @@
 // Package organicruntime_test proves the journeys a configured agent actually
-// performs once Gentle AI stopped owning implementation: the agent implements
-// organically, and Gentle AI's authority begins only after a candidate exists.
+// performs once Agent Smith stopped owning implementation: the agent implements
+// organically, and Agent Smith's authority begins only after a candidate exists.
 //
-// Every assertion here is driven through the real gentle-ai binary and the real
+// Every assertion here is driven through the real agent-smith binary and the real
 // `review` command surface against real Git repositories and a real bare remote.
 // There is no runtime fixture, no TLS control plane, and no bearer session: the
 // retired control plane cannot be proven, only the shipped product can.
@@ -32,9 +32,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/assets"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/reviewerprovider"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/versions"
+	"github.com/jonsanchezr/agent-smith/v4/internal/assets"
+	"github.com/jonsanchezr/agent-smith/v4/internal/reviewerprovider"
+	"github.com/jonsanchezr/agent-smith/v4/internal/versions"
 )
 
 const (
@@ -93,8 +93,8 @@ const (
 	organicStateValidating         = "validating"
 	organicStateCorrectionRequired = "correction_required"
 
-	organicGateSchema = "gentle-ai.review-gate-result/v1"
-	organicModeSchema = "gentle-ai.review-mode/v1"
+	organicGateSchema = "agent-smith.review-gate-result/v1"
+	organicModeSchema = "agent-smith.review-mode/v1"
 
 	organicGateAllow = "allow"
 	organicModeOff   = "off"
@@ -186,7 +186,7 @@ func runOrganicActor(role string) int {
 func assertOrganicDelegatedWorkerStaysInRoute(repo string) error {
 	binary := os.Getenv(organicActorBinaryEnvironment)
 	if binary == "" {
-		return errors.New("delegated actor has no gentle-ai binary to observe authority with")
+		return errors.New("delegated actor has no agent-smith binary to observe authority with")
 	}
 	ctx, cancel := context.WithTimeout(context.Background(), organicLocalTimeout)
 	defer cancel()
@@ -347,7 +347,7 @@ func TestCodexProviderAdapterUsesPinnedLocalRuntime(t *testing.T) {
 	harness.git("commit", "-qm", "feat: committed Codex correction candidate")
 	const lineage = "codex-loopback-egress-proof"
 	statusPayload := harness.gentle(
-		"review", "status", "--cwd", harness.repo.worktree, "--contract", "gentle-ai.review-integration/v2",
+		"review", "status", "--cwd", harness.repo.worktree, "--contract", "agent-smith.review-integration/v2",
 		"--agent", "codex", "--lineage", lineage, "--base-ref", baseTree, "--committed-only", "--next-transition",
 	)
 	var negotiated organicProviderStatusResult
@@ -356,7 +356,7 @@ func TestCodexProviderAdapterUsesPinnedLocalRuntime(t *testing.T) {
 	}
 	start := negotiated.NextTransition.Execute
 	stdout, stderr, err := harness.gentleAllowFailure(
-		"review", "start", "--cwd", harness.repo.worktree, "--contract", "gentle-ai.review-integration/v2",
+		"review", "start", "--cwd", harness.repo.worktree, "--contract", "agent-smith.review-integration/v2",
 		"--target", start.argument("target"), "--projection", start.argument("projection"), "--base-ref", baseTree, "--committed-only",
 		"--lineage", lineage, "--agent", "codex", "--consent", "granted", "--focus", "reliability",
 	)
@@ -368,7 +368,7 @@ func TestCodexProviderAdapterUsesPinnedLocalRuntime(t *testing.T) {
 		t.Fatalf("committed Codex START = %#v, %v\n%s", started, err, stdout)
 	}
 	statusPayload = harness.gentle(
-		"review", "status", "--cwd", harness.repo.worktree, "--contract", "gentle-ai.review-integration/v2",
+		"review", "status", "--cwd", harness.repo.worktree, "--contract", "agent-smith.review-integration/v2",
 		"--agent", "codex", "--lineage", lineage, "--base-ref", baseTree, "--committed-only", "--next-transition",
 	)
 	var reviewing organicProviderStatusResult
@@ -405,7 +405,7 @@ func TestCodexProviderAdapterUsesPinnedLocalRuntime(t *testing.T) {
 		if request.Method == http.MethodGet && request.URL.Path == "/v1/models" {
 			modelRequests++
 			writer.Header().Set("Content-Type", "application/json")
-			_, _ = fmt.Fprint(writer, `{"object":"list","data":[{"id":"gpt-5.6-terra","object":"model","created":0,"owned_by":"gentle-ai-loopback"}]}`)
+			_, _ = fmt.Fprint(writer, `{"object":"list","data":[{"id":"gpt-5.6-terra","object":"model","created":0,"owned_by":"agent-smith-loopback"}]}`)
 			return
 		}
 		if request.Method != http.MethodPost || request.URL.Path != "/v1/responses" {
@@ -908,7 +908,7 @@ func TestOpenCodeRuntimeIsPinnedForTheLiveProviderTransport(t *testing.T) {
 		"model":       "loopback/loopback",
 		"small_model": "loopback/loopback",
 		"provider": map[string]any{"loopback": map[string]any{
-			"npm": "@ai-sdk/openai-compatible", "name": "Gentle AI loopback",
+			"npm": "@ai-sdk/openai-compatible", "name": "Agent Smith loopback",
 			"options": map[string]any{"baseURL": server.URL + "/v1", "apiKey": "loopback-key"},
 			"models":  map[string]any{"loopback": map[string]any{"name": "Loopback", "limit": map[string]int{"context": 32000, "output": 2048}}},
 		}},
@@ -999,7 +999,7 @@ func TestOpenCodeRuntimeRunsFourBoundReviewersConcurrently(t *testing.T) {
 	start := initial.NextTransition.Execute
 	stdout, stderr, err := harness.gentleAllowFailure(
 		"review", "start", "--cwd", harness.repo.worktree,
-		"--contract", "gentle-ai.review-integration/v2", "--target", start.argument("target"), "--projection", start.argument("projection"),
+		"--contract", "agent-smith.review-integration/v2", "--target", start.argument("target"), "--projection", start.argument("projection"),
 		"--lineage", lineage, "--agent", "opencode", "--consent", "granted",
 	)
 	if err != nil {
@@ -1196,7 +1196,7 @@ func TestOpenCodeRuntimeRunsFourBoundReviewersConcurrently(t *testing.T) {
 	config, err := json.Marshal(map[string]any{
 		"autoupdate": false, "share": "disabled", "snapshot": false, "model": "loopback/loopback", "small_model": "loopback/loopback",
 		"provider": map[string]any{"loopback": map[string]any{
-			"npm": "@ai-sdk/openai-compatible", "name": "Gentle AI 4R loopback",
+			"npm": "@ai-sdk/openai-compatible", "name": "Agent Smith 4R loopback",
 			"options": map[string]any{"baseURL": server.URL + "/v1", "apiKey": "loopback-key"},
 			"models":  map[string]any{"loopback": map[string]any{"name": "Loopback", "limit": map[string]int{"context": 32000, "output": 2048}}},
 		}},
@@ -1554,7 +1554,7 @@ func organicProviderStart(t *testing.T, harness *organicHarness, lineage, agent 
 	}
 	transition := status.NextTransition.Execute
 	stdout, stderr, err := harness.gentleAllowFailure("review", "start", "--cwd", harness.repo.worktree,
-		"--contract", "gentle-ai.review-integration/v2", "--target", transition.argument("target"), "--projection", transition.argument("projection"),
+		"--contract", "agent-smith.review-integration/v2", "--target", transition.argument("target"), "--projection", transition.argument("projection"),
 		"--lineage", lineage, "--agent", agent, "--consent", "granted", "--focus", "reliability")
 	if err != nil {
 		t.Fatalf("provider START: %v\nstdout:\n%s\nstderr:\n%s", err, stdout, stderr)
@@ -1624,7 +1624,7 @@ func (execute organicProviderExecute) argument(name string) string {
 
 func organicProviderStatus(t *testing.T, harness *organicHarness, lineage, agent string) organicProviderStatusResult {
 	t.Helper()
-	payload := harness.gentle("review", "status", "--cwd", harness.repo.worktree, "--contract", "gentle-ai.review-integration/v2", "--agent", agent, "--lineage", lineage, "--next-transition", "--projection", "workspace")
+	payload := harness.gentle("review", "status", "--cwd", harness.repo.worktree, "--contract", "agent-smith.review-integration/v2", "--agent", agent, "--lineage", lineage, "--next-transition", "--projection", "workspace")
 	var status organicProviderStatusResult
 	if err := json.Unmarshal(payload, &status); err != nil {
 		t.Fatalf("decode provider status: %v\n%s", err, payload)
@@ -1868,7 +1868,7 @@ var organicRoutingGuidanceRequiredFragments = []string{
 // switch. Only RDD-capable runtimes (Claude Code, Codex, OpenCode) receive
 // it; every other runtime is ODD-only and must not.
 var organicRoutingGuidanceRDDFragments = []string{
-	"gentle-ai review mode enable|disable|status",
+	"agent-smith review mode enable|disable|status",
 	"disabled/unmanaged",
 }
 
@@ -1896,13 +1896,13 @@ func TestOrganicConfiguredAgentReceivesRoutingGuidanceCursor(t *testing.T) {
 		t.Fatal(err)
 	}
 	// Cursor's Detect looks for ~/.cursor, which this fake isolated HOME
-	// never has. Simulate Cursor as already installed so gentle-ai does not
+	// never has. Simulate Cursor as already installed so agent-smith does not
 	// correctly refuse an undetected agent here — this test targets
 	// routing-guidance delivery, not agent install behavior.
 	if err := os.MkdirAll(filepath.Join(home, ".cursor"), 0o755); err != nil {
 		t.Fatal(err)
 	}
-	const path = ".cursor/rules/gentle-ai.mdc"
+	const path = ".cursor/rules/agent-smith.mdc"
 	output, stderr, err := runOrganicCommand(
 		t, organicBinary, workspace, organicEnvironment(home),
 		"install", "--agent", "cursor", "--scope", "workspace", "--components", "permissions",
@@ -2257,7 +2257,7 @@ func TestOrganicRuntimeCurrentReviewHardening(t *testing.T) {
 
 				stdout, stderr, err := harness.gentleAllowFailure(
 					"review", "start", "--cwd", harness.repo.worktree,
-					"--contract", "gentle-ai.review-integration/v2", "--target", start.argument("target"), "--projection", start.argument("projection"),
+					"--contract", "agent-smith.review-integration/v2", "--target", start.argument("target"), "--projection", start.argument("projection"),
 					"--lineage", lineage, "--agent", "opencode", "--consent", "granted", "--policy", policy,
 				)
 				if err == nil {
@@ -2278,7 +2278,7 @@ func TestOrganicRuntimeCurrentReviewHardening(t *testing.T) {
 				if !strings.Contains(failure.Cause, "read facade review policy") {
 					t.Fatalf("policy preflight cause = %q, want wrapped policy read", failure.Cause)
 				}
-				if _, statErr := os.Stat(filepath.Join(harness.commonDir(), "gentle-ai", "defect-reports")); !os.IsNotExist(statErr) {
+				if _, statErr := os.Stat(filepath.Join(harness.commonDir(), "agent-smith", "defect-reports")); !os.IsNotExist(statErr) {
 					t.Fatalf("policy preflight created a defect-report entry: %v", statErr)
 				}
 			})
@@ -2334,7 +2334,7 @@ func TestOrganicRuntimeCurrentReviewHardening(t *testing.T) {
 		start := status.NextTransition.Execute
 		stdout, stderr, err := harness.gentleAllowFailure(
 			"review", "start", "--cwd", harness.repo.worktree,
-			"--contract", "gentle-ai.review-integration/v2", "--target", start.argument("target"), "--projection", start.argument("projection"),
+			"--contract", "agent-smith.review-integration/v2", "--target", start.argument("target"), "--projection", start.argument("projection"),
 			"--lineage", lineage, "--agent", "opencode", "--consent", "granted",
 		)
 		if err != nil {
@@ -2420,7 +2420,7 @@ func TestOrganicRuntimeCurrentReviewHardening(t *testing.T) {
 			t.Fatalf("quarantine correction plan = %#v", planned)
 		}
 
-		statePath := filepath.Join(harness.commonDir(), "gentle-ai", "review-transactions", "v2", lineage, "review-state.json")
+		statePath := filepath.Join(harness.commonDir(), "agent-smith", "review-transactions", "v2", lineage, "review-state.json")
 		payload, err := os.ReadFile(statePath)
 		if err != nil {
 			t.Fatal(err)
@@ -2468,7 +2468,7 @@ func TestOrganicRuntimeCurrentReviewHardening(t *testing.T) {
 
 		explicitPayload := harness.gentle(
 			"review", "status", "--cwd", harness.repo.worktree,
-			"--contract", "gentle-ai.review-integration/v2", "--agent", "opencode", "--lineage", lineage, "--next-transition",
+			"--contract", "agent-smith.review-integration/v2", "--agent", "opencode", "--lineage", lineage, "--next-transition",
 		)
 		var explicit organicProviderStatusResult
 		if err := json.Unmarshal(explicitPayload, &explicit); err != nil {
@@ -2488,7 +2488,7 @@ func TestOrganicRuntimeCurrentReviewHardening(t *testing.T) {
 
 		stdout, stderr, err := harness.gentleAllowFailure(
 			"review", "status", "--cwd", harness.repo.worktree,
-			"--contract", "gentle-ai.review-integration/v2", "--agent", "opencode", "--next-transition",
+			"--contract", "agent-smith.review-integration/v2", "--agent", "opencode", "--next-transition",
 		)
 		if err != nil {
 			t.Fatalf("fresh selector-free STATUS: %v\nstdout:\n%s\nstderr:\n%s", err, stdout, stderr)
@@ -2506,7 +2506,7 @@ func TestOrganicRuntimeCurrentReviewHardening(t *testing.T) {
 
 		stdout, stderr, err = harness.gentleAllowFailure(
 			"review", "status", "--cwd", harness.repo.worktree,
-			"--contract", "gentle-ai.review-integration/v2", "--agent", "opencode", "--next-transition",
+			"--contract", "agent-smith.review-integration/v2", "--agent", "opencode", "--next-transition",
 			"--workspace-overlay", "--projection", "staged", "--base-ref", "HEAD",
 		)
 		if err != nil {
@@ -2538,7 +2538,7 @@ func TestOrganicRuntimeCurrentReviewHardening(t *testing.T) {
 		start := status.NextTransition.Execute
 		stdout, stderr, err := harness.gentleAllowFailure(
 			"review", "start", "--cwd", harness.repo.worktree,
-			"--contract", "gentle-ai.review-integration/v2", "--target", start.argument("target"), "--projection", start.argument("projection"),
+			"--contract", "agent-smith.review-integration/v2", "--target", start.argument("target"), "--projection", start.argument("projection"),
 			"--lineage", lineage, "--agent", "opencode", "--consent", "granted",
 		)
 		if err != nil {
@@ -2575,7 +2575,7 @@ func TestOrganicRuntimeCurrentReviewHardening(t *testing.T) {
 			t.Fatal("differing result replaced an occupied reviewer slot")
 		}
 		if !strings.Contains(conflictStderr, "reviewer_result_slot_occupied") ||
-			!strings.Contains(conflictStderr, "gentle-ai review status --cwd <repo> --contract gentle-ai.review-integration/v2 --next-transition") ||
+			!strings.Contains(conflictStderr, "agent-smith review status --cwd <repo> --contract agent-smith.review-integration/v2 --next-transition") ||
 			!strings.Contains(conflictStderr, "authoritative continuation") {
 			t.Fatalf("occupied-slot continuation = %q", conflictStderr)
 		}
@@ -2588,7 +2588,7 @@ func TestOrganicRuntimeCurrentReviewHardening(t *testing.T) {
 		if continued.NextTransition == nil || continued.NextTransition.Kind != "collect" || continued.NextTransition.ReasonCode != "reviewer_results_required" {
 			t.Fatalf("occupied-slot STATUS continuation = %#v", continued.NextTransition)
 		}
-		if _, statErr := os.Stat(filepath.Join(harness.commonDir(), "gentle-ai", "defect-reports")); !os.IsNotExist(statErr) {
+		if _, statErr := os.Stat(filepath.Join(harness.commonDir(), "agent-smith", "defect-reports")); !os.IsNotExist(statErr) {
 			t.Fatalf("occupied-slot conflict created a defect-report entry: %v", statErr)
 		}
 	})
@@ -2715,7 +2715,7 @@ func TestOrganicKillSwitchStopsAtTheDeliveryBoundary(t *testing.T) {
 
 	// Zero effects: no review authority, no additional compare-and-swap
 	// generation, and a remote that never moved.
-	if _, err := os.Stat(filepath.Join(harness.commonDir(), "gentle-ai", "review-transactions", "v2")); !os.IsNotExist(err) {
+	if _, err := os.Stat(filepath.Join(harness.commonDir(), "agent-smith", "review-transactions", "v2")); !os.IsNotExist(err) {
 		t.Fatalf("a disabled start still created review authority: %v", err)
 	}
 	if after := harness.reviewModeGenerations(); !equalOrganicStrings(after, generationsAfterDisable) {
@@ -2903,7 +2903,7 @@ func TestOrganicTerminalAuthoritySurvivesWithdrawalAndReplaysWithoutEffect(t *te
 	if _, _, err := harness.gentleAllowFailure("review", "finalize", "--cwd", harness.repo.worktree, "--lineage", lineage); err == nil {
 		t.Fatal("terminal finalize replay reused burned authority")
 	}
-	if _, err := os.Stat(filepath.Join(harness.commonDir(), "gentle-ai", "review-transactions", "v2", lineage)); !os.IsNotExist(err) {
+	if _, err := os.Stat(filepath.Join(harness.commonDir(), "agent-smith", "review-transactions", "v2", lineage)); !os.IsNotExist(err) {
 		t.Fatalf("terminal replay recreated authority: %v", err)
 	}
 
@@ -3011,7 +3011,7 @@ func (harness *organicHarness) gentle(arguments ...string) []byte {
 	harness.t.Helper()
 	stdout, stderr, err := runOrganicCommand(harness.t, organicBinary, harness.repo.worktree, harness.environment(), arguments...)
 	if err != nil {
-		harness.t.Fatalf("gentle-ai %v: %v\nstdout:\n%s\nstderr:\n%s", arguments, err, stdout, stderr)
+		harness.t.Fatalf("agent-smith %v: %v\nstdout:\n%s\nstderr:\n%s", arguments, err, stdout, stderr)
 	}
 	return []byte(stdout)
 }
@@ -3135,7 +3135,7 @@ func organicAcknowledgementStatusSelectors(started organicStartResult) []string 
 func organicApprovedAcknowledgementStatus(t *testing.T, harness *organicHarness, lineage string, selectors ...string) *organicProviderExecute {
 	t.Helper()
 	arguments := []string{
-		"review", "status", "--cwd", harness.repo.worktree, "--contract", "gentle-ai.review-integration/v2",
+		"review", "status", "--cwd", harness.repo.worktree, "--contract", "agent-smith.review-integration/v2",
 		"--lineage", lineage, "--next-transition",
 	}
 	arguments = append(arguments, selectors...)
@@ -3223,7 +3223,7 @@ func (harness *organicHarness) assertReviewAcknowledgedAndBurned(lineage string,
 	if _, _, err := harness.gentleAllowFailure(exact...); err == nil {
 		harness.t.Fatal("replayed acknowledgement recreated or burned authority")
 	}
-	authority := filepath.Join(harness.commonDir(), "gentle-ai", "review-transactions", "v2", lineage)
+	authority := filepath.Join(harness.commonDir(), "agent-smith", "review-transactions", "v2", lineage)
 	if _, err := os.Stat(authority); !os.IsNotExist(err) {
 		harness.t.Fatalf("approved review %q retained authority after acknowledgement at %q: %v", lineage, authority, err)
 	}
@@ -3360,15 +3360,15 @@ func (harness *organicHarness) enableReview() organicModeResult {
 }
 
 // organicNamedContinuation returns the argument tokens of the first
-// `gentle-ai ...` command a product message names, read exactly as an operator
+// `agent-smith ...` command a product message names, read exactly as an operator
 // would: to the end of the line, stopping at the first `<placeholder>` whose
 // value the operator supplies.
 func organicNamedContinuation(t *testing.T, message string) []string {
 	t.Helper()
-	const product = "gentle-ai "
+	const product = "agent-smith "
 	index := strings.Index(message, product)
 	if index < 0 {
-		t.Fatalf("message names no runnable gentle-ai command: %q", message)
+		t.Fatalf("message names no runnable agent-smith command: %q", message)
 	}
 	tail := message[index+len(product):]
 	if cut := strings.IndexAny(tail, "\n"); cut >= 0 {
@@ -3383,19 +3383,19 @@ func organicNamedContinuation(t *testing.T, message string) []string {
 		tokens = append(tokens, token)
 	}
 	if len(tokens) == 0 {
-		t.Fatalf("message names no runnable gentle-ai command: %q", message)
+		t.Fatalf("message names no runnable agent-smith command: %q", message)
 	}
 	return tokens
 }
 
-// runNamedReviewStart dispatches a `gentle-ai review start ...` continuation
+// runNamedReviewStart dispatches a `agent-smith review start ...` continuation
 // read out of a product message, with the working directory already at the
 // repository so the invocation runs exactly as printed. extra carries only an
 // operator-supplied placeholder value the message asked for.
 func (harness *organicHarness) runNamedReviewStart(tokens []string, extra ...string) organicStartResult {
 	harness.t.Helper()
 	if len(tokens) < 2 || tokens[0] != "review" || tokens[1] != "start" {
-		harness.t.Fatalf("named continuation is %v, want gentle-ai review start", tokens)
+		harness.t.Fatalf("named continuation is %v, want agent-smith review start", tokens)
 	}
 	payload := harness.gentle(append(append([]string{}, tokens...), extra...)...)
 	var started organicStartResult
@@ -3409,7 +3409,7 @@ func (harness *organicHarness) runNamedReviewStart(tokens []string, extra ...str
 // records. Their count is how a rejected operation proves it wrote nothing.
 func (harness *organicHarness) reviewModeGenerations() []string {
 	harness.t.Helper()
-	root := filepath.Join(harness.commonDir(), "gentle-ai", "review-mode", "rar-authority", "v1", "rdd-mode")
+	root := filepath.Join(harness.commonDir(), "agent-smith", "review-mode", "rar-authority", "v1", "rdd-mode")
 	entries, err := os.ReadDir(root)
 	if os.IsNotExist(err) {
 		return nil
@@ -3431,7 +3431,7 @@ func (harness *organicHarness) reviewModeGenerations() []string {
 // prove it changed nothing at all, not merely that it reported the same state.
 func (harness *organicHarness) lineageDigest(lineage string) string {
 	harness.t.Helper()
-	root := filepath.Join(harness.commonDir(), "gentle-ai", "review-transactions", "v2", lineage)
+	root := filepath.Join(harness.commonDir(), "agent-smith", "review-transactions", "v2", lineage)
 	var builder strings.Builder
 	err := filepath.WalkDir(root, func(path string, entry os.DirEntry, err error) error {
 		if err != nil {
@@ -3459,7 +3459,7 @@ func (harness *organicHarness) lineageDigest(lineage string) string {
 
 func (harness *organicHarness) assertSingleReviewLineage(expected string) {
 	harness.t.Helper()
-	root := filepath.Join(harness.commonDir(), "gentle-ai", "review-transactions", "v2")
+	root := filepath.Join(harness.commonDir(), "agent-smith", "review-transactions", "v2")
 	entries, err := os.ReadDir(root)
 	if err != nil {
 		harness.t.Fatalf("read review authority: %v", err)
@@ -3492,7 +3492,7 @@ func (harness *organicHarness) hasSDDArtifacts() bool {
 
 func (harness *organicHarness) sddArtifact() (string, bool) {
 	harness.t.Helper()
-	root := filepath.Join(harness.commonDir(), "gentle-ai")
+	root := filepath.Join(harness.commonDir(), "agent-smith")
 	entries, err := os.ReadDir(root)
 	if os.IsNotExist(err) {
 		return "", false
@@ -3836,7 +3836,7 @@ func harnessCorrectionStatus(t *testing.T, harness *organicHarness, lineage stri
 	t.Helper()
 	payload := harness.gentle(
 		"review", "status", "--cwd", harness.repo.worktree, "--lineage", lineage,
-		"--contract", "gentle-ai.review-integration/v2", "--next-transition",
+		"--contract", "agent-smith.review-integration/v2", "--next-transition",
 	)
 	var status organicCorrectionStatus
 	if err := json.Unmarshal(payload, &status); err != nil {
@@ -3957,22 +3957,22 @@ func buildOrganicBinary(workspace string) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	name := "gentle-ai"
+	name := "agent-smith"
 	if runtime.GOOS == "windows" {
 		name += ".exe"
 	}
 	path := filepath.Join(workspace, name)
 	ctx, cancel := context.WithTimeout(context.Background(), organicSetupTimeout)
 	defer cancel()
-	command := organicCommandContext(ctx, "go", "build", "-trimpath", "-o", path, "./cmd/gentle-ai")
+	command := organicCommandContext(ctx, "go", "build", "-trimpath", "-o", path, "./cmd/agent-smith")
 	command.Dir = moduleRoot
 	command.Env = os.Environ()
 	if output, err := command.CombinedOutput(); err != nil {
-		return "", fmt.Errorf("build the gentle-ai test binary: %w\n%s", err, output)
+		return "", fmt.Errorf("build the agent-smith test binary: %w\n%s", err, output)
 	}
 	info, err := os.Stat(path)
 	if err != nil || !info.Mode().IsRegular() {
-		return "", fmt.Errorf("built gentle-ai binary %q is unusable: %v", path, err)
+		return "", fmt.Errorf("built agent-smith binary %q is unusable: %v", path, err)
 	}
 	return path, nil
 }
@@ -4031,7 +4031,7 @@ func equalOrganicStrings(left, right []string) bool {
 
 // TestRealAgentOrganicJourneys runs the same organic journeys through a real
 // configured agent. The agent runtime, its sub-agent mechanism, its tool calls,
-// the gentle-ai binary, and the repository are all real; only the model is a
+// the agent-smith binary, and the repository are all real; only the model is a
 // fixture, because a scripted model is what makes an agent journey repeatable.
 func TestRealAgentOrganicJourneys(t *testing.T) {
 	if os.Getenv(realAgentE2EEnvironment) != "1" {
@@ -4533,3 +4533,4 @@ func main(){if len(os.Args)!=2 || os.Args[1]!="--version" {os.Exit(2)};fmt.Print
 	}
 	t.Setenv("PATH", dir+string(os.PathListSeparator)+os.Getenv("PATH"))
 }
+

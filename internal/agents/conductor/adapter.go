@@ -1,7 +1,7 @@
 // Package conductor provides Conductor workspace-orchestrator integration.
 //
 // Conductor is a desktop workspace orchestrator that inherits Claude Code
-// configuration for the workspaces it manages. Gentle AI therefore treats it
+// configuration for the workspaces it manages. Agent Smith therefore treats it
 // as a detection/catalog-only integration: it never writes Conductor-specific
 // skills, MCP configuration, or system prompt files. All write-capability
 // claims are false by construction and projected from the canonical
@@ -14,9 +14,9 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/agents/capabilitymanifest"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/system"
+	"github.com/jonsanchezr/agent-smith/v4/internal/agents/capabilitymanifest"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
+	"github.com/jonsanchezr/agent-smith/v4/internal/system"
 )
 
 type statResult struct {
@@ -81,7 +81,7 @@ func (a *Adapter) GlobalConfigDir(homeDir string) string {
 	return ConfigPath(homeDir)
 }
 
-// The remaining path methods stay empty: Gentle AI performs no writes for
+// The remaining path methods stay empty: Agent Smith performs no writes for
 // Conductor, so no write target is advertised and no caller can resolve one.
 
 func (a *Adapter) SystemPromptDir(_ string) string {
@@ -181,5 +181,6 @@ type AgentNotInstallableError struct {
 }
 
 func (e AgentNotInstallableError) Error() string {
-	return fmt.Sprintf("agent %q must be installed manually before Gentle AI can configure it", e.Agent)
+	return fmt.Sprintf("agent %q must be installed manually before Agent Smith can configure it", e.Agent)
 }
+

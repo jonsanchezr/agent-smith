@@ -110,7 +110,7 @@ func TestCompactTargetProjectionsCompatible(t *testing.T) {
 }
 
 func TestProjectionCompatibilityGovernancePredicates(t *testing.T) {
-	emptyProof := hashCanonical("gentle-ai.intended-untracked/v1")
+	emptyProof := hashCanonical("agent-smith.intended-untracked/v1")
 	base := Snapshot{
 		Kind:                   TargetCurrentChanges,
 		Projection:             ProjectionStaged,
@@ -153,7 +153,7 @@ func TestProjectionCompatibilityGovernancePredicates(t *testing.T) {
 }
 
 func TestDiscoveryExactCandidateIgnoresIntendedUntrackedSideBand(t *testing.T) {
-	emptyProof := hashCanonical("gentle-ai.intended-untracked/v1")
+	emptyProof := hashCanonical("agent-smith.intended-untracked/v1")
 	base := Snapshot{
 		Kind:                   TargetCurrentChanges,
 		Projection:             ProjectionStaged,
@@ -197,3 +197,4 @@ func TestDiscoveryExactCandidateIgnoresIntendedUntrackedSideBand(t *testing.T) {
 		t.Fatal("legacyLiveTargetMatchesValidatedSnapshot() rejected exact candidate side-band variation")
 	}
 }
+

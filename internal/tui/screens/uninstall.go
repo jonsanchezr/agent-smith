@@ -4,10 +4,10 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/catalog"
-	componentuninstall "github.com/gentleman-programming/gentle-ai/v4/internal/components/uninstall"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/tui/styles"
+	"github.com/jonsanchezr/agent-smith/v4/internal/catalog"
+	componentuninstall "github.com/jonsanchezr/agent-smith/v4/internal/components/uninstall"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
+	"github.com/jonsanchezr/agent-smith/v4/internal/tui/styles"
 )
 
 type UninstallModeOption struct {
@@ -32,12 +32,12 @@ func UninstallModeOptions() []UninstallModeOption {
 		{
 			Mode:        model.UninstallModeFull,
 			Label:       "Full Uninstall",
-			Description: "Remove all gentle-ai managed configuration from all agents",
+			Description: "Remove all agent-smith managed configuration from all agents",
 		},
 		{
 			Mode:        model.UninstallModeFullRemove,
 			Label:       "Full Uninstall & Remove Binary",
-			Description: "Remove all configuration AND delete the gentle-ai binary itself",
+			Description: "Remove all configuration AND delete the agent-smith binary itself",
 		},
 		{
 			Mode:        model.UninstallModeCleanInstall,
@@ -52,7 +52,7 @@ func RenderUninstallMode(cursor int) string {
 
 	b.WriteString(styles.TitleStyle.Render("Uninstall Mode Selection"))
 	b.WriteString("\n\n")
-	b.WriteString(styles.SubtextStyle.Render("Choose how you want to uninstall gentle-ai:"))
+	b.WriteString(styles.SubtextStyle.Render("Choose how you want to uninstall agent-smith:"))
 	b.WriteString("\n\n")
 
 	options := UninstallModeOptions()
@@ -95,7 +95,7 @@ func RenderUninstall(selected []model.AgentID, cursor int) string {
 	b.WriteString("\n\n")
 	b.WriteString(styles.HelpStyle.Render("Use j/k to move, space to toggle, enter to continue."))
 	b.WriteString("\n\n")
-	b.WriteString(styles.SubtextStyle.Render("Select the agents whose gentle-ai managed configuration should be removed."))
+	b.WriteString(styles.SubtextStyle.Render("Select the agents whose agent-smith managed configuration should be removed."))
 	b.WriteString("\n\n")
 
 	selectedSet := make(map[model.AgentID]struct{}, len(selected))
@@ -136,7 +136,7 @@ func RenderUninstallComponents(selected []model.ComponentID, cursor int) string 
 	b.WriteString("\n\n")
 	b.WriteString(styles.HelpStyle.Render("Use j/k to move, space to toggle, enter to continue."))
 	b.WriteString("\n\n")
-	b.WriteString(styles.SubtextStyle.Render("Select which gentle-ai managed components should be removed from the selected agents."))
+	b.WriteString(styles.SubtextStyle.Render("Select which agent-smith managed components should be removed from the selected agents."))
 	b.WriteString("\n\n")
 
 	selectedSet := make(map[model.ComponentID]struct{}, len(selected))
@@ -279,21 +279,21 @@ func RenderUninstallConfirm(mode model.UninstallMode, selected []model.AgentID, 
 	case model.UninstallModeFull:
 		b.WriteString(styles.SubtextStyle.Render("Mode: Full Uninstall"))
 		b.WriteString("\n\n")
-		b.WriteString(styles.UnselectedStyle.Render("This will remove all gentle-ai managed configuration from all supported agents."))
+		b.WriteString(styles.UnselectedStyle.Render("This will remove all agent-smith managed configuration from all supported agents."))
 		b.WriteString("\n")
 	case model.UninstallModeFullRemove:
 		b.WriteString(styles.ErrorStyle.Render("Mode: Full Uninstall & Remove Binary"))
 		b.WriteString("\n\n")
-		b.WriteString(styles.UnselectedStyle.Render("This will remove all gentle-ai managed configuration from all agents"))
+		b.WriteString(styles.UnselectedStyle.Render("This will remove all agent-smith managed configuration from all agents"))
 		b.WriteString("\n")
-		b.WriteString(styles.ErrorStyle.Render("AND delete the gentle-ai binary itself."))
+		b.WriteString(styles.ErrorStyle.Render("AND delete the agent-smith binary itself."))
 		b.WriteString("\n\n")
 		b.WriteString(styles.ErrorStyle.Render("⚠ WARNING: This action cannot be undone without reinstalling!"))
 		b.WriteString("\n")
 	case model.UninstallModeCleanInstall:
 		b.WriteString(styles.SuccessStyle.Render("Mode: Full Uninstall + Clean Install"))
 		b.WriteString("\n\n")
-		b.WriteString(styles.UnselectedStyle.Render("This will remove all gentle-ai managed configuration from all agents"))
+		b.WriteString(styles.UnselectedStyle.Render("This will remove all agent-smith managed configuration from all agents"))
 		b.WriteString("\n")
 		b.WriteString(styles.SuccessStyle.Render("and immediately re-sync all managed assets from scratch."))
 		b.WriteString("\n\n")
@@ -434,7 +434,7 @@ func RenderUninstallResult(result componentuninstall.Result, err error, mode mod
 				b.WriteString("\n")
 				b.WriteString(styles.ErrorStyle.Render("  " + syncErr.Error()))
 				b.WriteString("\n\n")
-				b.WriteString(styles.WarningStyle.Render("You can run 'gentle-ai sync' manually to retry."))
+				b.WriteString(styles.WarningStyle.Render("You can run 'agent-smith sync' manually to retry."))
 			} else {
 				b.WriteString(styles.SuccessStyle.Render("✓ Clean install sync complete"))
 				b.WriteString("\n")
@@ -527,3 +527,4 @@ func hasSelectedComponent(components []model.ComponentID, target model.Component
 	}
 	return false
 }
+

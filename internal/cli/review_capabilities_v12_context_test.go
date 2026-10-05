@@ -8,7 +8,7 @@ import (
 	"slices"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/reviewtransaction"
+	"github.com/jonsanchezr/agent-smith/v4/internal/reviewtransaction"
 )
 
 func TestReviewCapabilitiesV13AdvertisesProviderAdmissionAndRecovery(t *testing.T) {
@@ -58,3 +58,4 @@ func TestReviewCapabilitiesV10ThroughV12ArtifactsRemainByteIdentical(t *testing.
 		}
 	}
 }
+

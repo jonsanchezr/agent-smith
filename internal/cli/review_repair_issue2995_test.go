@@ -9,7 +9,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/reviewtransaction"
+	"github.com/jonsanchezr/agent-smith/v4/internal/reviewtransaction"
 )
 
 // Issue #2995 work-unit 2 CLI contract: a store with more than one
@@ -234,3 +234,4 @@ func TestIssue2995ReviewRepairQuarantinesExactlySelectedHistoricalEntry(t *testi
 		t.Fatalf("quarantine did not preserve the selected entry's bytes: %v", err)
 	}
 }
+

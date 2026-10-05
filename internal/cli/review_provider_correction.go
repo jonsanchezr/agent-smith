@@ -6,9 +6,9 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/reviewerprovider"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/reviewtransaction"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
+	"github.com/jonsanchezr/agent-smith/v4/internal/reviewerprovider"
+	"github.com/jonsanchezr/agent-smith/v4/internal/reviewtransaction"
 )
 
 // Every in-process reviewer runtime returns free text, and one out-of-schema
@@ -100,7 +100,7 @@ func (capture reviewProviderCapture) continuation() string {
 // reviewProviderCaptureContinuation names the exact STATUS re-query every
 // capture role points a caller at once its bound slot is reoffered.
 func reviewProviderCaptureContinuation(runtime model.AgentID, lineageID string) string {
-	return fmt.Sprintf("gentle-ai review status --cwd <repo> --contract %s --agent %s --lineage %s --next-transition", ReviewIntegrationContractV2, runtime, lineageID)
+	return fmt.Sprintf("agent-smith review status --cwd <repo> --contract %s --agent %s --lineage %s --next-transition", ReviewIntegrationContractV2, runtime, lineageID)
 }
 
 // reviewProviderCaptureRefusedError wraps the final refusal after both
@@ -201,3 +201,4 @@ func reviewProviderCorrectivePrompt(original []byte, admission error) []byte {
 	prompt.WriteString(reviewProviderCorrectiveFeedbackHeader + "_END\n")
 	return prompt.Bytes()
 }
+

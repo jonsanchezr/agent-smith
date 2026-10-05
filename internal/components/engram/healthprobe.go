@@ -17,10 +17,10 @@ import (
 	"time"
 
 	"github.com/BurntSushi/toml"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/agents"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/agents/claude"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/components/filemerge"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
+	"github.com/jonsanchezr/agent-smith/v4/internal/agents"
+	"github.com/jonsanchezr/agent-smith/v4/internal/agents/claude"
+	"github.com/jonsanchezr/agent-smith/v4/internal/components/filemerge"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
 	"gopkg.in/yaml.v3"
 )
 
@@ -201,7 +201,7 @@ func stdioHandshake(ctx context.Context, timeout time.Duration, name string, arg
 		}
 	}()
 
-	request := `{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2024-11-05","capabilities":{},"clientInfo":{"name":"gentle-ai-doctor","version":"0"}}}` + "\n"
+	request := `{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2024-11-05","capabilities":{},"clientInfo":{"name":"agent-smith-doctor","version":"0"}}}` + "\n"
 	if _, err := io.WriteString(stdin, request); err != nil {
 		return fmt.Errorf("write engram mcp initialize request: %w", err)
 	}
@@ -566,3 +566,4 @@ func stringSlice(value any) ([]string, error) {
 	}
 	return result, nil
 }
+

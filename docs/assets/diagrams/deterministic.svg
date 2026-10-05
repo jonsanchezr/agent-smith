@@ -1,6 +1,6 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1240 680" width="1240" height="680" role="img" aria-labelledby="detTitle detDesc" font-family="ui-sans-serif, -apple-system, BlinkMacSystemFont, 'Segoe UI', Inter, Helvetica, Arial, sans-serif">
+﻿<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1240 680" width="1240" height="680" role="img" aria-labelledby="detTitle detDesc" font-family="ui-sans-serif, -apple-system, BlinkMacSystemFont, 'Segoe UI', Inter, Helvetica, Arial, sans-serif">
   <title id="detTitle">Why the next step is deterministic</title>
-  <desc id="detDesc">A different agent, a different model, and a brand-new session all converge on the same thing: the gentle-ai binary. It reads the change state from files on disk and returns the only valid next transition, so no model votes on what comes next. The answer is always one of four public states — Working, Checking, Ready, or Needs your decision — and asking again tomorrow from another agent returns the same answer, because it was derived rather than improvised.</desc>
+  <desc id="detDesc">A different agent, a different model, and a brand-new session all converge on the same thing: the agent-smith binary. It reads the change state from files on disk and returns the only valid next transition, so no model votes on what comes next. The answer is always one of four public states â€” Working, Checking, Ready, or Needs your decision â€” and asking again tomorrow from another agent returns the same answer, because it was derived rather than improvised.</desc>
 
   <defs>
     <radialGradient id="detAmbient" cx="12%" cy="0%" r="70%">
@@ -46,7 +46,7 @@
   <!-- ============ 02 the engine ============ -->
   <rect x="390" y="182" width="380" height="312" rx="18" fill="#241A22" stroke="#F095C8" stroke-opacity="0.5"/>
   <text x="414" y="240" font-size="19" font-weight="600" fill="#F7ECF2">The binary decides</text>
-  <text x="414" y="266" font-size="12.5" fill="#F095C8" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace">gentle-ai</text>
+  <text x="414" y="266" font-size="12.5" fill="#F095C8" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace">agent-smith</text>
   <line x1="414" y1="286" x2="746" y2="286" stroke="#4A3540"/>
   <text x="414" y="316" font-size="12" fill="#9C8391">It reads the state of the change</text>
   <text x="414" y="334" font-size="12" fill="#9C8391">from files on disk, then returns the</text>
@@ -77,12 +77,13 @@
   <circle cx="872" cy="426" r="4" fill="#D7A0B8"/>
   <text x="888" y="431" font-size="12" fill="#D7A0B8">Needs your decision</text>
 
-  <text x="1176" y="466" font-size="11" text-anchor="end" fill="#F095C8" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace">gentle-ai.sdd-status/v2</text>
+  <text x="1176" y="466" font-size="11" text-anchor="end" fill="#F095C8" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace">agent-smith.sdd-status/v2</text>
 
   <!-- payoff strip -->
   <rect x="40" y="546" width="1160" height="54" rx="16" fill="#2A1B24" stroke="#5A3A49"/>
   <text x="620" y="571" font-size="15" font-weight="700" text-anchor="middle" fill="#F095C8">Same question, same answer</text>
   <text x="620" y="591" font-size="12" text-anchor="middle" fill="#A88E9B">Ask again tomorrow, from another agent, on another model. The state lives in files, so the answer is read &#8212; not invented.</text>
 
-  <text x="620" y="644" font-size="12" text-anchor="middle" fill="#8A6E7C" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace">gentle-ai sdd status</text>
+  <text x="620" y="644" font-size="12" text-anchor="middle" fill="#8A6E7C" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace">agent-smith sdd status</text>
 </svg>
+

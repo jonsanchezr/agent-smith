@@ -1,7 +1,7 @@
-# Engram™ Command Reference
+# Engramâ„¢ Command Reference
 
 > [!NOTE]
-> These docs track `main`, which may include unreleased changes. For the latest release, see the [v4.0.0 docs](https://github.com/Gentleman-Programming/gentle-ai/tree/v4.0.0/docs).
+> These docs track `main`, which may include unreleased changes. For the latest release, see the [v4.0.0 docs](https://github.com/jonsanchezr/agent-smith/tree/v4.0.0/docs).
 
 <- [Back to README](../README.md)
 
@@ -68,7 +68,7 @@ Add `.engram/` to your repo and commit it. When a teammate clones and runs `engr
 
 ## Cloud Sync (Optional)
 
-Engram Cloud is optional replication for people who want project memories to follow them across machines they own. Local SQLite memory remains the default and authoritative source. Gentle AI ships the Engram client, but the cloud runtime and server lifecycle are owned by Engram upstream.
+Engram Cloud is optional replication for people who want project memories to follow them across machines they own. Local SQLite memory remains the default and authoritative source. Agent Smith ships the Engram client, but the cloud runtime and server lifecycle are owned by Engram upstream.
 
 Use this only when you already have an Engram Cloud server URL and token.
 
@@ -131,13 +131,13 @@ engram cloud upgrade repair --project <project-name> --dry-run
 engram cloud upgrade repair --project <project-name> --apply
 ```
 
-### What Gentle AI does not manage
+### What Agent Smith does not manage
 
 - It does not provision or operate an Engram Cloud server.
 - It does not make cloud sync mandatory; local memory is still the default.
 - It does not replace git-based team sharing via `engram sync` and `.engram/`.
 
-Full upstream docs: [Engram Cloud](https://github.com/Gentleman-Programming/engram/blob/main/docs/engram-cloud/README.md) and [Engram cloud CLI reference](https://github.com/Gentleman-Programming/engram/blob/main/DOCS.md#cloud-cli-opt-in).
+Full upstream docs: [Engram Cloud](https://github.com/jonsanchezr/engram/blob/main/docs/engram-cloud/README.md) and [Engram cloud CLI reference](https://github.com/jonsanchezr/engram/blob/main/DOCS.md#cloud-cli-opt-in).
 
 ---
 
@@ -190,4 +190,5 @@ If you're working outside a git repo, engram falls back to the directory name.
 
 ## Full Documentation
 
-For the complete source, configuration options, and contribution guide: [github.com/Gentleman-Programming/engram](https://github.com/Gentleman-Programming/engram)
+For the complete source, configuration options, and contribution guide: [github.com/jonsanchezr/engram](https://github.com/jonsanchezr/engram)
+

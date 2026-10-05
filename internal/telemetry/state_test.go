@@ -156,8 +156,9 @@ func TestNewInstallIDsAreDistinctUUIDv4(t *testing.T) {
 func TestPathIsNextToGentleAIStateDir(t *testing.T) {
 	home := t.TempDir()
 	got := Path(home)
-	want := filepath.Join(home, ".gentle-ai", "telemetry.json")
+	want := filepath.Join(home, ".agent-smith", "telemetry.json")
 	if got != want {
 		t.Fatalf("Path() = %q, want %q", got, want)
 	}
 }
+

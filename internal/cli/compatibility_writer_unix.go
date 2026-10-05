@@ -14,7 +14,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/components/filemerge"
+	"github.com/jonsanchezr/agent-smith/v4/internal/components/filemerge"
 	"golang.org/x/sys/unix"
 )
 
@@ -253,7 +253,7 @@ func createCompatibilityTempFile(dirFD int, perm fs.FileMode) (string, *os.File,
 		if _, err := rand.Read(token[:]); err != nil {
 			return "", nil, fmt.Errorf("generate compatibility temp file name: %w", err)
 		}
-		name := ".gentle-ai-" + hex.EncodeToString(token[:]) + ".tmp"
+		name := ".agent-smith-" + hex.EncodeToString(token[:]) + ".tmp"
 		fd, err := unix.Openat(dirFD, name, unix.O_WRONLY|unix.O_CREAT|unix.O_EXCL|unix.O_NOFOLLOW|unix.O_CLOEXEC, uint32(perm))
 		if err == unix.EEXIST {
 			continue
@@ -266,3 +266,4 @@ func createCompatibilityTempFile(dirFD int, perm fs.FileMode) (string, *os.File,
 	// refusal:by-design world-action: repeated random-name collisions prevent a safe temporary file publication.
 	return "", nil, fmt.Errorf("create compatibility temp file: exhausted unique names")
 }
+

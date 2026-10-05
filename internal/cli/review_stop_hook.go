@@ -13,19 +13,19 @@ import (
 	"strings"
 	"time"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/components/filemerge"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/reviewtransaction"
+	"github.com/jonsanchezr/agent-smith/v4/internal/components/filemerge"
+	"github.com/jonsanchezr/agent-smith/v4/internal/reviewtransaction"
 )
 
 // reviewStopHookSchema identifies the reminder envelope this hook prints to
 // stdout. Claude Code reads "decision" and "reason" as top-level keys.
-const reviewStopHookSchema = "gentle-ai.review-stop-hook/v1"
+const reviewStopHookSchema = "agent-smith.review-stop-hook/v1"
 
 // reviewStopHookReminderSchema identifies the small per-session record kept
-// under ~/.gentle-ai/review-stop-hook/v1. The schema name is unchanged from
+// under ~/.agent-smith/review-stop-hook/v1. The schema name is unchanged from
 // its first shape; it now optionally carries baseline_target_identity
 // alongside target_identity (see reviewStopHookReminderRecord).
-const reviewStopHookReminderSchema = "gentle-ai.review-stop-hook-reminder/v1"
+const reviewStopHookReminderSchema = "agent-smith.review-stop-hook-reminder/v1"
 
 // maxReviewStopHookPayloadBytes bounds the hook stdin payload, mirroring the
 // sdd-task-result precedent (internal/cli/sdd_task_result.go): a hook reports
@@ -75,7 +75,7 @@ type reviewStopHookReminderRecord struct {
 	LastSeenTargetIdentity string `json:"last_seen_target_identity,omitempty"`
 }
 
-// RunReviewStopHook is the `gentle-ai review stop-hook` entry point. Claude
+// RunReviewStopHook is the `agent-smith review stop-hook` entry point. Claude
 // Code runs it as both a SessionStart and a Stop hook. On SessionStart it
 // records the repository's current unreviewed-candidate identity (if any) as
 // this session's baseline, with zero output. On Stop it prints one reminder,
@@ -287,7 +287,7 @@ func reviewStopHookResolveTargetIdentity(ctx context.Context, repo, runtimeAgent
 // (carrying --consent=relay), the lossless-relay instruction for any consent
 // envelope that START returns, and the once-per-candidate scope of this hook.
 func reviewStopHookReasonText(targetIdentity, root, runtimeAgent, startCommand string) string {
-	statusCommand := fmt.Sprintf("gentle-ai review status --cwd %s --contract %s --agent %s --next-transition", root, ReviewIntegrationContractV2, runtimeAgent)
+	statusCommand := fmt.Sprintf("agent-smith review status --cwd %s --contract %s --agent %s --next-transition", root, ReviewIntegrationContractV2, runtimeAgent)
 	return strings.Join([]string{
 		"Receipt-driven development is enabled for this repository, and it holds an unreviewed candidate (target_identity " + targetIdentity + ").",
 		"By the review contract entry rule, you must run the selectorless STATUS preflight below and route only from its returned next_transition before reporting completion; never infer a command from prose or a stale reply.",
@@ -300,7 +300,7 @@ func reviewStopHookReasonText(targetIdentity, root, runtimeAgent, startCommand s
 
 // reviewStopHookRecordPath is the per-session state file path for sessionID.
 func reviewStopHookRecordPath(home, sessionID string) string {
-	return filepath.Join(home, ".gentle-ai", "review-stop-hook", "v1", sessionID+".json")
+	return filepath.Join(home, ".agent-smith", "review-stop-hook", "v1", sessionID+".json")
 }
 
 // readReviewStopHookRecord reads sessionID's existing record, if any. A
@@ -432,3 +432,4 @@ func recordReviewStopHookReminder(sessionID, targetIdentity string) (silent bool
 	_, err = filemerge.WriteFileAtomic(path, payload, 0o644)
 	return false, err
 }
+

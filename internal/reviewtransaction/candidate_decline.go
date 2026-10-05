@@ -37,8 +37,8 @@ import (
 const (
 	// CandidateDeclineAuthorizationSchema is the schema every pre-existing
 	// (pre-Slice-6) decline record on disk carries.
-	CandidateDeclineAuthorizationSchema = "gentle-ai.rdd-candidate-decline/v1"
-	candidateDeclineDigestDomain        = "gentle-ai.rdd-candidate-decline-digest/v1"
+	CandidateDeclineAuthorizationSchema = "agent-smith.rdd-candidate-decline/v1"
+	candidateDeclineDigestDomain        = "agent-smith.rdd-candidate-decline-digest/v1"
 )
 
 // ErrCandidateDeclineCorrupt rejects a candidate-scoped decline whose durable
@@ -123,3 +123,4 @@ func parseCandidateDeclineAuthorization(payload []byte) (CandidateDeclineAuthori
 	}
 	return authorization, nil
 }
+

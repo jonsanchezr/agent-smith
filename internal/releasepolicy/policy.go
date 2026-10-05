@@ -341,8 +341,8 @@ func validateArtifacts(root string, payload []byte, markerTime time.Time, contra
 		if !ok || item.Target != target {
 			return fmt.Errorf("resolved binary matrix changed at %s", platform)
 		}
-		expectedPath := fmt.Sprintf("dist/gentle-ai_%s/gentle-ai", target)
-		if item.Name != "gentle-ai" || item.Path != expectedPath || extraString(item.Extra, "Binary") != "gentle-ai" || extraString(item.Extra, "ID") != "gentle-ai" {
+		expectedPath := fmt.Sprintf("dist/agent-smith_%s/agent-smith", target)
+		if item.Name != "agent-smith" || item.Path != expectedPath || extraString(item.Extra, "Binary") != "agent-smith" || extraString(item.Extra, "ID") != "agent-smith" {
 			return fmt.Errorf("resolved binary identity changed at %s", platform)
 		}
 		if _, exists := seenBinaries[platform]; exists {
@@ -358,15 +358,15 @@ func validateArtifacts(root string, payload []byte, markerTime time.Time, contra
 	snapshotVersion := ""
 	providerArchive, provenanceArchive := false, false
 	for _, item := range byType["Archive"] {
-		if item.Name == "gentle-ai-release-provenance-v1.tar.gz" {
+		if item.Name == "agent-smith-release-provenance-v1.tar.gz" {
 			if item.Path != "dist/"+item.Name || item.GOOS != "" || item.GOARCH != "" || item.Target != "" || extraString(item.Extra, "Format") != "tar.gz" || extraString(item.Extra, "ID") != "release-provenance" || !reflect.DeepEqual(extraStrings(item.Extra, "Binaries"), []string{}) || provenanceArchive {
 				return errors.New("resolved release provenance archive identity changed")
 			}
 			provenanceArchive = true
 			continue
 		}
-		if strings.HasPrefix(item.Name, "gentle-ai-review-provider-contract-") {
-			artifactSemver := strings.TrimSuffix(strings.TrimPrefix(item.Name, "gentle-ai-review-provider-contract-"), ".tar.gz")
+		if strings.HasPrefix(item.Name, "agent-smith-review-provider-contract-") {
+			artifactSemver := strings.TrimSuffix(strings.TrimPrefix(item.Name, "agent-smith-review-provider-contract-"), ".tar.gz")
 			if artifactSemver != contractSemver || item.Path != "dist/"+item.Name || item.GOOS != "" || item.GOARCH != "" || item.Target != "" || extraString(item.Extra, "Format") != "tar.gz" || extraString(item.Extra, "ID") != "review-provider-contract" || !reflect.DeepEqual(extraStrings(item.Extra, "Binaries"), []string{}) || providerArchive {
 				return errors.New("resolved provider contract archive identity changed")
 			}
@@ -379,8 +379,8 @@ func validateArtifacts(root string, payload []byte, markerTime time.Time, contra
 			return fmt.Errorf("resolved archive matrix changed at %s", platform)
 		}
 		suffix := fmt.Sprintf("_%s_%s.tar.gz", item.GOOS, item.GOARCH)
-		version := strings.TrimSuffix(strings.TrimPrefix(item.Name, "gentle-ai_"), suffix)
-		if !strings.HasPrefix(item.Name, "gentle-ai_") || !strings.HasSuffix(item.Name, suffix) || !validSnapshotVersion(version) {
+		version := strings.TrimSuffix(strings.TrimPrefix(item.Name, "agent-smith_"), suffix)
+		if !strings.HasPrefix(item.Name, "agent-smith_") || !strings.HasSuffix(item.Name, suffix) || !validSnapshotVersion(version) {
 			return fmt.Errorf("resolved archive name changed at %s", platform)
 		}
 		if snapshotVersion == "" {
@@ -388,7 +388,7 @@ func validateArtifacts(root string, payload []byte, markerTime time.Time, contra
 		} else if version != snapshotVersion {
 			return errors.New("resolved archives do not share one snapshot version")
 		}
-		if item.Path != "dist/"+item.Name || extraString(item.Extra, "Format") != "tar.gz" || extraString(item.Extra, "ID") != "default" || !reflect.DeepEqual(extraStrings(item.Extra, "Binaries"), []string{"gentle-ai"}) {
+		if item.Path != "dist/"+item.Name || extraString(item.Extra, "Format") != "tar.gz" || extraString(item.Extra, "ID") != "default" || !reflect.DeepEqual(extraStrings(item.Extra, "Binaries"), []string{"agent-smith"}) {
 			return fmt.Errorf("resolved archive identity changed at %s", platform)
 		}
 		if _, exists := seenArchives[platform]; exists {
@@ -413,13 +413,13 @@ func validateArtifacts(root string, payload []byte, markerTime time.Time, contra
 		return errors.New("resolved metadata output changed")
 	}
 	formula := byType["Homebrew Formula"][0]
-	if formula.Name != "gentle-ai.rb" || formula.Path != "dist/homebrew/Formula/gentle-ai.rb" {
+	if formula.Name != "agent-smith.rb" || formula.Path != "dist/homebrew/Formula/agent-smith.rb" {
 		return errors.New("resolved Homebrew formula output changed")
 	}
 	brewConfig := extraMap(formula.Extra, "BrewConfig")
 	repository := extraMap(brewConfig, "repository")
-	if extraString(brewConfig, "name") != "gentle-ai" || extraString(brewConfig, "directory") != "Formula" ||
-		extraString(repository, "owner") != "Gentleman-Programming" || extraString(repository, "name") != "homebrew-tap" || extraString(repository, "token") != "{{ .Env.HOMEBREW_TAP_TOKEN }}" {
+	if extraString(brewConfig, "name") != "agent-smith" || extraString(brewConfig, "directory") != "Formula" ||
+		extraString(repository, "owner") != "jonsanchezr" || extraString(repository, "name") != "homebrew-tap" || extraString(repository, "token") != "{{ .Env.HOMEBREW_TAP_TOKEN }}" {
 		return errors.New("resolved Homebrew publisher changed")
 	}
 
@@ -550,7 +550,7 @@ func validateSnapshotFile(root, artifactPath string, markerTime time.Time) error
 }
 
 const expectedGoReleaserYAML = `version: 2
-project_name: gentle-ai
+project_name: agent-smith
 before:
   hooks:
     - go run ./internal/providercontractbundlecmd generate --out .goreleaser-provider-contract
@@ -558,8 +558,8 @@ before:
     - mkdir -p .goreleaser-provenance
     - go run ./internal/releaseprovenancecmd --out .goreleaser-provenance/manifest.json --config .goreleaser.yaml --goreleaser-version v2.15.2
 builds:
-  - main: ./cmd/gentle-ai
-    binary: gentle-ai
+  - main: ./cmd/agent-smith
+    binary: agent-smith
     env:
       - CGO_ENABLED=0
     goos:
@@ -574,7 +574,7 @@ builds:
       - >-
         -s -w
         -X main.version={{ .Version }}
-        -X github.com/gentleman-programming/gentle-ai/v4/internal/update/upgrade.releaseMinisignPublicKeys={{ .Env.MINISIGN_PUBLIC_KEYS_CANONICAL }}
+        -X github.com/jonsanchezr/agent-smith/v4/internal/update/upgrade.releaseMinisignPublicKeys={{ .Env.MINISIGN_PUBLIC_KEYS_CANONICAL }}
 archives:
   - formats:
       - tar.gz
@@ -592,7 +592,7 @@ archives:
     meta: true
     formats:
       - tar.gz
-    name_template: "gentle-ai-review-provider-contract-{{ .Env.PROVIDER_CONTRACT_SEMVER }}"
+    name_template: "agent-smith-review-provider-contract-{{ .Env.PROVIDER_CONTRACT_SEMVER }}"
     files:
       - src: .goreleaser-provider-contract/README.md
         strip_parent: true
@@ -626,7 +626,7 @@ archives:
     meta: true
     formats:
       - tar.gz
-    name_template: "gentle-ai-release-provenance-v1"
+    name_template: "agent-smith-release-provenance-v1"
     files:
       - src: .goreleaser-provenance/manifest.json
         strip_parent: true
@@ -649,9 +649,9 @@ signs:
       - "-x"
       - "${signature}"
       - "-c"
-      - "signature from gentle-ai release"
+      - "signature from agent-smith release"
       - "-t"
-      - "repo=Gentleman-Programming/gentle-ai;tag={{ .Tag }}"
+      - "repo=jonsanchezr/agent-smith;tag={{ .Tag }}"
     output: true
 changelog:
   sort: asc
@@ -662,15 +662,15 @@ changelog:
       - "^ci:"
 brews:
   - repository:
-      owner: Gentleman-Programming
+      owner: jonsanchezr
       name: homebrew-tap
       token: "{{ .Env.HOMEBREW_TAP_TOKEN }}"
     directory: Formula
-    name: gentle-ai
-    homepage: "https://github.com/Gentleman-Programming/gentle-ai"
-    description: "Gentle-AI — Ecosystem, Frameworks, Workflows for AI coding agents."
+    name: agent-smith
+    homepage: "https://github.com/jonsanchezr/agent-smith"
+    description: "agent-smith — Ecosystem, Frameworks, Workflows for AI coding agents."
     license: "MIT"
-    commit_msg_template: "chore: update gentle-ai formula to {{ .Tag }}"
+    commit_msg_template: "chore: update agent-smith formula to {{ .Tag }}"
 `
 
 const expectedReleaseWorkflowYAML = `name: Release
@@ -712,7 +712,7 @@ jobs:
         run: |
           set -euo pipefail
           run_id="${GITHUB_RUN_ID}:${GITHUB_RUN_ATTEMPT}:${GITHUB_JOB}"
-          marker="$RUNNER_TEMP/gentle-ai-release-policy-snapshot-start"
+          marker="$RUNNER_TEMP/agent-smith-release-policy-snapshot-start"
           rm -f -- "$marker"
           umask 077
           printf '%s\n' "$run_id" >"$marker"
@@ -731,7 +731,7 @@ jobs:
       - name: Verify release distribution policy
         run: ./scripts/verify-release-distribution-policy.sh
       - name: Verify provider contract bundle
-        run: go run ./internal/providercontractbundlecmd verify --archive "dist/gentle-ai-review-provider-contract-${PROVIDER_CONTRACT_SEMVER}.tar.gz"
+        run: go run ./internal/providercontractbundlecmd verify --archive "dist/agent-smith-review-provider-contract-${PROVIDER_CONTRACT_SEMVER}.tar.gz"
       - name: Verify tag, main, trust anchors, and module immutability
         run: ./scripts/release-preflight.sh
       - name: Unit tests
@@ -772,8 +772,8 @@ jobs:
           printf 'canonical=%s\n' "$canonical" >>"$GITHUB_OUTPUT"
       - name: Configure ephemeral signing paths
         run: |
-          printf 'MINISIGN_SECRET_KEY_FILE=%s/gentle-ai-release.key\n' "$RUNNER_TEMP" >>"$GITHUB_ENV"
-          printf 'MINISIGN_SIGNING_PUBLIC_KEY_FILE=%s/gentle-ai-release-signing.pub\n' "$RUNNER_TEMP" >>"$GITHUB_ENV"
+          printf 'MINISIGN_SECRET_KEY_FILE=%s/agent-smith-release.key\n' "$RUNNER_TEMP" >>"$GITHUB_ENV"
+          printf 'MINISIGN_SIGNING_PUBLIC_KEY_FILE=%s/agent-smith-release-signing.pub\n' "$RUNNER_TEMP" >>"$GITHUB_ENV"
           PROVIDER_CONTRACT_SEMVER=$(tr -d '\n' < contracts/review-provider-contract/CONTRACT_SEMVER)
           [[ "$PROVIDER_CONTRACT_SEMVER" =~ ^(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)$ ]]
           printf 'PROVIDER_CONTRACT_SEMVER=%s\n' "$PROVIDER_CONTRACT_SEMVER" >>"$GITHUB_ENV"
@@ -840,3 +840,4 @@ jobs:
           MINISIGN_PUBLIC_KEYS: ${{ vars.MINISIGN_PUBLIC_KEYS }}
         run: ./scripts/verify-release-assets.sh
 `
+

@@ -1,7 +1,7 @@
-# issue #2995 released-record fixtures
+﻿# issue #2995 released-record fixtures
 
 These two `review-state.json` files are byte-identical copies of compact
-review authority produced by the released gentle-ai v2.2.0 binary. They are
+review authority produced by the released agent-smith v2.2.0 binary. They are
 forensic evidence for issue #2995 (classification honesty for released
 v2.2.x records): a genuine CLI transaction wrote them, and every hash below
 pins the exact bytes. Never edit them in place; a drifted fixture proves
@@ -9,7 +9,7 @@ nothing.
 
 ## Release provenance
 
-- Released asset: `gentle-ai_2.2.0_linux_amd64.tar.gz`
+- Released asset: `agent-smith_2.2.0_linux_amd64.tar.gz`
 - Released asset SHA-256: `56efe0611c2af21913cd7fa768e05a0e6130d026a4157b909a5227e0e0a3b266`
 - Tag: `v2.2.0` (commit `ee83e83d56f0d149c52f93fd13b3296858f5147f`)
 
@@ -41,6 +41,7 @@ nothing.
 ## Why the SHA-256 pins matter
 
 Each record's `revision` field binds the exact persisted state bytes under
-the `gentle-ai.review-state/v2` formula, and the record SHA-256 above binds
+the `agent-smith.review-state/v2` formula, and the record SHA-256 above binds
 the whole file. Any edit to these fixtures breaks both pins, so a test
-failure against them always means the reader changed — never the evidence.
+failure against them always means the reader changed â€” never the evidence.
+

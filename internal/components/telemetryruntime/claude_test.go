@@ -7,7 +7,7 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/telemetry"
+	"github.com/jonsanchezr/agent-smith/v4/internal/telemetry"
 )
 
 func TestReadClaudeFileReturnsOnlyBoundedTail(t *testing.T) {
@@ -66,3 +66,4 @@ func TestReadClaudeFileRefusesOutsideHomeSymlink(t *testing.T) {
 		t.Fatal("followed symlink outside home")
 	}
 }
+

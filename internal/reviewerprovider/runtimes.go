@@ -1,6 +1,6 @@
 package reviewerprovider
 
-import "github.com/gentleman-programming/gentle-ai/v4/internal/model"
+import "github.com/jonsanchezr/agent-smith/v4/internal/model"
 
 // registeredRuntimeIdentities is deliberately closed. A runtime appears here
 // only after the compiled review boundary admits it: Claude's prompt-carried
@@ -32,3 +32,4 @@ func RegisteredRuntime(agent model.AgentID) bool {
 	}
 	return false
 }
+

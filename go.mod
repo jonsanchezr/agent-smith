@@ -1,4 +1,4 @@
-module github.com/gentleman-programming/gentle-ai/v4
+module github.com/jonsanchezr/agent-smith/v4
 
 go 1.25.10
 
@@ -44,3 +44,4 @@ require (
 	modernc.org/mathutil v1.7.1 // indirect
 	modernc.org/memory v1.12.1 // indirect
 )
+

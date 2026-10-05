@@ -6,7 +6,7 @@ import (
 	"runtime"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/agents/pi"
+	"github.com/jonsanchezr/agent-smith/v4/internal/agents/pi"
 )
 
 func TestRetirePiSystemPromptBlocksPreservesUnownedAndIsIdempotent(t *testing.T) {
@@ -16,7 +16,7 @@ func TestRetirePiSystemPromptBlocksPreservesUnownedAndIsIdempotent(t *testing.T)
 	if err := os.MkdirAll(filepath.Dir(path), 0o755); err != nil {
 		t.Fatal(err)
 	}
-	input := "user\n<!-- gentle-ai:persona -->\npersona\n<!-- /gentle-ai:persona -->\n<!-- gentle-ai:agent-routing -->\nrouting\n<!-- /gentle-ai:agent-routing -->\n<!-- gentle-ai:unknown -->\nkeep\n<!-- /gentle-ai:unknown -->\n"
+	input := "user\n<!-- agent-smith:persona -->\npersona\n<!-- /agent-smith:persona -->\n<!-- agent-smith:agent-routing -->\nrouting\n<!-- /agent-smith:agent-routing -->\n<!-- agent-smith:unknown -->\nkeep\n<!-- /agent-smith:unknown -->\n"
 	if err := os.WriteFile(path, []byte(input), 0o600); err != nil {
 		t.Fatal(err)
 	}
@@ -24,7 +24,7 @@ func TestRetirePiSystemPromptBlocksPreservesUnownedAndIsIdempotent(t *testing.T)
 	if err != nil || !first.Changed {
 		t.Fatalf("first cleanup = %+v, %v", first, err)
 	}
-	want := "user\n\n\n<!-- gentle-ai:unknown -->\nkeep\n<!-- /gentle-ai:unknown -->\n"
+	want := "user\n\n\n<!-- agent-smith:unknown -->\nkeep\n<!-- /agent-smith:unknown -->\n"
 	if got, err := os.ReadFile(path); err != nil || string(got) != want {
 		t.Fatalf("content = %q, %v", got, err)
 	}
@@ -44,7 +44,7 @@ func TestRetirePiSystemPromptBlocksPreservesUnpairedMarkerAndMode(t *testing.T) 
 	if err := os.MkdirAll(filepath.Dir(path), 0o755); err != nil {
 		t.Fatal(err)
 	}
-	input := "user\r\n<!-- gentle-ai:persona -->\r\nmanaged\r\n<!-- /gentle-ai:persona -->\r\ntail"
+	input := "user\r\n<!-- agent-smith:persona -->\r\nmanaged\r\n<!-- /agent-smith:persona -->\r\ntail"
 	if err := os.WriteFile(path, []byte(input), 0o600); err != nil {
 		t.Fatal(err)
 	}
@@ -60,7 +60,7 @@ func TestRetirePiSystemPromptBlocksPreservesUnpairedMarkerAndMode(t *testing.T) 
 			t.Fatalf("mode = %v, %v; want 0600", info, err)
 		}
 	}
-	unpaired := "<!-- gentle-ai:persona -->\nunpaired"
+	unpaired := "<!-- agent-smith:persona -->\nunpaired"
 	if err := os.WriteFile(path, []byte(unpaired), 0o600); err != nil {
 		t.Fatal(err)
 	}
@@ -80,7 +80,7 @@ func TestRetirePiSystemPromptBlocksRemovesOwnedEmptyFile(t *testing.T) {
 	if err := os.MkdirAll(filepath.Dir(path), 0o755); err != nil {
 		t.Fatal(err)
 	}
-	if err := os.WriteFile(path, []byte("  \n<!-- gentle-ai:persona -->\nmanaged\n<!-- /gentle-ai:persona -->\n"), 0o600); err != nil {
+	if err := os.WriteFile(path, []byte("  \n<!-- agent-smith:persona -->\nmanaged\n<!-- /agent-smith:persona -->\n"), 0o600); err != nil {
 		t.Fatal(err)
 	}
 	result, err := RetirePiSystemPromptBlocks(home, adapter)
@@ -132,7 +132,7 @@ func TestRetirePiSystemPromptBlocksAllowsSymlinkedParent(t *testing.T) {
 	if err := os.Symlink(realParent, parent); err != nil {
 		t.Skipf("symlinks unavailable: %v", err)
 	}
-	if err := os.WriteFile(path, []byte("<!-- gentle-ai:persona -->\nmanaged\n<!-- /gentle-ai:persona -->\nuser"), 0o600); err != nil {
+	if err := os.WriteFile(path, []byte("<!-- agent-smith:persona -->\nmanaged\n<!-- /agent-smith:persona -->\nuser"), 0o600); err != nil {
 		t.Fatal(err)
 	}
 	result, err := RetirePiSystemPromptBlocks(home, adapter)
@@ -143,3 +143,4 @@ func TestRetirePiSystemPromptBlocksAllowsSymlinkedParent(t *testing.T) {
 		t.Fatalf("linked-parent content = %q, %v", got, err)
 	}
 }
+

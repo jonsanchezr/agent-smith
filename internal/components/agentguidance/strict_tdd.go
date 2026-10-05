@@ -7,10 +7,10 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/agents"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/components/filemerge"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/components/opencodedefault"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
+	"github.com/jonsanchezr/agent-smith/v4/internal/agents"
+	"github.com/jonsanchezr/agent-smith/v4/internal/components/filemerge"
+	"github.com/jonsanchezr/agent-smith/v4/internal/components/opencodedefault"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
 )
 
 const strictTDDContent = "Strict TDD Mode: enabled"
@@ -58,7 +58,7 @@ func InjectStrictTDDWithOptions(targetDir string, agent model.AgentID, enabled b
 		if err != nil {
 			return Result{}, err
 		}
-		if !enabled && !strings.Contains(prompt, "<!-- gentle-ai:strict-tdd-mode -->") {
+		if !enabled && !strings.Contains(prompt, "<!-- agent-smith:strict-tdd-mode -->") {
 			return Result{}, nil
 		}
 		content := strictTDDContent
@@ -111,7 +111,7 @@ func InjectStrictTDDWithOptions(targetDir string, agent model.AgentID, enabled b
 		}
 		return Result{Changed: written.Changed, Files: []string{path}}, nil
 	}
-	if !enabled && (!exists || !strings.Contains(string(current), "<!-- gentle-ai:strict-tdd-mode -->")) {
+	if !enabled && (!exists || !strings.Contains(string(current), "<!-- agent-smith:strict-tdd-mode -->")) {
 		return Result{}, nil
 	}
 	content := strictTDDContent
@@ -128,3 +128,4 @@ func InjectStrictTDDWithOptions(targetDir string, agent model.AgentID, enabled b
 	}
 	return Result{Changed: written.Changed, Files: []string{path}}, nil
 }
+

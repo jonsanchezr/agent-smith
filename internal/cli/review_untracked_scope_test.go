@@ -8,7 +8,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/reviewtransaction"
+	"github.com/jonsanchezr/agent-smith/v4/internal/reviewtransaction"
 )
 
 // Issue #2394. An untracked, unignored file that merely sits in the worktree
@@ -141,3 +141,4 @@ func TestReviewerLensContextOmitsUndeclaredUntrackedBytes(t *testing.T) {
 		t.Fatalf("fixture credential file is missing, so the assertions proved nothing: %v", err)
 	}
 }
+

@@ -1,8 +1,8 @@
 package planner
 
 import (
-	"github.com/gentleman-programming/gentle-ai/v4/internal/catalog"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
+	"github.com/jonsanchezr/agent-smith/v4/internal/catalog"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
 )
 
 func BuildReviewPayload(selection model.Selection, resolved ResolvedPlan) ReviewPayload {
@@ -60,3 +60,4 @@ func agentNotesFor(agents []model.AgentID) []AgentNote {
 	}
 	return notes
 }
+

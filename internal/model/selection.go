@@ -71,7 +71,7 @@ func (s *Selection) EnsureComponent(component ComponentID) {
 // This is the shared rule used by both the CLI (RestorePersistedSelection)
 // and the TUI (applyOverrides) sync entry points: a persisted component
 // selection that omits "sdd" must not silently swallow that explicit
-// request. See https://github.com/Gentleman-Programming/gentle-ai/issues/3430 —
+// request. See https://github.com/jonsanchezr/agent-smith/issues/3430 —
 // both entry points restore Components from state.json, dropping ComponentSDD
 // whenever the persisted selection predates that component being chosen; the
 // componentSyncStep that writes profiles/model assignments into
@@ -106,3 +106,4 @@ type SyncOverrides struct {
 	StrictTDD                        *bool                            // nil = no override; non-nil = override strict TDD mode
 	Profiles                         []Profile                        // NEW: profile creation/updates during sync
 }
+

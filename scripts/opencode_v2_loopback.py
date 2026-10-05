@@ -1,4 +1,4 @@
-"""Deterministic test-only provider and observer; never real review admission."""
+﻿"""Deterministic test-only provider and observer; never real review admission."""
 from contextlib import contextmanager
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 import hashlib
@@ -363,7 +363,7 @@ def prove_generic_dispatch(request, observation_log, requests, failures):
 
 def prove_dispatch(request, observation_log, requests, failures):
     # Legacy review conformance is deliberately separate from generic dispatch.
-    shell = request("/api/shell", {"command": "gentle-ai review opencode-transport </dev/null", "timeout": 5000})["data"]
+    shell = request("/api/shell", {"command": "agent-smith review opencode-transport </dev/null", "timeout": 5000})["data"]
     deadline = time.monotonic() + 10
     while shell["status"] == "running" and time.monotonic() < deadline:
         time.sleep(0.1)
@@ -382,3 +382,4 @@ def prove_dispatch(request, observation_log, requests, failures):
     assert negative_results, "native refusal did not reach parent tool result"
     assert not failures, "unexpected network/provider requests: " + repr(failures)
     assert not any(item["type"] == "forbidden-network" for item in observations)
+

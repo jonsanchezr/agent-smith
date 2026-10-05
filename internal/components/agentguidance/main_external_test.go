@@ -4,9 +4,9 @@ import (
 	"os"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/components/agentguidance"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/components/reviewassets"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/testenv"
+	"github.com/jonsanchezr/agent-smith/v4/internal/components/agentguidance"
+	"github.com/jonsanchezr/agent-smith/v4/internal/components/reviewassets"
+	"github.com/jonsanchezr/agent-smith/v4/internal/testenv"
 )
 
 // TestMain wires the production review contract source the installer
@@ -20,3 +20,4 @@ func TestMain(m *testing.M) {
 	agentguidance.SetReviewContractSource(reviewassets.ReviewExecutionContractFor)
 	os.Exit(m.Run())
 }
+

@@ -6,8 +6,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/agents"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
+	"github.com/jonsanchezr/agent-smith/v4/internal/agents"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
 )
 
 func TestStrictTDDCarrierLifecycle(t *testing.T) {
@@ -106,3 +106,4 @@ func TestStrictTDDModifiedKimiModuleFailsClosed(t *testing.T) {
 		}
 	}
 }
+

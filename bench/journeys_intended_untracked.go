@@ -85,7 +85,7 @@ func selectIntendedUntrackedAndRunPrintedStart(r *journeyRun) error {
 		return fmt.Errorf("initial Pi STATUS = %+v", initial)
 	}
 	input := initial.NextTransition.Collect.Inputs[0]
-	if input.Name != "intended_untracked_selection" || input.Schema != "gentle-ai.review-intended-untracked-selection/v1" ||
+	if input.Name != "intended_untracked_selection" || input.Schema != "agent-smith.review-intended-untracked-selection/v1" ||
 		input.CaptureOperation != "external.select_intended_untracked" || input.Submission == nil {
 		return fmt.Errorf("initial intended-untracked submission = %+v", input)
 	}
@@ -101,7 +101,7 @@ func selectIntendedUntrackedAndRunPrintedStart(r *journeyRun) error {
 	}
 	selectedPaths := []string{"docs/chosen, file.md", "docs/second file,with comma.md"}
 	answer, err := json.Marshal(closedIntendedUntrackedSelection{
-		Schema:                     "gentle-ai.review-intended-untracked-selection/v1",
+		Schema:                     "agent-smith.review-intended-untracked-selection/v1",
 		UntrackedScope:             "select",
 		ExpectedUntrackedInventory: inventory,
 		IntendedUntracked:          selectedPaths,
@@ -147,7 +147,7 @@ func selectIntendedUntrackedAndRunPrintedStart(r *journeyRun) error {
 func intendedUntrackedSelectionSubmissionArguments(descriptor *waveSubmissionDescriptor, value string) ([]string, error) {
 	if descriptor == nil || descriptor.OperationToken != "status" || descriptor.Value == nil || len(descriptor.Values) != 0 ||
 		descriptor.Value.Slot != "intended_untracked_selection" || descriptor.Value.Domain != "schema_bound_json" ||
-		descriptor.Value.Schema != "gentle-ai.review-intended-untracked-selection/v1" ||
+		descriptor.Value.Schema != "agent-smith.review-intended-untracked-selection/v1" ||
 		descriptor.Value.SubstitutionLocation < 0 || descriptor.Value.SubstitutionLocation >= len(descriptor.ArgumentTokens) {
 		return nil, fmt.Errorf("intended-untracked submission descriptor = %+v", descriptor)
 	}
@@ -572,3 +572,4 @@ func intendedUntrackedJourneys() []Journey {
 		},
 	}
 }
+

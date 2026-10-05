@@ -10,7 +10,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/system"
+	"github.com/jonsanchezr/agent-smith/v4/internal/system"
 )
 
 func TestResolveCapabilityVersionTable(t *testing.T) {
@@ -644,3 +644,4 @@ func TestActivationRestoresLauncherExecutableModeWhenContentMatches(t *testing.T
 		t.Fatalf("launcher mode after re-activation = %v, want 0755", got)
 	}
 }
+

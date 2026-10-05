@@ -9,8 +9,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/telemetry"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
+	"github.com/jonsanchezr/agent-smith/v4/internal/telemetry"
 )
 
 type openCodeTestRoundTrip func(*http.Request) (*http.Response, error)
@@ -30,7 +30,7 @@ func TestSendOpenCodeReadsAssignmentFromRealisticLargeConfig(t *testing.T) {
 	if err := telemetry.Save(home, telemetry.State{InstallID: "local", Enabled: true, NoticeShown: true}); err != nil {
 		t.Fatal(err)
 	}
-	config := `{"padding":"` + strings.Repeat("x", 70*1024) + `","agent":{"gentle-orchestrator":{"model":"openai/gpt-5.6-sol","variant":"medium"}}}`
+	config := `{"padding":"` + strings.Repeat("x", 70*1024) + `","agent":{"agent-smith-orchestrator":{"model":"openai/gpt-5.6-sol","variant":"medium"}}}`
 	path := filepath.Join(home, ".config", "opencode", "opencode.json")
 	if err := os.MkdirAll(filepath.Dir(path), 0o700); err != nil {
 		t.Fatal(err)
@@ -48,9 +48,9 @@ func TestSendOpenCodeReadsAssignmentFromRealisticLargeConfig(t *testing.T) {
 		if err != nil {
 			t.Fatal(err)
 		}
-		return &http.Response{StatusCode: http.StatusOK, Header: make(http.Header), Body: io.NopCloser(strings.NewReader(`{"schema":"gentle-ai.telemetry-runtime-delivery/v1","decision":"stored"}`))}, nil
+		return &http.Response{StatusCode: http.StatusOK, Header: make(http.Header), Body: io.NopCloser(strings.NewReader(`{"schema":"agent-smith.telemetry-runtime-delivery/v1","decision":"stored"}`))}, nil
 	})}
-	envelope := `{"schema":"gentle-ai.telemetry-opencode/v1","info":{"role":"assistant","time":{"created":1,"completed":3},"providerID":"openai","modelID":"gpt-5.6-sol","agent":"gentle-orchestrator"}}`
+	envelope := `{"schema":"agent-smith.telemetry-opencode/v1","info":{"role":"assistant","time":{"created":1,"completed":3},"providerID":"openai","modelID":"gpt-5.6-sol","agent":"agent-smith-orchestrator"}}`
 	if decision := SendOpenCode(context.Background(), home, os.Getenv, strings.NewReader(envelope), client); decision != "stored" {
 		t.Fatalf("SendOpenCode() decision = %q, want stored", decision)
 	}
@@ -76,7 +76,7 @@ func TestReadOpenCodeAssignment(t *testing.T) {
 			agent:  "sdd-apply",
 			want:   model.ModelAssignment{ProviderID: "openai", ModelID: "gpt-5.6", Effort: "high"},
 		},
-		{name: "reads orchestrator assignment", config: `{"agent":{"gentle-orchestrator":{"model":"openai/gpt-5.6-sol","variant":"medium"}}}`, agent: "gentle-orchestrator", want: model.ModelAssignment{ProviderID: "openai", ModelID: "gpt-5.6-sol", Effort: "medium"}},
+		{name: "reads orchestrator assignment", config: `{"agent":{"agent-smith-orchestrator":{"model":"openai/gpt-5.6-sol","variant":"medium"}}}`, agent: "agent-smith-orchestrator", want: model.ModelAssignment{ProviderID: "openai", ModelID: "gpt-5.6-sol", Effort: "medium"}},
 		{name: "reads native build assignment", config: `{"agent":{"build":{"model":"openai/gpt-5.6","variant":"low"}}}`, agent: "build", want: model.ModelAssignment{ProviderID: "openai", ModelID: "gpt-5.6", Effort: "low"}},
 		{name: "reads native plan assignment", config: `{"agent":{"plan":{"model":"openai/gpt-5.6","variant":"max"}}}`, agent: "plan", want: model.ModelAssignment{ProviderID: "openai", ModelID: "gpt-5.6", Effort: "max"}},
 		{name: "reads custom assignment without filtering", config: `{"agent":{"private-agent":{"model":"anthropic/claude-opus-5","variant":"xhigh"}}}`, agent: "private-agent", want: model.ModelAssignment{ProviderID: "anthropic", ModelID: "claude-opus-5", Effort: "xhigh"}},
@@ -206,13 +206,13 @@ func TestSendOpenCodeResolvesConfiguredReasoningEffort(t *testing.T) {
 				if err != nil {
 					t.Fatal(err)
 				}
-				return &http.Response{StatusCode: http.StatusOK, Header: make(http.Header), Body: io.NopCloser(strings.NewReader(`{"schema":"gentle-ai.telemetry-runtime-delivery/v1","decision":"stored"}`))}, nil
+				return &http.Response{StatusCode: http.StatusOK, Header: make(http.Header), Body: io.NopCloser(strings.NewReader(`{"schema":"agent-smith.telemetry-runtime-delivery/v1","decision":"stored"}`))}, nil
 			})}
 			agent := ""
 			if tt.agent != "" {
 				agent = `,"agent":"` + tt.agent + `"`
 			}
-			envelope := `{"schema":"gentle-ai.telemetry-opencode/` + tt.schema + `","info":{"role":"assistant","time":{"created":1,"completed":3},"providerID":"openai","modelID":"gpt-5.6"` + agent + `}}`
+			envelope := `{"schema":"agent-smith.telemetry-opencode/` + tt.schema + `","info":{"role":"assistant","time":{"created":1,"completed":3},"providerID":"openai","modelID":"gpt-5.6"` + agent + `}}`
 			if decision := SendOpenCode(context.Background(), home, os.Getenv, strings.NewReader(envelope), client); decision != "stored" {
 				t.Fatalf("SendOpenCode() decision = %q, want stored", decision)
 			}
@@ -228,3 +228,4 @@ func TestSendOpenCodeResolvesConfiguredReasoningEffort(t *testing.T) {
 		})
 	}
 }
+

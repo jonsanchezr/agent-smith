@@ -9,9 +9,9 @@ import (
 	"runtime"
 	"strings"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/agents"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/components/filemerge"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
+	"github.com/jonsanchezr/agent-smith/v4/internal/agents"
+	"github.com/jonsanchezr/agent-smith/v4/internal/components/filemerge"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
 )
 
 type Result struct {
@@ -19,11 +19,11 @@ type Result struct {
 	Files   []string
 }
 
-const claudeLegacySkillRegistryCommand = `gentle-ai skill-registry refresh --quiet --no-gitignore --cwd "${CLAUDE_PROJECT_DIR:-$PWD}" || true`
+const claudeLegacySkillRegistryCommand = `agent-smith skill-registry refresh --quiet --no-gitignore --cwd "${CLAUDE_PROJECT_DIR:-$PWD}" || true`
 
 func claudeSkillRegistryCommand(platform string) string {
 	if platform == "windows" {
-		return `powershell -NoProfile -Command 'if (Test-Path env:CLAUDE_PROJECT_DIR) { $dir = $env:CLAUDE_PROJECT_DIR } else { $dir = $PWD }; gentle-ai skill-registry refresh --quiet --no-gitignore --cwd "$dir"; exit 0'`
+		return `powershell -NoProfile -Command 'if (Test-Path env:CLAUDE_PROJECT_DIR) { $dir = $env:CLAUDE_PROJECT_DIR } else { $dir = $PWD }; agent-smith skill-registry refresh --quiet --no-gitignore --cwd "$dir"; exit 0'`
 	}
 	return claudeLegacySkillRegistryCommand
 }
@@ -81,7 +81,7 @@ func installSkillRegistry(homeDir string, adapter agents.Adapter, platform strin
 	case model.AgentCodex:
 		path = filepath.Join(adapter.GlobalConfigDir(homeDir), "hooks.json")
 		event = "SessionStart"
-		command = `gentle-ai skill-registry refresh --quiet --no-gitignore --cwd "$PWD" || true`
+		command = `agent-smith skill-registry refresh --quiet --no-gitignore --cwd "$PWD" || true`
 	case model.AgentClaudeCode:
 		path = adapter.SettingsPath(homeDir)
 		event = "UserPromptSubmit"
@@ -161,3 +161,4 @@ func installSkillRegistry(homeDir string, adapter agents.Adapter, platform strin
 	}
 	return Result{Changed: wr.Changed, Files: []string{path}}, nil
 }
+

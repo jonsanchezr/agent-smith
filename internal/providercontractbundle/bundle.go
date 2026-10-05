@@ -23,12 +23,12 @@ import (
 	"strings"
 	"time"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/reviewerprovider"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
+	"github.com/jonsanchezr/agent-smith/v4/internal/reviewerprovider"
 )
 
 const (
-	bundleSchema             = "gentle-ai.review-provider-contract-bundle/v1"
+	bundleSchema             = "agent-smith.review-provider-contract-bundle/v1"
 	contractSemverFile       = "contracts/review-provider-contract/CONTRACT_SEMVER"
 	maxArchiveBytes    int64 = 8 << 20
 	maxFileBytes       int64 = 4 << 20
@@ -145,7 +145,7 @@ type manifest struct {
 // orchestrationRuntimeIdentities is deliberately closed, the same discipline
 // reviewerprovider applies to registeredRuntimeIdentities: a runtime is added
 // here only once it has no other delivery channel for the review execution
-// contract inside Gentle AI's own installer (no system prompt, skill, or
+// contract inside Agent Smith's own installer (no system prompt, skill, or
 // file-subagent surface to splice generic SDD composition into), so this
 // bundle becomes that runtime's sole channel. Pi is first: its capability
 // manifest advertises MCP only, so its contract does not reach gentle-pi
@@ -212,16 +212,16 @@ func validPiFacadeLifecycle(content string) bool {
 			return false
 		}
 	}
-	// The user-owned kill switch (`gentle-ai review mode ...`) is ordinary CLI
+	// The user-owned kill switch (`agent-smith review mode ...`) is ordinary CLI
 	// with no facade operation, so the contract may legitimately name it; every
-	// other raw "gentle-ai review " lifecycle route is still forbidden.
-	stripped := strings.ReplaceAll(content, "gentle-ai review mode ", "")
-	return !strings.Contains(stripped, "gentle-ai review ")
+	// other raw "agent-smith review " lifecycle route is still forbidden.
+	stripped := strings.ReplaceAll(content, "agent-smith review mode ", "")
+	return !strings.Contains(stripped, "agent-smith review ")
 }
 
-var bundleREADME = []byte(`# Gentle AI review provider contract
+var bundleREADME = []byte(`# Agent Smith review provider contract
 
-This data-only bundle describes the provider result contracts admitted by Gentle AI.
+This data-only bundle describes the provider result contracts admitted by Agent Smith.
 
 ## Activation
 
@@ -234,7 +234,7 @@ This data-only bundle describes the provider result contracts admitted by Gentle
 
 manifest.json's orchestration array lists, for closed runtimes only, one
 orchestration/<runtime>.md file: the exact review execution contract text
-Gentle AI's own installer would have spliced into that runtime's system
+Agent Smith's own installer would have spliced into that runtime's system
 prompt, for a runtime whose adapter has no system prompt to splice it into.
 It carries no executable content, same as every other file in this bundle: a
 runtime mirrors and delivers the text as-is and still relies on Go for every
@@ -801,3 +801,4 @@ func sortedFileNames(files map[string][]byte) []string {
 	sort.Strings(names)
 	return names
 }
+

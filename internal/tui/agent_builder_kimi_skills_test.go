@@ -5,7 +5,7 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
 )
 
 // TestAgentBuilderSkillsDirIn_KimiPrefersCurrentLayout verifies that the
@@ -75,3 +75,4 @@ func TestAgentBuilderSkillsDirIn_KimiUnexpectedStatErrorOmitsKimi(t *testing.T) 
 		t.Errorf("agentBuilderSkillsDirIn(kimi) = %q, want empty on unexpected stat error", got)
 	}
 }
+

@@ -13,11 +13,11 @@ import (
 	"testing"
 	"time"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/reviewtransaction"
+	"github.com/jonsanchezr/agent-smith/v4/internal/reviewtransaction"
 )
 
 const (
-	inspectAuthorityTestSchema    = "gentle-ai.review-authority-inspection/v1"
+	inspectAuthorityTestSchema    = "agent-smith.review-authority-inspection/v1"
 	inspectAuthorityTestOperation = "review/inspect-authority"
 )
 
@@ -39,7 +39,7 @@ func TestReviewInspectAuthorityHelpAndArguments(t *testing.T) {
 		if err := RunReview([]string{"inspect-authority", "--help"}, &output); err != nil {
 			t.Fatalf("review inspect-authority --help: %v", err)
 		}
-		if !strings.Contains(output.String(), "Usage: gentle-ai review inspect-authority [flags]") ||
+		if !strings.Contains(output.String(), "Usage: agent-smith review inspect-authority [flags]") ||
 			!strings.Contains(output.String(), "--cwd <value>") {
 			t.Fatalf("inspect-authority help:\n%s", output.String())
 		}
@@ -254,7 +254,7 @@ func writeInspectCLIRecoveryPair(t *testing.T, repo, prefix string, unchanged bo
 		RecoveredAt: time.Date(2026, 7, 21, 12, 0, 0, 0, time.UTC), MaintainerAuthorization: authorization,
 	}
 	if authorization == "" {
-		successor.Recovery.MaintainerAuthorization = "gentle-ai.review-recovery-authorization/v1\npredecessor_lineage=" + predecessor.LineageID +
+		successor.Recovery.MaintainerAuthorization = "agent-smith.review-recovery-authorization/v1\npredecessor_lineage=" + predecessor.LineageID +
 			"\npredecessor_revision=" + predecessorRevision + "\ntarget_identity=" + successor.InitialSnapshot.Identity +
 			"\nactor=maintainer@example.com\nreason=retry"
 	}
@@ -321,3 +321,4 @@ func containsInspectCLIString(values []string, want string) bool {
 	}
 	return false
 }
+

@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/reviewtransaction"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/tui/styles"
+	"github.com/jonsanchezr/agent-smith/v4/internal/reviewtransaction"
+	"github.com/jonsanchezr/agent-smith/v4/internal/tui/styles"
 )
 
 // ReviewStoreResetConfirmOptionCount reports how many options the confirmation
@@ -121,7 +121,7 @@ func RenderReviewStoreResetConfirm(report reviewtransaction.StoreResetReport, su
 		b.WriteString("\n")
 		b.WriteString(styles.UnselectedStyle.Render("Finish or abandon them first. To remove them anyway, run:"))
 		b.WriteString("\n")
-		b.WriteString(styles.SelectedStyle.Render("  gentle-ai review store-reset --cwd " + report.Repository + " --confirm --include-in-flight"))
+		b.WriteString(styles.SelectedStyle.Render("  agent-smith review store-reset --cwd " + report.Repository + " --confirm --include-in-flight"))
 		b.WriteString("\n\n")
 		b.WriteString(renderOptions(ReviewStoreResetConfirmOptions(report, surveyErr), cursor))
 		b.WriteString("\n")
@@ -236,3 +236,4 @@ func ReviewStoreResetBytes(bytes int64) string {
 	}
 	return fmt.Sprintf("%.1f %sB", value, []string{"K", "M", "G", "T"}[exponent])
 }
+

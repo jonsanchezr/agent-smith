@@ -10,14 +10,14 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/components/filemerge"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/components/opencodeagents"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/system"
+	"github.com/jonsanchezr/agent-smith/v4/internal/components/filemerge"
+	"github.com/jonsanchezr/agent-smith/v4/internal/components/opencodeagents"
+	"github.com/jonsanchezr/agent-smith/v4/internal/system"
 )
 
 // kiloParityAgentNames is the Kilo agent set: the v3.7.0 Judgment Day roles
 // (#4471). Kilo never received review-validator (it hosts no provider relay)
-// nor the gentle-ai-* ODD trio (its orchestrator routes to native
+// nor the agent-smith-* ODD trio (its orchestrator routes to native
 // delegation), and it receives no review agent at all because receipt-driven
 // development ships only to its own runtimes.
 var kiloParityAgentNames = []string{
@@ -25,7 +25,7 @@ var kiloParityAgentNames = []string{
 }
 
 // kiloRetiredReviewAgentNames are the RDD agents earlier releases installed on
-// Kilo; upgrades remove the entries Gentle AI owns.
+// Kilo; upgrades remove the entries Agent Smith owns.
 var kiloRetiredReviewAgentNames = []string{
 	"review-risk", "review-readability", "review-reliability", "review-resilience",
 	"review-refuter", "review-validator",
@@ -62,7 +62,7 @@ func assertKiloParityAgents(t *testing.T, agents map[string]any) {
 			t.Fatalf("Kilo agent %q missing permission: %#v", name, entry)
 		}
 	}
-	for _, name := range append([]string{"gentle-ai-explore", "gentle-ai-verify", "gentle-ai-worker"}, kiloRetiredReviewAgentNames...) {
+	for _, name := range append([]string{"agent-smith-explore", "agent-smith-verify", "agent-smith-worker"}, kiloRetiredReviewAgentNames...) {
 		if _, ok := agents[name]; ok {
 			t.Fatalf("Kilo must not install %q", name)
 		}
@@ -73,17 +73,17 @@ func assertKiloParityAgents(t *testing.T, agents map[string]any) {
 			t.Fatalf("Kilo agent %q still carries __managed_by (#4471): %#v", name, entry)
 		}
 	}
-	orchestrator, _ := agents["gentle-orchestrator"].(map[string]any)
+	orchestrator, _ := agents["agent-smith-orchestrator"].(map[string]any)
 	permission, _ := orchestrator["permission"].(map[string]any)
 	task, _ := permission["task"].(map[string]any)
 	for _, name := range kiloParityAgentNames {
 		if task[name] != "allow" {
-			t.Fatalf("Kilo gentle-orchestrator does not allow delegating to %q: %#v", name, task)
+			t.Fatalf("Kilo agent-smith-orchestrator does not allow delegating to %q: %#v", name, task)
 		}
 	}
 	for _, name := range kiloRetiredReviewAgentNames {
 		if _, ok := task[name]; ok {
-			t.Fatalf("Kilo gentle-orchestrator still delegates to RDD agent %q: %#v", name, task)
+			t.Fatalf("Kilo agent-smith-orchestrator still delegates to RDD agent %q: %#v", name, task)
 		}
 	}
 }
@@ -182,7 +182,7 @@ func TestKiloUpgradeRetiresOwnedAgents(t *testing.T) {
 			if !reflect.DeepEqual(agents["other-marked"], map[string]any{"prompt": "keep this"}) {
 				t.Error("unknown marked agent changed beyond marker removal")
 			}
-			for _, name := range append([]string{"gentle-orchestrator"}, kiloParityAgentNames...) {
+			for _, name := range append([]string{"agent-smith-orchestrator"}, kiloParityAgentNames...) {
 				entry := agents[name].(map[string]any)
 				if _, stale := entry["tools"]; stale {
 					t.Errorf("%s retained stale v3.7.0 tools", name)
@@ -190,7 +190,7 @@ func TestKiloUpgradeRetiresOwnedAgents(t *testing.T) {
 			}
 			for name, want := range map[string]map[string]any{
 				"jd-judge-a":          {"model": "user/judge", "variant": "low"},
-				"gentle-orchestrator": {"model": "user/orchestrator"},
+				"agent-smith-orchestrator": {"model": "user/orchestrator"},
 			} {
 				entry := agents[name].(map[string]any)
 				for field, value := range want {
@@ -210,7 +210,7 @@ func TestKiloUpgradeRetiresOwnedAgents(t *testing.T) {
 // TestKiloUpgradeRemovesOwnedReviewAgentsAndKeepsUserOnes seeds the review
 // agents an earlier release wrote to Kilo in the managed shape, next to a
 // user's own review agent under an RDD name, and proves install and sync
-// remove only Gentle AI's entries and their orchestrator task permissions.
+// remove only Agent Smith's entries and their orchestrator task permissions.
 func TestKiloUpgradeRemovesOwnedReviewAgentsAndKeepsUserOnes(t *testing.T) {
 	for _, tc := range []struct {
 		name string
@@ -251,7 +251,7 @@ func TestKiloUpgradeRemovesOwnedReviewAgentsAndKeepsUserOnes(t *testing.T) {
 			withModel["model"] = "user/risk"
 			// A user's own agent under an RDD name is never ours.
 			agents["review-readability"] = map[string]any{"mode": "subagent", "prompt": "My own readability reviewer", "model": "user/readability"}
-			agents["gentle-orchestrator"] = map[string]any{"model": "user/orchestrator", "permission": map[string]any{"task": task}}
+			agents["agent-smith-orchestrator"] = map[string]any{"model": "user/orchestrator", "permission": map[string]any{"task": task}}
 			seed, err := json.MarshalIndent(map[string]any{"agent": agents}, "", "  ")
 			if err != nil {
 				t.Fatal(err)
@@ -275,7 +275,7 @@ func TestKiloUpgradeRemovesOwnedReviewAgentsAndKeepsUserOnes(t *testing.T) {
 			if user["prompt"] != "My own readability reviewer" || user["model"] != "user/readability" {
 				t.Errorf("user-owned review-readability changed: %#v", after["review-readability"])
 			}
-			orchestrator, _ := after["gentle-orchestrator"].(map[string]any)
+			orchestrator, _ := after["agent-smith-orchestrator"].(map[string]any)
 			permission, _ := orchestrator["permission"].(map[string]any)
 			gotTask, _ := permission["task"].(map[string]any)
 			for _, name := range []string{"review-risk", "review-reliability", "review-resilience", "review-refuter", "review-validator"} {
@@ -288,11 +288,11 @@ func TestKiloUpgradeRemovesOwnedReviewAgentsAndKeepsUserOnes(t *testing.T) {
 			}
 			for _, name := range kiloParityAgentNames {
 				if gotTask[name] != "allow" {
-					t.Errorf("Kilo gentle-orchestrator does not allow delegating to %q: %#v", name, gotTask)
+					t.Errorf("Kilo agent-smith-orchestrator does not allow delegating to %q: %#v", name, gotTask)
 				}
 			}
 			if orchestrator["model"] != "user/orchestrator" {
-				t.Errorf("gentle-orchestrator lost the user model: %#v", orchestrator)
+				t.Errorf("agent-smith-orchestrator lost the user model: %#v", orchestrator)
 			}
 			tc.run(t)
 			if second, _ := os.ReadFile(path); !bytes.Equal(first, second) {
@@ -310,7 +310,7 @@ func TestRetireKiloReviewAgentsPreservesSettingsMode(t *testing.T) {
 	}
 	seed, err := json.Marshal(map[string]any{"agent": map[string]any{
 		"review-risk":         shape,
-		"gentle-orchestrator": map[string]any{"permission": map[string]any{"task": map[string]any{"review-risk": "allow", "jd-judge-a": "allow"}}},
+		"agent-smith-orchestrator": map[string]any{"permission": map[string]any{"task": map[string]any{"review-risk": "allow", "jd-judge-a": "allow"}}},
 	}})
 	if err != nil {
 		t.Fatal(err)
@@ -334,7 +334,7 @@ func TestRetireKiloReviewAgentsPreservesSettingsMode(t *testing.T) {
 	if _, ok := agents["review-risk"]; ok {
 		t.Fatalf("managed review-risk survived: %s", raw)
 	}
-	task := agents["gentle-orchestrator"].(map[string]any)["permission"].(map[string]any)["task"].(map[string]any)
+	task := agents["agent-smith-orchestrator"].(map[string]any)["permission"].(map[string]any)["task"].(map[string]any)
 	if _, ok := task["review-risk"]; ok || task["jd-judge-a"] != "allow" {
 		t.Fatalf("task permissions = %#v, want only review-risk dropped", task)
 	}
@@ -345,7 +345,7 @@ func TestRetireKiloReviewAgentsPreservesSettingsMode(t *testing.T) {
 
 // TestKiloReviewTaskPermissionCleanupRequiresOwnershipProof proves install and
 // sync drop an orchestrator task permission for a review agent only when this
-// run removed that agent as Gentle AI's: in the managed shape, or under the
+// run removed that agent as Agent Smith's: in the managed shape, or under the
 // v3.7.0 __managed_by marker. A permission whose agent was already absent is the
 // user's and survives.
 func TestKiloReviewTaskPermissionCleanupRequiresOwnershipProof(t *testing.T) {
@@ -379,7 +379,7 @@ func TestKiloReviewTaskPermissionCleanupRequiresOwnershipProof(t *testing.T) {
 		{"user permission without agent entry survives", map[string]any{}, true, false},
 		{"managed entry and its permission are removed", map[string]any{"review-risk": managedRisk}, false, false},
 		{"legacy marked entry and its permission are removed", map[string]any{
-			"review-risk": map[string]any{"__managed_by": "gentle-ai/sdd", "mode": "subagent", "prompt": "legacy"},
+			"review-risk": map[string]any{"__managed_by": "agent-smith/sdd", "mode": "subagent", "prompt": "legacy"},
 		}, false, false},
 	} {
 		for _, run := range runs {
@@ -390,7 +390,7 @@ func TestKiloReviewTaskPermissionCleanupRequiresOwnershipProof(t *testing.T) {
 					t.Fatal(err)
 				}
 				agents := map[string]any{
-					"gentle-orchestrator": map[string]any{"permission": map[string]any{"task": map[string]any{"review-risk": "allow"}}},
+					"agent-smith-orchestrator": map[string]any{"permission": map[string]any{"task": map[string]any{"review-risk": "allow"}}},
 				}
 				for name, entry := range tc.agents {
 					agents[name] = entry
@@ -412,7 +412,7 @@ func TestKiloReviewTaskPermissionCleanupRequiresOwnershipProof(t *testing.T) {
 				if _, got := after["review-risk"]; got != tc.wantAgent {
 					t.Errorf("review-risk agent present = %v, want %v:\n%s", got, tc.wantAgent, first)
 				}
-				orchestrator, _ := after["gentle-orchestrator"].(map[string]any)
+				orchestrator, _ := after["agent-smith-orchestrator"].(map[string]any)
 				permission, _ := orchestrator["permission"].(map[string]any)
 				task, _ := permission["task"].(map[string]any)
 				if _, got := task["review-risk"]; got != tc.wantTask {
@@ -426,3 +426,4 @@ func TestKiloReviewTaskPermissionCleanupRequiresOwnershipProof(t *testing.T) {
 		}
 	}
 }
+

@@ -3,7 +3,7 @@ package screens
 import (
 	"strings"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/tui/styles"
+	"github.com/jonsanchezr/agent-smith/v4/internal/tui/styles"
 )
 
 // RenderABInstalling renders the installation-in-progress (or error) screen.
@@ -34,3 +34,4 @@ func RenderABInstalling(engineName string, spinnerFrame int, installErr error) s
 
 	return b.String()
 }
+

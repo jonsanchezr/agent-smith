@@ -12,7 +12,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
 )
 
 const codexReviewerLoopbackBaseURLEnvironment = "GENTLE_AI_CODEX_REVIEWER_LOOPBACK_BASE_URL"
@@ -44,7 +44,7 @@ func (adapter *CodexAdapter) Review(ctx context.Context, invocation Invocation) 
 		return nil, fmt.Errorf("codex reviewer transport unavailable: %w", err)
 	}
 
-	scratch, err := os.MkdirTemp("", "gentle-ai-codex-reviewer-*")
+	scratch, err := os.MkdirTemp("", "agent-smith-codex-reviewer-*")
 	if err != nil {
 		return nil, fmt.Errorf("codex reviewer transport unavailable: create scratch directory: %w", err)
 	}
@@ -95,7 +95,7 @@ func codexReviewerArguments(scratch, outputPath string) ([]string, error) {
 
 	return append(arguments,
 		"--config", `model_provider="`+codexReviewerLoopbackProviderID+`"`,
-		"--config", fmt.Sprintf(`model_providers.%s={name="Gentle AI reviewer loopback",base_url=%q,wire_api="responses"}`, codexReviewerLoopbackProviderID, baseURL),
+		"--config", fmt.Sprintf(`model_providers.%s={name="Agent Smith reviewer loopback",base_url=%q,wire_api="responses"}`, codexReviewerLoopbackProviderID, baseURL),
 	), nil
 }
 
@@ -138,3 +138,4 @@ func codexReviewerLoopbackBaseURL(raw string) (string, bool, error) {
 
 	return endpoint.String(), true, nil
 }
+

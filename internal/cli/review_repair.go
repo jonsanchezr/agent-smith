@@ -8,13 +8,13 @@ import (
 	"reflect"
 	"strings"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/reviewtransaction"
+	"github.com/jonsanchezr/agent-smith/v4/internal/reviewtransaction"
 )
 
-const ReviewIntegrationRepairSchema = "gentle-ai.review-integration.repair/v1"
-const ReviewIntegrationRepairSchemaID = "https://gentle-ai.dev/contracts/review-integration/v1/schemas/repair.schema.json"
-const ReviewIntegrationRepairSchemaV2 = "gentle-ai.review-integration.repair/v2"
-const ReviewIntegrationRepairSchemaIDV2 = "https://gentle-ai.dev/contracts/review-integration/v2/schemas/repair.schema.json"
+const ReviewIntegrationRepairSchema = "agent-smith.review-integration.repair/v1"
+const ReviewIntegrationRepairSchemaID = "https://agent-smith.dev/contracts/review-integration/v1/schemas/repair.schema.json"
+const ReviewIntegrationRepairSchemaV2 = "agent-smith.review-integration.repair/v2"
+const ReviewIntegrationRepairSchemaIDV2 = "https://agent-smith.dev/contracts/review-integration/v2/schemas/repair.schema.json"
 
 type ReviewRepairMode string
 
@@ -90,7 +90,7 @@ type ReviewRepairDispositionExecution struct {
 // Naming it converts a dead end into a route without weakening the bound,
 // widening any authority, or presenting one byte of partial classification as
 // though it were complete.
-const reviewRepairTruncatedContinuation = "this authority store exceeds the bounded repair assessment, so nothing was classified here; classify every entry with `gentle-ai review inspect-authority`"
+const reviewRepairTruncatedContinuation = "this authority store exceeds the bounded repair assessment, so nothing was classified here; classify every entry with `agent-smith review inspect-authority`"
 
 type ReviewRepairResult struct {
 	Schema     string                                      `json:"schema"`
@@ -257,7 +257,7 @@ func (err *reviewRepairOperationError) Error() string {
 func (err *reviewRepairOperationError) Unwrap() error { return err.cause }
 
 func runReviewRepair(ctx context.Context, args []string, stdout io.Writer) error {
-	flags := newReviewFlagSet("review repair", stdout, "Assess the complete review authority inventory and execute only one provider-owned classified repair. Run --preflight first. It emits bounded path-free provider inputs, never an authorization template. A maintainer supplies actor, reason, and an exact gentle-ai.review-repair-authorization/v1 binding. When multiple content-mismatched leaves or multiple historical (outdated) authority entries exist, --preflight enumerates exact selectors; re-run it with one selector before executing its plan.")
+	flags := newReviewFlagSet("review repair", stdout, "Assess the complete review authority inventory and execute only one provider-owned classified repair. Run --preflight first. It emits bounded path-free provider inputs, never an authorization template. A maintainer supplies actor, reason, and an exact agent-smith.review-repair-authorization/v1 binding. When multiple content-mismatched leaves or multiple historical (outdated) authority entries exist, --preflight enumerates exact selectors; re-run it with one selector before executing its plan.")
 	cwd := flags.String("cwd", ".", "repository path")
 	contract := flags.String("contract", ReviewIntegrationContractV1, "review integration contract")
 	preflight := flags.Bool("preflight", false, "perform deterministic read-only classification without authority mutation")
@@ -299,13 +299,13 @@ func runReviewRepair(ctx context.Context, args []string, stdout io.Writer) error
 		case *predecessorLineage != "" || *predecessorRevision != "":
 			// Edge selector (#1892/#2014): all four exact fields.
 			if strings.TrimSpace(*predecessorLineage) == "" || strings.TrimSpace(*predecessorRevision) == "" || strings.TrimSpace(*successorLineage) == "" || strings.TrimSpace(*successorRevision) == "" {
-				return reviewPreflightError(errors.New("review repair exact selector requires --predecessor-lineage --predecessor-revision --successor-lineage --successor-revision; run `gentle-ai review repair --preflight` to obtain one"))
+				return reviewPreflightError(errors.New("review repair exact selector requires --predecessor-lineage --predecessor-revision --successor-lineage --successor-revision; run `agent-smith review repair --preflight` to obtain one"))
 			}
 		default:
 			// Historical selector (#2995): a historical authority entry names no
 			// predecessor revision, so its selector is successor-only.
 			if strings.TrimSpace(*successorLineage) == "" || strings.TrimSpace(*successorRevision) == "" {
-				return reviewPreflightError(errors.New("review repair historical selector requires --successor-lineage --successor-revision; run `gentle-ai review repair --preflight` to obtain one"))
+				return reviewPreflightError(errors.New("review repair historical selector requires --successor-lineage --successor-revision; run `agent-smith review repair --preflight` to obtain one"))
 			}
 		}
 	}
@@ -378,11 +378,11 @@ func runReviewRepair(ctx context.Context, args []string, stdout io.Writer) error
 	}
 	if repairExecutionInputPresent(*planDigest, *inventoryRevision, *dispositionAuthorization) {
 		if repairExecutionInputPresent(*class, *lineage, *expectedRevision, *cause, *disposition, *repositoryBinding, *authorization) {
-			return reviewPreflightError(errors.New("review repair execution accepts either classified repair inputs or leaf authority disposition inputs, not both; run `gentle-ai review repair` again with only one input set"))
+			return reviewPreflightError(errors.New("review repair execution accepts either classified repair inputs or leaf authority disposition inputs, not both; run `agent-smith review repair` again with only one input set"))
 		}
 		for _, required := range []string{*planDigest, *inventoryRevision, *actor, *reason, *dispositionAuthorization} {
 			if strings.TrimSpace(required) == "" {
-				return reviewPreflightError(errors.New("review repair leaf authority disposition execution requires --plan-digest --inventory-revision --actor --reason --authorization; run `gentle-ai review repair --preflight` first to obtain --plan-digest and --inventory-revision"))
+				return reviewPreflightError(errors.New("review repair leaf authority disposition execution requires --plan-digest --inventory-revision --actor --reason --authorization; run `agent-smith review repair --preflight` first to obtain --plan-digest and --inventory-revision"))
 			}
 		}
 		// Wave 6: derivation, admission, and the plan_digest/inventory_revision
@@ -432,7 +432,7 @@ func runReviewRepair(ctx context.Context, args []string, stdout io.Writer) error
 		return encodeReviewJSON(stdout, result)
 	}
 	if selectorPresent {
-		return reviewPreflightError(errors.New("review repair exact selector requires --plan-digest --inventory-revision --actor --reason --authorization; run `gentle-ai review repair --preflight` with the selector first"))
+		return reviewPreflightError(errors.New("review repair exact selector requires --plan-digest --inventory-revision --actor --reason --authorization; run `agent-smith review repair --preflight` with the selector first"))
 	}
 	for _, required := range []string{*class, *lineage, *expectedRevision, *cause, *disposition, *repositoryBinding, *actor, *reason, *authorization} {
 		if strings.TrimSpace(required) == "" {
@@ -528,3 +528,4 @@ func newReviewRepairPreflightResult(assessment reviewtransaction.AuthorityRepair
 	result.RequiredInputs = []string{"actor", "reason", "maintainer_authorization"}
 	return result
 }
+

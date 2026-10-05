@@ -17,15 +17,15 @@ import (
 	"strings"
 	"time"
 
-	piagent "github.com/gentleman-programming/gentle-ai/v4/internal/agents/pi"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/components/filemerge"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/system"
+	piagent "github.com/jonsanchezr/agent-smith/v4/internal/agents/pi"
+	"github.com/jonsanchezr/agent-smith/v4/internal/components/filemerge"
+	"github.com/jonsanchezr/agent-smith/v4/internal/system"
 )
 
 const (
-	piCodeGraphToolMarker     = "<!-- gentle-ai:pi-codegraph-tool -->"
-	piCodeGraphGuidanceMarker = "<!-- gentle-ai:pi-codegraph-guidance -->"
-	piCodeGraphEndMarker      = "<!-- /gentle-ai:pi-codegraph -->"
+	piCodeGraphToolMarker     = "<!-- agent-smith:pi-codegraph-tool -->"
+	piCodeGraphGuidanceMarker = "<!-- agent-smith:pi-codegraph-guidance -->"
+	piCodeGraphEndMarker      = "<!-- /agent-smith:pi-codegraph -->"
 )
 
 var (
@@ -314,7 +314,7 @@ func reconcilePiMCP(path string, journal *piJournal, changed map[string]struct{}
 	}
 	desired := map[string]any{"command": "codegraph", "args": []any{"serve", "--mcp"}}
 	if entry, found := servers["codegraph"]; found && !equivalentPiMCP(entry) {
-		return existing, fmt.Errorf("misconfigured Pi CodeGraph MCP entry at %q; Gentle AI will not overwrite it", path)
+		return existing, fmt.Errorf("misconfigured Pi CodeGraph MCP entry at %q; Agent Smith will not overwrite it", path)
 	}
 	if entry, found := servers["codegraph"]; found && equivalentPiMCP(entry) {
 		return existing, nil
@@ -551,7 +551,7 @@ func probePiCodeGraphMCPWithTransport(ctx context.Context, stdin io.WriteCloser,
 	decoder := json.NewDecoder(bufio.NewReader(stdout))
 	if err := encoder.Encode(map[string]any{
 		"jsonrpc": "2.0", "id": 1, "method": "initialize",
-		"params": map[string]any{"protocolVersion": "2025-03-26", "capabilities": map[string]any{}, "clientInfo": map[string]any{"name": "gentle-ai", "version": "1"}},
+		"params": map[string]any{"protocolVersion": "2025-03-26", "capabilities": map[string]any{}, "clientInfo": map[string]any{"name": "agent-smith", "version": "1"}},
 	}); err != nil {
 		return PiCodeGraphMCPProbeResult{}, fmt.Errorf("send MCP initialize: %w", err)
 	}
@@ -665,7 +665,7 @@ func inspectPiCodeGraph(homeDir, workspaceDir string) (bool, string, []PiCodeGra
 	}
 	if len(children) == 0 {
 		if _, err := os.Stat(paths.Manifest); err != nil {
-			return false, "no effective Pi children were discovered and no Gentle-AI ownership record exists", nil
+			return false, "no effective Pi children were discovered and no agent-smith ownership record exists", nil
 		}
 		if err := verifyPiCodeGraph(paths.MCPConfig, nil); err != nil {
 			return false, err.Error(), nil
@@ -698,7 +698,7 @@ func inspectPiCodeGraph(homeDir, workspaceDir string) (bool, string, []PiCodeGra
 	return true, "verified Pi MCP transport and every effective child", reports
 }
 
-// PiCodeGraphPaths returns only files Gentle AI may reconcile or remove.
+// PiCodeGraphPaths returns only files Agent Smith may reconcile or remove.
 func PiCodeGraphPaths(homeDir, workspaceDir string) []string {
 	paths := piagent.CodeGraphPaths(homeDir)
 	result := []string{paths.MCPConfig, paths.Manifest}
@@ -1067,3 +1067,4 @@ func (j *piJournal) validate(path string) error {
 	}
 	return fmt.Errorf("Pi CodeGraph path %q escapes allowed roots", path)
 }
+

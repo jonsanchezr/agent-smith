@@ -1,11 +1,11 @@
-#!/usr/bin/env bash
+﻿#!/usr/bin/env bash
 # Local cross-lane integration battery. NOT wired into CI on purpose:
 # the optional --with-model lane spends real reviewer model runs on the
-# development subscription, and every lane drives a real gentle-ai binary
+# development subscription, and every lane drives a real agent-smith binary
 # end to end against live scratch repositories.
 #
 # Usage:
-#   scripts/cross-lane-battery.sh --binary /path/to/gentle-ai [--with-model] [--with-host] [--keep-work]
+#   scripts/cross-lane-battery.sh --binary /path/to/agent-smith [--with-model] [--with-host] [--keep-work]
 #
 # Deterministic lanes (always run):
 #   opencode  - drives the REAL OpenCode transport plugin bytes through an
@@ -40,3 +40,4 @@ set -euo pipefail
 repo_root="$(git rev-parse --show-toplevel)"
 cd "$repo_root"
 exec go run ./scripts/crosslane "$@"
+

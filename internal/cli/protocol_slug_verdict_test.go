@@ -3,7 +3,7 @@ package cli
 import (
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
 )
 
 // TestComputeSlugSlimVerdictsSafestWinsAcrossDivergentPair pins JD-017: the
@@ -78,3 +78,4 @@ func TestComputeSlugSlimVerdictsSkipsAgentsWithoutSetupSlug(t *testing.T) {
 		t.Fatalf("computeSlugSlimVerdicts() = %v, want empty map for an agent with no setup slug", verdicts)
 	}
 }
+

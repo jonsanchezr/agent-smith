@@ -4,7 +4,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/tui/screens"
+	"github.com/jonsanchezr/agent-smith/v4/internal/tui/screens"
 )
 
 func TestWelcomeOmitsExternalPluginActions(t *testing.T) {
@@ -153,3 +153,4 @@ func TestRenderWelcome_WithProfiles_CountOne(t *testing.T) {
 		t.Errorf("legacy profile menu remains")
 	}
 }
+

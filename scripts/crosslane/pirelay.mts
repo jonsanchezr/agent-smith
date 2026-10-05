@@ -1,4 +1,4 @@
-// Cross-lane battery pi host-relay driver.
+﻿// Cross-lane battery pi host-relay driver.
 //
 // Feeds one provider-issued review.capture-result collect input to the
 // INSTALLED gentle-pi review-host-relay implementation: the lib/ sources are
@@ -16,7 +16,7 @@
 //   {
 //     "capture_argument_tokens": ["--lineage=...", ...],
 //     "submission": { "operation_token", "argument_tokens", "value"|"values" },
-//     "gentle_ai_executable": "/abs/path/gentle-ai",
+//     "gentle_ai_executable": "/abs/path/agent-smith",
 //     "pi_executable": "pi"
 //   }
 // Output: one JSON result line on stdout:
@@ -38,7 +38,7 @@ interface CaseConfig {
     value?: WireSubmissionValue
     values?: WireSubmissionValue[]
   }
-  gentle_ai_executable: string
+  agent_smith_executable: string
   pi_executable: string
   target_cwd: string
 }
@@ -58,7 +58,7 @@ const submission = {
 const result = await runReviewHostRelaySlot({
   captureArgumentTokens: config.capture_argument_tokens,
   submission,
-  gentleAiExecutable: config.gentle_ai_executable,
+  gentleAiExecutable: config.agent_smith_executable,
   piExecutable: config.pi_executable,
   targetCwd: config.target_cwd,
   environment: { HOME: process.env.HOME, PATH: process.env.PATH, PI_CODING_AGENT_DIR: process.env.PI_CODING_AGENT_DIR, GENTLE_PI_REVIEW_RELAY_CONTRACT: "gentle-pi.review-relay/v1" },
@@ -68,3 +68,4 @@ console.log(JSON.stringify({
   result_bytes: result.resultByteLength,
   submission: result.submission,
 }))
+

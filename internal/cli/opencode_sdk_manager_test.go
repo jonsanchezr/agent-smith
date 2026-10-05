@@ -10,8 +10,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/agents/opencode"
-	opencodeactivation "github.com/gentleman-programming/gentle-ai/v4/internal/opencode"
+	"github.com/jonsanchezr/agent-smith/v4/internal/agents/opencode"
+	opencodeactivation "github.com/jonsanchezr/agent-smith/v4/internal/opencode"
 )
 
 const v2SDKManualInstall = "npm install --save --no-audit --no-fund @opencode/plugin@2.0.4"
@@ -127,7 +127,7 @@ func TestV2SDKProposalRefusesVersionManagerShims(t *testing.T) {
 		{name: "mise", dir: ".local/share/mise/shims", script: "#!/bin/sh\ntouch \"$PWD/invoked\"\n", want: "mise"},
 		{name: "nodenv", dir: ".nodenv/shims", script: "#!/bin/sh\ntouch \"$PWD/invoked\"\n", want: "nodenv"},
 		{name: "shell script shim", dir: "tools/bin", script: "#!/usr/bin/env bash\nexec asdf exec \"npm\" \"$@\"\n", want: "asdf", shebang: true},
-		{name: "missing interpreter", dir: "plain/bin", script: "#!/usr/bin/env gentle-ai-missing-interpreter\n", want: "interpreter", shebang: true},
+		{name: "missing interpreter", dir: "plain/bin", script: "#!/usr/bin/env agent-smith-missing-interpreter\n", want: "interpreter", shebang: true},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
 			if tc.shebang && runtime.GOOS == "windows" {
@@ -223,3 +223,4 @@ func TestV2SDKPreflightRuntimeDetectionFailureIsActionable(t *testing.T) {
 		})
 	}
 }
+

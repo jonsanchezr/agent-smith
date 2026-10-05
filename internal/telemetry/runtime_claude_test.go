@@ -13,7 +13,7 @@ import (
 // domain-separation prefix concatenated with the message id, truncated to
 // the first 16 bytes and hex-encoded.
 func expectedClaudeStopDeliveryID(messageID string) string {
-	sum := sha256.Sum256([]byte("gentle-ai.telemetry-runtime-claude-stop/v1\x00" + messageID))
+	sum := sha256.Sum256([]byte("agent-smith.telemetry-runtime-claude-stop/v1\x00" + messageID))
 	return hex.EncodeToString(sum[:16])
 }
 
@@ -446,3 +446,4 @@ func TestClaudeFrontmatterFallbackAndInvalidValues(t *testing.T) {
 		t.Fatalf("model fallback with usage: %+v", o.Row)
 	}
 }
+

@@ -9,11 +9,11 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/reviewtransaction"
+	"github.com/jonsanchezr/agent-smith/v4/internal/reviewtransaction"
 )
 
 // ReviewStoreResetSchema identifies the user-facing store reset projection.
-const ReviewStoreResetSchema = "gentle-ai.review-store-reset-result/v1"
+const ReviewStoreResetSchema = "agent-smith.review-store-reset-result/v1"
 
 // ReviewStoreResetResult is the command's machine-readable output.
 type ReviewStoreResetResult struct {
@@ -219,3 +219,4 @@ func reviewStoreResetBytes(bytes int64) string {
 	}
 	return fmt.Sprintf("%.1f %sB", value, []string{"K", "M", "G", "T"}[exponent])
 }
+

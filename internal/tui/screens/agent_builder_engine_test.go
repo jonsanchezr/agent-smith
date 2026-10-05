@@ -4,7 +4,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
 )
 
 func TestRenderABEngine_NonEmpty(t *testing.T) {
@@ -59,3 +59,4 @@ func TestABEngineOptions_IncludesBack(t *testing.T) {
 		t.Errorf("last option = %q, want 'Back'", opts[len(opts)-1])
 	}
 }
+

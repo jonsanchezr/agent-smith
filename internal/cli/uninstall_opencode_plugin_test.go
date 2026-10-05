@@ -6,8 +6,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/components/opencodeplugin"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
+	"github.com/jonsanchezr/agent-smith/v4/internal/components/opencodeplugin"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
 )
 
 // ─── ParseUninstallOpenCodePluginFlags ──────────────────────────────────────
@@ -116,7 +116,7 @@ func TestRenderUninstallOpenCodePluginReportSurfacesLayers(t *testing.T) {
 		ChangedNodeModules: true,
 		CacheEntryRemoved:  "/home/me/.cache/opencode/packages/opencode-subagent-statusline@latest",
 		NodeModulesPath:    "/home/me/.config/opencode/node_modules/opencode-subagent-statusline",
-		CleanupPending:     []string{"/home/me/.cache/opencode/packages/.gentle-ai-uninstall-pending"},
+		CleanupPending:     []string{"/home/me/.cache/opencode/packages/.agent-smith-uninstall-pending"},
 	})
 	for _, want := range []string{
 		"Sub-agent Statusline",
@@ -294,3 +294,4 @@ func TestPromptUninstallOpenCodePluginConfirmGentleLogoBranch(t *testing.T) {
 type eofReader struct{}
 
 func (eofReader) Read([]byte) (int, error) { return 0, io.EOF }
+

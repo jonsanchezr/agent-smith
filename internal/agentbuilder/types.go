@@ -3,7 +3,7 @@ package agentbuilder
 import (
 	"time"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
 )
 
 // GeneratedAgent holds the result of a generation run before installation.
@@ -38,3 +38,4 @@ type InstallResult struct {
 	Success bool
 	Err     error
 }
+

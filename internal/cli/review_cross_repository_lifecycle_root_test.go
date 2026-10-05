@@ -7,8 +7,8 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/reviewtransaction"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
+	"github.com/jonsanchezr/agent-smith/v4/internal/reviewtransaction"
 )
 
 func TestCrossRepositoryLifecycleRootConformance(t *testing.T) {
@@ -271,3 +271,4 @@ func assertUnsupportedCrossRepositoryLifecycleRoot(t *testing.T, targetNested st
 		t.Fatalf("unsupported runtime created B authority: %#v", stores)
 	}
 }
+

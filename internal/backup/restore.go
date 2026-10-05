@@ -6,7 +6,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/components/filemerge"
+	"github.com/jonsanchezr/agent-smith/v4/internal/components/filemerge"
 )
 
 // UserHomeDirFn is the function used to resolve the user's home directory.
@@ -101,7 +101,7 @@ func invalidOriginalPathErr(originalPath string, roots []string) error {
 //
 // When Roots is empty, Restore falls back to the single directory returned by
 // UserHomeDirFn — the historical, backward-compatible behavior. This is the
-// correct default for standalone restores (`gentle-ai restore <id>` and the
+// correct default for standalone restores (`agent-smith restore <id>` and the
 // TUI "restore from list" screen): the backup being restored may be
 // arbitrarily old, and the workspace root that was in effect when it was
 // created is not something the current process can safely rediscover on its
@@ -223,7 +223,7 @@ func (s RestoreService) restoreCompressed(manifest Manifest) error {
 		return fmt.Errorf("resolve restore roots: %w", err)
 	}
 
-	tempDir, err := os.MkdirTemp("", "gentle-ai-restore-*")
+	tempDir, err := os.MkdirTemp("", "agent-smith-restore-*")
 	if err != nil {
 		return fmt.Errorf("create temp restore dir: %w", err)
 	}
@@ -423,3 +423,4 @@ func restoreEntry(entry ManifestEntry, trustedSnapshot bool, roots []string) err
 
 	return nil
 }
+

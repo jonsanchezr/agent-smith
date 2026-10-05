@@ -5,9 +5,9 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/opencode"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/system"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
+	"github.com/jonsanchezr/agent-smith/v4/internal/opencode"
+	"github.com/jonsanchezr/agent-smith/v4/internal/system"
 )
 
 func TestOpenCodeInstallerBetaPresentation(t *testing.T) {
@@ -49,3 +49,4 @@ func TestOpenCodeInstallerBetaPresentation(t *testing.T) {
 		})
 	}
 }
+

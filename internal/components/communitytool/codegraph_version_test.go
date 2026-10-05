@@ -7,7 +7,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
 )
 
 func TestParseCodeGraphVersion(t *testing.T) {
@@ -224,3 +224,4 @@ func hasManualActionContaining(actions []string, needle string) bool {
 	}
 	return false
 }
+

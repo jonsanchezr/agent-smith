@@ -8,8 +8,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/components/filemerge"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/system"
+	"github.com/jonsanchezr/agent-smith/v4/internal/components/filemerge"
+	"github.com/jonsanchezr/agent-smith/v4/internal/system"
 )
 
 func TestOpenCodeUpgradeRetiresOwnedAgents(t *testing.T) {
@@ -81,7 +81,7 @@ func TestOpenCodeUpgradeRetiresOwnedAgents(t *testing.T) {
 			if !reflect.DeepEqual(agents["other-marked"], map[string]any{"prompt": "keep this"}) {
 				t.Error("unknown marked agent changed beyond marker removal")
 			}
-			for _, key := range []string{"jd-judge-a", "review-risk", "review-refuter", "review-validator", "gentle-orchestrator"} {
+			for _, key := range []string{"jd-judge-a", "review-risk", "review-refuter", "review-validator", "agent-smith-orchestrator"} {
 				entry := agents[key].(map[string]any)
 				if _, stale := entry["tools"]; stale {
 					t.Errorf("%s retained stale tools", key)
@@ -131,3 +131,4 @@ func TestOpenCodeUpgradePreservesUnmarkedGeneral(t *testing.T) {
 		t.Fatalf("unmarked general changed: %v", general)
 	}
 }
+

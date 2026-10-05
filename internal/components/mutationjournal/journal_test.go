@@ -11,7 +11,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/components/filemerge"
+	"github.com/jonsanchezr/agent-smith/v4/internal/components/filemerge"
 )
 
 func TestNewRejectsEmptyRoots(t *testing.T) {
@@ -359,3 +359,4 @@ func sha256Hex(s string) string {
 	sum := sha256.Sum256([]byte(s))
 	return hex.EncodeToString(sum[:])
 }
+

@@ -5,7 +5,7 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
 )
 
 func TestFactoryResolvesPiAdapter(t *testing.T) {
@@ -164,3 +164,4 @@ func TestFactoryRejectsUnsupportedOpenClawLookalike(t *testing.T) {
 		t.Fatalf("NewAdapter() error = %v, want ErrAgentNotSupported", err)
 	}
 }
+

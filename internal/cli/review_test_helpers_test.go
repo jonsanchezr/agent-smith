@@ -8,8 +8,8 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/reviewerprovider"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/reviewtransaction"
+	"github.com/jonsanchezr/agent-smith/v4/internal/reviewerprovider"
+	"github.com/jonsanchezr/agent-smith/v4/internal/reviewtransaction"
 )
 
 // writeReviewCLIRawInput writes raw provider role result bytes to a temp file
@@ -114,3 +114,4 @@ func providerTargetedValidationPayload(t *testing.T, request reviewtransaction.T
 	}
 	return payload
 }
+

@@ -8,10 +8,10 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/components/engram"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/system"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/verify"
+	"github.com/jonsanchezr/agent-smith/v4/internal/components/engram"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
+	"github.com/jonsanchezr/agent-smith/v4/internal/system"
+	"github.com/jonsanchezr/agent-smith/v4/internal/verify"
 )
 
 // TestRunInstallLinuxEngramUsesDownloadNotGoInstall verifies that after the fix,
@@ -663,7 +663,7 @@ func TestRunInstallBetaEngramUsesMainGoInstallAndInstalledBinary(t *testing.T) {
 	foundGoInstall := false
 	foundSetupWithBetaBinary := false
 	for _, cmd := range commands {
-		if cmd == "go install github.com/Gentleman-Programming/engram/cmd/engram@main" {
+		if cmd == "go install github.com/jonsanchezr/engram/cmd/engram@main" {
 			foundGoInstall = true
 		}
 		if strings.HasPrefix(cmd, betaEngram+" setup ") {
@@ -751,3 +751,4 @@ func verifyReportRequiresFile(report verify.Report, path string) bool {
 	}
 	return false
 }
+

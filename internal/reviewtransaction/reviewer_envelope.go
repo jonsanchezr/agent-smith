@@ -8,13 +8,13 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/reviewerprovider"
+	"github.com/jonsanchezr/agent-smith/v4/internal/reviewerprovider"
 )
 
 // ReviewerResultSchema is the published input schema for one reviewer result.
 // It lives beside AdmitArtifact on purpose: admission is the authority for the
 // shape, and every consumer that describes that shape to a model -- the
-// `gentle-ai review schema reviewer` command and the generated lens agent
+// `agent-smith review schema reviewer` command and the generated lens agent
 // prompts -- derives its wording from this document instead of restating it.
 // Three independent prose copies of this envelope are what let a lens agent
 // emit findings/evidence with no subject_hash and no inspection (community
@@ -227,3 +227,4 @@ func NewReviewerResultEnvelope() ReviewerResultEnvelope {
 		LensAgentNames:            lenses,
 	}
 }
+

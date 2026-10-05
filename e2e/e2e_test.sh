@@ -1,5 +1,5 @@
-#!/usr/bin/env bash
-# e2e_test.sh — End-to-end tests for gentle-ai installer
+﻿#!/usr/bin/env bash
+# e2e_test.sh â€” End-to-end tests for agent-smith installer
 #
 # Test tiers (controlled by environment variables):
 #   (default)            Tier 1: binary existence + dry-run tests (fast, no side-effects)
@@ -22,7 +22,7 @@ source "$SCRIPT_DIR/lib.sh"
 # ---------------------------------------------------------------------------
 BINARY="$(resolve_binary)"
 if [ -z "$BINARY" ]; then
-    echo "ERROR: gentle-ai binary not found. Build it first."
+    echo "ERROR: agent-smith binary not found. Build it first."
     exit 1
 fi
 log_info "Using binary: $BINARY"
@@ -35,7 +35,7 @@ if [ "${RUN_FULL_E2E:-0}" = "1" ] || [ "${RUN_BACKUP_TESTS:-0}" = "1" ]; then
 fi
 
 # ===========================================================================
-# TIER 1 — Basic binary & dry-run tests (always run)
+# TIER 1 â€” Basic binary & dry-run tests (always run)
 # ===========================================================================
 
 # --- Category 1a: Binary basics ---
@@ -69,7 +69,7 @@ test_version_command() {
 
     output=$($BINARY version 2>&1) || true
 
-    if echo "$output" | grep -q "gentle-ai"; then
+    if echo "$output" | grep -q "agent-smith"; then
         log_pass "Version command returns binary name"
     else
         log_fail "Version command failed: $output"
@@ -105,7 +105,7 @@ test_dry_run_detects_linux() {
     # This test is only meaningful inside the Docker container (Linux).
     # Skip gracefully on macOS/other to avoid killing the test run.
     if [[ "$(uname -s)" != "Linux" ]]; then
-        log_skip "Not running on Linux — platform detection test skipped"
+        log_skip "Not running on Linux â€” platform detection test skipped"
         return 0
     fi
 
@@ -202,7 +202,7 @@ test_preset_minimal_components() {
 test_preset_minimal_with_default_persona_includes_persona() {
     log_test "Preset minimal with default persona (gentleman) includes persona"
 
-    # Persona is now decoupled from preset — default Gentleman persona is
+    # Persona is now decoupled from preset â€” default Gentleman persona is
     # installed regardless of which preset the user picks.
     output=$($BINARY install --preset minimal --agent claude-code --dry-run 2>&1) || true
 
@@ -235,7 +235,7 @@ test_preset_ecosystem_components() {
 test_preset_full_with_custom_persona_excludes_persona() {
     log_test "Preset full-gentleman with persona=custom excludes persona"
 
-    # Persona is decoupled — picking persona=custom skips persona install
+    # Persona is decoupled â€” picking persona=custom skips persona install
     # even when the preset is full-gentleman.
     output=$($BINARY install --preset full-gentleman --persona custom --agent claude-code --dry-run 2>&1) || true
 
@@ -435,7 +435,7 @@ test_unknown_command_rejected() {
 }
 
 # ===========================================================================
-# TIER 2 — Full install tests (require RUN_FULL_E2E=1)
+# TIER 2 â€” Full install tests (require RUN_FULL_E2E=1)
 # ===========================================================================
 
 # --- Category 2: Claude Code component injection ---
@@ -455,7 +455,7 @@ test_cc_engram_injection() {
 
         # CLAUDE.md section
         assert_file_exists "$HOME/.claude/CLAUDE.md" "CLAUDE.md exists"
-        assert_file_contains "$HOME/.claude/CLAUDE.md" "gentle-ai:engram-protocol" "CLAUDE.md has engram-protocol section marker"
+        assert_file_contains "$HOME/.claude/CLAUDE.md" "agent-smith:engram-protocol" "CLAUDE.md has engram-protocol section marker"
         assert_file_contains "$HOME/.claude/CLAUDE.md" "mem_save" "CLAUDE.md has real Engram content (mem_save)"
         assert_file_size_min "$HOME/.claude/CLAUDE.md" 500 "CLAUDE.md has substantial content"
     else
@@ -469,14 +469,14 @@ test_cc_persona_gentleman() {
 
     if $BINARY install --agent claude-code --component persona --persona gentleman 2>&1; then
         assert_file_exists "$HOME/.claude/CLAUDE.md" "CLAUDE.md exists"
-        assert_file_contains "$HOME/.claude/CLAUDE.md" "gentle-ai:persona" "CLAUDE.md has persona section marker"
-        # Claude has an active output-style channel — the CLAUDE.md persona
+        assert_file_contains "$HOME/.claude/CLAUDE.md" "agent-smith:persona" "CLAUDE.md has persona section marker"
+        # Claude has an active output-style channel â€” the CLAUDE.md persona
         # section is now a residual (tooling directives + pointer only); tone
         # content lives exclusively in the output style (design.md Decision 1).
         assert_file_contains "$HOME/.claude/CLAUDE.md" "Persona Voice" "CLAUDE.md persona residual points to the output style"
         assert_file_not_contains "$HOME/.claude/CLAUDE.md" "Senior Architect" "CLAUDE.md persona residual carries no tone content"
         assert_file_size_min "$HOME/.claude/CLAUDE.md" 200 "Persona section is substantial"
-        # Output-style file — canonical tone channel
+        # Output-style file â€” canonical tone channel
         assert_file_exists "$HOME/.claude/output-styles/gentleman.md" "Output-style file exists"
         assert_file_contains "$HOME/.claude/output-styles/gentleman.md" "name: Gentleman" "Output-style has YAML frontmatter"
         assert_file_contains "$HOME/.claude/output-styles/gentleman.md" "keep-coding-instructions: true" "Output-style keeps coding instructions"
@@ -496,8 +496,8 @@ test_cc_persona_neutral() {
 
     if $BINARY install --agent claude-code --component persona --persona neutral 2>&1; then
         assert_file_exists "$HOME/.claude/CLAUDE.md" "CLAUDE.md exists"
-        assert_file_contains "$HOME/.claude/CLAUDE.md" "gentle-ai:persona" "CLAUDE.md has persona section marker"
-        # Claude has an active output-style channel — the CLAUDE.md persona
+        assert_file_contains "$HOME/.claude/CLAUDE.md" "agent-smith:persona" "CLAUDE.md has persona section marker"
+        # Claude has an active output-style channel â€” the CLAUDE.md persona
         # section is now a residual; the mentor identity lives in the output
         # style (design.md Decision 1).
         assert_file_contains "$HOME/.claude/CLAUDE.md" "Persona Voice" "CLAUDE.md persona residual points to the output style"
@@ -722,7 +722,7 @@ test_oc_engram_injection() {
 
         # Fallback safety: AGENTS.md must include engram protocol section.
         assert_file_exists "$agents_md" "OpenCode AGENTS.md"
-        assert_file_contains "$agents_md" 'gentle-ai:engram-protocol' "AGENTS.md has engram-protocol section"
+        assert_file_contains "$agents_md" 'agent-smith:engram-protocol' "AGENTS.md has engram-protocol section"
         assert_file_contains "$agents_md" 'mem_save' "AGENTS.md has memory protocol content"
     else
         log_fail "OpenCode engram install command failed"
@@ -833,7 +833,7 @@ test_qwen_engram_idempotency() {
 
     local settings="$HOME/.qwen/settings.json"
 
-    # First run — the install's exit code is irrelevant here (e.g. transient
+    # First run â€” the install's exit code is irrelevant here (e.g. transient
     # npm failure); we assert on the resulting file.
     $BINARY install --agent qwen-code --component engram --persona neutral > /dev/null 2>&1 || true
     if [ ! -f "$settings" ]; then
@@ -903,9 +903,9 @@ test_full_preset_claude_code() {
 
         # ODD routing, memory and persona coexist without duplicate sections.
         assert_file_exists "$claude_md" "CLAUDE.md exists"
-        assert_file_contains "$claude_md" "gentle-ai:agent-routing" "Has ODD routing section"
-        assert_file_contains "$claude_md" "gentle-ai:engram-protocol" "Has memory section"
-        assert_file_contains "$claude_md" "gentle-ai:persona" "Has persona section"
+        assert_file_contains "$claude_md" "agent-smith:agent-routing" "Has ODD routing section"
+        assert_file_contains "$claude_md" "agent-smith:engram-protocol" "Has memory section"
+        assert_file_contains "$claude_md" "agent-smith:persona" "Has persona section"
         assert_no_duplicate_section "$claude_md" "agent-routing" "No duplicate ODD routing section"
         assert_no_duplicate_section "$claude_md" "persona" "No duplicate persona section"
 
@@ -952,8 +952,8 @@ test_full_preset_opencode() {
         # OpenCode owns ODD routing in the managed orchestrator prompt in opencode.json.
         assert_file_exists "$agents_md" "AGENTS.md exists"
         assert_file_contains "$agents_md" "Senior Architect" "Gentleman persona"
-        assert_file_contains "$settings" "gentle-ai:agent-routing" "OpenCode orchestrator has ODD routing"
-        assert_file_contains "$agents_md" "gentle-ai:engram-protocol" "AGENTS.md has engram protocol"
+        assert_file_contains "$settings" "agent-smith:agent-routing" "OpenCode orchestrator has ODD routing"
+        assert_file_contains "$agents_md" "agent-smith:engram-protocol" "AGENTS.md has engram protocol"
         assert_no_duplicate_section "$agents_md" "engram-protocol" "No duplicate engram section in AGENTS.md"
         assert_file_count_min "$HOME/.config/opencode/skills" "SKILL.md" 8 "At least 8 foundation skill files"
 
@@ -976,7 +976,7 @@ test_minimal_preset_opencode_only_engram_no_persona() {
 
         # Minimal preset should NOT silently install persona.
         if [ -f "$agents_md" ]; then
-            assert_file_not_contains "$agents_md" "gentle-ai:persona" "No persona marker in minimal preset"
+            assert_file_not_contains "$agents_md" "agent-smith:persona" "No persona marker in minimal preset"
             assert_file_not_contains "$agents_md" "Senior Architect" "No persona content in minimal preset"
         else
             log_pass "No AGENTS.md created by minimal preset (correct)"
@@ -993,10 +993,10 @@ test_minimal_preset_claude_only_engram() {
     if $BINARY install --agent claude-code --preset minimal --persona custom 2>&1; then
         # Engram should be installed (MCP + CLAUDE.md)
         assert_file_exists "$HOME/.claude/CLAUDE.md" "CLAUDE.md exists"
-        assert_file_contains "$HOME/.claude/CLAUDE.md" "gentle-ai:engram-protocol" "Engram protocol section"
+        assert_file_contains "$HOME/.claude/CLAUDE.md" "agent-smith:engram-protocol" "Engram protocol section"
 
         # Persona should NOT be in CLAUDE.md
-        assert_file_not_contains "$HOME/.claude/CLAUDE.md" "gentle-ai:persona" "No persona in minimal"
+        assert_file_not_contains "$HOME/.claude/CLAUDE.md" "agent-smith:persona" "No persona in minimal"
         # No permissions settings.json
         if [ -f "$HOME/.claude/settings.json" ]; then
             assert_file_not_contains "$HOME/.claude/settings.json" '"permissions"' "No permissions in minimal"
@@ -1021,12 +1021,12 @@ test_ecosystem_both_agents() {
     if $BINARY install --agent claude-code --agent opencode --component engram --component skills --component context7 --preset ecosystem-only --persona neutral 2>&1; then
         # Claude Code
         assert_file_exists "$HOME/.claude/CLAUDE.md" "Claude CLAUDE.md"
-        assert_file_contains "$HOME/.claude/CLAUDE.md" "gentle-ai:agent-routing" "Claude has ODD routing"
+        assert_file_contains "$HOME/.claude/CLAUDE.md" "agent-smith:agent-routing" "Claude has ODD routing"
         assert_file_contains "$HOME/.claude.json" '"context7"' "Claude context7 MCP"
         assert_file_count_min "$HOME/.claude/skills" "SKILL.md" 8 "Claude foundation skills"
 
         # OpenCode
-        assert_file_contains "$HOME/.config/opencode/opencode.json" "gentle-ai:agent-routing" "OpenCode orchestrator has ODD routing"
+        assert_file_contains "$HOME/.config/opencode/opencode.json" "agent-smith:agent-routing" "OpenCode orchestrator has ODD routing"
         assert_file_count_min "$HOME/.config/opencode/skills" "SKILL.md" 8 "OpenCode foundation skills"
         assert_file_contains "$HOME/.config/opencode/opencode.json" '"context7"' "OpenCode context7"
         assert_valid_json "$HOME/.config/opencode/opencode.json" "OpenCode opencode.json valid JSON"
@@ -1068,7 +1068,7 @@ test_content_claude_md_sections_substantial() {
 
     local claude_md="$HOME/.claude/CLAUDE.md"
     if [ -f "$claude_md" ]; then
-        assert_file_contains "$claude_md" "gentle-ai:agent-routing" "CLAUDE.md has ODD routing"
+        assert_file_contains "$claude_md" "agent-smith:agent-routing" "CLAUDE.md has ODD routing"
         assert_file_size_min "$claude_md" 1000 "CLAUDE.md with routing, memory and persona >= 1000 bytes"
     else
         log_fail "CLAUDE.md not created"
@@ -1177,7 +1177,7 @@ test_idempotent_engram_claude() {
     fi
 }
 
-# ─── Gemini parity tests ─────────────────────────────────────────────────────
+# â”€â”€â”€ Gemini parity tests â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 test_gemini_engram_tools_flag() {
     log_test "Gemini: engram injection uses --tools=agent"
@@ -1195,7 +1195,7 @@ test_gemini_engram_tools_flag() {
     fi
 }
 
-# ─── Codex parity tests ───────────────────────────────────────────────────────
+# â”€â”€â”€ Codex parity tests â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 test_codex_engram_injection() {
     log_test "Codex: engram injection writes config.toml + instruction files"
@@ -1293,7 +1293,7 @@ test_idempotent_full_claude() {
     local first_md_hash
     first_md_hash=$(md5sum "$HOME/.claude/CLAUDE.md" 2>/dev/null | cut -d' ' -f1)
     # Snapshot settings.json for semantic comparison (engram setup may reorder
-    # top-level keys on re-run — see engram binary's non-deterministic map
+    # top-level keys on re-run â€” see engram binary's non-deterministic map
     # serialization). Byte-exact hashing would false-fail on harmless reorder.
     cp "$HOME/.claude/settings.json" /tmp/gai_settings_run1.json 2>/dev/null || true
 
@@ -1333,8 +1333,8 @@ test_edge_theme_not_in_presets() {
         # or other optional components.
         if [ -f "$HOME/.claude/CLAUDE.md" ]; then
             local sections
-            sections=$(grep -o '<!-- gentle-ai:[a-z0-9-]* -->' "$HOME/.claude/CLAUDE.md" | sort -u | tr '\n' ' ')
-            if [ "$(printf '%s' "$sections" | xargs)" = "<!-- gentle-ai:agent-routing --> <!-- gentle-ai:orchestrator --> <!-- gentle-ai:remote-authorization -->" ]; then
+            sections=$(grep -o '<!-- agent-smith:[a-z0-9-]* -->' "$HOME/.claude/CLAUDE.md" | sort -u | tr '\n' ' ')
+            if [ "$(printf '%s' "$sections" | xargs)" = "<!-- agent-smith:agent-routing --> <!-- agent-smith:orchestrator --> <!-- agent-smith:remote-authorization -->" ]; then
                 log_pass "Theme-only: CLAUDE.md carries orchestrator, routing and remote authorization only"
             else
                 log_fail "Theme-only install wrote component sections: $sections"
@@ -1365,13 +1365,13 @@ test_edge_persona_switch() {
     cleanup_test_env
 
     # First install with gentleman. Claude has an active output-style channel,
-    # so the teacher identity ("Senior Architect") lives in the output style —
+    # so the teacher identity ("Senior Architect") lives in the output style â€”
     # the CLAUDE.md persona section is a residual pointer (design.md Decision 1).
     $BINARY install --agent claude-code --component persona --persona gentleman 2>&1 || true
     assert_file_contains "$HOME/.claude/CLAUDE.md" "Persona Voice" "First install: gentleman persona residual points to the output style"
     assert_file_contains "$HOME/.claude/output-styles/gentleman.md" "Senior Architect" "First install: gentleman output-style has the teacher identity"
 
-    # Then install with neutral — should REPLACE persona section AND the
+    # Then install with neutral â€” should REPLACE persona section AND the
     # selected output style. Neutral is a distinct professional voice (same
     # mentor identity, no regional language, no "Senior Architect" bio), so
     # the CLAUDE.md residual stays tone-free and the neutral output style is
@@ -1393,7 +1393,7 @@ test_edge_persona_switch_preserves_sections_opencode() {
 
     local agents_md="$HOME/.config/opencode/AGENTS.md"
     assert_file_exists "$agents_md" "AGENTS.md after full install"
-    assert_file_contains "$agents_md" "gentle-ai:engram-protocol" "Engram section present before switch"
+    assert_file_contains "$agents_md" "agent-smith:engram-protocol" "Engram section present before switch"
 
     # Step 2: Switch to neutral persona
     $BINARY install --agent opencode --component persona --persona neutral 2>&1 || true
@@ -1401,7 +1401,7 @@ test_edge_persona_switch_preserves_sections_opencode() {
     # Step 3: Verify sections survived
     assert_file_contains "$agents_md" "Senior Architect" "Neutral persona present after switch"
     assert_file_not_contains "$agents_md" "Rioplatense" "Regional language removed after switch"
-    assert_file_contains "$agents_md" "gentle-ai:engram-protocol" "Engram section survived persona switch"
+    assert_file_contains "$agents_md" "agent-smith:engram-protocol" "Engram section survived persona switch"
     assert_no_duplicate_section "$agents_md" "engram-protocol" "No duplicate engram after switch"
 }
 
@@ -1427,7 +1427,7 @@ test_edge_multiple_json_overlays() {
     log_test "Edge case: multiple JSON overlays merge correctly"
     cleanup_test_env
 
-    # Install permissions, then theme, then context7 — all into OpenCode opencode.json
+    # Install permissions, then theme, then context7 â€” all into OpenCode opencode.json
     $BINARY install --agent opencode --component permissions --persona neutral 2>&1 || true
     $BINARY install --agent opencode --component theme --persona neutral 2>&1 || true
     $BINARY install --agent opencode --component context7 --persona neutral 2>&1 || true
@@ -1457,7 +1457,7 @@ test_gga_config() {
         local agents_md="$HOME/.config/gga/AGENTS.md"
         assert_file_exists "$agents_md" "GGA AGENTS.md template"
     else
-        log_skip "GGA install failed (expected — binary install may require network)"
+        log_skip "GGA install failed (expected â€” binary install may require network)"
     fi
 }
 
@@ -1470,7 +1470,7 @@ test_gga_runtime_pr_mode_installed() {
         assert_file_exists "$pr_mode" "GGA pr_mode.sh exists"
         assert_file_contains "$pr_mode" 'detect_base_branch' "pr_mode.sh has PR mode functions"
     else
-        log_skip "GGA install failed (expected — binary install may require network)"
+        log_skip "GGA install failed (expected â€” binary install may require network)"
     fi
 }
 
@@ -1485,7 +1485,7 @@ test_gga_reinstall_is_idempotent() {
             log_fail "Second GGA install failed"
         fi
     else
-        log_skip "GGA first install failed (expected — binary install may require network)"
+        log_skip "GGA first install failed (expected â€” binary install may require network)"
     fi
 }
 
@@ -1495,15 +1495,15 @@ test_windsurf_persona_and_engram_content() {
     log_test "Windsurf: persona and Engram coexist in global_rules.md"
     cleanup_test_env
 
-    # Windsurf is a desktop app — signal its presence without a live agent.
+    # Windsurf is a desktop app â€” signal its presence without a live agent.
     mkdir -p "$HOME/.codeium/windsurf"
 
     if $BINARY install --agent windsurf --component persona --component engram --persona gentleman 2>&1; then
         local rules="$HOME/.codeium/windsurf/memories/global_rules.md"
         assert_file_exists "$rules" "global_rules.md exists"
         assert_file_contains "$rules" "Senior Architect" "Persona injected"
-        assert_file_contains "$rules" "gentle-ai:engram-protocol" "Engram protocol marker present"
-        assert_file_contains "$rules" "gentle-ai:agent-routing" "ODD routing marker present"
+        assert_file_contains "$rules" "agent-smith:engram-protocol" "Engram protocol marker present"
+        assert_file_contains "$rules" "agent-smith:agent-routing" "ODD routing marker present"
         assert_file_size_min "$rules" 2000 "global_rules.md has substantial content"
     else
         log_fail "Windsurf persona+Engram install command failed"
@@ -1541,7 +1541,7 @@ test_codex_context7_in_toml() {
 # --- Category 7: Injection integrity (guards against issue #4 regression) ---
 
 test_integrity_full_preset_all_skills_nonempty() {
-    log_test "Integrity: full preset — every SKILL.md is non-empty"
+    log_test "Integrity: full preset â€” every SKILL.md is non-empty"
     cleanup_test_env
 
     if $BINARY install --agent opencode --component skills --preset full-gentleman --persona gentleman 2>&1; then
@@ -1573,7 +1573,7 @@ test_integrity_full_preset_all_skills_nonempty() {
 }
 
 # ===========================================================================
-# TIER 3 — Backup / restore tests (require RUN_BACKUP_TESTS=1)
+# TIER 3 â€” Backup / restore tests (require RUN_BACKUP_TESTS=1)
 # ===========================================================================
 
 test_backup_created_on_install() {
@@ -1583,7 +1583,7 @@ test_backup_created_on_install() {
 
     if $BINARY install --agent opencode --component permissions --persona neutral 2>&1; then
         local backup_count
-        backup_count=$(find "$HOME/.gentle-ai/backups" -mindepth 1 -maxdepth 1 -type d 2>/dev/null | wc -l | tr -d ' ')
+        backup_count=$(find "$HOME/.agent-smith/backups" -mindepth 1 -maxdepth 1 -type d 2>/dev/null | wc -l | tr -d ' ')
         if [ "$backup_count" -gt 0 ]; then
             log_pass "Backup directory created ($backup_count snapshots)"
         else
@@ -1601,7 +1601,7 @@ test_backup_contains_original_files() {
 
     if $BINARY install --agent opencode --component permissions --persona neutral 2>&1; then
         local latest_backup
-        latest_backup=$(find "$HOME/.gentle-ai/backups" -mindepth 1 -maxdepth 1 -type d 2>/dev/null | sort | tail -1)
+        latest_backup=$(find "$HOME/.agent-smith/backups" -mindepth 1 -maxdepth 1 -type d 2>/dev/null | sort | tail -1)
         if [ -n "$latest_backup" ]; then
             local file_count
             file_count=$(find "$latest_backup" -type f 2>/dev/null | wc -l | tr -d ' ')
@@ -1625,7 +1625,7 @@ test_backup_manifest_exists() {
 
     if $BINARY install --agent opencode --component permissions --persona neutral 2>&1; then
         local latest_backup
-        latest_backup=$(find "$HOME/.gentle-ai/backups" -mindepth 1 -maxdepth 1 -type d 2>/dev/null | sort | tail -1)
+        latest_backup=$(find "$HOME/.agent-smith/backups" -mindepth 1 -maxdepth 1 -type d 2>/dev/null | sort | tail -1)
         if [ -n "$latest_backup" ]; then
             if [ -f "$latest_backup/manifest.json" ]; then
                 assert_valid_json "$latest_backup/manifest.json" "Backup manifest is valid JSON"
@@ -1669,7 +1669,7 @@ test_backup_multiple_snapshots() {
     $BINARY install --agent opencode --component theme --persona neutral 2>&1 || true
 
     local backup_count
-    backup_count=$(find "$HOME/.gentle-ai/backups" -mindepth 1 -maxdepth 1 -type d 2>/dev/null | wc -l | tr -d ' ')
+    backup_count=$(find "$HOME/.agent-smith/backups" -mindepth 1 -maxdepth 1 -type d 2>/dev/null | wc -l | tr -d ' ')
     if [ "$backup_count" -ge 2 ]; then
         log_pass "Multiple backup snapshots created ($backup_count)"
     else
@@ -1684,7 +1684,7 @@ test_backup_claude_code_files() {
 
     if $BINARY install --agent claude-code --component permissions --persona neutral 2>&1; then
         local latest_backup
-        latest_backup=$(find "$HOME/.gentle-ai/backups" -mindepth 1 -maxdepth 1 -type d 2>/dev/null | sort | tail -1)
+        latest_backup=$(find "$HOME/.agent-smith/backups" -mindepth 1 -maxdepth 1 -type d 2>/dev/null | sort | tail -1)
         if [ -n "$latest_backup" ] && [ -f "$latest_backup/manifest.json" ]; then
             log_pass "Claude Code backup snapshot with manifest created"
         else
@@ -1850,3 +1850,4 @@ fi
 # Summary & exit
 # ---------------------------------------------------------------------------
 print_summary
+

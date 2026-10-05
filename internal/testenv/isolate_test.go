@@ -4,7 +4,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/testenv"
+	"github.com/jonsanchezr/agent-smith/v4/internal/testenv"
 )
 
 // TestIsolateUnsetsKnownAgentRuntimeDirOverrides pins the exact set of
@@ -27,3 +27,4 @@ func TestIsolateUnsetsKnownAgentRuntimeDirOverrides(t *testing.T) {
 		}
 	}
 }
+

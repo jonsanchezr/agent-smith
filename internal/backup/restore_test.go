@@ -65,7 +65,7 @@ func TestRestoreRestoresExistingAndRemovesCreated(t *testing.T) {
 		t.Fatalf("restored content = %q", string(restored))
 	}
 
-	// gentle-ai#5006(F5): the restore must force the recorded mode (0600) even
+	// agent-smith#5006(F5): the restore must force the recorded mode (0600) even
 	// though originalPath currently sits at a wider mode (0644): restoring a
 	// backup snapshot must reproduce its exact recorded state, not preserve
 	// whatever mode the file happens to have when the restore runs.
@@ -849,3 +849,4 @@ func TestRestoreCompressedMixedEntries(t *testing.T) {
 		t.Errorf("created_by_sync should have been removed by !Existed branch, but stat err = %v", statErr)
 	}
 }
+

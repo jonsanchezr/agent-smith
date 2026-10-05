@@ -15,7 +15,7 @@ import (
 	"slices"
 	"strings"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/components/filemerge"
+	"github.com/jonsanchezr/agent-smith/v4/internal/components/filemerge"
 )
 
 // OwnedFile is the persisted before-image record. It mirrors what an external
@@ -284,3 +284,4 @@ func hashBytes(data []byte) string {
 	sum := sha256.Sum256(data)
 	return hex.EncodeToString(sum[:])
 }
+

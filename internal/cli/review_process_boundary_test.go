@@ -8,7 +8,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/reviewtransaction"
+	"github.com/jonsanchezr/agent-smith/v4/internal/reviewtransaction"
 )
 
 // TestReviewStartSelectsCanonicalFourRForSubprocessWrapper is the issue #1438
@@ -122,3 +122,4 @@ func TestNegotiatedReviewStartUsesCurrentV2ActionVocabulary(t *testing.T) {
 		})
 	}
 }
+

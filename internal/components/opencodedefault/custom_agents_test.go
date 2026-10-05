@@ -12,7 +12,7 @@ func TestDiscoverCustomAgents(t *testing.T) {
 		name, config string
 		want         []string
 	}{
-		{"JSON and reserved identities", `{"agent":{"z-user":{},"a-user":{},"build":{},"plan":{},"general":{},"explore":{},"gentle-reviewer":{},"gentle-worker":{},"gentle-orchestrator":{},"sdd-orchestrator":{},"sdd-apply":{},"jd-judge-a":{},"review-risk":{}}}`, []string{"a-user", "z-user"}},
+		{"JSON and reserved identities", `{"agent":{"z-user":{},"a-user":{},"build":{},"plan":{},"general":{},"explore":{},"gentle-reviewer":{},"gentle-worker":{},"agent-smith-orchestrator":{},"sdd-orchestrator":{},"sdd-apply":{},"jd-judge-a":{},"review-risk":{}}}`, []string{"a-user", "z-user"}},
 		{"JSONC", `{"agent":{"personal":{}}, // comment
  "default_agent":"personal",}`, []string{"personal"}},
 		{"malformed JSON", `{"agent":{`, nil},

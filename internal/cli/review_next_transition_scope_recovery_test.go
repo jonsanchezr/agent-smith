@@ -6,7 +6,7 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/reviewtransaction"
+	"github.com/jonsanchezr/agent-smith/v4/internal/reviewtransaction"
 )
 
 func TestNegotiatedStatusRoutesHistoricalScopeChangeToRecovery(t *testing.T) {
@@ -96,3 +96,4 @@ func TestRejectedTargetedValidatorCaptureRoutesEscalatedRecovery(t *testing.T) {
 		})
 	}
 }
+

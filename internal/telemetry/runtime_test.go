@@ -8,14 +8,14 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/opencode"
+	"github.com/jonsanchezr/agent-smith/v4/internal/opencode"
 	"github.com/santhosh-tekuri/jsonschema/v6"
 )
 
 const tokenAbsent = `{"reported":0,"unavailable":1,"unsupported":0,"sum":0}`
 const tokenZero = `{"reported":1,"unavailable":0,"unsupported":0,"sum":0}`
 const tokenNone = `{"reported":0,"unavailable":0,"unsupported":0,"sum":0}`
-const runtimeFixture = `{"schema":"gentle-ai.telemetry-runtime-aggregate/v1","registry":1,"host":"claude-code","rows":[{"model":{"provider":"anthropic","id":"claude-opus-5"},"agent_kind":"orchestrator","agent_class":"unknown","model_evidence":"response","selected_effort":"unavailable","effective_effort":"high","launches":1,"responses":0,"input_tokens":` + tokenZero + `,"output_tokens":` + tokenAbsent + `,"cache_read_tokens":{"reported":0,"unavailable":0,"unsupported":1,"sum":0},"cache_creation_tokens":` + tokenAbsent + `,"reasoning_tokens":` + tokenAbsent + `,"total_tokens":` + tokenAbsent + `,"error_category":"unknown","duration":{"kind":"unavailable","measured_count":0,"sum_ms":null}}]}`
+const runtimeFixture = `{"schema":"agent-smith.telemetry-runtime-aggregate/v1","registry":1,"host":"claude-code","rows":[{"model":{"provider":"anthropic","id":"claude-opus-5"},"agent_kind":"orchestrator","agent_class":"unknown","model_evidence":"response","selected_effort":"unavailable","effective_effort":"high","launches":1,"responses":0,"input_tokens":` + tokenZero + `,"output_tokens":` + tokenAbsent + `,"cache_read_tokens":{"reported":0,"unavailable":0,"unsupported":1,"sum":0},"cache_creation_tokens":` + tokenAbsent + `,"reasoning_tokens":` + tokenAbsent + `,"total_tokens":` + tokenAbsent + `,"error_category":"unknown","duration":{"kind":"unavailable","measured_count":0,"sum_ms":null}}]}`
 
 func tokenReported(sum string) string {
 	return `{"reported":1,"unavailable":0,"unsupported":0,"sum":` + sum + `}`
@@ -382,3 +382,4 @@ func TestRuntimeModelPatternsMatchSchema(t *testing.T) {
 		t.Fatalf("schema id pattern = %q, want Go constant %q", generic.ID.Pattern, runtimeModelIDPattern)
 	}
 }
+

@@ -5,7 +5,7 @@ import (
 	"errors"
 	"os"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/catalog"
+	"github.com/jonsanchezr/agent-smith/v4/internal/catalog"
 )
 
 // builtinSkills returns the current set of built-in skill names derived from
@@ -79,3 +79,4 @@ func HasConflictWithBuiltin(name string) bool {
 	_, ok := builtinSkills()[name]
 	return ok
 }
+

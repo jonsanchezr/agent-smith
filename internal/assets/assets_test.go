@@ -155,7 +155,7 @@ func TestClaudeODDOnlyOrchestrator(t *testing.T) {
 		"{{GENTLE_AI_ODD_SECTION:Organic Driven Development Is The Default Workflow (MANDATORY)}}",
 		"{{GENTLE_AI_ODD_SECTION:Language Domain Contract}}",
 		"{{GENTLE_AI_ODD_SECTION:Delegated Verification Gate (MANDATORY)}}",
-		"Lossless Blocking Prompts", "Gentle AI Provider Defect Handoff",
+		"Lossless Blocking Prompts", "Agent Smith Provider Defect Handoff",
 		"Native Checking Contract", "Review Execution Contract", "Mandatory Delegation Triggers",
 	} {
 		if !strings.Contains(content, required) {
@@ -190,7 +190,7 @@ func TestPrimaryODDOnlyOrchestrator(t *testing.T) {
 			for _, required := range []string{
 				"{{GENTLE_AI_ODD_SECTION:Organic Driven Development Is The Default Workflow (MANDATORY)}}",
 				"{{GENTLE_AI_ODD_SECTION:Delegated Verification Gate (MANDATORY)}}",
-				"Lossless Blocking Prompts", "Gentle AI Provider Defect Handoff",
+				"Lossless Blocking Prompts", "Agent Smith Provider Defect Handoff",
 				"Mandatory Delegation Triggers", "Native Checking Contract", "Review Execution Contract",
 			} {
 				if !strings.Contains(content, required) {
@@ -208,7 +208,7 @@ func TestPrimaryODDOnlyOrchestrator(t *testing.T) {
 				}
 			}
 			if runtime == "opencode" {
-				for _, required := range []string{"Delegation Visibility (OpenCode Desktop)", "`gentle-ai-explore`", "`gentle-ai-worker`", "`gentle-ai-verify`", "Sub-Agent Launch Deduplication", "Sub-Agent Context Protocol"} {
+				for _, required := range []string{"Delegation Visibility (OpenCode Desktop)", "`agent-smith-explore`", "`agent-smith-worker`", "`agent-smith-verify`", "Sub-Agent Launch Deduplication", "Sub-Agent Context Protocol"} {
 					if !strings.Contains(content, required) {
 						t.Errorf("missing OpenCode contract %q", required)
 					}
@@ -235,7 +235,7 @@ func TestRemainingODDOnlyOrchestrators(t *testing.T) {
 				"{{GENTLE_AI_ODD_SECTION:Organic Driven Development Is The Default Workflow (MANDATORY)}}",
 				"{{GENTLE_AI_ODD_SECTION:Language Domain Contract}}",
 				"{{GENTLE_AI_ODD_SECTION:Delegated Verification Gate (MANDATORY)}}",
-				"Lossless Blocking Prompts", "Gentle AI Provider Defect Handoff",
+				"Lossless Blocking Prompts", "Agent Smith Provider Defect Handoff",
 				"Mandatory Delegation Triggers", "Native Checking Contract", "Review Execution Contract",
 			} {
 				if !strings.Contains(content, required) {
@@ -278,7 +278,7 @@ import { syncBuiltinESMExports } from "node:module"
 const calls = []
 const held = []
 childProcess.execFile = (file, args, options, callback) => {
-  assert.equal(file,"gentle-ai")
+  assert.equal(file,"agent-smith")
   assert.deepEqual(args,["telemetry","runtime","opencode","--json"])
   assert.equal(options.timeout,4000); assert.equal(options.maxBuffer,1024)
   const call = { args, body: "", killed:false }; calls.push(call)
@@ -309,13 +309,13 @@ await tick();assert.equal(returned,true);assert.equal(calls.length,1)
 assert(!calls[0].body.includes("PRIVATE"))
 const envelope=JSON.parse(calls[0].body)
 assert.deepEqual(Object.keys(envelope).sort(),["info","schema"])
-assert.equal(envelope.schema,"gentle-ai.telemetry-opencode/v1")
+assert.equal(envelope.schema,"agent-smith.telemetry-opencode/v1")
 assert.equal(envelope.info.agent,"sdd-apply")
 assert.equal(envelope.info.tokens,undefined)
 held.shift()(new Error("PRIVATE_NATIVE_ERROR"),"")
 await tick();await tick();assert.equal(calls.length,1) // failure never retries
 await event(info);assert.equal(calls.length,2) // a new event is a new attempt
-held.shift()(null,JSON.stringify({schema:"gentle-ai.telemetry-runtime-send/v1",decision:"discarded"}))
+held.shift()(null,JSON.stringify({schema:"agent-smith.telemetry-runtime-send/v1",decision:"discarded"}))
 await tick();assert.equal(calls.length,2) // discarded metrics stay discarded
 await event({...info,mode:"x".repeat(65)});assert.equal(calls.length,3)
 assert.equal(JSON.parse(calls[2].body).info.agent,undefined);held.shift()(null,"")
@@ -357,7 +357,7 @@ var retiredWorkRunCeremonyTokens = []string{
 	"connectorSessionRef",
 	"GENTLE_AI_PRODUCTIVE_RUNTIME",
 	"{{GENTLE_AI_RUNTIME_AGENT_ID}}",
-	"--contract gentle-ai.work-",
+	"--contract agent-smith.work-",
 }
 
 func TestODDOrchestratorsCarryNoRetiredWorkRunCeremony(t *testing.T) {
@@ -396,7 +396,7 @@ func TestOrchestratorsProjectOrganicRouting(t *testing.T) {
 		}
 		for _, retired := range []string{
 			"#### Review Lens Selection", "run exactly ONE lens", "run the full 4R set",
-			"review/start(target)", "gentle-ai.review-integration/v1 --next-transition",
+			"review/start(target)", "agent-smith.review-integration/v1 --next-transition",
 		} {
 			if strings.Contains(content, retired) {
 				t.Fatalf("%s retained prompt-owned review ceremony %q", path, retired)
@@ -612,7 +612,7 @@ func TestOpenCodeEmbeddedAssetLayout(t *testing.T) {
 		t.Fatalf("ReadDir(opencode/agents) error = %v", err)
 	}
 	wantAgents := map[string]bool{
-		"gentle-ai-explore.md": true, "gentle-ai-verify.md": true, "gentle-ai-worker.md": true,
+		"agent-smith-explore.md": true, "agent-smith-verify.md": true, "agent-smith-worker.md": true,
 		"jd-judge-a.md": true, "jd-judge-b.md": true, "jd-fix-agent.md": true,
 		"review-risk.md": true, "review-readability.md": true, "review-reliability.md": true, "review-resilience.md": true,
 	}
@@ -659,8 +659,8 @@ func TestOpenCodeEmbeddedAssetLayout(t *testing.T) {
 func TestOpenCodeBackgroundPolicyMarkersAreBalanced(t *testing.T) {
 	content := MustRead("opencode/background-subagents.md")
 	const (
-		start = "<!-- gentle-ai:opencode-background-subagents -->"
-		end   = "<!-- /gentle-ai:opencode-background-subagents -->"
+		start = "<!-- agent-smith:opencode-background-subagents -->"
+		end   = "<!-- /agent-smith:opencode-background-subagents -->"
 	)
 	trimmed := strings.TrimSpace(content)
 	if strings.Count(trimmed, start) != 1 || strings.Count(trimmed, end) != 1 {
@@ -679,14 +679,14 @@ func TestOpenCodeReviewTransportPluginContract(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	for _, want := range []string{`gentle-ai.provider-transport/v1`, `"review", "opencode-transport"`, `RELAY_REGISTRY_KEY`, `reviewRelayRegistry()`, `output.args.prompt = (await relay.prompt).prompt`, `output.output = await registration.relay.complete(output.output)`, `"tool.execute.before"`, `"tool.execute.after"`,
+	for _, want := range []string{`agent-smith.provider-transport/v1`, `"review", "opencode-transport"`, `RELAY_REGISTRY_KEY`, `reviewRelayRegistry()`, `output.args.prompt = (await relay.prompt).prompt`, `output.output = await registration.relay.complete(output.output)`, `"tool.execute.before"`, `"tool.execute.after"`,
 		// A refused relay start must fail the Task loudly and never launch an
 		// unbound child: the before hook poisons the Task prompt and the after
 		// hook replaces child output with the typed refusal, so a host runtime
 		// that swallows hook errors still cannot deliver an unbound child's
 		// prose as a reviewer completion.
 		`opencode_review_transport_relay_refused`, `refused.set(key, reason)`, `output.args.prompt = relayRefusedPrompt(reason)`, `output.output = relayRefusedOutput(refusal)`,
-		// Issue #3049 binary handshake: the plugin probes PATH for gentle-ai
+		// Issue #3049 binary handshake: the plugin probes PATH for agent-smith
 		// before spawning the relay child and refuses with two typed codes
 		// that route through the same refused-prompt / refused-output
 		// machinery so a refused handshake still fails the Task loudly.
@@ -820,7 +820,7 @@ func TestSkillRegistryPluginContract(t *testing.T) {
 			t.Fatalf("skill-registry.ts missing %q", want)
 		}
 	}
-	// stdout belongs to OpenCode commands whose output gentle-ai parses
+	// stdout belongs to OpenCode commands whose output agent-smith parses
 	// (`opencode models --verbose`); plugin logging must stay on stderr.
 	for _, forbidden := range []string{"console.info", "console.log"} {
 		if strings.Contains(src, forbidden) {
@@ -1003,7 +1003,7 @@ func TestOpenCodeODDOrchestratorDelegationVisibility(t *testing.T) {
 	content := MustRead("opencode/orchestrator.md")
 
 	for _, required := range []string{
-		"<!-- gentle-ai:opencode-desktop-delegation-progress -->",
+		"<!-- agent-smith:opencode-desktop-delegation-progress -->",
 		"#### Delegation Visibility (OpenCode Desktop)",
 		"`delegate` or `task`",
 		"assistant-visible status line immediately before the call",
@@ -1014,7 +1014,7 @@ func TestOpenCodeODDOrchestratorDelegationVisibility(t *testing.T) {
 		"15 tokens or fewer",
 		"25 tokens or fewer",
 		"executor prompts",
-		"<!-- /gentle-ai:opencode-desktop-delegation-progress -->",
+		"<!-- /agent-smith:opencode-desktop-delegation-progress -->",
 	} {
 		if !strings.Contains(content, required) {
 			t.Fatalf("opencode/sdd-orchestrator.md missing delegation visibility wording %q", required)
@@ -1551,16 +1551,16 @@ func TestODDOrchestratorAssetsScopedToParent(t *testing.T) {
 	}
 }
 
-// Gentleman-Programming/gentle-shell#1713: the generic workers read the ODD
+// jonsanchezr/gentle-shell#1713: the generic workers read the ODD
 // feature document as the specification, by reference, instead of a
 // paraphrase of the user's request; verify grounds its verdict in each spec.
 func TestOpenCodeGenericAgentsReadTheFeatureSpecByReference(t *testing.T) {
 	t.Parallel()
 
 	want := map[string][]string{
-		"opencode/agents/gentle-ai-worker.md":  {"until `## Log`", "`## Specs` are authoritative over any summary in the handoff", "which `S#` the change covers"},
-		"opencode/agents/gentle-ai-verify.md":  {"execute only exact test, build, lint, or spec example commands explicitly authorized by the parent", "verbatim user entries in `## Log`", "verdict per `S#`", "compare the exact output and error text", "isolated state"},
-		"opencode/agents/gentle-ai-explore.md": {"until `## Log`"},
+		"opencode/agents/agent-smith-worker.md":  {"until `## Log`", "`## Specs` are authoritative over any summary in the handoff", "which `S#` the change covers"},
+		"opencode/agents/agent-smith-verify.md":  {"execute only exact test, build, lint, or spec example commands explicitly authorized by the parent", "verbatim user entries in `## Log`", "verdict per `S#`", "compare the exact output and error text", "isolated state"},
+		"opencode/agents/agent-smith-explore.md": {"until `## Log`"},
 	}
 	for path, clauses := range want {
 		body, err := FS.ReadFile(path)
@@ -1574,3 +1574,4 @@ func TestOpenCodeGenericAgentsReadTheFeatureSpecByReference(t *testing.T) {
 		}
 	}
 }
+

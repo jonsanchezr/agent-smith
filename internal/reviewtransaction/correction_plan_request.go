@@ -8,8 +8,8 @@ import (
 )
 
 const (
-	CorrectionPlanRequestSchema   = "gentle-ai.review-correction-plan-request/v1"
-	CorrectionPlanRequestSchemaID = "https://gentle-ai.dev/contracts/review-integration/v1/schemas/correction-plan-request.schema.json"
+	CorrectionPlanRequestSchema   = "agent-smith.review-correction-plan-request/v1"
+	CorrectionPlanRequestSchemaID = "https://agent-smith.dev/contracts/review-integration/v1/schemas/correction-plan-request.schema.json"
 )
 
 // CorrectionPlanRequest is the immutable provider-owned input for planning one
@@ -142,3 +142,4 @@ func correctionPlanRequestHash(request CorrectionPlanRequest) string {
 	sum := sha256.Sum256(append([]byte(CorrectionPlanRequestSchema+"\x00"), payload...))
 	return "sha256:" + hex.EncodeToString(sum[:])
 }
+

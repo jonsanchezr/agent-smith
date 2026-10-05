@@ -1,4 +1,4 @@
-// gentle-ai:managed telemetry-runtime/v2
+﻿// agent-smith:managed telemetry-runtime/v2
 import { Plugin } from "@opencode/plugin"
 import { execFile } from "node:child_process"
 
@@ -13,7 +13,7 @@ function veto() {
 }
 
 export default Plugin.define({
-  id: "gentle-ai.telemetry-runtime",
+  id: "agent-smith.telemetry-runtime",
   setup(ctx) {
     // Explicit V2-only privacy exception: bounded, expiring RAM correlation.
     // No raw event retention, identity output, persistence, retries or SDK reads.
@@ -51,7 +51,7 @@ export default Plugin.define({
           if (!start || event.created < start.created || children.size >= MAX_IN_FLIGHT) continue
           const tokens = event.data.tokens
           const error = event.type === "session.step.failed" ? event.data.error : undefined
-          const body = JSON.stringify({ schema: "gentle-ai.telemetry-opencode/v2", info: {
+          const body = JSON.stringify({ schema: "agent-smith.telemetry-opencode/v2", info: {
             role: "assistant", time: { created: start.created, completed: event.created },
             providerID: start.providerID, modelID: start.modelID, agent: start.agent, selectedEffort: start.selectedEffort,
             tokens: tokens && { input: counter(tokens.input), output: counter(tokens.output), reasoning: counter(tokens.reasoning),
@@ -60,7 +60,7 @@ export default Plugin.define({
           } })
           if (Buffer.byteLength(body) > 16384 || veto()) continue
           try {
-            const child = execFile("gentle-ai", ["telemetry", "runtime", "opencode", "--json"],
+            const child = execFile("agent-smith", ["telemetry", "runtime", "opencode", "--json"],
               { timeout: 4000, killSignal: "SIGKILL", maxBuffer: 1024, windowsHide: true }, () => children.delete(child))
             children.add(child)
             child.stdin?.on("error", () => {})
@@ -79,3 +79,4 @@ export default Plugin.define({
     }
   },
 })
+

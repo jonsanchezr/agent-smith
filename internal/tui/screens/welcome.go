@@ -5,8 +5,8 @@ import (
 	"strings"
 
 	"github.com/charmbracelet/lipgloss"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/tui/styles"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/update"
+	"github.com/jonsanchezr/agent-smith/v4/internal/tui/styles"
+	"github.com/jonsanchezr/agent-smith/v4/internal/update"
 	"github.com/rivo/uniseg"
 )
 
@@ -457,3 +457,4 @@ func hardWrapWord(word string, width int) []string {
 	}
 	return lines
 }
+

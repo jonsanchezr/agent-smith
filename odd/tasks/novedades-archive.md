@@ -1,4 +1,4 @@
-# Feature: novedades archive in docs/novedades
+﻿# Feature: novedades archive in docs/novedades
 
 ## Objective
 Turn the generated "novedades" PDF into a periodic publication with a fixed identity, archived in the repository so the community can consult past editions and future ones stay reproducible.
@@ -9,15 +9,15 @@ The 2026-09-20 edition was generated ad hoc from a local content JSON. Nothing i
 ## Scope
 - `docs/novedades/README.md`: what this publication is, fixed structure, naming convention, how an edition is produced, and the index of editions.
 - `docs/novedades/plantilla.json`: the fixed template, derived from the approved 2026-09-20 edition, with placeholder content and comments-by-example.
-- `docs/novedades/2026-09-20/`: first archived edition — `novedades.json` (source), both PDFs (dark + light).
+- `docs/novedades/2026-09-20/`: first archived edition â€” `novedades.json` (source), both PDFs (dark + light).
 - Style/design lives in the global `gentle-docs` skill, not in this repo; the README points at it and records the commit range so an edition can be rebuilt.
 - Out of scope: publishing a website, automating generation in CI, changing the skill itself (tracked separately below).
 
 ## Constraints
-- Fixed structure for every edition, in order: cover + stats, "En 30 segundos", "¿Te afecta?", numbered sections, glosario, cierre, anexo de commits.
-- Naming: `gentle-ai-novedades-YYYY-MM-DD[-claro].pdf`, folder `docs/novedades/YYYY-MM-DD/`.
+- Fixed structure for every edition, in order: cover + stats, "En 30 segundos", "Â¿Te afecta?", numbered sections, glosario, cierre, anexo de commits.
+- Naming: `agent-smith-novedades-YYYY-MM-DD[-claro].pdf`, folder `docs/novedades/YYYY-MM-DD/`.
 - Every edition records its commit range (`<base>..<head>`) so it is reproducible.
-- Reader-facing content in neutral Latin American Spanish; repository docs (README) in English per repo convention — verify against existing docs/ files before writing.
+- Reader-facing content in neutral Latin American Spanish; repository docs (README) in English per repo convention â€” verify against existing docs/ files before writing.
 - Never show palette hex codes as visible document text.
 
 ## TDD
@@ -26,7 +26,7 @@ The 2026-09-20 edition was generated ad hoc from a local content JSON. Nothing i
 
 ## Delivery
 - Route: delegated direct (writer trigger: 2+ non-trivial files). One writer.
-- Worktree: `~/work/oss/gentle-ai-worktrees/novedades-archive`, branch `docs/novedades-archive`, base `upstream/main` (f0782af2).
+- Worktree: `~/work/oss/agent-smith-worktrees/novedades-archive`, branch `docs/novedades-archive`, base `upstream/main` (f0782af2).
 - Commits: Conventional Commits on the branch. Push/PR remain the user's decision.
 
 ## Tasks
@@ -42,8 +42,8 @@ The 2026-09-20 edition was generated ad hoc from a local content JSON. Nothing i
 ## Progress / Evidence
 - 2026-09-20: worktree created; feature document written.
 - 2026-09-20: T1 done. Route: delegated direct (writer trigger, 2+ non-trivial files), one writer.
-  - docs/ language convention verified: English (checked `docs/usage.md`, `docs/community-roadmap.md`, `docs/agents.md` — `## Section` headings, `← [Back to README](../README.md)` back-links, concise prose). README.md written in English; archived edition content stays in Spanish (per its own `lang: "es"`).
-  - Built: `docs/novedades/README.md`, `docs/novedades/plantilla.json`, `docs/novedades/2026-09-20/{novedades.json, gentle-ai-novedades-2026-09-20.pdf, gentle-ai-novedades-2026-09-20-claro.pdf}`.
+  - docs/ language convention verified: English (checked `docs/usage.md`, `docs/community-roadmap.md`, `docs/agents.md` â€” `## Section` headings, `â† [Back to README](../README.md)` back-links, concise prose). README.md written in English; archived edition content stays in Spanish (per its own `lang: "es"`).
+  - Built: `docs/novedades/README.md`, `docs/novedades/plantilla.json`, `docs/novedades/2026-09-20/{novedades.json, agent-smith-novedades-2026-09-20.pdf, agent-smith-novedades-2026-09-20-claro.pdf}`.
   - Verification (all commands run in the foreground from the worktree):
     - `build.py docs/novedades/2026-09-20/novedades.json --out <scratchpad>/build-edition --theme both`: exit 0, both PDFs produced.
     - `build.py docs/novedades/plantilla.json --out <scratchpad>/build-plantilla --theme both`: exit 0, both PDFs produced (proves the template is valid and buildable).
@@ -53,11 +53,11 @@ The 2026-09-20 edition was generated ad hoc from a local content JSON. Nothing i
   - Commit: see git log on `docs/novedades-archive` for the T1 commit hash and subject.
   - Deviation: none. Open question: none for T1 (T2 parent verification and T3 skill-side preset remain open, as scoped).
 - 2026-09-20 T2 (parent, inline): rebuilt both PDFs from the archived `novedades.json` -> 12/12 pages, extracted text identical to the archived copies; `contrast.py` exit 0; preview rendered and reviewed; README index links resolve.
-  - Two findings fixed in commit `7e2ba04f`: the README claimed a rebuild is byte-for-byte (false — PDF build metadata changes the hash; page count and text do match), and nothing linked to the archive, so the community could not find it. Added a `Novedades` entry to the README nav.
+  - Two findings fixed in commit `7e2ba04f`: the README claimed a rebuild is byte-for-byte (false â€” PDF build metadata changes the hash; page count and text do match), and nothing linked to the archive, so the community could not find it. Added a `Novedades` entry to the README nav.
 - 2026-09-20 T3: shipped `assets/examples/novedades-plantilla.json` in the global `gentle-docs` skill and referenced it from SKILL.md; `pytest` -> 26 passed (the new example is covered by the parametrized build test).
 - Status: all tasks done. Branch `docs/novedades-archive` has 2 commits, not pushed. Push and PR remain the user's decision.
-- 2026-09-20 (correction): fixed the commit range in `annex.note` — it read `Rango: 82a6de96..upstream/main`, which is unreproducible (`upstream/main` is a moving ref) and unanchored (nothing named the release the base hash corresponds to). Verified `82a6de96` is exactly the `v3.4.0` tag and `f0782af2` is the current `upstream/main` tip.
-  - Route: delegated direct (writer trigger: 2+ non-trivial files touched — `novedades.json`, `plantilla.json`, `README.md`, both PDFs).
+- 2026-09-20 (correction): fixed the commit range in `annex.note` â€” it read `Rango: 82a6de96..upstream/main`, which is unreproducible (`upstream/main` is a moving ref) and unanchored (nothing named the release the base hash corresponds to). Verified `82a6de96` is exactly the `v3.4.0` tag and `f0782af2` is the current `upstream/main` tip.
+  - Route: delegated direct (writer trigger: 2+ non-trivial files touched â€” `novedades.json`, `plantilla.json`, `README.md`, both PDFs).
   - Edits:
     - `docs/novedades/2026-09-20/novedades.json` (`annex.note`, line 334): `Rango: 82a6de96..upstream/main` -> `Rango: v3.4.0 (82a6de96)..f0782af2`.
     - `docs/novedades/plantilla.json` (line 173): `Rango: <hash-base>..<hash-head>` -> `Rango: <tag-release-anterior> (<hash-base>)..<hash-head>`.
@@ -71,12 +71,12 @@ The 2026-09-20 edition was generated ad hoc from a local content JSON. Nothing i
     - Text extraction of the rebuilt dark PDF (pypdfium2): `v3.4.0` present, `f0782af2` present, `upstream/main` absent from the annex range line.
     - `scripts/preview.py` contact sheet rendered and visually reviewed: annex page (page 11 of 12) shows "Rango: v3.4.0 (82a6de96)..f0782af2" cleanly, no layout breakage.
   - Deviation: none.
-- 2026-09-20 (rework): the per-edition-folder-plus-PDFs model was measured against the actual cadence and does not survive it. Two facts forced the change: the upstream repo cuts a release every ~1.4 days (40 releases over 57 days) and `main` takes ~19 non-merge commits per day (391 over 21 days); the user decided the publication follows `main` near-daily rather than per release. Consequences: (1) anchoring every edition to the latest release tag makes daily editions repeat the previous day's commits, so ranges must chain instead (base = previous edition's head hash, falling back to the latest release tag only for the first edition); (2) committing two ~76 KB PDFs per edition at daily cadence is ~55 MB/year against a 94 MB repo, so PDFs stop being committed — the per-release consolidated PDF is now a GitHub release asset instead.
-  - Route: delegated direct (writer trigger: 2+ non-trivial files touched — new `2026-09-20.md`, new `plantilla.md`, rewritten `README.md`, deletions of `plantilla.json`, `2026-09-20/novedades.json`, both PDFs, and the now-empty `2026-09-20/` folder).
-  - Built: `docs/novedades/2026-09-20.md` (converted from the archived `novedades.json`, same content and section order, front matter records the range/count/date), `docs/novedades/plantilla.md` (daily-edition template with the chained-range placeholder). Deleted: `docs/novedades/plantilla.json`, `docs/novedades/2026-09-20/novedades.json`, both PDFs under `2026-09-20/`, and the resulting empty `2026-09-20/` folder. Rewrote `docs/novedades/README.md` for the daily-Markdown / per-release-PDF split, the chained range rule with its first-edition fallback, non-merge counting, how to produce a daily edition, and how to produce the per-release PDF from a consolidation JSON authored against the `gentle-docs` skill's `assets/examples/novedades-plantilla.json` (referenced, not duplicated). Root `README.md`'s `Novedades` nav line was left unchanged — the path (`docs/novedades/README.md`) did not change.
+- 2026-09-20 (rework): the per-edition-folder-plus-PDFs model was measured against the actual cadence and does not survive it. Two facts forced the change: the upstream repo cuts a release every ~1.4 days (40 releases over 57 days) and `main` takes ~19 non-merge commits per day (391 over 21 days); the user decided the publication follows `main` near-daily rather than per release. Consequences: (1) anchoring every edition to the latest release tag makes daily editions repeat the previous day's commits, so ranges must chain instead (base = previous edition's head hash, falling back to the latest release tag only for the first edition); (2) committing two ~76 KB PDFs per edition at daily cadence is ~55 MB/year against a 94 MB repo, so PDFs stop being committed â€” the per-release consolidated PDF is now a GitHub release asset instead.
+  - Route: delegated direct (writer trigger: 2+ non-trivial files touched â€” new `2026-09-20.md`, new `plantilla.md`, rewritten `README.md`, deletions of `plantilla.json`, `2026-09-20/novedades.json`, both PDFs, and the now-empty `2026-09-20/` folder).
+  - Built: `docs/novedades/2026-09-20.md` (converted from the archived `novedades.json`, same content and section order, front matter records the range/count/date), `docs/novedades/plantilla.md` (daily-edition template with the chained-range placeholder). Deleted: `docs/novedades/plantilla.json`, `docs/novedades/2026-09-20/novedades.json`, both PDFs under `2026-09-20/`, and the resulting empty `2026-09-20/` folder. Rewrote `docs/novedades/README.md` for the daily-Markdown / per-release-PDF split, the chained range rule with its first-edition fallback, non-merge counting, how to produce a daily edition, and how to produce the per-release PDF from a consolidation JSON authored against the `gentle-docs` skill's `assets/examples/novedades-plantilla.json` (referenced, not duplicated). Root `README.md`'s `Novedades` nav line was left unchanged â€” the path (`docs/novedades/README.md`) did not change.
   - Verification (all commands run in the foreground from the worktree):
     - Every internal link/path in `docs/novedades/README.md` confirmed to resolve on disk (`../../README.md`, `2026-09-20.md`) or exist on the filesystem (`~/.claude/skills/gentle-docs/assets/build.py`, `assets/examples/novedades-plantilla.json`, `scripts/setup.sh`, `scripts/contrast.py`, `scripts/preview.py`).
-    - `git log --no-merges --format='%h %s' 82a6de96..f0782af2`: 17 lines, extracted and diffed against the 17 annex rows in `2026-09-20.md` — exact match (hash and subject, no drift from the JSON's original data).
+    - `git log --no-merges --format='%h %s' 82a6de96..f0782af2`: 17 lines, extracted and diffed against the 17 annex rows in `2026-09-20.md` â€” exact match (hash and subject, no drift from the JSON's original data).
     - `git rev-list --count --no-merges 82a6de96..f0782af2` -> 17. `git rev-list --count 82a6de96..f0782af2` -> 19. Both match the front matter and the README's stated numbers.
     - `go run ./internal/gofmtcheck` -> exit 0 (no Go touched; sanity check only).
     - `git diff --numstat f0782af2..HEAD` summed: 532 additions, 0 deletions (binary PDFs and the superseded JSON files net to zero against the f0782af2 base, since none of them existed there either). This exceeds the repo's 400-line PR gate; stated here plainly, no chaining applied per this task's explicit scope (single writer, one or more commits on the existing branch).
@@ -93,3 +93,4 @@ The 2026-09-20 edition was generated ad hoc from a local content JSON. Nothing i
   - Edits: removed `docs/novedades/` (`README.md`, `plantilla.md`, `2026-09-20.md`) and the `Novedades` link from the root `README.md` navigation. This task history stays as the record of how the publication was designed.
   - Verification: `git grep -n -i novedades` outside `odd/tasks/` returns nothing; the root README navigation keeps its remaining four links.
   - Superseded: the committed-Markdown, chained-range and per-release consolidated-PDF rules above no longer apply to this repository.
+

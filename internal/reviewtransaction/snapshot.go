@@ -18,7 +18,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/pathidentity"
+	"github.com/jonsanchezr/agent-smith/v4/internal/pathidentity"
 )
 
 type TargetKind string
@@ -220,7 +220,7 @@ func (builder SnapshotBuilder) build(ctx context.Context, target Target, allowSt
 		}
 	case TargetExactRevision:
 		baseTree, candidateTree, err = builder.resolveExactRevision(ctx, target.Revision)
-		untrackedProof = hashCanonical("gentle-ai.intended-untracked/v1")
+		untrackedProof = hashCanonical("agent-smith.intended-untracked/v1")
 	case TargetFixDiff:
 		if strings.TrimSpace(target.BaseRef) == "" || len(ledgerIDs) == 0 {
 			return Snapshot{}, errors.New("fix-diff requires base_ref and ledger_ids")
@@ -301,7 +301,7 @@ func (builder SnapshotBuilder) buildHeadWithIntended(ctx context.Context, intend
 	}
 	// Keep the private index beside Git's writable control files. A restricted
 	// integration environment may not provide an accessible process temp dir.
-	temp, err := os.CreateTemp(gitDir, ".gentle-ai-review-index-*")
+	temp, err := os.CreateTemp(gitDir, ".agent-smith-review-index-*")
 	if err != nil {
 		return "", "", err
 	}
@@ -795,7 +795,7 @@ func (builder SnapshotBuilder) IntendedUntrackedInventory(ctx context.Context) (
 // intendedUntrackedInventoryCommand is the runnable STATUS that publishes the
 // canonical untracked inventory; the bare `--next-transition` form is refused
 // without a negotiated contract and runtime identity (issue #2895).
-const intendedUntrackedInventoryCommand = "gentle-ai review status --cwd <repo> --contract gentle-ai.review-integration/v2 --agent <runtime> --next-transition"
+const intendedUntrackedInventoryCommand = "agent-smith review status --cwd <repo> --contract agent-smith.review-integration/v2 --agent <runtime> --next-transition"
 
 // StillUntracked keeps the entries of a frozen intended-untracked declaration
 // that the index does not carry yet (issue #3759). A declared path committed
@@ -851,7 +851,7 @@ func (builder SnapshotBuilder) ValidateIntendedUntrackedSelection(ctx context.Co
 
 func intendedUntrackedInventoryDigest(paths []string) string {
 	hash := sha256.New()
-	writeLengthPrefixed(hash, []byte("gentle-ai.intended-untracked-inventory/v1"))
+	writeLengthPrefixed(hash, []byte("agent-smith.intended-untracked-inventory/v1"))
 	for _, path := range paths {
 		writeLengthPrefixed(hash, []byte(path))
 	}
@@ -1216,7 +1216,7 @@ func (builder *SnapshotBuilder) buildCurrentChanges(ctx context.Context, intende
 	}
 	// Keep the private index beside Git's writable control files. A restricted
 	// integration environment may not provide an accessible process temp dir.
-	temp, err := os.CreateTemp(filepath.Dir(indexPath), ".gentle-ai-review-index-*")
+	temp, err := os.CreateTemp(filepath.Dir(indexPath), ".agent-smith-review-index-*")
 	if err != nil {
 		return "", "", "", err
 	}
@@ -1487,7 +1487,7 @@ func (builder SnapshotBuilder) rejectIgnoredIntended(ctx context.Context, intend
 
 func (builder SnapshotBuilder) untrackedProof(ctx context.Context, candidateTree string, intended []string) (string, error) {
 	hash := sha256.New()
-	hash.Write([]byte("gentle-ai.intended-untracked/v1\x00"))
+	hash.Write([]byte("agent-smith.intended-untracked/v1\x00"))
 	if len(intended) == 0 {
 		return "sha256:" + hex.EncodeToString(hash.Sum(nil)), nil
 	}
@@ -1650,7 +1650,7 @@ func canonicalStrings(values []string, label string) ([]string, error) {
 
 func digestPaths(paths []string) string {
 	hash := sha256.New()
-	hash.Write([]byte("gentle-ai.paths/v1\x00"))
+	hash.Write([]byte("agent-smith.paths/v1\x00"))
 	for _, logicalPath := range paths {
 		writeLengthPrefixed(hash, []byte(logicalPath))
 	}
@@ -1712,11 +1712,11 @@ func IdentityForComponents(kind TargetKind, projection Projection, baseTree, can
 func snapshotIdentityForProjection(kind TargetKind, projection Projection, baseTree, candidateTree, pathsDigest, proof string, intended, ledgerIDs []string) string {
 	hash := sha256.New()
 	if kind == TargetBaseWorkspaceOverlay {
-		hash.Write([]byte("gentle-ai.review-snapshot/base-workspace-overlay/v2\x00"))
+		hash.Write([]byte("agent-smith.review-snapshot/base-workspace-overlay/v2\x00"))
 	} else if projection == ProjectionStaged {
-		hash.Write([]byte("gentle-ai.review-snapshot/v4\x00"))
+		hash.Write([]byte("agent-smith.review-snapshot/v4\x00"))
 	} else {
-		hash.Write([]byte("gentle-ai.review-snapshot/v3\x00"))
+		hash.Write([]byte("agent-smith.review-snapshot/v3\x00"))
 	}
 	values := []string{string(kind), baseTree, candidateTree, pathsDigest}
 	if projection == ProjectionStaged {
@@ -1808,7 +1808,7 @@ func (err *GitCommandError) Unwrap() error { return err.Cause }
 
 var ErrGitOutputLimit = errors.New("git output exceeded deterministic byte limit")
 
-// refusal:by-design world-action: unexpected Git diagnostics require repairing the repository or its environment; no Gentle AI command can safely infer that repair.
+// refusal:by-design world-action: unexpected Git diagnostics require repairing the repository or its environment; no Agent Smith command can safely infer that repair.
 var ErrGitInventoryDiagnostics = errors.New("git inventory produced diagnostics")
 
 // GitInventoryDiagnosticsError reports unexpected diagnostics from a Git
@@ -2175,3 +2175,4 @@ func sanitizedGitEnvironmentForRun(environment, extra []string, isolateConfig bo
 	result = append(result, extra...)
 	return result
 }
+

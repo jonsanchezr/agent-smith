@@ -7,8 +7,8 @@ import (
 	"io"
 )
 
-const RuntimeEventSchema = "gentle-ai.telemetry-runtime-event/v1"
-const RuntimeDeliverySchema = "gentle-ai.telemetry-runtime-delivery/v1"
+const RuntimeEventSchema = "agent-smith.telemetry-runtime-event/v1"
+const RuntimeDeliverySchema = "agent-smith.telemetry-runtime-delivery/v1"
 
 // RuntimeEvent is anonymous transport. DeliveryID is fresh for each observation
 // submission, OR a one-way hash of a host message id whose only purpose is
@@ -54,3 +54,4 @@ func ParseRuntimeEvent(data []byte) (RuntimeEvent, error) {
 	event.Registry = json.RawMessage("1")
 	return event, nil
 }
+

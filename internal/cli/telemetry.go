@@ -10,12 +10,12 @@ import (
 	"strings"
 	"time"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/state"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/telemetry"
+	"github.com/jonsanchezr/agent-smith/v4/internal/state"
+	"github.com/jonsanchezr/agent-smith/v4/internal/telemetry"
 )
 
-// TelemetryStatusSchema identifies the `gentle-ai telemetry status|enable|disable`
-// projection (gentle-ai.telemetry-status/v1).
+// TelemetryStatusSchema identifies the `agent-smith telemetry status|enable|disable`
+// projection (agent-smith.telemetry-status/v1).
 const TelemetryStatusSchema = telemetry.StatusSchema
 
 // TelemetryStdinReadLimit caps how many bytes `telemetry send` will read from
@@ -40,9 +40,9 @@ type TelemetryStatusResult struct {
 	Counters          telemetry.Counters `json:"counters"`
 }
 
-// TelemetryTriggerSchema identifies `gentle-ai telemetry trigger`'s answer
-// (gentle-ai.telemetry-trigger/v1).
-const TelemetryTriggerSchema = "gentle-ai.telemetry-trigger/v1"
+// TelemetryTriggerSchema identifies `agent-smith telemetry trigger`'s answer
+// (agent-smith.telemetry-trigger/v1).
+const TelemetryTriggerSchema = "agent-smith.telemetry-trigger/v1"
 
 // TelemetryTriggerResult is what `telemetry trigger` reports: the exhaustive
 // classification of what Opportunistic just did, never an error.
@@ -52,15 +52,15 @@ type TelemetryTriggerResult struct {
 	Source   string `json:"source"`
 }
 
-// RunTelemetry implements `gentle-ai telemetry status|enable|disable|preview`
+// RunTelemetry implements `agent-smith telemetry status|enable|disable|preview`
 // plus the hidden `telemetry send` subcommand that SpawnDetachedSend
 // launches in the background (payload arrives on its stdin, never a file
 // path, so there is never a path for it to remove). status, enable, disable,
 // and preview never send anything themselves.
 func RunTelemetry(args []string, stdout io.Writer) error {
 	if len(args) == 0 || args[0] == "help" || args[0] == "-h" || args[0] == "--help" {
-		_, _ = fmt.Fprintln(stdout, "Usage: gentle-ai telemetry <status|policy|enable|disable|preview|trigger|runtime> [--json]")
-		_, _ = fmt.Fprintln(stdout, "Anonymous, opt-out usage telemetry. status reports whether sending is enabled and why; policy reads effective collection permission without creating or repairing state; enable/disable set the local opt-out; preview prints the exact payload that would be sent next, without sending it; trigger runs the same opportunistic check install/update/sync run internally (enrollment, install-once, the 24h heartbeat limit, and the failure backoff all apply) — hosts such as Gentle Pi that call gentle-ai only through review/sdd-attempt use this to still get a heartbeat. The first run only shows the notice and sends nothing; sending starts on the following trigger. Opt out permanently with `gentle-ai telemetry disable`, or for one run with DO_NOT_TRACK=1.")
+		_, _ = fmt.Fprintln(stdout, "Usage: agent-smith telemetry <status|policy|enable|disable|preview|trigger|runtime> [--json]")
+		_, _ = fmt.Fprintln(stdout, "Anonymous, opt-out usage telemetry. status reports whether sending is enabled and why; policy reads effective collection permission without creating or repairing state; enable/disable set the local opt-out; preview prints the exact payload that would be sent next, without sending it; trigger runs the same opportunistic check install/update/sync run internally (enrollment, install-once, the 24h heartbeat limit, and the failure backoff all apply) — hosts such as Gentle Pi that call agent-smith only through review/sdd-attempt use this to still get a heartbeat. The first run only shows the notice and sends nothing; sending starts on the following trigger. Opt out permanently with `agent-smith telemetry disable`, or for one run with DO_NOT_TRACK=1.")
 		return nil
 	}
 
@@ -102,9 +102,9 @@ func runTelemetryPolicy(args []string, stdout io.Writer) error {
 		return err
 	}
 	if flags.NArg() != 0 {
-		return fmt.Errorf("telemetry policy takes no positional arguments; run 'gentle-ai telemetry policy' without positional arguments")
+		return fmt.Errorf("telemetry policy takes no positional arguments; run 'agent-smith telemetry policy' without positional arguments")
 	}
-	result := TelemetryPolicyResult{Schema: "gentle-ai.telemetry-policy/v1", Operation: "policy", Source: telemetry.SourceStateDisable, Reason: "state_unavailable"}
+	result := TelemetryPolicyResult{Schema: "agent-smith.telemetry-policy/v1", Operation: "policy", Source: telemetry.SourceStateDisable, Reason: "state_unavailable"}
 	decision := telemetry.Decide(os.Getenv, telemetry.State{Enabled: true})
 	if !decision.Enabled {
 		result.Source, result.Reason = decision.Source, string(telemetry.DecisionDisabled)
@@ -141,7 +141,7 @@ func runTelemetryStateCommand(operation string, args []string, stdout io.Writer)
 		return err
 	}
 	if flags.NArg() != 0 {
-		return fmt.Errorf("unexpected telemetry %s argument %q", operation, flags.Arg(0)) // refusal:by-design operator-knowledge: rerun `gentle-ai telemetry status|enable|disable` with no positional arguments
+		return fmt.Errorf("unexpected telemetry %s argument %q", operation, flags.Arg(0)) // refusal:by-design operator-knowledge: rerun `agent-smith telemetry status|enable|disable` with no positional arguments
 	}
 
 	homeDir, err := osUserHomeDir()
@@ -196,9 +196,9 @@ func runTelemetryStateCommand(operation string, args []string, stdout io.Writer)
 	_, _ = fmt.Fprintf(stdout, "install_id: %s\n", result.InstallID)
 	_, _ = fmt.Fprintf(stdout, "endpoint: %s\n", result.Endpoint)
 	if !result.Enabled {
-		_, _ = fmt.Fprintln(stdout, "run `gentle-ai telemetry enable` to opt back in")
+		_, _ = fmt.Fprintln(stdout, "run `agent-smith telemetry enable` to opt back in")
 	} else {
-		_, _ = fmt.Fprintln(stdout, "run `gentle-ai telemetry disable` to opt out")
+		_, _ = fmt.Fprintln(stdout, "run `agent-smith telemetry disable` to opt out")
 	}
 	return nil
 }
@@ -219,7 +219,7 @@ func runTelemetryPreview(args []string, stdout io.Writer) error {
 		return err
 	}
 	if flags.NArg() != 0 {
-		return fmt.Errorf("unexpected telemetry preview argument %q", flags.Arg(0)) // refusal:by-design operator-knowledge: rerun `gentle-ai telemetry preview` with no positional arguments
+		return fmt.Errorf("unexpected telemetry preview argument %q", flags.Arg(0)) // refusal:by-design operator-knowledge: rerun `agent-smith telemetry preview` with no positional arguments
 	}
 
 	homeDir, err := osUserHomeDir()
@@ -279,7 +279,7 @@ func runTelemetrySend(args []string, stdout io.Writer) error {
 		return err
 	}
 	if flags.NArg() != 0 {
-		return errors.New("telemetry send takes no arguments; it reads its payload from stdin") // refusal:by-design operator-knowledge: this hidden subcommand is only ever invoked by gentle-ai's own detached sender, which always pipes the payload on stdin
+		return errors.New("telemetry send takes no arguments; it reads its payload from stdin") // refusal:by-design operator-knowledge: this hidden subcommand is only ever invoked by agent-smith's own detached sender, which always pipes the payload on stdin
 	}
 	limited := io.LimitReader(os.Stdin, TelemetryStdinReadLimit)
 	payload, err := io.ReadAll(limited)
@@ -287,7 +287,7 @@ func runTelemetrySend(args []string, stdout io.Writer) error {
 		return fmt.Errorf("read telemetry payload from stdin: %w", err)
 	}
 	if len(payload) >= TelemetryStdinReadLimit {
-		return fmt.Errorf("telemetry payload on stdin exceeds %d bytes", telemetry.MaxPayloadBytes) // refusal:by-design operator-knowledge: this hidden subcommand only ever receives a payload gentle-ai's own event builder produced, which never exceeds the contract's ceiling; an oversized stream indicates a malformed caller, not a state any command can fix
+		return fmt.Errorf("telemetry payload on stdin exceeds %d bytes", telemetry.MaxPayloadBytes) // refusal:by-design operator-knowledge: this hidden subcommand only ever receives a payload agent-smith's own event builder produced, which never exceeds the contract's ceiling; an oversized stream indicates a malformed caller, not a state any command can fix
 	}
 	homeDir, err := osUserHomeDir()
 	if err != nil {
@@ -316,7 +316,7 @@ func telemetryInstalledSelection(homeDir string) ([]string, []string, error) {
 }
 
 // telemetryRDDEnabled reads the effective receipt-driven-development mode
-// through the same read-only reader `gentle-ai review mode status` uses. A
+// through the same read-only reader `agent-smith review mode status` uses. A
 // resolution failure (e.g. cwd is not a repository) is reported as disabled
 // rather than failing the caller: telemetry must never block on this.
 func telemetryRDDEnabled(cwd string) bool {
@@ -336,7 +336,7 @@ func telemetryRDDEnabled(cwd string) bool {
 // switch, so this returns false without ever resolving a home directory or
 // reading/writing anything. Only when the environment allows it does this
 // resolve home and re-run Decide against the real persisted state (which a
-// prior `gentle-ai telemetry disable` may have turned off).
+// prior `agent-smith telemetry disable` may have turned off).
 func telemetryEnabledHomeDir() (string, bool) {
 	if envDecision := telemetry.Decide(os.Getenv, telemetry.State{Enabled: true}); !envDecision.Enabled {
 		return "", false
@@ -364,7 +364,7 @@ func telemetryEnabledHomeDir() (string, bool) {
 // telemetryRecordReviewOutcome increments the one matching counter when a
 // review reaches a terminal outcome (approved, correction-required, or
 // escalated), then opportunistically triggers a send: hosts such as Gentle
-// Pi that drive gentle-ai only through `review ...` (never install/sync/
+// Pi that drive agent-smith only through `review ...` (never install/sync/
 // update) would otherwise accumulate counters forever without ever sending a
 // heartbeat. TelemetryTrigger already enforces enrollment-first, the 24h
 // heartbeat limit, the failure backoff, and every kill switch, so this adds
@@ -390,7 +390,7 @@ func telemetryRecordReviewOutcome(kind string) {
 
 // runTelemetryTriggerCommand runs exactly the opportunistic path a
 // successful install/update/sync runs internally, for hosts (e.g. Gentle Pi)
-// that otherwise never call gentle-ai through any of those three. It always
+// that otherwise never call agent-smith through any of those three. It always
 // exits 0: TelemetryTrigger is best-effort by construction, and the detached
 // child (if one was spawned) does the actual network call, so this never
 // blocks.
@@ -403,7 +403,7 @@ func runTelemetryTriggerCommand(args []string, stdout io.Writer) error {
 		return err
 	}
 	if flags.NArg() != 0 {
-		return fmt.Errorf("unexpected telemetry trigger argument %q", flags.Arg(0)) // refusal:by-design operator-knowledge: rerun `gentle-ai telemetry trigger` with no positional arguments
+		return fmt.Errorf("unexpected telemetry trigger argument %q", flags.Arg(0)) // refusal:by-design operator-knowledge: rerun `agent-smith telemetry trigger` with no positional arguments
 	}
 
 	homeDir, err := osUserHomeDir()
@@ -461,3 +461,4 @@ func telemetryTrigger(homeDir string, stderr io.Writer) {
 		Agents: agents, Components: components, RDDEnabled: telemetryRDDEnabled("."),
 	})
 }
+

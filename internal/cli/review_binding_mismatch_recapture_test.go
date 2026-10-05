@@ -9,7 +9,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/reviewtransaction"
+	"github.com/jonsanchezr/agent-smith/v4/internal/reviewtransaction"
 )
 
 // mismatchedSubjectReviewerPayload returns a fully well-formed reviewer result
@@ -110,3 +110,4 @@ func TestReviewCaptureResultRecapturesSameLensAfterBindingMismatch(t *testing.T)
 	assertApprovedAcknowledgementTransition(t, terminal.Acknowledgement, repo, started.LineageID, started.TargetIdentity, terminal.StoreRevision)
 	assertApprovedCompactAuthorityBurned(t, store, started.LineageID)
 }
+

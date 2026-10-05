@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"path/filepath"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/filecoord"
+	"github.com/jonsanchezr/agent-smith/v4/internal/filecoord"
 )
 
 // antigravityLockTarget returns the stable coordination target for one config
@@ -19,7 +19,7 @@ func antigravityLockTarget(configHome string) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	return filepath.Join(canonical, ".gemini", "antigravity-cli", "plugins", "gentle-ai-engram"), nil
+	return filepath.Join(canonical, ".gemini", "antigravity-cli", "plugins", "agent-smith-engram"), nil
 }
 
 // antigravityLockRoot returns the coordination lock root for one canonical
@@ -30,7 +30,7 @@ func antigravityLockRoot(configHome string) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	return filepath.Join(canonical, ".gentle-ai", "locks"), nil
+	return filepath.Join(canonical, ".agent-smith", "locks"), nil
 }
 
 // canonicalAntigravityConfigHome canonicalizes configHome through symlinks so
@@ -66,7 +66,7 @@ func canonicalAntigravityConfigHome(configHome string) (string, error) {
 // guarding every managed Antigravity mutation for one physical config home.
 // One non-blocking attempt on a background context: contention returns a busy
 // error wrapping filecoord.ErrBusy with retry advice, and the caller owns
-// pacing. The lock is cooperative — it serializes gentle-ai writers, never
+// pacing. The lock is cooperative — it serializes agent-smith writers, never
 // arbitrary external editors — and its lease must be released by the caller,
 // which joins release failures into the operation's error.
 func acquireAntigravityCoordinationLock(configHomeDir string) (*filecoord.Lease, error) {
@@ -81,9 +81,10 @@ func acquireAntigravityCoordinationLock(configHomeDir string) (*filecoord.Lease,
 	lease, err := filecoord.Acquire(context.Background(), target, root)
 	if err != nil {
 		if errors.Is(err, filecoord.ErrBusy) {
-			return nil, fmt.Errorf("another gentle-ai writer already holds the Antigravity coordination lock for %q; no Antigravity files were modified — retry once that run completes: %w", target, err)
+			return nil, fmt.Errorf("another agent-smith writer already holds the Antigravity coordination lock for %q; no Antigravity files were modified — retry once that run completes: %w", target, err)
 		}
 		return nil, fmt.Errorf("acquire Antigravity coordination lock: %w", err)
 	}
 	return lease, nil
 }
+

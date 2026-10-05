@@ -1,11 +1,11 @@
-#!/usr/bin/env bash
-# lib.sh — shared test helpers for gentle-ai E2E tests
+﻿#!/usr/bin/env bash
+# lib.sh â€” shared test helpers for agent-smith E2E tests
 # Sourced by e2e_test.sh; never executed directly.
 #
 # Deliberately NO `set -e` here: `source` shares shell options with the
 # caller, and this suite counts failures and continues (log_fail counters +
 # print_summary). Under a leaked `-e`, the first unguarded failing assertion
-# aborts the whole script — no remaining tests, no summary, no totals
+# aborts the whole script â€” no remaining tests, no summary, no totals
 # (issue #2466). Failures still fail the run: print_summary returns nonzero
 # when FAILED > 0.
 set -uo pipefail
@@ -41,29 +41,29 @@ log_info()  { printf "${BLUE}[INFO]${NC}  %s\n" "$1"; }
 # ---------------------------------------------------------------------------
 # Binary resolution
 # ---------------------------------------------------------------------------
-# The binary should be built and placed at /usr/local/bin/gentle-ai inside
-# the Docker container. If not found, fall back to $HOME/gentle-ai or the
+# The binary should be built and placed at /usr/local/bin/agent-smith inside
+# the Docker container. If not found, fall back to $HOME/agent-smith or the
 # current directory.
-# Resolution priority (highest → lowest):
-#   1. ./gentle-ai in the current repo directory (freshly built local binary)
-#   2. ~/gentle-ai (explicit copy in home)
-#   3. gentle-ai on PATH (system-installed, e.g. Homebrew)
-# This ensures `go build ./cmd/gentle-ai && bash e2e/e2e_test.sh` always
+# Resolution priority (highest â†’ lowest):
+#   1. ./agent-smith in the current repo directory (freshly built local binary)
+#   2. ~/agent-smith (explicit copy in home)
+#   3. agent-smith on PATH (system-installed, e.g. Homebrew)
+# This ensures `go build ./cmd/agent-smith && bash e2e/e2e_test.sh` always
 # tests the locally built binary rather than the installed release version.
 resolve_binary() {
-    # Prefer the locally built binary (./gentle-ai) produced by `go build ./cmd/gentle-ai`.
+    # Prefer the locally built binary (./agent-smith) produced by `go build ./cmd/agent-smith`.
     # We check both the current directory and the script's parent directory so
     # the resolver works whether the test is invoked from the repo root or from e2e/.
     local repo_root
     repo_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-    if [ -x "$repo_root/gentle-ai" ]; then
-        echo "$repo_root/gentle-ai"
-    elif [ -x "./gentle-ai" ]; then
-        echo "./gentle-ai"
-    elif [ -x "$HOME/gentle-ai" ]; then
-        echo "$HOME/gentle-ai"
-    elif command -v gentle-ai >/dev/null 2>&1; then
-        echo "gentle-ai"
+    if [ -x "$repo_root/agent-smith" ]; then
+        echo "$repo_root/agent-smith"
+    elif [ -x "./agent-smith" ]; then
+        echo "./agent-smith"
+    elif [ -x "$HOME/agent-smith" ]; then
+        echo "$HOME/agent-smith"
+    elif command -v agent-smith >/dev/null 2>&1; then
+        echo "agent-smith"
     else
         echo ""
     fi
@@ -73,7 +73,7 @@ resolve_binary() {
 # Cleanup helpers
 # ---------------------------------------------------------------------------
 
-# cleanup_test_env — reset filesystem state between tests.
+# cleanup_test_env â€” reset filesystem state between tests.
 # Removes config dirs and files that the installer writes.
 cleanup_test_env() {
     rm -rf "$HOME/.config/opencode" 2>/dev/null || true
@@ -83,7 +83,7 @@ cleanup_test_env() {
     rm -f "$HOME/.claude.json" 2>/dev/null || true
     rm -rf "$HOME/.codex" 2>/dev/null || true
     rm -rf "$HOME/.gemini" 2>/dev/null || true
-    rm -rf "$HOME/.gentle-ai" 2>/dev/null || true
+    rm -rf "$HOME/.agent-smith" 2>/dev/null || true
     rm -rf "$HOME/.codeium" 2>/dev/null || true
     rm -rf "$HOME/.cursor" 2>/dev/null || true
     rm -rf "$HOME/.qwen" 2>/dev/null || true
@@ -92,9 +92,9 @@ cleanup_test_env() {
     mkdir -p "$HOME/.config"
 }
 
-# setup_fake_engram_binary — install a deterministic local engram shim for E2E.
+# setup_fake_engram_binary â€” install a deterministic local engram shim for E2E.
 #
-# Full Docker E2E validates gentle-ai's agent/config injection behavior, not the
+# Full Docker E2E validates agent-smith's agent/config injection behavior, not the
 # external Engram release CDN. The real installer skips the network download when
 # an `engram` binary already exists on PATH, so this shim keeps coverage of the
 # install pipeline while avoiding flaky GitHub API/rate-limit failures.
@@ -106,7 +106,7 @@ setup_fake_engram_binary() {
         return 0
     fi
 
-    local fake_bin_dir="$HOME/.gentle-ai-e2e/bin"
+    local fake_bin_dir="$HOME/.agent-smith-e2e/bin"
     local fake_engram="$fake_bin_dir/engram"
 
     mkdir -p "$fake_bin_dir"
@@ -142,7 +142,7 @@ EOF
     log_info "Using deterministic Engram E2E shim: $fake_engram"
 }
 
-# setup_fake_configs — seed fake config files so backup tests have something
+# setup_fake_configs â€” seed fake config files so backup tests have something
 # to snapshot and restore.
 setup_fake_configs() {
     mkdir -p "$HOME/.config/opencode"
@@ -206,7 +206,7 @@ assert_file_contains() {
     local pattern="$2"
     local label="${3:-$file contains '$pattern'}"
     if [ ! -f "$file" ]; then
-        log_fail "Cannot check content — file not found: $file"
+        log_fail "Cannot check content â€” file not found: $file"
         return 1
     fi
     if grep -q "$pattern" "$file"; then
@@ -245,7 +245,7 @@ assert_file_size_min() {
     local min_bytes="$2"
     local label="${3:-$file >= $min_bytes bytes}"
     if [ ! -f "$file" ]; then
-        log_fail "Cannot check size — file not found: $file"
+        log_fail "Cannot check size â€” file not found: $file"
         return 1
     fi
     local actual_size
@@ -265,7 +265,7 @@ assert_valid_json() {
     local file="$1"
     local label="${2:-$file is valid JSON}"
     if [ ! -f "$file" ]; then
-        log_fail "Cannot check JSON — file not found: $file"
+        log_fail "Cannot check JSON â€” file not found: $file"
         return 1
     fi
     # Use python3 if available, else node, else skip
@@ -318,7 +318,7 @@ assert_file_count() {
     local expected="$3"
     local label="${4:-$dir/$pattern count == $expected}"
     if [ ! -d "$dir" ]; then
-        log_fail "Cannot count files — directory not found: $dir"
+        log_fail "Cannot count files â€” directory not found: $dir"
         return 1
     fi
     local actual
@@ -340,7 +340,7 @@ assert_file_count_min() {
     local min="$3"
     local label="${4:-$dir/$pattern count >= $min}"
     if [ ! -d "$dir" ]; then
-        log_fail "Cannot count files — directory not found: $dir"
+        log_fail "Cannot count files â€” directory not found: $dir"
         return 1
     fi
     local actual
@@ -361,11 +361,11 @@ assert_md5_match() {
     local file2="$2"
     local label="${3:-$file1 == $file2}"
     if [ ! -f "$file1" ]; then
-        log_fail "Cannot compare — file not found: $file1"
+        log_fail "Cannot compare â€” file not found: $file1"
         return 1
     fi
     if [ ! -f "$file2" ]; then
-        log_fail "Cannot compare — file not found: $file2"
+        log_fail "Cannot compare â€” file not found: $file2"
         return 1
     fi
     local hash1 hash2
@@ -381,16 +381,16 @@ assert_md5_match() {
 }
 
 # assert_no_duplicate_section FILE SECTION_ID LABEL
-# Checks that the gentle-ai section marker appears exactly once (no duplicates).
+# Checks that the agent-smith section marker appears exactly once (no duplicates).
 assert_no_duplicate_section() {
     local file="$1"
     local section_id="$2"
     local label="${3:-No duplicate section '$section_id' in $file}"
     if [ ! -f "$file" ]; then
-        log_fail "Cannot check sections — file not found: $file"
+        log_fail "Cannot check sections â€” file not found: $file"
         return 1
     fi
-    local marker="<!-- gentle-ai:${section_id} -->"
+    local marker="<!-- agent-smith:${section_id} -->"
     local count
     # `grep -c` prints "0" AND exits 1 on zero matches, so `|| echo 0` would
     # yield the two-line string "0\n0" and break the numeric comparisons below.
@@ -462,3 +462,4 @@ print_summary() {
     printf "\n%bAll tests passed.%b\n" "$GREEN" "$NC"
     return 0
 }
+

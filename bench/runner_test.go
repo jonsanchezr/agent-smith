@@ -18,7 +18,7 @@ import (
 )
 
 // fakeBinary writes an executable that answers a fixed argv with a fixed
-// message, so the capability probe can be tested without a real gentle-ai.
+// message, so the capability probe can be tested without a real agent-smith.
 func fakeBinary(t *testing.T, script string) *Sandbox {
 	t.Helper()
 	root := t.TempDir()
@@ -375,7 +375,7 @@ func TestRunTTYInactivityBudgetStillKillsASilentExchange(t *testing.T) {
 
 func TestInvokeTTYReportsPromptStartFailure(t *testing.T) {
 	sandbox := fakeBinary(t, "")
-	sandbox.Binary = filepath.Join(t.TempDir(), "missing-gentle-ai")
+	sandbox.Binary = filepath.Join(t.TempDir(), "missing-agent-smith")
 	observation, err := sandbox.invokeTTY(sandbox.Repo, []string{"welcome"}, func(*bufio.Reader, io.WriteCloser) error { return nil })
 	if err == nil {
 		t.Fatal("invokeTTY error = nil, want prompt start failure")
@@ -502,11 +502,11 @@ func TestReadBackBlanksGitTrace(t *testing.T) {
 
 // reviewModeStubBinary writes an executable that logs every argv it is given
 // and answers `review mode enable` with the effective mode the test wants,
-// so the review precondition can be tested without a real gentle-ai.
+// so the review precondition can be tested without a real agent-smith.
 func reviewModeStubBinary(t *testing.T, effective string) (string, string) {
 	t.Helper()
 	dir := t.TempDir()
-	binary := filepath.Join(dir, "gentle-ai-stub")
+	binary := filepath.Join(dir, "agent-smith-stub")
 	log := filepath.Join(dir, "argv.log")
 	script := "#!/bin/sh\n" +
 		"echo \"$*\" >> " + log + "\n" +
@@ -591,7 +591,7 @@ func TestUntouchedJourneyNeverTouchesTheSwitch(t *testing.T) {
 }
 
 func TestSandboxEnvKeepsTempFilesInsideTheSandbox(t *testing.T) {
-	sandbox, err := newSandbox("gentle-ai", t.TempDir())
+	sandbox, err := newSandbox("agent-smith", t.TempDir())
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -623,7 +623,7 @@ func TestSandboxEnvKeepsTempFilesInsideTheSandbox(t *testing.T) {
 }
 
 func TestSandboxEnvKeepsWindowsHomeInsideTheSandbox(t *testing.T) {
-	sandbox, err := newSandbox("gentle-ai", t.TempDir())
+	sandbox, err := newSandbox("agent-smith", t.TempDir())
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -663,3 +663,4 @@ func TestSelectedAuthorityCaptureHelpersSelectTheSandboxLineage(t *testing.T) {
 		})
 	}
 }
+

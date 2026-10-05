@@ -5,7 +5,7 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/system"
+	"github.com/jonsanchezr/agent-smith/v4/internal/system"
 )
 
 // OpenCode guidance and its verification both resolve XDG_CONFIG_HOME rather
@@ -51,3 +51,4 @@ func TestRunInstallOpenCodeReviewVerifiesUnderXDGConfigHome(t *testing.T) {
 		t.Fatalf("install touched ~/.config/opencode although XDG_CONFIG_HOME is set (stat err = %v)", err)
 	}
 }
+

@@ -13,19 +13,19 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/agents"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/agents/antigravity"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/agents/claude"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/agents/codex"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/agents/gemini"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/agents/hermes"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/agents/openclaw"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/agents/opencode"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/agents/pi"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/agents/qwen"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/agents/vscode"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/components/filemerge"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
+	"github.com/jonsanchezr/agent-smith/v4/internal/agents"
+	"github.com/jonsanchezr/agent-smith/v4/internal/agents/antigravity"
+	"github.com/jonsanchezr/agent-smith/v4/internal/agents/claude"
+	"github.com/jonsanchezr/agent-smith/v4/internal/agents/codex"
+	"github.com/jonsanchezr/agent-smith/v4/internal/agents/gemini"
+	"github.com/jonsanchezr/agent-smith/v4/internal/agents/hermes"
+	"github.com/jonsanchezr/agent-smith/v4/internal/agents/openclaw"
+	"github.com/jonsanchezr/agent-smith/v4/internal/agents/opencode"
+	"github.com/jonsanchezr/agent-smith/v4/internal/agents/pi"
+	"github.com/jonsanchezr/agent-smith/v4/internal/agents/qwen"
+	"github.com/jonsanchezr/agent-smith/v4/internal/agents/vscode"
+	"github.com/jonsanchezr/agent-smith/v4/internal/components/filemerge"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
 )
 
 // ─── #1635 Antigravity prevalidation and write accounting tests ─────────────
@@ -39,7 +39,7 @@ func antigravityWriteFixture(t *testing.T) (home, globalPath, settingsPath, plug
 	t.Helper()
 	home = t.TempDir()
 	cliDir := filepath.Join(home, ".gemini", "antigravity-cli")
-	pluginDir := filepath.Join(cliDir, "plugins", "gentle-ai-engram")
+	pluginDir := filepath.Join(cliDir, "plugins", "agent-smith-engram")
 	if err := os.MkdirAll(pluginDir, 0o755); err != nil {
 		t.Fatalf("MkdirAll(%q) error = %v", pluginDir, err)
 	}
@@ -164,7 +164,7 @@ func TestInjectAntigravityPrevalidatesGlobalMCPConfigBeforeWrites(t *testing.T) 
 					t.Fatalf("error = %v, want it to name the Antigravity global MCP config", err)
 				}
 				// No mutation and no plugin activation next to unclassifiable input.
-				if _, statErr := os.Stat(filepath.Join(cliDir, "plugins", "gentle-ai-engram")); !os.IsNotExist(statErr) {
+				if _, statErr := os.Stat(filepath.Join(cliDir, "plugins", "agent-smith-engram")); !os.IsNotExist(statErr) {
 					t.Fatalf("plugin must not be activated; stat err = %v", statErr)
 				}
 				if _, statErr := os.Stat(filepath.Join(cliDir, "settings.json")); !os.IsNotExist(statErr) {
@@ -194,7 +194,7 @@ func TestInjectAntigravityPrevalidatesGlobalMCPConfigBeforeWrites(t *testing.T) 
 					t.Fatalf("accepted global MCP config was rewritten\nwant:\n%s\ngot:\n%s", *tc.content, got)
 				}
 			}
-			pluginMCPPath := filepath.Join(cliDir, "plugins", "gentle-ai-engram", "mcp_config.json")
+			pluginMCPPath := filepath.Join(cliDir, "plugins", "agent-smith-engram", "mcp_config.json")
 			if _, statErr := os.Stat(pluginMCPPath); statErr != nil {
 				t.Fatalf("plugin must be activated for accepted input; stat err = %v", statErr)
 			}
@@ -211,12 +211,12 @@ func TestInjectAntigravityAccountsEachWriteFailure(t *testing.T) {
 	}{
 		{name: "settings bootstrap failing before replacement", suffix: filepath.Join(".gemini", "antigravity-cli", "settings.json")},
 		{name: "settings bootstrap failing after landing", suffix: filepath.Join(".gemini", "antigravity-cli", "settings.json"), land: true},
-		{name: "plugin manifest failing before replacement", suffix: filepath.Join(".gemini", "antigravity-cli", "plugins", "gentle-ai-engram", "plugin.json")},
-		{name: "plugin manifest failing after landing", suffix: filepath.Join(".gemini", "antigravity-cli", "plugins", "gentle-ai-engram", "plugin.json"), land: true},
-		{name: "plugin MCP config failing before replacement", suffix: filepath.Join(".gemini", "antigravity-cli", "plugins", "gentle-ai-engram", "mcp_config.json")},
-		{name: "plugin MCP config failing after landing", suffix: filepath.Join(".gemini", "antigravity-cli", "plugins", "gentle-ai-engram", "mcp_config.json"), land: true},
-		{name: "plugin hooks failing before replacement", suffix: filepath.Join(".gemini", "antigravity-cli", "plugins", "gentle-ai-engram", "hooks.json")},
-		{name: "plugin hooks failing after landing", suffix: filepath.Join(".gemini", "antigravity-cli", "plugins", "gentle-ai-engram", "hooks.json"), land: true},
+		{name: "plugin manifest failing before replacement", suffix: filepath.Join(".gemini", "antigravity-cli", "plugins", "agent-smith-engram", "plugin.json")},
+		{name: "plugin manifest failing after landing", suffix: filepath.Join(".gemini", "antigravity-cli", "plugins", "agent-smith-engram", "plugin.json"), land: true},
+		{name: "plugin MCP config failing before replacement", suffix: filepath.Join(".gemini", "antigravity-cli", "plugins", "agent-smith-engram", "mcp_config.json")},
+		{name: "plugin MCP config failing after landing", suffix: filepath.Join(".gemini", "antigravity-cli", "plugins", "agent-smith-engram", "mcp_config.json"), land: true},
+		{name: "plugin hooks failing before replacement", suffix: filepath.Join(".gemini", "antigravity-cli", "plugins", "agent-smith-engram", "hooks.json")},
+		{name: "plugin hooks failing after landing", suffix: filepath.Join(".gemini", "antigravity-cli", "plugins", "agent-smith-engram", "hooks.json"), land: true},
 		{name: "global rewrite failing before replacement", suffix: cliMCPSuffix},
 		{name: "global rewrite failing after landing", suffix: cliMCPSuffix, land: true},
 	} {
@@ -315,7 +315,7 @@ func antigravityRecoveryFixture(t *testing.T) (home, settingsPath, pluginDir, pl
 	t.Helper()
 	home = t.TempDir()
 	cliDir := filepath.Join(home, ".gemini", "antigravity-cli")
-	pluginDir = filepath.Join(cliDir, "plugins", "gentle-ai-engram")
+	pluginDir = filepath.Join(cliDir, "plugins", "agent-smith-engram")
 	if err := os.MkdirAll(pluginDir, 0o755); err != nil {
 		t.Fatalf("MkdirAll(%q) error = %v", pluginDir, err)
 	}
@@ -342,7 +342,7 @@ func antigravityRecoveryFixture(t *testing.T) (home, settingsPath, pluginDir, pl
 		}
 		before[path] = snapshot
 	}
-	write(pluginPath, "{\n  \"name\": \"gentle-ai-engram\",\n  \"user\": true\n}\n", 0o640)
+	write(pluginPath, "{\n  \"name\": \"agent-smith-engram\",\n  \"user\": true\n}\n", 0o640)
 	write(pluginMCPPath, `{"mcpServers":{"engram":{"command":"/custom/engram","args":["mcp"]}}}`+"\n", 0o600)
 	write(unrelatedPath, "user notes\n", 0o644)
 	// hooks.json is deliberately absent so recovery exercises both preexisting
@@ -479,7 +479,7 @@ func TestInjectAntigravityRestoresTouchedPluginAssetsToExactBeforeImage(t *testi
 				pluginAssetOrder[1]: pluginMCPPath,
 				pluginAssetOrder[2]: hooksPath,
 			}
-			failAntigravityWrite(t, filepath.Join(".gemini", "antigravity-cli", "plugins", "gentle-ai-engram", tc.suffix), tc.land)
+			failAntigravityWrite(t, filepath.Join(".gemini", "antigravity-cli", "plugins", "agent-smith-engram", tc.suffix), tc.land)
 
 			result, err := Inject(home, antigravityAdapter())
 
@@ -533,7 +533,7 @@ func TestInjectAntigravityRestoresTouchedPluginAssetsToExactBeforeImage(t *testi
 func TestInjectAntigravityRecoveryFailureIsExplicit(t *testing.T) {
 	t.Run("restoration write failure", func(t *testing.T) {
 		home, settingsPath, _, pluginPath, pluginMCPPath, hooksPath, _, _ := antigravityRecoveryFixture(t)
-		failAntigravityWrite(t, filepath.Join(".gemini", "antigravity-cli", "plugins", "gentle-ai-engram", "hooks.json"), true)
+		failAntigravityWrite(t, filepath.Join(".gemini", "antigravity-cli", "plugins", "agent-smith-engram", "hooks.json"), true)
 		restoreFault := errors.New("injected antigravity restore fault")
 		origRestore := restoreAntigravityFileAtomic
 		restoreAntigravityFileAtomic = func(path string, content []byte, perm fs.FileMode) (filemerge.WriteResult, error) {
@@ -579,7 +579,7 @@ func TestInjectAntigravityRecoveryFailureIsExplicit(t *testing.T) {
 
 	t.Run("recovery read failure", func(t *testing.T) {
 		home, _, _, pluginPath, pluginMCPPath, hooksPath, _, _ := antigravityRecoveryFixture(t)
-		failAntigravityWrite(t, filepath.Join(".gemini", "antigravity-cli", "plugins", "gentle-ai-engram", "hooks.json"), true)
+		failAntigravityWrite(t, filepath.Join(".gemini", "antigravity-cli", "plugins", "agent-smith-engram", "hooks.json"), true)
 		readbackFault := errors.New("injected antigravity readback fault")
 		origRead := readAntigravityPluginAsset
 		readAntigravityPluginAsset = func(path string) (antigravityAssetBackup, error) {
@@ -730,9 +730,9 @@ func TestInjectAntigravitySoleEntryRemovalFailureClassifiesOwnership(t *testing.
 			result, err := Inject(home, antigravityAdapter())
 			assertAntigravityFaults(t, err, errAntigravityRemoveFault)
 			pluginAssets := []string{
-				filepath.Join(cliDir, "plugins", "gentle-ai-engram", "plugin.json"),
-				filepath.Join(cliDir, "plugins", "gentle-ai-engram", "mcp_config.json"),
-				filepath.Join(cliDir, "plugins", "gentle-ai-engram", "hooks.json")}
+				filepath.Join(cliDir, "plugins", "agent-smith-engram", "plugin.json"),
+				filepath.Join(cliDir, "plugins", "agent-smith-engram", "mcp_config.json"),
+				filepath.Join(cliDir, "plugins", "agent-smith-engram", "hooks.json")}
 			landed := append([]string{filepath.Join(cliDir, "settings.json")}, pluginAssets...)
 			if tc.mode == "after" {
 				// The real unlink happened before the fault: a landed mutation.
@@ -802,7 +802,7 @@ func TestInjectAntigravityCleanupNeverRestoresForeignGlobalRegistration(t *testi
 				t.Fatalf("foreign registration must be preserved byte-for-byte\nwant:\n%s\ngot:\n%s", tc.foreign, raw)
 			}
 			for _, name := range []string{"plugin.json", "mcp_config.json", "hooks.json"} {
-				assertAntigravityCanonicalPluginAsset(t, filepath.Join(cliDir, "plugins", "gentle-ai-engram", name))
+				assertAntigravityCanonicalPluginAsset(t, filepath.Join(cliDir, "plugins", "agent-smith-engram", name))
 			}
 		})
 	}
@@ -956,7 +956,7 @@ func TestInjectAntigravityOwnershipTransferUncertaintyIsExplicit(t *testing.T) {
 func TestInjectAntigravityClassifyDriftBlocksDestructiveRestore(t *testing.T) {
 	home := t.TempDir()
 	cliDir, _, _ := seedAntigravitySoleEntry(t, home)
-	pluginMCPPath := filepath.Join(cliDir, "plugins", "gentle-ai-engram", "mcp_config.json")
+	pluginMCPPath := filepath.Join(cliDir, "plugins", "agent-smith-engram", "mcp_config.json")
 	drift := []byte(`{"mcpServers":{"engram":{"command":"/external/engram","args":["mcp"]}}}` + "\n")
 	classifyCalls := 0
 	orig := classifyAntigravityGlobalManagedEntry
@@ -985,8 +985,8 @@ func TestInjectAntigravityClassifyDriftBlocksDestructiveRestore(t *testing.T) {
 		t.Fatalf("drifted plugin asset must be preserved byte-for-byte, not clobbered by a stale before-image\nwant:\n%s\ngot:\n%s", drift, got)
 	}
 	// Nothing was restored: the untouched plugin assets keep their installed bytes.
-	assertAntigravityCanonicalPluginAsset(t, filepath.Join(cliDir, "plugins", "gentle-ai-engram", "plugin.json"))
-	assertAntigravityCanonicalPluginAsset(t, filepath.Join(cliDir, "plugins", "gentle-ai-engram", "hooks.json"))
+	assertAntigravityCanonicalPluginAsset(t, filepath.Join(cliDir, "plugins", "agent-smith-engram", "plugin.json"))
+	assertAntigravityCanonicalPluginAsset(t, filepath.Join(cliDir, "plugins", "agent-smith-engram", "hooks.json"))
 }
 
 func TestInjectAntigravityStaleGlobalRetirementPreventsPluginRestore(t *testing.T) {
@@ -1022,7 +1022,7 @@ func TestInjectAntigravityStaleGlobalRetirementPreventsPluginRestore(t *testing.
 	// The stale before-images (absent) must NOT be restored over the plugin:
 	// that would leave zero Engram registrations anywhere.
 	for _, name := range []string{"plugin.json", "mcp_config.json", "hooks.json"} {
-		assertAntigravityCanonicalPluginAsset(t, filepath.Join(cliDir, "plugins", "gentle-ai-engram", name))
+		assertAntigravityCanonicalPluginAsset(t, filepath.Join(cliDir, "plugins", "agent-smith-engram", name))
 	}
 }
 
@@ -1048,7 +1048,7 @@ func TestInjectAntigravityRollbackPreservesDriftedPluginAsset(t *testing.T) {
 		return origRestore(path, content, perm)
 	}
 	t.Cleanup(func() { restoreAntigravityFileAtomic = origRestore })
-	failAntigravityWrite(t, filepath.Join(".gemini", "antigravity-cli", "plugins", "gentle-ai-engram", "hooks.json"), true)
+	failAntigravityWrite(t, filepath.Join(".gemini", "antigravity-cli", "plugins", "agent-smith-engram", "hooks.json"), true)
 
 	_, err := Inject(home, antigravityAdapter())
 
@@ -1274,10 +1274,10 @@ func TestInjectClaudeWritesProtocolSection(t *testing.T) {
 	}
 
 	text := string(content)
-	if !strings.Contains(text, "<!-- gentle-ai:engram-protocol -->") {
+	if !strings.Contains(text, "<!-- agent-smith:engram-protocol -->") {
 		t.Fatal("CLAUDE.md missing open marker for engram-protocol")
 	}
-	if !strings.Contains(text, "<!-- /gentle-ai:engram-protocol -->") {
+	if !strings.Contains(text, "<!-- /agent-smith:engram-protocol -->") {
 		t.Fatal("CLAUDE.md missing close marker for engram-protocol")
 	}
 	// Real content check.
@@ -1379,7 +1379,7 @@ func TestInjectOpenCodeMergesEngramToSettings(t *testing.T) {
 		t.Fatalf("ReadFile(AGENTS.md) error = %v", err)
 	}
 	agentsText := string(agentsContent)
-	if !strings.Contains(agentsText, "<!-- gentle-ai:engram-protocol -->") {
+	if !strings.Contains(agentsText, "<!-- agent-smith:engram-protocol -->") {
 		t.Fatal("AGENTS.md missing engram protocol section marker")
 	}
 	if !strings.Contains(agentsText, "mem_save") {
@@ -1763,14 +1763,14 @@ func TestInjectAntigravityRegistersEngramViaPluginOnly(t *testing.T) {
 		t.Fatalf("global Antigravity MCP config %q must not be written for Engram; stat err = %v", cliMCPPath, err)
 	}
 
-	pluginPath := filepath.Join(home, ".gemini", "antigravity-cli", "plugins", "gentle-ai-engram", "plugin.json")
+	pluginPath := filepath.Join(home, ".gemini", "antigravity-cli", "plugins", "agent-smith-engram", "plugin.json")
 	if _, err := os.Stat(pluginPath); err != nil {
 		t.Fatalf("Antigravity Engram plugin manifest missing: %v", err)
 	}
 
 	// #797: the plugin MCP config must use the canonical Engram agent tool
 	// profile (args ["mcp", "--tools=agent"]).
-	pluginMCPPath := filepath.Join(home, ".gemini", "antigravity-cli", "plugins", "gentle-ai-engram", "mcp_config.json")
+	pluginMCPPath := filepath.Join(home, ".gemini", "antigravity-cli", "plugins", "agent-smith-engram", "mcp_config.json")
 	pluginMCPContent, err := os.ReadFile(pluginMCPPath)
 	if err != nil {
 		t.Fatalf("ReadFile(%q) error = %v", pluginMCPPath, err)
@@ -1792,7 +1792,7 @@ func TestInjectAntigravityRegistersEngramViaPluginOnly(t *testing.T) {
 		t.Fatalf("Antigravity Engram plugin MCP config args = %v, want [mcp --tools=agent]; got:\n%s", server.Args, pluginMCPContent)
 	}
 
-	hooksPath := filepath.Join(home, ".gemini", "antigravity-cli", "plugins", "gentle-ai-engram", "hooks.json")
+	hooksPath := filepath.Join(home, ".gemini", "antigravity-cli", "plugins", "agent-smith-engram", "hooks.json")
 	hooksContent, err := os.ReadFile(hooksPath)
 	if err != nil {
 		t.Fatalf("ReadFile(%q) error = %v", hooksPath, err)
@@ -1882,7 +1882,7 @@ func TestInjectAntigravityRemovesManagedGlobalEngramDuplicate(t *testing.T) {
 			}
 
 			// The plugin carries the canonical agent tool profile.
-			pluginMCPPath := filepath.Join(cliDir, "plugins", "gentle-ai-engram", "mcp_config.json")
+			pluginMCPPath := filepath.Join(cliDir, "plugins", "agent-smith-engram", "mcp_config.json")
 			pluginRaw, err := os.ReadFile(pluginMCPPath)
 			if err != nil {
 				t.Fatalf("ReadFile(%q) error = %v", pluginMCPPath, err)
@@ -1923,7 +1923,7 @@ func TestInjectAntigravityIgnoresNonEngramGlobalCommandWhenPreservingPlugin(t *t
 	home := t.TempDir()
 	cliDir := filepath.Join(home, ".gemini", "antigravity-cli")
 	mcpPath := filepath.Join(cliDir, "mcp_config.json")
-	pluginDir := filepath.Join(cliDir, "plugins", "gentle-ai-engram")
+	pluginDir := filepath.Join(cliDir, "plugins", "agent-smith-engram")
 	pluginMCPPath := filepath.Join(pluginDir, "mcp_config.json")
 	if err := os.MkdirAll(pluginDir, 0o755); err != nil {
 		t.Fatalf("MkdirAll(%q) error = %v", pluginDir, err)
@@ -2237,7 +2237,7 @@ func TestInjectClaudePreservesAbsoluteCommandFromEngramSetup(t *testing.T) {
 }
 
 // TestInjectClaudeSkipsMCPServersEngramWhenPluginEnabled reproduces issue
-// #4188: gentle-ai sync must not add mcpServers.engram to ~/.claude.json
+// #4188: agent-smith sync must not add mcpServers.engram to ~/.claude.json
 // when the Engram plugin is already enabled via
 // ~/.claude/settings.json's enabledPlugins["engram@engram"], because the
 // plugin already exposes the same 18 tools under a different prefix.
@@ -2273,7 +2273,7 @@ func TestInjectClaudeSkipsMCPServersEngramWhenPluginEnabled(t *testing.T) {
 // TestInjectClaudePreservesIdenticalManualRegistrationsWhenPluginEnabled
 // verifies that sync never infers ownership from an Engram registration's
 // shape. A user can author exactly the same registry and legacy entries that
-// gentle-ai would write, so plugin detection must only suppress new writes.
+// agent-smith would write, so plugin detection must only suppress new writes.
 func TestInjectClaudePreservesIdenticalManualRegistrationsWhenPluginEnabled(t *testing.T) {
 	home := t.TempDir()
 	mockEngramLookPath(t, "/opt/homebrew/bin/engram", "")
@@ -3530,8 +3530,8 @@ func TestInjectOpenClawWritesEngramProtocolToWorkspaceAgentsOnly(t *testing.T) {
 	}
 	agentsText := string(agentsContent)
 	for _, want := range []string{
-		"<!-- gentle-ai:engram-protocol -->",
-		"<!-- /gentle-ai:engram-protocol -->",
+		"<!-- agent-smith:engram-protocol -->",
+		"<!-- /agent-smith:engram-protocol -->",
 		"mem_save",
 	} {
 		if !strings.Contains(agentsText, want) {
@@ -3547,7 +3547,7 @@ func TestInjectOpenClawWritesEngramProtocolToWorkspaceAgentsOnly(t *testing.T) {
 		t.Fatalf("ReadFile(TOOLS.md) error = %v", err)
 	}
 	toolsText := string(toolsContent)
-	if strings.Contains(toolsText, "gentle-ai:engram-protocol") || strings.Contains(toolsText, "mem_save") {
+	if strings.Contains(toolsText, "agent-smith:engram-protocol") || strings.Contains(toolsText, "mem_save") {
 		t.Fatalf("TOOLS.md must not receive Engram protocol sections; got:\n%s", toolsText)
 	}
 	if !strings.Contains(toolsText, "User-owned tool notes.") {
@@ -3565,7 +3565,7 @@ func TestInjectOpenClawWritesEngramProtocolToWorkspaceAgentsOnly(t *testing.T) {
 	if err != nil {
 		t.Fatalf("ReadFile(AGENTS.md) second error = %v", err)
 	}
-	if count := strings.Count(string(updated), "<!-- gentle-ai:engram-protocol -->"); count != 1 {
+	if count := strings.Count(string(updated), "<!-- agent-smith:engram-protocol -->"); count != 1 {
 		t.Fatalf("AGENTS.md has %d Engram protocol markers, want exactly 1", count)
 	}
 }
@@ -3952,7 +3952,7 @@ func TestInjectWithOptionsReInjectConvergesFullToSlimAndBack(t *testing.T) {
 	if !strings.Contains(string(afterFull), "needs_review") {
 		t.Fatalf("expected FULL section after first inject; got:\n%s", afterFull)
 	}
-	if n := strings.Count(string(afterFull), "<!-- gentle-ai:engram-protocol -->"); n != 1 {
+	if n := strings.Count(string(afterFull), "<!-- agent-smith:engram-protocol -->"); n != 1 {
 		t.Fatalf("expected exactly 1 open marker after first inject, got %d", n)
 	}
 
@@ -3971,10 +3971,10 @@ func TestInjectWithOptionsReInjectConvergesFullToSlimAndBack(t *testing.T) {
 	if !strings.Contains(string(afterSlim), "SessionStart hook") {
 		t.Fatalf("expected SLIM pointer content after re-inject; got:\n%s", afterSlim)
 	}
-	if n := strings.Count(string(afterSlim), "<!-- gentle-ai:engram-protocol -->"); n != 1 {
+	if n := strings.Count(string(afterSlim), "<!-- agent-smith:engram-protocol -->"); n != 1 {
 		t.Fatalf("expected exactly 1 open marker after re-inject to slim (no duplication), got %d", n)
 	}
-	if n := strings.Count(string(afterSlim), "<!-- /gentle-ai:engram-protocol -->"); n != 1 {
+	if n := strings.Count(string(afterSlim), "<!-- /agent-smith:engram-protocol -->"); n != 1 {
 		t.Fatalf("expected exactly 1 close marker after re-inject to slim (no duplication), got %d", n)
 	}
 
@@ -3989,7 +3989,7 @@ func TestInjectWithOptionsReInjectConvergesFullToSlimAndBack(t *testing.T) {
 	if !strings.Contains(string(afterBackToFull), "needs_review") {
 		t.Fatalf("expected FULL section after re-inject back to full; got:\n%s", afterBackToFull)
 	}
-	if n := strings.Count(string(afterBackToFull), "<!-- gentle-ai:engram-protocol -->"); n != 1 {
+	if n := strings.Count(string(afterBackToFull), "<!-- agent-smith:engram-protocol -->"); n != 1 {
 		t.Fatalf("expected exactly 1 open marker after re-inject back to full (no duplication), got %d", n)
 	}
 }
@@ -4163,3 +4163,4 @@ func TestUpsertCodexTableKeyBeforeMCPServersIgnoresDelimitersInStringsAndComment
 		}
 	}
 }
+

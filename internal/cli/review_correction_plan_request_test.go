@@ -12,7 +12,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/reviewtransaction"
+	"github.com/jonsanchezr/agent-smith/v4/internal/reviewtransaction"
 )
 
 func TestNegotiatedCorrectionPlanningExposesProviderOwnedFindings(t *testing.T) {
@@ -333,3 +333,4 @@ func reviewTransitionInputTokens(t *testing.T, repo string, input ReviewTransiti
 	}
 	return args
 }
+

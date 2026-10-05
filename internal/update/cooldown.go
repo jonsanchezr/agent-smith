@@ -6,9 +6,9 @@ import (
 	"os"
 	"time"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/state"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/statecoord"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/system"
+	"github.com/jonsanchezr/agent-smith/v4/internal/state"
+	"github.com/jonsanchezr/agent-smith/v4/internal/statecoord"
+	"github.com/jonsanchezr/agent-smith/v4/internal/system"
 )
 
 // UpdateCheckTTL is the minimum time between remote update checks. Launches
@@ -119,3 +119,4 @@ func checkSucceeded(results []UpdateResult) bool {
 	}
 	return true
 }
+

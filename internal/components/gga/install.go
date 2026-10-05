@@ -6,9 +6,9 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/installcmd"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/system"
+	"github.com/jonsanchezr/agent-smith/v4/internal/installcmd"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
+	"github.com/jonsanchezr/agent-smith/v4/internal/system"
 )
 
 func InstallCommand(profile system.PlatformProfile) ([][]string, error) {
@@ -35,3 +35,4 @@ func cleanupInstallDirWith(runner system.PowerShellRunner, path string) error {
 func ShouldInstall(enabled bool) bool {
 	return enabled
 }
+

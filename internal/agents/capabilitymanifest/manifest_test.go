@@ -7,8 +7,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/catalog"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
+	"github.com/jonsanchezr/agent-smith/v4/internal/catalog"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
 )
 
 func TestCanonicalImplementationRoutingBoundaries(t *testing.T) {
@@ -207,7 +207,7 @@ func TestEveryManifestKeepsWorkRoutingDormantAndHashesCanonically(t *testing.T) 
 	// relays one ordinary task through Go-owned admission, Codex's provider
 	// subprocess reaches the same contract, and gentle-pi's host relay
 	// forwards the Go-issued opaque task to a fresh locked-down pi
-	// subprocess (gentle-pi#311, gentle-ai#3249).
+	// subprocess (gentle-pi#311, agent-smith#3249).
 	wantManifestDigests := map[model.AgentID]string{
 		model.AgentAntigravity:   "sha256:4666df6712fc63b0aacf1227cb28d0afdace1f98cbdd611aa2d5e8d4048b87ce",
 		model.AgentClaudeCode:    "sha256:0644de1b6539cffee24ed3d673b450bf1f460fe5db7e8f05c5a0911aace8b280",
@@ -380,3 +380,4 @@ func TestForAgentRejectsUnknownAgent(t *testing.T) {
 		t.Fatalf("ForAgent() error = %v, want ErrUnsupportedAgent", err)
 	}
 }
+

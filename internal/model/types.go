@@ -143,7 +143,17 @@ const (
 	SkillWorkUnitCommits     SkillID = "work-unit-commits"
 	SkillRDDDefectWorkflow   SkillID = "rdd-defect-workflow"
 	SkillSystemicIssueTriage SkillID = "systemic-issue-triage"
-	SkillGentleAIBench       SkillID = "gentle-ai-bench"
+	SkillAgentSmithBench       SkillID = "agent-smith-bench"
+	// Spec Kit skills — bypass IsSDDSkill() guard via speckit- prefix
+	SkillSpecKitConstitution  SkillID = "speckit-constitution"
+	SkillSpecKitSpecify       SkillID = "speckit-specify"
+	SkillSpecKitClarify       SkillID = "speckit-clarify"
+	SkillSpecKitPlan          SkillID = "speckit-plan"
+	SkillSpecKitChecklist     SkillID = "speckit-checklist"
+	SkillSpecKitTasks         SkillID = "speckit-tasks"
+	SkillSpecKitAnalyze       SkillID = "speckit-analyze"
+	SkillSpecKitImplement     SkillID = "speckit-implement"
+	SkillSpecKitConverge      SkillID = "speckit-converge"
 )
 
 type PersonaID string
@@ -162,7 +172,7 @@ const (
 type SystemPromptStrategy int
 
 const (
-	// StrategyMarkdownSections uses <!-- gentle-ai:ID --> markers to inject sections
+	// StrategyMarkdownSections uses <!-- agent-smith:ID --> markers to inject sections
 	// into an existing file without clobbering user content (Claude Code CLAUDE.md).
 	StrategyMarkdownSections SystemPromptStrategy = iota
 	// StrategyFileReplace replaces the entire system prompt file (OpenCode AGENTS.md).
@@ -249,3 +259,4 @@ type Profile struct {
 	OrchestratorModel ModelAssignment            // orchestrator model
 	PhaseAssignments  map[string]ModelAssignment // key = phase name (e.g. "sdd-apply")
 }
+

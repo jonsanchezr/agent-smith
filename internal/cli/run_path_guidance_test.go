@@ -6,9 +6,9 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/planner"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/verify"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
+	"github.com/jonsanchezr/agent-smith/v4/internal/planner"
+	"github.com/jonsanchezr/agent-smith/v4/internal/verify"
 )
 
 func TestEngramPathGuidanceFish(t *testing.T) {
@@ -139,3 +139,4 @@ func TestWithGoInstallPathNoteSkipsWithoutEngram(t *testing.T) {
 		t.Fatalf("FinalNote should be unchanged without engram, got: %q", updated.FinalNote)
 	}
 }
+

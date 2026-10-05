@@ -3,7 +3,7 @@ package cli
 import (
 	"context"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/reviewtransaction"
+	"github.com/jonsanchezr/agent-smith/v4/internal/reviewtransaction"
 )
 
 // The kill switch freezes authority against review progress. Every operation
@@ -92,3 +92,4 @@ func authorizeReviewRDDOperation(ctx context.Context, repo string, operation rev
 	// the command that clears it instead of surfacing a bare parse error.
 	return reviewModeUnreadable(ctx, repo, global, err)
 }
+

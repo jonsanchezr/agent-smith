@@ -6,7 +6,7 @@ import (
 	"path/filepath"
 )
 
-// hostCodexLane drives the REAL Codex host application: gentle-ai's compiled
+// hostCodexLane drives the REAL Codex host application: agent-smith's compiled
 // codex adapter spawns `codex exec --skip-git-repo-check --ignore-user-config
 // --sandbox read-only -C <empty scratch> --output-last-message <result>` with
 // the Go-materialized opaque provider prompt on stdin, exactly the transport
@@ -47,3 +47,4 @@ func (b *battery) runHostCodexLane() {
 	}
 	b.hostFollowToReceipt(hostCodexLane, repo, "codex", nil)
 }
+

@@ -9,8 +9,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/opencode"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
+	"github.com/jonsanchezr/agent-smith/v4/internal/opencode"
 )
 
 func pickerTestState(index int) *ModelPickerState {
@@ -36,7 +36,7 @@ func pickerRowIndex(t *testing.T, state ModelPickerState, agent string) int {
 
 func TestModelPickerRowsOfferInstalledAgentsWithoutRetiredSDD(t *testing.T) {
 	rows := ModelPickerRows()
-	want := []string{"gentle-orchestrator", "--- Gentle AI agents ---", "gentle-ai-explore", "gentle-ai-verify", "gentle-ai-worker", "--- Judgment Day ---", "jd-judge-a", "jd-judge-b", "jd-fix-agent", "--- Review agents ---", "review-risk", "review-readability", "review-reliability", "review-resilience", "review-refuter", "review-validator", "--- OpenCode native agents ---", "general", "explore"}
+	want := []string{"Agent-smith", "--- Agent Smith agents ---", "agent-smith-explore", "agent-smith-verify", "agent-smith-worker", "--- Judgment Day ---", "jd-judge-a", "jd-judge-b", "jd-fix-agent", "--- Review agents ---", "review-risk", "review-readability", "review-reliability", "review-resilience", "review-refuter", "review-validator", "--- OpenCode native agents ---", "general", "explore"}
 	if !reflect.DeepEqual(rows, want) {
 		t.Fatalf("active OpenCode rows = %v, want %v", rows, want)
 	}
@@ -45,13 +45,13 @@ func TestModelPickerRowsOfferInstalledAgentsWithoutRetiredSDD(t *testing.T) {
 			t.Errorf("inactive or prompt-only role offered: %q", row)
 		}
 	}
-	if want := 1 + 1 + len(opencode.GentleAIODDPhases()); SeparatorRowIdx() != want {
+	if want := 1 + 1 + len(opencode.AgentSmithODDPhases()); SeparatorRowIdx() != want {
 		t.Fatalf("Judgment Day separator index = %d, want %d", SeparatorRowIdx(), want)
 	}
 }
 
 func TestModelPickerAssignsOnlySelectedInstalledAgent(t *testing.T) {
-	for _, agent := range []string{"gentle-orchestrator", "jd-judge-a", "review-risk", "review-refuter", "general", "explore"} {
+	for _, agent := range []string{"agent-smith-orchestrator", "jd-judge-a", "review-risk", "review-refuter", "general", "explore"} {
 		t.Run(agent, func(t *testing.T) {
 			state := pickerTestState(0)
 			state.SelectedPhaseIdx = pickerRowIndex(t, *state, agent)
@@ -230,7 +230,7 @@ func TestRenderModelPickerAssignmentLabelsAndWarning(t *testing.T) {
 	}
 	assignment := model.ModelAssignment{ProviderID: "anthropic", ModelID: "claude", Effort: "high"}
 	output := RenderModelPicker(map[string]model.ModelAssignment{SDDOrchestratorPhase: assignment}, state, 0)
-	for _, fragment := range []string{"invalid opencode.json", "gentle-orchestrator", "Anthropic / Claude [high]"} {
+	for _, fragment := range []string{"invalid opencode.json", "agent-smith-orchestrator", "Anthropic / Claude [high]"} {
 		if !strings.Contains(output, fragment) {
 			t.Errorf("rendered assignment missing %q: %s", fragment, output)
 		}
@@ -239,7 +239,7 @@ func TestRenderModelPickerAssignmentLabelsAndWarning(t *testing.T) {
 
 func TestRuntimeModelPickerStateDiscoversCustomAgents(t *testing.T) {
 	settings := filepath.Join(t.TempDir(), "opencode.json")
-	if err := os.WriteFile(settings, []byte(`{"agent":{"gentle-orchestrator":{},"custom-coder-v1":{}}}`), 0o644); err != nil {
+	if err := os.WriteFile(settings, []byte(`{"agent":{"agent-smith-orchestrator":{},"custom-coder-v1":{}}}`), 0o644); err != nil {
 		t.Fatal(err)
 	}
 	state := NewRuntimeModelPickerStateWithDiscoverer(settings, nil)
@@ -301,7 +301,7 @@ func TestRuntimeCatalogDiscoveryErrorDiagnostics(t *testing.T) {
 }
 
 func TestModelPickerOrchestratorKeyRemainsStable(t *testing.T) {
-	if SDDOrchestratorPhase != "gentle-orchestrator" {
+	if SDDOrchestratorPhase != "agent-smith-orchestrator" {
 		t.Fatalf("persisted coordinator key changed: %q", SDDOrchestratorPhase)
 	}
 }
@@ -781,3 +781,4 @@ func TestProviderEntriesSortedByNameWithModelCounts(t *testing.T) {
 		t.Fatalf("provider entries = %+v", got)
 	}
 }
+

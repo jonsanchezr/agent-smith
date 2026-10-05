@@ -16,11 +16,11 @@ import (
 )
 
 const (
-	RARVerificationAuthoritySchema = "gentle-ai.rar-verification-authority/v1"
-	RARNativeReceiptSchema         = "gentle-ai.rar-native-review-receipt/v1"
+	RARVerificationAuthoritySchema = "agent-smith.rar-verification-authority/v1"
+	RARNativeReceiptSchema         = "agent-smith.rar-native-review-receipt/v1"
 
-	rarAuthorityIndexSchema  = "gentle-ai.rar-authority-index/v1"
-	rarAuthorityDigestDomain = "gentle-ai.rar-verification-authority-digest/v1"
+	rarAuthorityIndexSchema  = "agent-smith.rar-authority-index/v1"
+	rarAuthorityDigestDomain = "agent-smith.rar-verification-authority-digest/v1"
 	rarAuthorityDirectory    = "rar-authority"
 	rarAuthorityVersion      = "v1"
 	rarAuthorityMaxBytes     = 4 << 20
@@ -223,7 +223,7 @@ func OpenRARAuthorityRepositoryWithRepositoryIdentityLease(
 	identity := reviewRepositoryIdentityRecordFromLease(lease)
 	root := filepath.Join(
 		identity.GitCommonDir,
-		"gentle-ai",
+		"agent-smith",
 		"review-transactions",
 		rarAuthorityDirectory,
 		rarAuthorityVersion,
@@ -568,7 +568,7 @@ func (repository *RARAuthorityRepository) validateIdentity(ctx context.Context) 
 	}
 	wantRoot := filepath.Join(
 		live.GitCommonDir,
-		"gentle-ai",
+		"agent-smith",
 		"review-transactions",
 		rarAuthorityDirectory,
 		rarAuthorityVersion,
@@ -719,3 +719,4 @@ func decodeStrictRARJSON(payload []byte, target any) error {
 func rarNativeReceiptEqual(left, right RARNativeReceiptAuthority) bool {
 	return reflect.DeepEqual(left, right)
 }
+

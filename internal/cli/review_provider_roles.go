@@ -9,9 +9,9 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/reviewerprovider"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/reviewtransaction"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
+	"github.com/jonsanchezr/agent-smith/v4/internal/reviewerprovider"
+	"github.com/jonsanchezr/agent-smith/v4/internal/reviewtransaction"
 )
 
 var errReviewProviderRefuterNotRequired = errors.New("provider refuter request has no inferential findings; continue through the remaining capture route") // refusal:by-design operator-knowledge: the native closure branch consumes this sentinel and derives the remaining capture transition; no caller-selected command exists
@@ -690,7 +690,7 @@ func reviewProviderCaptureAdmittedTargetedValidatorResult(ctx context.Context, r
 			return nil, err
 		}
 		if remaining := state.CorrectionBudget - state.CumulativeCorrectionLines; actual < 0 || actual > remaining {
-			return nil, fmt.Errorf("actual correction is %d changed lines, exceeding the frozen budget of %d; shrink the correction to at most %d changed lines and rerun `gentle-ai review capture-validation` with the exact tokens STATUS reoffers", actual, state.CorrectionBudget, remaining)
+			return nil, fmt.Errorf("actual correction is %d changed lines, exceeding the frozen budget of %d; shrink the correction to at most %d changed lines and rerun `agent-smith review capture-validation` with the exact tokens STATUS reoffers", actual, state.CorrectionBudget, remaining)
 		}
 	}
 	if outcome == "failed" {
@@ -898,3 +898,4 @@ func reviewProviderRoleEnvelopeFloor(ctx context.Context, repo, runtime, frozenP
 	}
 	return nil
 }
+

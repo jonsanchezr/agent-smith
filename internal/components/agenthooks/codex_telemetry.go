@@ -7,9 +7,9 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/agents"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/components/filemerge"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
+	"github.com/jonsanchezr/agent-smith/v4/internal/agents"
+	"github.com/jonsanchezr/agent-smith/v4/internal/components/filemerge"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
 )
 
 // InstallCodexTelemetry installs runtime stop hooks independently of SDD selection.
@@ -46,7 +46,7 @@ func InstallCodexTelemetry(homeDir string, adapter agents.Adapter) (Result, erro
 		hooksMap = map[string]any{}
 	}
 	changed := false
-	const telemetryCommand = `gentle-ai telemetry runtime codex --json`
+	const telemetryCommand = `agent-smith telemetry runtime codex --json`
 	for _, event := range []string{"SubagentStop", "Stop"} {
 		if codexHookCommandExists(hooksMap, event, telemetryCommand) {
 			continue
@@ -95,3 +95,4 @@ func codexHookCommandExists(hooksMap map[string]any, event, command string) bool
 	}
 	return false
 }
+

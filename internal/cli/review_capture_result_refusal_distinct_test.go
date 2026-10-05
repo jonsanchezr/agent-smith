@@ -6,7 +6,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
 )
 
 // TestCaptureResultHostMediatedRefusalsAreDistinguishable is #3441.
@@ -18,7 +18,7 @@ import (
 //
 //	review capture-result provider runtime %q is host-mediated; use its live transport collection
 //
-// so a report that quoted it (Gentleman-Programming/gentle-pi#367, defect C)
+// so a report that quoted it (jonsanchezr/gentle-pi#367, defect C)
 // could not be traced to either branch -- and the two branches send the
 // follow-up to different repositories. Each refusal now names the flag the
 // caller passed, the runtime's compiled transport, and the one accepted form.
@@ -103,3 +103,4 @@ func TestCaptureResultHostMediatedRefusalsAreDistinguishable(t *testing.T) {
 		}
 	})
 }
+

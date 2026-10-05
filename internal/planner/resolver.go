@@ -3,8 +3,8 @@ package planner
 import (
 	"fmt"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/catalog"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
+	"github.com/jonsanchezr/agent-smith/v4/internal/catalog"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
 )
 
 type dependencyResolver struct {
@@ -80,3 +80,4 @@ func (r dependencyResolver) expandDependencies(component model.ComponentID, depe
 
 	return nil
 }
+

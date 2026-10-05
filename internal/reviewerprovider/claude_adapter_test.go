@@ -12,7 +12,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
 )
 
 const claudeAdapterHelperEnvironment = "GENTLE_AI_REVIEWER_PROVIDER_CLAUDE_HELPER"
@@ -194,3 +194,4 @@ func TestClaudeAdapterFailureNamesStdoutReasonWhenStderrIsEmpty(t *testing.T) {
 		t.Fatalf("Review() = %q, %v; want a single-line bounded transport failure naming the stdout reason", raw, err)
 	}
 }
+

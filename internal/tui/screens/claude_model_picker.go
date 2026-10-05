@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/tui/styles"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
+	"github.com/jonsanchezr/agent-smith/v4/internal/tui/styles"
 )
 
 // ClaudeModelPreset represents a named preset for Claude model assignments.
@@ -586,3 +586,4 @@ func ClaudeModelPickerOptionCount(state ClaudeModelPickerState) int {
 	}
 	return len(claudePresetOrder) + 1 // presets + Back
 }
+

@@ -12,14 +12,14 @@ import (
 )
 
 const (
-	schema = "gentle-ai.release-provenance/v1"
+	schema = "agent-smith.release-provenance/v1"
 	// localSchema marks a manifest produced outside GitHub Actions. It exists
 	// because the archive that packages the manifest needs the file to be there,
 	// not because a local build has provenance to report: prerelease tags do not
 	// trigger release.yml, so building one by hand is the documented path, and a
 	// local checkout knows no tag, run or workflow it could honestly name.
-	localSchema         = "gentle-ai.release-provenance/local-build"
-	repository          = "Gentleman-Programming/gentle-ai"
+	localSchema         = "agent-smith.release-provenance/local-build"
+	repository          = "jonsanchezr/agent-smith"
 	goReleaserVersion   = "v2.15.2"
 	providerArchiveKind = "provider-contract"
 )
@@ -102,11 +102,11 @@ func Build(config []byte, input Input) ([]byte, error) {
 	artifacts := make([]any, 0, len(platforms)+1)
 	for _, platform := range platforms {
 		artifacts = append(artifacts, binaryArtifact{
-			Name: "gentle-ai_" + version + "_" + platform[0] + "_" + platform[1] + ".tar.gz", Kind: "binary",
+			Name: "agent-smith_" + version + "_" + platform[0] + "_" + platform[1] + ".tar.gz", Kind: "binary",
 			GOOS: platform[0], GOARCH: platform[1], CGOEnabled: "0", Trimpath: true,
 		})
 	}
-	artifacts = append(artifacts, contractArtifact{Name: "gentle-ai-review-provider-contract-" + input.ProviderContractSemver + ".tar.gz", Kind: providerArchiveKind})
+	artifacts = append(artifacts, contractArtifact{Name: "agent-smith-review-provider-contract-" + input.ProviderContractSemver + ".tar.gz", Kind: providerArchiveKind})
 	digest := sha256.Sum256(config)
 	encoded, err := json.Marshal(manifest{
 		Schema:                 schema,
@@ -210,3 +210,4 @@ func writeManifestOnce(output string, payload []byte) error {
 	}
 	return nil
 }
+

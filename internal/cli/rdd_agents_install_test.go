@@ -9,9 +9,9 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/components/reviewassets"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/system"
+	"github.com/jonsanchezr/agent-smith/v4/internal/components/reviewassets"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
+	"github.com/jonsanchezr/agent-smith/v4/internal/system"
 )
 
 func rddAgentFileNames(t *testing.T, dir string) []string {
@@ -95,7 +95,7 @@ func TestFreshInstallShipsOpenCodeReviewAgents(t *testing.T) {
 
 // TestUpgradeRemovesOwnedReviewAgentsFromNonRDDRuntimes seeds review agents an
 // earlier release installed and recorded in the ownership ledger, plus a user's
-// own review agent, and proves install and sync remove only Gentle AI's files.
+// own review agent, and proves install and sync remove only Agent Smith's files.
 func TestUpgradeRemovesOwnedReviewAgentsFromNonRDDRuntimes(t *testing.T) {
 	for _, flow := range []string{"install", "sync"} {
 		for _, agent := range []model.AgentID{model.AgentCursor, model.AgentKiroIDE, model.AgentKimi} {
@@ -146,3 +146,4 @@ func TestUpgradeRemovesOwnedReviewAgentsFromNonRDDRuntimes(t *testing.T) {
 		}
 	}
 }
+

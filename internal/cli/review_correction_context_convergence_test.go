@@ -9,7 +9,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/reviewtransaction"
+	"github.com/jonsanchezr/agent-smith/v4/internal/reviewtransaction"
 )
 
 // TestCorrectionPhaseRepositoryContextStaysExecutable extends the
@@ -192,3 +192,4 @@ func TestCorrectionPhaseRepositoryContextStaysExecutable(t *testing.T) {
 		t.Logf("        executed ok (%d bytes)", len(text))
 	}
 }
+

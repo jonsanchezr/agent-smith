@@ -7,8 +7,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/opencode"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/update"
+	"github.com/jonsanchezr/agent-smith/v4/internal/opencode"
+	"github.com/jonsanchezr/agent-smith/v4/internal/update"
 )
 
 func TestV2CommunityUpgradeRefusesBeforeMutation(t *testing.T) {
@@ -39,3 +39,4 @@ func TestV2CommunityUpgradeRefusesBeforeMutation(t *testing.T) {
 	}
 }
 func containsV2Refusal(s string) bool { return strings.Contains(s, "V2 compatibility") }
+

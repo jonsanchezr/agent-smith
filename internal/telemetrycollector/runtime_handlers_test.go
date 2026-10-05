@@ -174,7 +174,7 @@ func TestRuntimeHandleEvents(t *testing.T) {
 				if err := json.Unmarshal(w.Body.Bytes(), &ack); err != nil {
 					t.Fatal(err)
 				}
-				if len(ack) != 2 || ack["schema"] != "gentle-ai.telemetry-runtime-delivery/v1" || ack["decision"] != tc.decision {
+				if len(ack) != 2 || ack["schema"] != "agent-smith.telemetry-runtime-delivery/v1" || ack["decision"] != tc.decision {
 					t.Fatalf("ack %v", ack)
 				}
 				if w.Header().Get("Content-Type") != "application/json" {
@@ -420,3 +420,4 @@ func TestHandleMetrics_EmptyRegistryServesEmptyBody(t *testing.T) {
 		t.Fatalf("body = %q, want empty", w.Body.String())
 	}
 }
+

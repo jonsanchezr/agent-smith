@@ -1,0 +1,45 @@
+# OpenSpec Configuration — agent-smith
+
+schema: spec-driven
+
+context: |
+  Tech stack: Go 1.25+, Charmbracelet bubbletea TUI, SQLite (modernc.org/sqlite)
+  Architecture: CLI/TUI ecosystem configurator for AI coding agents
+  Testing: go test (unit + e2e in e2e/organicruntime/), coverage via go test -cover
+  Style: Go idiomatic, bubble tea patterns, layered internal packages
+
+rules:
+  proposal:
+    - Include rollback plan for risky changes
+  specs:
+    - Use Given/When/Then for scenarios
+    - Use RFC 2119 keywords (MUST, SHALL, SHOULD, MAY)
+  design:
+    - Include sequence diagrams for complex flows
+    - Document architecture decisions with rationale
+  tasks:
+    - Group by phase, use hierarchical numbering
+    - Keep tasks completable in one session
+  apply:
+    guidelines:
+      - Follow existing code patterns
+    tdd: true
+    test_command: "go test ./..."
+  verify:
+    test_command: "go test ./..."
+    build_command: "go build ./..."
+    coverage_threshold: 0
+  archive:
+    - Warn before merging destructive deltas
+
+testing:
+  command: "go test ./..."
+  runner: "go test"
+  coverage_command: "go test -cover ./..."
+  linter_command: "go vet ./..."
+  formatter_command: "gofmt -s -l ."
+  type_checker_command: "go vet ./..."
+
+strict_tdd: true
+
+persistence_mode: hybrid

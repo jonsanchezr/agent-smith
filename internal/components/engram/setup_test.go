@@ -7,7 +7,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
 )
 
 func TestParseSetupModeDefaultsToSupported(t *testing.T) {
@@ -179,3 +179,4 @@ func TestProbeProtocolFlagCommandUsesProvidedBinary(t *testing.T) {
 		t.Fatalf("probe command = %q, want beta binary path", gotCommand)
 	}
 }
+

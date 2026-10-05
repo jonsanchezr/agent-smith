@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+﻿#!/usr/bin/env bash
 set -euo pipefail
 
 repo_root="$(git rev-parse --show-toplevel)"
@@ -142,7 +142,7 @@ for relative in (
 
 v22 = json.loads((repo / current_contract_root / "schemas/capabilities-v2.2.schema.json").read_text(encoding="utf-8"))
 v22_payload = json.dumps(v22, sort_keys=True)
-for retired in ("gentle-ai.review-receipt/v2", "sdd_receipt_binding"):
+for retired in ("agent-smith.review-receipt/v2", "sdd_receipt_binding"):
     assert retired not in v22_payload, f"v2.2 capabilities retains retired vocabulary {retired}"
 
 status_v5 = json.loads((repo / current_contract_root / "schemas/status-v5.schema.json").read_text(encoding="utf-8"))
@@ -224,3 +224,4 @@ for artifact in platform_archives:
 
 print(f"review contract release archives: PASS ({len(platform_archives)} archives, {len(expected_names)} contract files each)")
 PY
+

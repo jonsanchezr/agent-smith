@@ -19,12 +19,12 @@ import (
 
 const (
 	ReviewRepositoryContextCapability = "review.opaque_repository_context"
-	ReviewRepositoryContextSchema     = "gentle-ai.review-repository-context/v1"
+	ReviewRepositoryContextSchema     = "agent-smith.review-repository-context/v1"
 
 	reviewRepositoryContextHandlePrefix = "rctx1_"
 	reviewRepositoryLocatorMaxBytes     = 64 << 10
 
-	reviewRepositoryContextV2Schema          = "gentle-ai.review-repository-context/v2"
+	reviewRepositoryContextV2Schema          = "agent-smith.review-repository-context/v2"
 	reviewRepositoryContextV2HandlePrefix    = "rctx2_"
 	reviewRepositoryContextV2MaxDecodedBytes = 64 << 10
 	// The v2 handle is a fixed-width digest, not a transported payload. Its
@@ -706,7 +706,7 @@ func reviewRepositoryContextPath(handle string) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	return filepath.Join(home, ".gentle-ai", "review-contexts", "v1", handle+".json"), nil
+	return filepath.Join(home, ".agent-smith", "review-contexts", "v1", handle+".json"), nil
 }
 
 func reviewRepositoryContextHome() (string, error) {
@@ -718,7 +718,7 @@ func reviewRepositoryContextHome() (string, error) {
 }
 
 func ensureReviewRepositoryContextStorageRoot(home string) (string, error) {
-	root := filepath.Join(home, ".gentle-ai")
+	root := filepath.Join(home, ".agent-smith")
 	if !locatorPathWithin(home, root) {
 		return "", errors.New("review repository context storage root escapes HOME")
 	}
@@ -1156,3 +1156,4 @@ func identityHash(value string) string {
 	sum := sha256.Sum256([]byte(value))
 	return hex.EncodeToString(sum[:])
 }
+

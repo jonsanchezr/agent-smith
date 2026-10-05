@@ -18,7 +18,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/reviewtransaction"
+	"github.com/jonsanchezr/agent-smith/v4/internal/reviewtransaction"
 )
 
 // TestNegotiatedReviewStartRefusesEmptyCandidateWithoutAuthority proves the
@@ -219,3 +219,4 @@ func TestDirectReviewStartRefusesEmptyBaseDiffCandidate(t *testing.T) {
 		t.Fatalf("refused direct-route zero-delta base-diff START created authority: %#v", stores)
 	}
 }
+

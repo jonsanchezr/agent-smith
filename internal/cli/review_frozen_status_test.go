@@ -11,7 +11,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/reviewtransaction"
+	"github.com/jonsanchezr/agent-smith/v4/internal/reviewtransaction"
 )
 
 func TestExplicitFrozenReviewingStatusResumesPendingCandidateAfterDrift(t *testing.T) {
@@ -417,3 +417,4 @@ func captureFrozenReviewerResults(t *testing.T, repo string, record reviewtransa
 		}
 	}
 }
+

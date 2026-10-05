@@ -178,7 +178,7 @@ func (s *Sandbox) initRepo(path string) error {
 		return err
 	}
 	// The installed agent config must never leak into a reviewed diff.
-	return s.write(filepath.Join(path, ".gitignore"), ".claude/\n.gentle-ai/\n")
+	return s.write(filepath.Join(path, ".gitignore"), ".claude/\n.agent-smith/\n")
 }
 
 func (s *Sandbox) write(path, content string) error {
@@ -670,7 +670,7 @@ type Step struct {
 	// README.
 	DeadEnd bool
 	// ByDesign declares the opposite: a block here is a CORRECT refusal that
-	// already told the operator what to do, in words no `gentle-ai` command
+	// already told the operator what to do, in words no `agent-smith` command
 	// could express. It is the second author-declared input, and the more
 	// expensive one — a shape from a closed vocabulary plus a quote of the
 	// product's own next-action text, verified against the emitted bytes.
@@ -702,7 +702,7 @@ const (
 	// reviewPreconditionUndeclared is the zero value, and validateCorpus
 	// rejects it. A new journey has to say which world it runs in.
 	reviewPreconditionUndeclared ReviewPrecondition = ""
-	// reviewOptedIn runs `gentle-ai review mode enable --scope global` in the
+	// reviewOptedIn runs `agent-smith review mode enable --scope global` in the
 	// sandbox HOME before the journey's first product command, exactly as a
 	// user opts in, and fails the journey if the product does not then report
 	// the switch on. Global is the only scope that can assert "on": a clone may
@@ -866,7 +866,7 @@ func (r *journeyRun) runTTY(args []string, modelRun bool, exchange func(*bufio.R
 func runJourney(binary string, journey Journey) JourneyResult {
 	result := JourneyResult{ID: journey.ID, Title: journey.Title, Source: journey.Source, Status: StatusCompleted}
 
-	root, err := os.MkdirTemp("", "gentle-ai-bench-"+journey.ID+"-")
+	root, err := os.MkdirTemp("", "agent-smith-bench-"+journey.ID+"-")
 	if err != nil {
 		result.Status = StatusFailed
 		result.FailureReason = err.Error()
@@ -1007,3 +1007,4 @@ func envelopeString(stdout string, path ...string) (string, bool) {
 	text, ok := node.(string)
 	return text, ok
 }
+

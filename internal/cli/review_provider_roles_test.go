@@ -5,9 +5,9 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/reviewerprovider"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/reviewtransaction"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
+	"github.com/jonsanchezr/agent-smith/v4/internal/reviewerprovider"
+	"github.com/jonsanchezr/agent-smith/v4/internal/reviewtransaction"
 )
 
 // runtimeBudgetRolePromptRequest builds the smallest refuter request whose
@@ -17,7 +17,7 @@ import (
 // cap and one byte over it.
 func runtimeBudgetRolePromptRequest(content string) reviewProviderRefuterRequest {
 	return reviewProviderRefuterRequest{
-		Schema: "gentle-ai.review-provider-refuter-request/v1", LineageID: "lineage",
+		Schema: "agent-smith.review-provider-refuter-request/v1", LineageID: "lineage",
 		AuthorityVersion: "revision", TargetIdentity: "target", SnapshotIdentity: "target",
 		Claims:   []reviewtransaction.RefuterClaim{},
 		Evidence: []reviewProviderEvidence{{Path: "path.txt", Content: content}},
@@ -101,3 +101,4 @@ func TestReviewProviderRolePromptKeepsTheOutputLimitDistinct(t *testing.T) {
 		t.Fatalf("prompt over both bounds = %v, want the tighter runtime input ceiling", err)
 	}
 }
+

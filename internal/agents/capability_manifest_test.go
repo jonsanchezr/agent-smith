@@ -4,8 +4,8 @@ import (
 	"errors"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/agents/capabilitymanifest"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
+	"github.com/jonsanchezr/agent-smith/v4/internal/agents/capabilitymanifest"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
 )
 
 func TestDefaultRegistryManifestsMatchEveryAdapterProjection(t *testing.T) {
@@ -112,3 +112,4 @@ func TestRegistryRejectsLegacyProjectionMismatch(t *testing.T) {
 		t.Fatalf("NewRegistry() error = %v, want ErrCapabilityManifestMismatch", err)
 	}
 }
+

@@ -29,7 +29,7 @@ var (
 )
 
 func TestMain(m *testing.M) {
-	testHome, err := os.MkdirTemp("", "gentle-ai-reviewtransaction-test-home-*")
+	testHome, err := os.MkdirTemp("", "agent-smith-reviewtransaction-test-home-*")
 	if err != nil {
 		panic(err)
 	}
@@ -589,11 +589,11 @@ func TestLegacyFrozenSnapshotIdentityFailsValidationClosed(t *testing.T) {
 func legacyPreCutSnapshotIdentityForTest(kind TargetKind, projection Projection, baseTree, candidateTree, pathsDigest, proof string, intended, ledgerIDs []string) string {
 	hash := sha256.New()
 	if kind == TargetBaseWorkspaceOverlay {
-		hash.Write([]byte("gentle-ai.review-snapshot/base-workspace-overlay/v1\x00"))
+		hash.Write([]byte("agent-smith.review-snapshot/base-workspace-overlay/v1\x00"))
 	} else if projection == ProjectionStaged {
-		hash.Write([]byte("gentle-ai.review-snapshot/v2\x00"))
+		hash.Write([]byte("agent-smith.review-snapshot/v2\x00"))
 	} else {
-		hash.Write([]byte("gentle-ai.review-snapshot/v1\x00"))
+		hash.Write([]byte("agent-smith.review-snapshot/v1\x00"))
 	}
 	values := []string{string(kind), baseTree, candidateTree, pathsDigest, proof}
 	if projection == ProjectionStaged {
@@ -1047,7 +1047,7 @@ func TestSnapshotTempIndexesAreRemovedAfterGitAddErrors(t *testing.T) {
 			writeSnapshotFile(t, repo, ".gitattributes", "unsupported.txt filter=snapshotfail\n")
 			gitSnapshot(t, repo, "add", ".gitattributes")
 			gitSnapshot(t, repo, "commit", "-m", "failing filter fixture")
-			gitSnapshot(t, repo, "config", "filter.snapshotfail.clean", "git rev-parse --verify refs/heads/gentle-ai-filter-must-fail")
+			gitSnapshot(t, repo, "config", "filter.snapshotfail.clean", "git rev-parse --verify refs/heads/agent-smith-filter-must-fail")
 			gitSnapshot(t, repo, "config", "filter.snapshotfail.required", "true")
 			writeSnapshotFile(t, repo, "unsupported.txt", "cannot clean\n")
 			target := Target{Kind: kind, IntendedUntracked: []string{"unsupported.txt"}}
@@ -1057,7 +1057,7 @@ func TestSnapshotTempIndexesAreRemovedAfterGitAddErrors(t *testing.T) {
 			if _, err := (SnapshotBuilder{Repo: repo}).Build(context.Background(), target); err == nil {
 				t.Fatal("Build() accepted an unsupported worktree entry")
 			}
-			matches, err := filepath.Glob(filepath.Join(tempDir, "gentle-ai-review-index-*"))
+			matches, err := filepath.Glob(filepath.Join(tempDir, "agent-smith-review-index-*"))
 			if err != nil || len(matches) != 0 {
 				t.Fatalf("temporary indexes remain: %v, err=%v", matches, err)
 			}
@@ -1947,7 +1947,7 @@ func TestUntrackedProofBatchedListingMatchesPerPathReference(t *testing.T) {
 		t.Fatal(err)
 	}
 	hash := sha256.New()
-	hash.Write([]byte("gentle-ai.intended-untracked/v1\x00"))
+	hash.Write([]byte("agent-smith.intended-untracked/v1\x00"))
 	for _, logicalPath := range snapshot.IntendedUntracked {
 		entry, err := runGit(context.Background(), repo, nil, nil, "ls-tree", "-z", snapshot.CandidateTree, "--", literalPathspec(logicalPath))
 		if err != nil || len(entry) == 0 {
@@ -2105,7 +2105,7 @@ func initSnapshotRepo(t *testing.T) string {
 
 func snapshotRepoTemplate() (string, error) {
 	snapshotRepoTemplateOnce.Do(func() {
-		template, err := os.MkdirTemp("", "gentle-ai-snapshot-repo-*")
+		template, err := os.MkdirTemp("", "agent-smith-snapshot-repo-*")
 		if err != nil {
 			snapshotRepoTemplateErr = fmt.Errorf("create template directory: %w", err)
 			return
@@ -2371,3 +2371,4 @@ func TestRebuildCurrentSnapshotEvidenceAcceptsHistoricalInterpretation(t *testin
 		t.Fatalf("historical authority rejected against an unchanged repository: %v", err)
 	}
 }
+

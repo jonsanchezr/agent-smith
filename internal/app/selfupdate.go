@@ -12,11 +12,11 @@ import (
 
 	"github.com/mattn/go-isatty"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/state"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/statecoord"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/system"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/update"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/update/upgrade"
+	"github.com/jonsanchezr/agent-smith/v4/internal/state"
+	"github.com/jonsanchezr/agent-smith/v4/internal/statecoord"
+	"github.com/jonsanchezr/agent-smith/v4/internal/system"
+	"github.com/jonsanchezr/agent-smith/v4/internal/update"
+	"github.com/jonsanchezr/agent-smith/v4/internal/update/upgrade"
 )
 
 // selfUpdateNowFn returns the current time; injected for test determinism.
@@ -75,7 +75,7 @@ func defaultPromptForUpdate(stdout io.Writer, stdin io.Reader, currentVersion, l
 // selfUpdateTimeout is the maximum time allowed for the update check + upgrade.
 const selfUpdateTimeout = 7 * time.Second
 
-// selfUpdate checks for and applies a gentle-ai update before normal dispatch.
+// selfUpdate checks for and applies a agent-smith update before normal dispatch.
 // Returns nil on success or skip; errors are non-fatal (caller logs and continues).
 //
 // Guard evaluation order (per spec):
@@ -109,21 +109,21 @@ func selfUpdate(ctx context.Context, version string, profile system.PlatformProf
 		homeDir = "" // fall back to always-check on home dir failure
 	}
 
-	// Check for updates (only gentle-ai), gated by the 6h cooldown.
+	// Check for updates (only agent-smith), gated by the 6h cooldown.
 	// When the cache is fresh (elapsed < UpdateCheckTTL), this returns nil
 	// and no network request is made. The underlying check is always
 	// updateCheckFiltered, kept as a package-level var for other tests.
 	results := update.CheckAllWithCooldown(ctx, version, profile, homeDir, update.UpdateCheckTTL,
 		selfUpdateNowFn,
 		func(c context.Context, ver string, prof system.PlatformProfile) []update.UpdateResult {
-			return updateCheckFiltered(c, ver, prof, []string{"gentle-ai"})
+			return updateCheckFiltered(c, ver, prof, []string{"agent-smith"})
 		},
 	)
 
-	// Find the gentle-ai result.
+	// Find the agent-smith result.
 	var target *update.UpdateResult
 	for i := range results {
-		if results[i].Tool.Name == "gentle-ai" {
+		if results[i].Tool.Name == "agent-smith" {
 			target = &results[i]
 			break
 		}
@@ -161,7 +161,7 @@ func selfUpdate(ctx context.Context, version string, profile system.PlatformProf
 	// Check if upgrade succeeded.
 	var succeeded bool
 	for _, r := range report.Results {
-		if r.ToolName == "gentle-ai" && r.Status == upgrade.UpgradeSucceeded {
+		if r.ToolName == "agent-smith" && r.Status == upgrade.UpgradeSucceeded {
 			succeeded = true
 			break
 		}
@@ -192,7 +192,7 @@ func selfUpdate(ctx context.Context, version string, profile system.PlatformProf
 
 func gentleAIUpgradeSucceeded(report upgrade.UpgradeReport) (string, bool) {
 	for _, r := range report.Results {
-		if r.ToolName == "gentle-ai" && r.Status == upgrade.UpgradeSucceeded {
+		if r.ToolName == "agent-smith" && r.Status == upgrade.UpgradeSucceeded {
 			return strings.TrimPrefix(r.NewVersion, "v"), true
 		}
 	}
@@ -222,20 +222,21 @@ func restartAfterGentleAIUpgrade(latestVersion string, stdout io.Writer) error {
 	// PendingSync=true and completing the deferred sync. This sidesteps the
 	// Windows binary-lock issue and gives a consistent single path across all OSes.
 	// Tradeoff: Unix loses seamless re-exec restart; mitigated by clear copy below.
-	_, _ = fmt.Fprintf(stdout, "Updated to v%s — restart gentle-ai to continue.\n", latestVersion)
+	_, _ = fmt.Fprintf(stdout, "Updated to v%s — restart agent-smith to continue.\n", latestVersion)
 	return nil
 }
 
 // printPostUpgradeDoctorAdvisory prints a non-blocking informational advisory
-// suggesting the user run 'gentle-ai doctor' to verify ecosystem health after
-// a successful gentle-ai upgrade. It is purely informational: it does not run
+// suggesting the user run 'agent-smith doctor' to verify ecosystem health after
+// a successful agent-smith upgrade. It is purely informational: it does not run
 // any checks, does not change exit status, and does not block the upgrade.
 //
 // The advisory is shown in two places:
-//  1. After a successful `gentle-ai upgrade` CLI invocation (printed by runUpgrade).
+//  1. After a successful `agent-smith upgrade` CLI invocation (printed by runUpgrade).
 //  2. On the next launch under the new binary when PendingSync=true is observed
 //     (covers the TUI self-update path, where the new binary was not yet running
 //     when the upgrade completed).
 func printPostUpgradeDoctorAdvisory(stdout io.Writer) {
-	_, _ = fmt.Fprintf(stdout, "\n[info]    Run 'gentle-ai doctor' to verify ecosystem health after upgrade\n")
+	_, _ = fmt.Fprintf(stdout, "\n[info]    Run 'agent-smith doctor' to verify ecosystem health after upgrade\n")
 }
+

@@ -8,9 +8,9 @@ import (
 	"path/filepath"
 	"runtime"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/agents/capabilitymanifest"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/system"
+	"github.com/jonsanchezr/agent-smith/v4/internal/agents/capabilitymanifest"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
+	"github.com/jonsanchezr/agent-smith/v4/internal/system"
 )
 
 type Adapter struct {
@@ -80,7 +80,7 @@ func (a *Adapter) InstallCommand(_ system.PlatformProfile) ([][]string, error) {
 //   - Settings:  macOS: ~/Library/Application Support/Kiro/User/
 //               Linux: ~/.config/kiro/user/ (respects XDG_CONFIG_HOME)
 //               Windows: %APPDATA%/kiro/User/
-// Steering content is written to ~/.kiro/steering/gentle-ai.md via StrategySteeringFile.
+// Steering content is written to ~/.kiro/steering/agent-smith.md via StrategySteeringFile.
 
 func (a *Adapter) GlobalConfigDir(homeDir string) string {
 	return filepath.Join(homeDir, ".kiro")
@@ -91,7 +91,7 @@ func (a *Adapter) SystemPromptDir(homeDir string) string {
 }
 
 func (a *Adapter) SystemPromptFile(homeDir string) string {
-	return filepath.Join(a.SystemPromptDir(homeDir), "gentle-ai.md")
+	return filepath.Join(a.SystemPromptDir(homeDir), "agent-smith.md")
 }
 
 func (a *Adapter) SkillsDir(homeDir string) string {
@@ -105,7 +105,7 @@ func (a *Adapter) SkillsDir(homeDir string) string {
 }
 
 func (a *Adapter) SettingsPath(homeDir string) string {
-	// Kiro's OS app settings remain a secondary Gentle AI path; CodeGraph MCP
+	// Kiro's OS app settings remain a secondary Agent Smith path; CodeGraph MCP
 	// ownership is rooted independently under ~/.kiro/settings.
 	return filepath.Join(a.kiroConfigDir(homeDir), "settings.json")
 }
@@ -201,3 +201,4 @@ func (a *Adapter) SupportsSystemPrompt() bool {
 func (a *Adapter) SupportsMCP() bool {
 	return a.CapabilityManifest().Features.MCP
 }
+

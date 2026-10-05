@@ -1,8 +1,8 @@
-#!/usr/bin/env bash
-# Regression tests for gentle-ai#4689: scripts/install.sh must derive the
+﻿#!/usr/bin/env bash
+# Regression tests for agent-smith#4689: scripts/install.sh must derive the
 # go-install module path (and the beta GONOSUMDB/GOPRIVATE/GONOPROXY
-# patterns) from go.mod at the resolved source ref — latest release tag for
-# stable, main commit SHA for beta — instead of hard-coding a major. A future
+# patterns) from go.mod at the resolved source ref â€” latest release tag for
+# stable, main commit SHA for beta â€” instead of hard-coding a major. A future
 # /vN bump must need no installer change.
 #
 # Each test sources install.sh in a fresh subshell (safe: main only runs
@@ -53,13 +53,13 @@ assert_not_contains() {
 # ---- mocks -------------------------------------------------------------------
 # State consulted by mock_curl; reset_mocks sets the defaults per test.
 EXPECTED_TAG=""; EXPECTED_SHA=""
-GOMOD_MODULE="github.com/gentleman-programming/gentle-ai/v3"
+GOMOD_MODULE="github.com/jonsanchezr/agent-smith/v3"
 GOMOD_HTTP="200"; GOMOD_NO_MODULE="0"; RELEASES_HTTP="200"; COMMITS_HTTP="200"
 INSTALL_LOG=""; GO_WAS_CALLED=0
 
 reset_mocks() {
     EXPECTED_TAG=""; EXPECTED_SHA=""
-    GOMOD_MODULE="github.com/gentleman-programming/gentle-ai/v3"
+    GOMOD_MODULE="github.com/jonsanchezr/agent-smith/v3"
     GOMOD_HTTP="200"; GOMOD_NO_MODULE="0"; RELEASES_HTTP="200"; COMMITS_HTTP="200"
     INSTALL_LOG=""; GO_WAS_CALLED=0
 }
@@ -105,19 +105,19 @@ test_stable_v3_current() {
     CHANNEL="stable"; LATEST_VERSION=""
     install_go
     assert_eq "install target" \
-        "github.com/gentleman-programming/gentle-ai/v3/cmd/gentle-ai@v3.7.0" \
+        "github.com/jonsanchezr/agent-smith/v3/cmd/agent-smith@v3.7.0" \
         "${INSTALL_LOG}"
 }
 
 # Current v4 release fixture: the resolved tag's go.mod declares /v4.
 test_stable_v4_regression() {
     reset_mocks; EXPECTED_TAG="v4.0.0"
-    GOMOD_MODULE="github.com/gentleman-programming/gentle-ai/v4"
+    GOMOD_MODULE="github.com/jonsanchezr/agent-smith/v4"
     curl() { mock_curl "$@"; }; go() { mock_go "$@"; }
     CHANNEL="stable"; LATEST_VERSION=""
     install_go
     assert_eq "install target follows the new /v4 path" \
-        "github.com/gentleman-programming/gentle-ai/v4/cmd/gentle-ai@v4.0.0" \
+        "github.com/jonsanchezr/agent-smith/v4/cmd/agent-smith@v4.0.0" \
         "${INSTALL_LOG}"
 }
 
@@ -125,17 +125,17 @@ test_stable_v4_regression() {
 # and export env patterns carrying the derived path (never a /v3 literal).
 test_beta_v5_derives_module_and_env() {
     reset_mocks; EXPECTED_SHA="abcdef1234567890abcdef1234567890abcdef12"
-    GOMOD_MODULE="github.com/gentleman-programming/gentle-ai/v5"
+    GOMOD_MODULE="github.com/jonsanchezr/agent-smith/v5"
     unset GONOSUMDB GOPRIVATE GONOPROXY 2>/dev/null || true
     curl() { mock_curl "$@"; }; go() { mock_go "$@"; }
     CHANNEL="beta"; LATEST_VERSION=""
     install_go
     assert_eq "install target uses derived /v5 path and SHA" \
-        "github.com/gentleman-programming/gentle-ai/v5/cmd/gentle-ai@abcdef1234567890abcdef1234567890abcdef12" \
+        "github.com/jonsanchezr/agent-smith/v5/cmd/agent-smith@abcdef1234567890abcdef1234567890abcdef12" \
         "${INSTALL_LOG}" || return 1
-    assert_eq "GONOSUMDB" "github.com/gentleman-programming/gentle-ai/v5" "${GONOSUMDB:-}" || return 1
-    assert_eq "GOPRIVATE" "github.com/gentleman-programming/gentle-ai/v5" "${GOPRIVATE:-}" || return 1
-    assert_eq "GONOPROXY" "github.com/gentleman-programming/gentle-ai/v5" "${GONOPROXY:-}" || return 1
+    assert_eq "GONOSUMDB" "github.com/jonsanchezr/agent-smith/v5" "${GONOSUMDB:-}" || return 1
+    assert_eq "GOPRIVATE" "github.com/jonsanchezr/agent-smith/v5" "${GOPRIVATE:-}" || return 1
+    assert_eq "GONOPROXY" "github.com/jonsanchezr/agent-smith/v5" "${GONOPROXY:-}" || return 1
     assert_not_contains "env pattern" "${GONOSUMDB:-}" "/v3"
 }
 
@@ -165,7 +165,7 @@ test_go_mod_fail_closed() {
 
 # The execution guard must run main when the script is piped to bash via
 # stdin (`curl | bash`: BASH_SOURCE[0] empty, $0=bash), not only on direct
-# execution — otherwise the documented primary invocation silently no-ops.
+# execution â€” otherwise the documented primary invocation silently no-ops.
 test_stdin_execution_runs_main() {
     local out
     out="$(cat "${INSTALL_SH}" | bash -s -- --help)"
@@ -192,10 +192,11 @@ run_test "stdin execution (curl | bash) still runs main"              test_stdin
 run_test "Windows stable installs the release tag, never @latest"     test_ps1_stable_pins_release_tag
 
 if [ "${TESTS_FAILED}" -eq 0 ]; then
-    printf '%sok%s — %d/%d installer module-path tests passed\n' \
+    printf '%sok%s â€” %d/%d installer module-path tests passed\n' \
         "${C_GREEN}" "${C_NC}" "${TESTS_PASSED}" "${TESTS_TOTAL}"
     exit 0
 fi
-printf '%sFAIL%s — %d/%d failed:\n' "${C_RED}" "${C_NC}" "${TESTS_FAILED}" "${TESTS_TOTAL}"
+printf '%sFAIL%s â€” %d/%d failed:\n' "${C_RED}" "${C_NC}" "${TESTS_FAILED}" "${TESTS_TOTAL}"
 for name in "${FAILED_NAMES[@]}"; do printf '  - %s\n' "${name}"; done
 exit 1
+

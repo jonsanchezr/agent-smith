@@ -7,7 +7,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/storage"
+	"github.com/jonsanchezr/agent-smith/v4/internal/storage"
 )
 
 func TestAvailableBytes_TempDir(t *testing.T) {
@@ -96,3 +96,4 @@ func TestFormatBytes(t *testing.T) {
 		}
 	}
 }
+

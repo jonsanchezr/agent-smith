@@ -1,6 +1,6 @@
 package skills
 
-import "github.com/gentleman-programming/gentle-ai/v4/internal/model"
+import "github.com/jonsanchezr/agent-smith/v4/internal/model"
 
 // Retained orchestration skill installed by every non-custom preset.
 var orchestrationSkills = []model.SkillID{model.SkillJudgmentDay}
@@ -9,7 +9,7 @@ var orchestrationSkills = []model.SkillID{model.SkillJudgmentDay}
 // selectable through the TUI skill picker and explicit `--skills` resolution,
 // but no default preset installs them.
 var contributorSkills = []model.SkillID{
-	model.SkillGentleAIBench,
+	model.SkillAgentSmithBench,
 	model.SkillBranchPR,
 	model.SkillIssueCreation,
 	model.SkillCommentWriter,
@@ -21,7 +21,7 @@ var contributorSkills = []model.SkillID{
 // general skills. Contributor skills keep their historical positions.
 var selectableFoundationSkills = []model.SkillID{
 	model.SkillGoTesting,
-	model.SkillGentleAIBench,
+	model.SkillAgentSmithBench,
 	model.SkillCreator,
 	model.SkillImprover,
 	model.SkillBranchPR,
@@ -76,3 +76,4 @@ func copySkills(src []model.SkillID) []model.SkillID {
 	copy(dst, src)
 	return dst
 }
+

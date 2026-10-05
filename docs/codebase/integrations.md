@@ -1,11 +1,11 @@
-# Integrations
+﻿# Integrations
 
 > [!NOTE]
-> These docs track `main`, which may include unreleased changes. For the latest release, see the [v4.0.0 docs](https://github.com/Gentleman-Programming/gentle-ai/tree/v4.0.0/docs).
+> These docs track `main`, which may include unreleased changes. For the latest release, see the [v4.0.0 docs](https://github.com/jonsanchezr/agent-smith/tree/v4.0.0/docs).
 
 [Back to Codebase Guide](../CODEBASE-GUIDE.md)
 
-Gentle-AI integration code should stay thin: adapters describe where and how an agent accepts configuration; components decide what managed content to inject.
+agent-smith integration code should stay thin: adapters describe where and how an agent accepts configuration; components decide what managed content to inject.
 
 ## Agent integration map
 
@@ -36,14 +36,14 @@ Gentle-AI integration code should stay thin: adapters describe where and how an 
 
 Community tools and OpenCode plugins are different integration paths:
 
-| Path | Gentle-AI owns | Runtime owner |
+| Path | agent-smith owns | Runtime owner |
 |---|---|---|
 | `internal/components/communitytool/` | Installation orchestration plus managed guidance/config/MCP reconciliation, such as CodeGraph setup and guidance. | The external tool runtime. |
 | `internal/components/opencodeplugin/` | External plugin package-name registration; Gentle Logo also writes/registers a managed local TUI plugin file. | OpenCode and the plugin package or managed local plugin file. |
 
 ## Thin plugin principle
 
-OpenCode community plugins are optional integrations. For external plugins, Gentle-AI ensures `~/.config/opencode/tui.json` exists and contains the plugin package name. For Gentle Logo, Gentle-AI writes the managed local TUI plugin file under `~/.config/opencode/tui-plugins/` and registers that path. OpenCode owns runtime loading.
+OpenCode community plugins are optional integrations. For external plugins, agent-smith ensures `~/.config/opencode/tui.json` exists and contains the plugin package name. For Gentle Logo, agent-smith writes the managed local TUI plugin file under `~/.config/opencode/tui-plugins/` and registers that path. OpenCode owns runtime loading.
 
 ```text
 TUI selection
@@ -65,3 +65,4 @@ TUI selection
 ## Navigation
 
 Previous: [Dashboard](dashboard.md) | Next: [Maintainer playbook](maintainer-playbook.md)
+

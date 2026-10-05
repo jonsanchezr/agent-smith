@@ -36,7 +36,7 @@ func issue3561DanglingAncestorFixture(sandbox *Sandbox) error {
 	if err := os.MkdirAll(filepath.Join(sandbox.Home, ".claude"), 0o755); err != nil {
 		return err
 	}
-	statePath := filepath.Join(sandbox.Home, ".gentle-ai", "state.json")
+	statePath := filepath.Join(sandbox.Home, ".agent-smith", "state.json")
 	state := fmt.Sprintf(`{"installed_agents":["opencode","claude-code"],"last_update_check":%q}`, time.Now().UTC().Format(time.RFC3339Nano))
 	if err := sandbox.write(statePath, state); err != nil {
 		return err
@@ -66,13 +66,13 @@ func issue3561SymlinkSkip(sandbox *Sandbox) string {
 
 func issue3561VerifyDoctor(sandbox *Sandbox, observation Observation) error {
 	if observation.ExitCode != 0 {
-		return fmt.Errorf("gentle-ai doctor exited %d: %s", observation.ExitCode, firstLine(observation.Stderr))
+		return fmt.Errorf("agent-smith doctor exited %d: %s", observation.ExitCode, firstLine(observation.Stderr))
 	}
-	if strings.Contains(observation.Stdout, "gentle-ai sync") {
+	if strings.Contains(observation.Stdout, "agent-smith sync") {
 		return fmt.Errorf("doctor recommended the unrunnable sync recovery: %s", observation.Stdout)
 	}
 	ancestorPath := sandbox.Scratch["issue-3561-ancestor"]
-	for _, want := range []string{sandbox.Scratch["issue-3561-config"], "dangling ancestor symlink " + ancestorPath, "inspect", "gentle-ai doctor"} {
+	for _, want := range []string{sandbox.Scratch["issue-3561-config"], "dangling ancestor symlink " + ancestorPath, "inspect", "agent-smith doctor"} {
 		if !strings.Contains(observation.Stdout, want) {
 			return fmt.Errorf("doctor output missing %q: %s", want, observation.Stdout)
 		}
@@ -111,7 +111,7 @@ func issue3561VerifyDoctor(sandbox *Sandbox, observation Observation) error {
 	if string(state) != sandbox.Scratch["issue-3561-state-content"] {
 		return fmt.Errorf("doctor changed state.json: got %q, want %q", string(state), sandbox.Scratch["issue-3561-state-content"])
 	}
-	backupPath := filepath.Join(sandbox.Home, ".gentle-ai", "backups")
+	backupPath := filepath.Join(sandbox.Home, ".agent-smith", "backups")
 	if _, err := os.Lstat(backupPath); err == nil {
 		return fmt.Errorf("doctor unexpectedly created %q", backupPath)
 	} else if !os.IsNotExist(err) {
@@ -125,10 +125,11 @@ func issue3561Journeys() []Journey {
 		ID:     "j118-doctor-dangling-config-ancestor",
 		Review: reviewUntouched,
 		Title:  "Doctor identifies a dangling ancestor of a managed config path without recommending sync",
-		Source: "https://github.com/Gentleman-Programming/gentle-ai/pull/3561",
+		Source: "https://github.com/jonsanchezr/agent-smith/pull/3561",
 		Steps: []Step{
 			{Name: "fixture: dangling ~/.config ancestor over the OpenCode managed path", Fixture: issue3561DanglingAncestorFixture},
 			{Name: "doctor reports manual repair and preserves the filesystem", Skip: issue3561SymlinkSkip, Args: issue3561DoctorArgs, After: issue3561VerifyDoctor},
 		},
 	}}
 }
+

@@ -9,10 +9,10 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/pipeline"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/planner"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/system"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
+	"github.com/jonsanchezr/agent-smith/v4/internal/pipeline"
+	"github.com/jonsanchezr/agent-smith/v4/internal/planner"
+	"github.com/jonsanchezr/agent-smith/v4/internal/system"
 )
 
 func createWindowsCompatibilityJunction(t *testing.T, link, target string) {
@@ -272,7 +272,7 @@ func TestWindowsCompatibilityTransactionRefusesRootParentAndNestedJunctions(t *t
 			if content, readErr := os.ReadFile(pluginPath); readErr != nil || string(content) != "stale" {
 				t.Fatalf("plugin refresh ran after compatibility refusal: content=%q error=%v", content, readErr)
 			}
-			if _, statErr := os.Stat(filepath.Join(home, ".gentle-ai", "backups")); !os.IsNotExist(statErr) {
+			if _, statErr := os.Stat(filepath.Join(home, ".agent-smith", "backups")); !os.IsNotExist(statErr) {
 				t.Fatalf("backup started after compatibility refusal: %v", statErr)
 			}
 		})
@@ -447,3 +447,4 @@ func TestWindowsCompatibilityTransactionRollbackRemovesCreatedFilesAfterDuplicat
 		t.Fatalf("rollback left newly created compatibility file: %v", statErr)
 	}
 }
+

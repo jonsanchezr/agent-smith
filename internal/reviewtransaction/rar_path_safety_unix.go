@@ -228,7 +228,7 @@ var rarPOSIXPrivateModeIneffective = posixPrivateModeIneffective
 // reports "effective": an inconclusive probe is not grounds to guess a new
 // refusal.
 func posixPrivateModeIneffective(dir string) bool {
-	file, err := os.CreateTemp(dir, ".gentle-ai-private-mode-probe-")
+	file, err := os.CreateTemp(dir, ".agent-smith-private-mode-probe-")
 	if err != nil {
 		return false
 	}
@@ -356,3 +356,4 @@ func validateRARRepositoryParent(path string) error {
 	}
 	return nil
 }
+

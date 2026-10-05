@@ -1,7 +1,7 @@
-{
+﻿{
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://gentle-ai.dev/contracts/telemetry/v1/schemas/event.schema.json",
-  "title": "gentle-ai.telemetry-event/v1",
+  "$id": "https://agent-smith.dev/contracts/telemetry/v1/schemas/event.schema.json",
+  "title": "agent-smith.telemetry-event/v1",
   "description": "Anonymous usage event POSTed to the telemetry collector. Carries only fixed enums, a random install identifier, and counts; never a path, hostname, username, prompt, diff, or IP address. Every string property is closed (enum, const, or pattern) so a free-text field can never be added silently.",
   "type": "object",
   "additionalProperties": false,
@@ -19,7 +19,7 @@
   ],
   "properties": {
     "schema": {
-      "const": "gentle-ai.telemetry-event/v1"
+      "const": "agent-smith.telemetry-event/v1"
     },
     "event": {
       "type": "string",
@@ -27,7 +27,7 @@
     },
     "install_id": {
       "type": "string",
-      "description": "UUID v4, generated once per installation and stored in the gentle-ai state directory.",
+      "description": "UUID v4, generated once per installation and stored in the agent-smith state directory.",
       "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
     },
     "sent_at": {
@@ -38,7 +38,7 @@
     },
     "version": {
       "type": "string",
-      "description": "gentle-ai's numeric release version, or 0.0.0-dev for a source/untagged build. Never an arbitrary string.",
+      "description": "agent-smith's numeric release version, or 0.0.0-dev for a source/untagged build. Never an arbitrary string.",
       "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+(-[0-9A-Za-z.+-]{1,64})?$"
     },
     "os": {
@@ -94,3 +94,4 @@
     }
   }
 }
+

@@ -17,15 +17,15 @@ import (
 	"strings"
 	"time"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/components/filemerge"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/system"
+	"github.com/jonsanchezr/agent-smith/v4/internal/components/filemerge"
+	"github.com/jonsanchezr/agent-smith/v4/internal/system"
 )
 
 const (
-	engramOwner            = "Gentleman-Programming"
+	engramOwner            = "jonsanchezr"
 	engramRepo             = "engram"
 	engramName             = "engram"
-	engramCanonicalModule  = "github.com/Gentleman-Programming/engram"
+	engramCanonicalModule  = "github.com/jonsanchezr/engram"
 	engramCanonicalPackage = engramCanonicalModule + "/cmd/engram"
 )
 
@@ -112,7 +112,7 @@ func appendGoEnvPattern(required, existing string) string {
 }
 
 func canonicalEngramGoInstallPackage(pkg string) string {
-	const lowerPackage = "github.com/gentleman-programming/engram/cmd/engram"
+	const lowerPackage = "github.com/jonsanchezr/engram/cmd/engram"
 	if strings.HasPrefix(strings.ToLower(pkg), lowerPackage) {
 		return engramCanonicalPackage + pkg[len(lowerPackage):]
 	}
@@ -120,7 +120,7 @@ func canonicalEngramGoInstallPackage(pkg string) string {
 }
 
 // engramCoreTagPattern matches only plain semver tags (vX.Y.Z) that identify
-// core engram binary releases. The Gentleman-Programming/engram repository also
+// core engram binary releases. The jonsanchezr/engram repository also
 // publishes gentle-engram npm and pi releases under tags like
 // "gentle-engram vX.Y.Z" or "pi-vX.Y.Z" in the same release stream. This
 // pattern intentionally excludes those so a gentle-engram/pi tag can never be
@@ -179,7 +179,7 @@ func DownloadLatestBinary(profile system.PlatformProfile, isBeta bool) (string, 
 	}
 	outPath := filepath.Join(installDir, binaryName)
 
-	tmpDir, err := os.MkdirTemp("", "gentle-ai-engram-*")
+	tmpDir, err := os.MkdirTemp("", "agent-smith-engram-*")
 	if err != nil {
 		return "", fmt.Errorf("create temp dir: %w", err)
 	}
@@ -360,7 +360,7 @@ const engramReleasePageSize = 20
 
 // engramReleaseMaxPages caps the pagination loop so it can never run forever.
 // At 20 releases/page this covers 100 releases — enough runway even when the
-// Gentleman-Programming/engram repo publishes many pi-v*/gentle-engram entries
+// jonsanchezr/engram repo publishes many pi-v*/gentle-engram entries
 // between core vX.Y.Z releases.
 const engramReleaseMaxPages = 5
 
@@ -643,7 +643,7 @@ func stopEngramProcessesWith(runner system.PowerShellRunner) error {
 	msg := strings.TrimSpace(string(out))
 	if strings.HasPrefix(msg, "WARNING:") {
 		// Non-fatal: log to stderr so operators can diagnose, but return nil.
-		fmt.Fprintf(os.Stderr, "gentle-ai: engram stop: %s\n", msg)
+		fmt.Fprintf(os.Stderr, "agent-smith: engram stop: %s\n", msg)
 	}
 	return nil
 }
@@ -856,3 +856,4 @@ func writeExecutable(r io.Reader, outPath string) error {
 	}
 	return nil
 }
+

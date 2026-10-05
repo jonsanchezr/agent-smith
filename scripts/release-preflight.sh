@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+﻿#!/usr/bin/env bash
 set -euo pipefail
 
 die() {
@@ -15,7 +15,7 @@ require_env GITHUB_REPOSITORY
 require_env GITHUB_REF_TYPE
 require_env GITHUB_REF_NAME
 require_env GITHUB_SHA
-[[ "$GITHUB_REPOSITORY" == "Gentleman-Programming/gentle-ai" ]] || die "unexpected repository $GITHUB_REPOSITORY"
+[[ "$GITHUB_REPOSITORY" == "jonsanchezr/agent-smith" ]] || die "unexpected repository $GITHUB_REPOSITORY"
 [[ "$GITHUB_REF_TYPE" == "tag" ]] || die "release must run from a tag push"
 
 tag=$GITHUB_REF_NAME
@@ -56,3 +56,4 @@ go mod tidy -diff
 [[ -z "$(git status --porcelain=v1 --untracked-files=all)" ]] || die "preflight mutated the checkout"
 
 printf 'release preflight: exact tag %s on main %s verified\n' "$tag" "$head_sha"
+

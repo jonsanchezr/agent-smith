@@ -115,14 +115,14 @@ func JDPhases() []string {
 	}
 }
 
-// GentleAIODDPhases returns the ordered list of the generic ODD subagents
+// AgentSmithODDPhases returns the ordered list of the generic ODD subagents
 // ported from Gentle Shell's global agents (#4471). They support independent
 // model configuration like JD and the review lenses.
-func GentleAIODDPhases() []string {
+func AgentSmithODDPhases() []string {
 	return []string{
-		"gentle-ai-explore",
-		"gentle-ai-verify",
-		"gentle-ai-worker",
+		"agent-smith-explore",
+		"agent-smith-verify",
+		"agent-smith-worker",
 	}
 }
 
@@ -156,3 +156,4 @@ func ConfigurableAgentPhases() []string {
 	phases = append(phases, ReviewPhases()...)
 	return phases
 }
+

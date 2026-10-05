@@ -14,22 +14,22 @@ import (
 
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/backup"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/cli"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/components/communitytool"
-	componentuninstall "github.com/gentleman-programming/gentle-ai/v4/internal/components/uninstall"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/opencode"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/pipeline"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/planner"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/reviewtransaction"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/state"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/statecoord"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/system"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/tui/screens"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/tui/styles"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/update"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/update/upgrade"
+	"github.com/jonsanchezr/agent-smith/v4/internal/backup"
+	"github.com/jonsanchezr/agent-smith/v4/internal/cli"
+	"github.com/jonsanchezr/agent-smith/v4/internal/components/communitytool"
+	componentuninstall "github.com/jonsanchezr/agent-smith/v4/internal/components/uninstall"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
+	"github.com/jonsanchezr/agent-smith/v4/internal/opencode"
+	"github.com/jonsanchezr/agent-smith/v4/internal/pipeline"
+	"github.com/jonsanchezr/agent-smith/v4/internal/planner"
+	"github.com/jonsanchezr/agent-smith/v4/internal/reviewtransaction"
+	"github.com/jonsanchezr/agent-smith/v4/internal/state"
+	"github.com/jonsanchezr/agent-smith/v4/internal/statecoord"
+	"github.com/jonsanchezr/agent-smith/v4/internal/system"
+	"github.com/jonsanchezr/agent-smith/v4/internal/tui/screens"
+	"github.com/jonsanchezr/agent-smith/v4/internal/tui/styles"
+	"github.com/jonsanchezr/agent-smith/v4/internal/update"
+	"github.com/jonsanchezr/agent-smith/v4/internal/update/upgrade"
 	"github.com/muesli/termenv"
 )
 
@@ -1571,7 +1571,7 @@ func TestConfigureOpenCodeModelsShowsJSONCCustomProviderWithRuntimeProviders(t *
 	t.Setenv("OPENCODE_CONFIG_DIR", "")
 	dir := t.TempDir()
 	writePath := filepath.Join(dir, "opencode.json")
-	if err := os.WriteFile(writePath, []byte(`{"agent":{"gentle-orchestrator":{"__managed_by":"gentle-ai/sdd"}},"provider":{"custom-cloud":{"name":"Lower priority"}}}`), 0o600); err != nil {
+	if err := os.WriteFile(writePath, []byte(`{"agent":{"agent-smith-orchestrator":{"__managed_by":"agent-smith/sdd"}},"provider":{"custom-cloud":{"name":"Lower priority"}}}`), 0o600); err != nil {
 		t.Fatal(err)
 	}
 	settingsPath := filepath.Join(dir, "opencode.jsonc")
@@ -1882,15 +1882,15 @@ func TestUpgradePhaseCompletedClearsUpdateResults(t *testing.T) {
 func TestReportUpgradedGentleAI(t *testing.T) {
 	report := upgrade.UpgradeReport{Results: []upgrade.ToolUpgradeResult{
 		{ToolName: "engram", Status: upgrade.UpgradeSucceeded},
-		{ToolName: "gentle-ai", Status: upgrade.UpgradeSucceeded},
+		{ToolName: "agent-smith", Status: upgrade.UpgradeSucceeded},
 	}}
-	if !reportUpgradedGentleAI(report) {
-		t.Fatal("reportUpgradedGentleAI() = false, want true")
+	if !reportUpgradedAgentSmith(report) {
+		t.Fatal("reportUpgradedAgentSmith() = false, want true")
 	}
 
 	report.Results[1].Status = upgrade.UpgradeFailed
-	if reportUpgradedGentleAI(report) {
-		t.Fatal("reportUpgradedGentleAI() = true for failed gentle-ai upgrade")
+	if reportUpgradedAgentSmith(report) {
+		t.Fatal("reportUpgradedAgentSmith() = true for failed agent-smith upgrade")
 	}
 }
 
@@ -2528,7 +2528,7 @@ func TestStartUninstall_FullRemoveHomebrewManagedBinaryAddsManualAction(t *testi
 		return componentuninstall.Result{}, nil
 	}
 
-	restoreExec := setOSExecutableForTest("/opt/homebrew/bin/gentle-ai", nil)
+	restoreExec := setOSExecutableForTest("/opt/homebrew/bin/agent-smith", nil)
 	defer restoreExec()
 
 	removeCalled := false
@@ -2548,7 +2548,7 @@ func TestStartUninstall_FullRemoveHomebrewManagedBinaryAddsManualAction(t *testi
 	if len(msg.Result.ManualActions) == 0 {
 		t.Fatal("ManualActions should include Homebrew uninstall guidance")
 	}
-	if !strings.Contains(msg.Result.ManualActions[0], "brew uninstall gentle-ai") {
+	if !strings.Contains(msg.Result.ManualActions[0], "brew uninstall agent-smith") {
 		t.Fatalf("manual action = %q, want brew uninstall guidance", msg.Result.ManualActions[0])
 	}
 }
@@ -2562,7 +2562,7 @@ func TestStartUninstall_FullRemoveNonBrewRemovesBinary(t *testing.T) {
 		return componentuninstall.Result{}, nil
 	}
 
-	restoreExec := setOSExecutableForTest("/tmp/gentle-ai", nil)
+	restoreExec := setOSExecutableForTest("/tmp/agent-smith", nil)
 	defer restoreExec()
 
 	removedPath := ""
@@ -2576,8 +2576,8 @@ func TestStartUninstall_FullRemoveNonBrewRemovesBinary(t *testing.T) {
 	if msg.Err != nil {
 		t.Fatalf("UninstallDoneMsg.Err = %v, want nil", msg.Err)
 	}
-	if removedPath != "/tmp/gentle-ai" {
-		t.Fatalf("os.Remove path = %q, want %q", removedPath, "/tmp/gentle-ai")
+	if removedPath != "/tmp/agent-smith" {
+		t.Fatalf("os.Remove path = %q, want %q", removedPath, "/tmp/agent-smith")
 	}
 }
 
@@ -4275,7 +4275,7 @@ func TestNoWrapAroundUpOnBackupScreen(t *testing.T) {
 func TestModelConfigOpenCodePrePopulatesAssignments(t *testing.T) {
 	// Pre-existing assignments that should be read from settings
 	preExisting := map[string]model.ModelAssignment{
-		"gentle-orchestrator": {ProviderID: "anthropic", ModelID: "claude-sonnet-4-20250514"},
+		"agent-smith-orchestrator": {ProviderID: "anthropic", ModelID: "claude-sonnet-4-20250514"},
 		"sdd-apply":           {ProviderID: "openai", ModelID: "gpt-4o"},
 		"review-refuter":      {ProviderID: "openai", ModelID: "gpt-5"},
 	}
@@ -4303,10 +4303,10 @@ func TestModelConfigOpenCodePrePopulatesAssignments(t *testing.T) {
 	if state.Selection.ModelAssignments == nil {
 		t.Fatal("ModelAssignments should be pre-populated, got nil")
 	}
-	got := state.Selection.ModelAssignments["gentle-orchestrator"]
-	want := preExisting["gentle-orchestrator"]
+	got := state.Selection.ModelAssignments["agent-smith-orchestrator"]
+	want := preExisting["agent-smith-orchestrator"]
 	if got != want {
-		t.Errorf("gentle-orchestrator assignment = %+v, want %+v", got, want)
+		t.Errorf("agent-smith-orchestrator assignment = %+v, want %+v", got, want)
 	}
 	got2 := state.Selection.ModelAssignments["sdd-apply"]
 	want2 := preExisting["sdd-apply"]
@@ -4327,7 +4327,7 @@ func TestModelConfigOpenCodeDoesNotOverwriteExistingSessionAssignments(t *testin
 	orig := readCurrentAssignmentsFn
 	readCurrentAssignmentsFn = func(_ string) (map[string]model.ModelAssignment, error) {
 		return map[string]model.ModelAssignment{
-			"gentle-orchestrator": {ProviderID: "anthropic", ModelID: "claude-sonnet-4-20250514"},
+			"agent-smith-orchestrator": {ProviderID: "anthropic", ModelID: "claude-sonnet-4-20250514"},
 		}, nil
 	}
 	t.Cleanup(func() { readCurrentAssignmentsFn = orig })
@@ -4337,14 +4337,14 @@ func TestModelConfigOpenCodeDoesNotOverwriteExistingSessionAssignments(t *testin
 	m.Cursor = 1
 	// Pre-populate Selection.ModelAssignments in the current session
 	m.Selection.ModelAssignments = map[string]model.ModelAssignment{
-		"gentle-orchestrator": sessionAssignment,
+		"agent-smith-orchestrator": sessionAssignment,
 	}
 
 	updated, _ := m.Update(tea.KeyMsg{Type: tea.KeyEnter})
 	state := updated.(Model)
 
 	// The session assignment must be preserved, not overwritten by file contents
-	got := state.Selection.ModelAssignments["gentle-orchestrator"]
+	got := state.Selection.ModelAssignments["agent-smith-orchestrator"]
 	if got != sessionAssignment {
 		t.Errorf("session assignment overwritten: got %+v, want %+v", got, sessionAssignment)
 	}
@@ -4381,7 +4381,7 @@ func TestModelConfigReadsCurrentAssignmentsWithoutChangingSettings(t *testing.T)
 		// Existing settings may include JSONC comments and legacy agent names.
 		"agent": {
 			"sdd-orchestrator": {"model": "openai/legacy"},
-			"gentle-orchestrator": {"model": "anthropic/current", "variant": "high"},
+			"agent-smith-orchestrator": {"model": "anthropic/current", "variant": "high"},
 			"custom-agent": {"model": "openai/custom"},
 			"broken": {"model": 123}
 		}
@@ -4393,7 +4393,7 @@ func TestModelConfigReadsCurrentAssignmentsWithoutChangingSettings(t *testing.T)
 	if err != nil {
 		t.Fatal(err)
 	}
-	if got := assignments["gentle-orchestrator"]; got != (model.ModelAssignment{ProviderID: "anthropic", ModelID: "current", Effort: "high"}) {
+	if got := assignments["agent-smith-orchestrator"]; got != (model.ModelAssignment{ProviderID: "anthropic", ModelID: "current", Effort: "high"}) {
 		t.Fatalf("current orchestrator assignment = %+v", got)
 	}
 	if got := assignments["custom-agent"]; got.ModelID != "custom" {
@@ -4412,7 +4412,7 @@ func TestModelConfigAssignmentsSurviveNavigation(t *testing.T) {
 	want := model.ModelAssignment{ProviderID: "anthropic", ModelID: "claude-sonnet-4-20250514"}
 	original := readCurrentAssignmentsFn
 	readCurrentAssignmentsFn = func(string) (map[string]model.ModelAssignment, error) {
-		return map[string]model.ModelAssignment{"gentle-orchestrator": want}, nil
+		return map[string]model.ModelAssignment{"agent-smith-orchestrator": want}, nil
 	}
 	t.Cleanup(func() { readCurrentAssignmentsFn = original })
 
@@ -4421,7 +4421,7 @@ func TestModelConfigAssignmentsSurviveNavigation(t *testing.T) {
 	m.Cursor = 1
 	updated, _ := m.Update(tea.KeyMsg{Type: tea.KeyEnter})
 	m = updated.(Model)
-	if m.Screen != ScreenModelPicker || m.Selection.ModelAssignments["gentle-orchestrator"] != want {
+	if m.Screen != ScreenModelPicker || m.Selection.ModelAssignments["agent-smith-orchestrator"] != want {
 		t.Fatalf("Configure models did not load current assignments: screen=%v assignments=%v", m.Screen, m.Selection.ModelAssignments)
 	}
 	m.Selection.ModelAssignments["custom-agent"] = model.ModelAssignment{ProviderID: "openai", ModelID: "gpt-5"}
@@ -5144,24 +5144,24 @@ func TestCodexModelPickerCustomModeEscResetsCursor(t *testing.T) {
 	}
 }
 
-func TestGentleAIUpgradeVersionDetectsSucceededGentleAI(t *testing.T) {
+func TestAgentSmithUpgradeVersionDetectsSucceededGentleAI(t *testing.T) {
 	report := upgrade.UpgradeReport{Results: []upgrade.ToolUpgradeResult{
 		{ToolName: "engram", Status: upgrade.UpgradeSucceeded, NewVersion: "1.0.0"},
-		{ToolName: "gentle-ai", Status: upgrade.UpgradeSucceeded, NewVersion: "v1.40.0"},
+		{ToolName: "agent-smith", Status: upgrade.UpgradeSucceeded, NewVersion: "v1.40.0"},
 	}}
 	m := Model{UpgradeReport: &report}
-	got, ok := m.GentleAIUpgradeVersion()
+	got, ok := m.AgentSmithUpgradeVersion()
 	if !ok {
-		t.Fatal("GentleAIUpgradeVersion() ok = false, want true")
+		t.Fatal("AgentSmithUpgradeVersion() ok = false, want true")
 	}
 	if got != "1.40.0" {
-		t.Fatalf("GentleAIUpgradeVersion() = %q, want %q", got, "1.40.0")
+		t.Fatalf("AgentSmithUpgradeVersion() = %q, want %q", got, "1.40.0")
 	}
 }
 
 func TestUpgradeResultEnterQuitsWhenGentleAIWasUpgraded(t *testing.T) {
 	report := upgrade.UpgradeReport{Results: []upgrade.ToolUpgradeResult{
-		{ToolName: "gentle-ai", Status: upgrade.UpgradeSucceeded, NewVersion: "v1.40.0"},
+		{ToolName: "agent-smith", Status: upgrade.UpgradeSucceeded, NewVersion: "v1.40.0"},
 	}}
 	m := Model{Screen: ScreenUpgrade, UpgradeReport: &report}
 	_, cmd := m.confirmSelection()
@@ -5175,7 +5175,7 @@ func TestUpgradeResultEnterQuitsWhenGentleAIWasUpgraded(t *testing.T) {
 
 func TestUpgradeSyncResultEscQuitsWhenGentleAIWasUpgraded(t *testing.T) {
 	report := upgrade.UpgradeReport{Results: []upgrade.ToolUpgradeResult{
-		{ToolName: "gentle-ai", Status: upgrade.UpgradeSucceeded, NewVersion: "v1.40.0"},
+		{ToolName: "agent-smith", Status: upgrade.UpgradeSucceeded, NewVersion: "v1.40.0"},
 	}}
 	m := Model{Screen: ScreenUpgradeSync, UpgradeReport: &report, HasSyncRun: true}
 	_, cmd := m.handleKeyPress(tea.KeyMsg{Type: tea.KeyEsc})
@@ -5235,7 +5235,7 @@ func executeUpgradeSyncSequence(t *testing.T, m Model) []tea.Msg {
 }
 
 // TestStartUpgradeSync_SetsPendingSyncWhenGentleAIUpgraded verifies that when
-// the UpgradeFn reports gentle-ai as upgraded, the syncCmd branch of
+// the UpgradeFn reports agent-smith as upgraded, the syncCmd branch of
 // startUpgradeSync writes PendingSync=true to state.json before returning
 // SyncDoneMsg. This is the TUI-path equivalent of the selfupdate.go path tested
 // in TestSelfUpdate_SetsPendingSyncOnSuccess.
@@ -5248,11 +5248,11 @@ func TestStartUpgradeSync_SetsPendingSyncWhenGentleAIUpgraded(t *testing.T) {
 	m.Screen = ScreenUpgradeSync
 	m.OperationRunning = true
 
-	// UpgradeFn reports gentle-ai as successfully upgraded.
+	// UpgradeFn reports agent-smith as successfully upgraded.
 	m.UpgradeFn = func(_ context.Context, _ []update.UpdateResult) upgrade.UpgradeReport {
 		return upgrade.UpgradeReport{
 			Results: []upgrade.ToolUpgradeResult{
-				{ToolName: "gentle-ai", Status: upgrade.UpgradeSucceeded, NewVersion: "1.8.0"},
+				{ToolName: "agent-smith", Status: upgrade.UpgradeSucceeded, NewVersion: "1.8.0"},
 			},
 		}
 	}
@@ -5283,12 +5283,12 @@ func TestStartUpgradeSync_SetsPendingSyncWhenGentleAIUpgraded(t *testing.T) {
 		t.Fatalf("state.Read(%q) error = %v (PendingSync was not written)", home, err)
 	}
 	if !s.PendingSync {
-		t.Errorf("PendingSync = false after gentle-ai self-upgrade in TUI flow, want true")
+		t.Errorf("PendingSync = false after agent-smith self-upgrade in TUI flow, want true")
 	}
 }
 
 // TestStartUpgradeSync_DoesNotSetPendingSyncWhenGentleAINotUpgraded verifies
-// that when gentle-ai was NOT upgraded (e.g. only engram was upgraded), the
+// that when agent-smith was NOT upgraded (e.g. only engram was upgraded), the
 // syncCmd branch does NOT set PendingSync, and sync proceeds normally via SyncFn.
 func TestStartUpgradeSync_DoesNotSetPendingSyncWhenGentleAINotUpgraded(t *testing.T) {
 	home := t.TempDir()
@@ -5299,7 +5299,7 @@ func TestStartUpgradeSync_DoesNotSetPendingSyncWhenGentleAINotUpgraded(t *testin
 	m.Screen = ScreenUpgradeSync
 	m.OperationRunning = true
 
-	// UpgradeFn reports only engram upgraded, not gentle-ai.
+	// UpgradeFn reports only engram upgraded, not agent-smith.
 	m.UpgradeFn = func(_ context.Context, _ []update.UpdateResult) upgrade.UpgradeReport {
 		return upgrade.UpgradeReport{
 			Results: []upgrade.ToolUpgradeResult{
@@ -5318,10 +5318,10 @@ func TestStartUpgradeSync_DoesNotSetPendingSyncWhenGentleAINotUpgraded(t *testin
 
 	// SyncFn must have been called (not the deferred-PendingSync path).
 	if !syncCalled {
-		t.Errorf("SyncFn was not called — expected normal sync when gentle-ai was not upgraded")
+		t.Errorf("SyncFn was not called — expected normal sync when agent-smith was not upgraded")
 	}
 
-	// PendingSync must NOT be set when gentle-ai was not upgraded.
+	// PendingSync must NOT be set when agent-smith was not upgraded.
 	// state.json may not exist at all if nothing wrote it; that is expected and
 	// means PendingSync was never set (correct). Any other read error is
 	// unexpected and should fail the test loudly.
@@ -5332,7 +5332,7 @@ func TestStartUpgradeSync_DoesNotSetPendingSyncWhenGentleAINotUpgraded(t *testin
 		}
 		// File absent → PendingSync was never set — correct.
 	} else if s.PendingSync {
-		t.Errorf("PendingSync = true after non-gentle-ai upgrade, want false")
+		t.Errorf("PendingSync = true after non-agent-smith upgrade, want false")
 	}
 
 	// Verify SyncDoneMsg arrived.
@@ -5360,7 +5360,7 @@ func TestStartUpgradeSync_NoClobberOnCorruptStateFile(t *testing.T) {
 	t.Setenv("USERPROFILE", home)
 
 	// Write a corrupt state file so state.Read returns a non-ErrNotExist error.
-	stateDir := filepath.Join(home, ".gentle-ai")
+	stateDir := filepath.Join(home, ".agent-smith")
 	if err := os.MkdirAll(stateDir, 0o755); err != nil {
 		t.Fatalf("MkdirAll: %v", err)
 	}
@@ -5374,11 +5374,11 @@ func TestStartUpgradeSync_NoClobberOnCorruptStateFile(t *testing.T) {
 	m.Screen = ScreenUpgradeSync
 	m.OperationRunning = true
 
-	// UpgradeFn reports gentle-ai as successfully upgraded.
+	// UpgradeFn reports agent-smith as successfully upgraded.
 	m.UpgradeFn = func(_ context.Context, _ []update.UpdateResult) upgrade.UpgradeReport {
 		return upgrade.UpgradeReport{
 			Results: []upgrade.ToolUpgradeResult{
-				{ToolName: "gentle-ai", Status: upgrade.UpgradeSucceeded, NewVersion: "1.8.0"},
+				{ToolName: "agent-smith", Status: upgrade.UpgradeSucceeded, NewVersion: "1.8.0"},
 			},
 		}
 	}
@@ -5526,7 +5526,7 @@ func TestWelcomeView_LongAdvisoryStaysWithinWindowWidth(t *testing.T) {
 }
 
 func TestWelcomeAdvisory_BoundsAndScrollsOverflow(t *testing.T) {
-	const releaseURL = "https://github.com/Gentleman-Programming/gentle-ai/releases/tag/v1.49.0"
+	const releaseURL = "https://github.com/jonsanchezr/agent-smith/releases/tag/v1.49.0"
 	m := NewModel(system.DetectionResult{}, "dev")
 	m.Width = 60
 	m.Height = 50
@@ -5569,7 +5569,7 @@ func TestWelcomeAdvisory_BoundsAndScrollsOverflow(t *testing.T) {
 }
 
 func TestWelcomeAdvisory_FittingContentShowsLatestReleaseWithoutScrollHint(t *testing.T) {
-	const releaseURL = "https://github.com/Gentleman-Programming/gentle-ai/releases/tag/v1.49.0"
+	const releaseURL = "https://github.com/jonsanchezr/agent-smith/releases/tag/v1.49.0"
 	m := NewModel(system.DetectionResult{}, "dev")
 	m.Width = 100
 	m.Height = 60
@@ -5595,7 +5595,7 @@ func TestWelcomeAdvisory_SmallTerminalPreservesMenu(t *testing.T) {
 	baselineHeight := lipgloss.Height(m.View())
 	updated, _ := m.Update(AdvisoryMsg{Advisory: update.Advisory{
 		Message: strings.Repeat("long advisory ", 80),
-		URL:     "https://github.com/Gentleman-Programming/gentle-ai/releases/tag/v1.49.0",
+		URL:     "https://github.com/jonsanchezr/agent-smith/releases/tag/v1.49.0",
 	}})
 	view := updated.(Model).View()
 
@@ -5613,7 +5613,7 @@ func TestWelcomeAdvisory_ResizeAndContentChangesClampScroll(t *testing.T) {
 	m.Height = 60
 	updated, _ := m.Update(AdvisoryMsg{Advisory: update.Advisory{
 		Message: strings.Repeat("release detail ", 12),
-		URL:     "https://github.com/Gentleman-Programming/gentle-ai/releases/tag/v1.49.0",
+		URL:     "https://github.com/jonsanchezr/agent-smith/releases/tag/v1.49.0",
 	}})
 	state := updated.(Model)
 	updated, _ = state.Update(tea.KeyMsg{Type: tea.KeyPgDown})
@@ -5894,7 +5894,7 @@ func TestAdvisoryMsg_SanitizesOnStore(t *testing.T) {
 // makeUpdateResult returns a minimal UpdateResult with the given status and release URL.
 func makeUpdateResult(status update.UpdateStatus, releaseURL string) update.UpdateResult {
 	return update.UpdateResult{
-		Tool:             update.ToolInfo{Name: "gentle-ai"},
+		Tool:             update.ToolInfo{Name: "agent-smith"},
 		Status:           status,
 		InstalledVersion: "1.0.0",
 		LatestVersion:    "2.0.0",
@@ -7593,3 +7593,4 @@ func TestMarkPendingSyncUnderLockReReadsLatestStateAfterLockContention(t *testin
 		t.Fatalf("concurrent RDDMode clobbered: got %q, want %q", got.RDDMode, reviewtransaction.RDDModeOn)
 	}
 }
+

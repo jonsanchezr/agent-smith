@@ -18,29 +18,29 @@ import (
 // the fallback strategy.
 var Tools = []ToolInfo{
 	{
-		Name:          "gentle-ai",
-		Owner:         "Gentleman-Programming",
-		Repo:          "gentle-ai",
+		Name:          "agent-smith",
+		Owner:         "jonsanchezr",
+		Repo:          "agent-smith",
 		DetectCmd:     nil, // version comes from build-time ldflags (app.Version)
 		VersionPrefix: "v",
-		// gentle-ai: Homebrew when the package is brew-owned, authenticated binary
+		// agent-smith: Homebrew when the package is brew-owned, authenticated binary
 		// release download on Linux/macOS, and `go install` on Windows, where no
 		// official signed binary is published.
 		InstallMethod: InstallBinary,
 		// GoImportPath is what makes the Windows self-upgrade possible. It is
 		// deliberately NOT a general opt-in to go-install: effectiveMethod routes
-		// gentle-ai on Linux/macOS to InstallBinary regardless of this field, so
+		// agent-smith on Linux/macOS to InstallBinary regardless of this field, so
 		// those platforms keep the minisign-verified release download.
 		//
 		// The path stores the module/import base WITHOUT the /vN suffix; the
 		// /vN suffix is derived at composition time from the target version via
 		// ModulePathForVersion so a v2 binary composing "go install ...@v3.0.1"
 		// resolves to github.com/.../v3/... and not the unresolvable /v2 path.
-		GoImportPath: "github.com/gentleman-programming/gentle-ai/cmd/gentle-ai",
+		GoImportPath: "github.com/jonsanchezr/agent-smith/cmd/agent-smith",
 	},
 	{
 		Name:              "engram",
-		Owner:             "Gentleman-Programming",
+		Owner:             "jonsanchezr",
 		Repo:              "engram",
 		DetectCmd:         []string{"engram", "version"},
 		VersionPrefix:     "v",
@@ -70,7 +70,7 @@ var Tools = []ToolInfo{
 	},
 	{
 		Name:          "gga",
-		Owner:         "Gentleman-Programming",
+		Owner:         "jonsanchezr",
 		Repo:          "gentleman-guardian-angel",
 		DetectCmd:     []string{"gga", "--version"},
 		VersionPrefix: "v",
@@ -95,3 +95,4 @@ var Tools = []ToolInfo{
 		},
 	},
 }
+

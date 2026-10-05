@@ -15,9 +15,9 @@ import (
 	"strings"
 	"time"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/reviewerprovider"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/reviewtransaction"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
+	"github.com/jonsanchezr/agent-smith/v4/internal/reviewerprovider"
+	"github.com/jonsanchezr/agent-smith/v4/internal/reviewtransaction"
 )
 
 const (
@@ -444,11 +444,11 @@ func openCodeTransportStartBound(ctx context.Context, taskPrompt, agent string) 
 }
 
 // openCodeProviderRoleResultEnvelope renders the exact published
-// gentle-ai.opencode-review-provider-role/v1 envelope for a captured provider
+// agent-smith.opencode-review-provider-role/v1 envelope for a captured provider
 // role result. It is the single wording source for those bytes, so the
 // transport and the published-schema conformance test cannot drift apart.
 func openCodeProviderRoleResultEnvelope(role reviewProviderRole) string {
-	return `{"schema":"gentle-ai.opencode-review-provider-role/v1","role":"` + string(role) + `","captured":true}`
+	return `{"schema":"agent-smith.opencode-review-provider-role/v1","role":"` + string(role) + `","captured":true}`
 }
 
 func openCodeTransportComplete(ctx context.Context, session openCodeTransportSession, envelope openCodeTransportEnvelope) (openCodeTransportEnvelope, error) {
@@ -827,7 +827,7 @@ func boundedOpenCodeTaskPayload(payload []byte) ([]byte, error) {
 }
 
 func openCodeTransportFailure(code string) error {
-	return fmt.Errorf("%s: OpenCode Task transport did not produce a capturable reviewer result; run `gentle-ai review status --cwd <repo> --contract gentle-ai.review-integration/v2 --next-transition` before retrying", code)
+	return fmt.Errorf("%s: OpenCode Task transport did not produce a capturable reviewer result; run `agent-smith review status --cwd <repo> --contract agent-smith.review-integration/v2 --next-transition` before retrying", code)
 }
 
 // openCodeTransportCaptureRefusalCause classifies a provider-role capture
@@ -848,11 +848,11 @@ func openCodeTransportCaptureRefusalCause(err error) string {
 }
 
 func openCodeTransportCaptureRefusal(err error) error {
-	return fmt.Errorf("opencode_provider_role_result_refused (cause: %s): OpenCode Task transport did not produce a capturable reviewer result; run `gentle-ai review status --cwd <repo> --contract gentle-ai.review-integration/v2 --next-transition` before retrying", openCodeTransportCaptureRefusalCause(err))
+	return fmt.Errorf("opencode_provider_role_result_refused (cause: %s): OpenCode Task transport did not produce a capturable reviewer result; run `agent-smith review status --cwd <repo> --contract agent-smith.review-integration/v2 --next-transition` before retrying", openCodeTransportCaptureRefusalCause(err))
 }
 
 func openCodeTransportAuthorityUnavailable(cause error) error {
-	return fmt.Errorf("opencode_review_transport_authority_unavailable: OpenCode Task transport did not produce a capturable reviewer result; run `gentle-ai review status --cwd <repo> --contract gentle-ai.review-integration/v2 --next-transition` before retrying: %w", cause)
+	return fmt.Errorf("opencode_review_transport_authority_unavailable: OpenCode Task transport did not produce a capturable reviewer result; run `agent-smith review status --cwd <repo> --contract agent-smith.review-integration/v2 --next-transition` before retrying: %w", cause)
 }
 
 // Bounded refusal reasons the V2 relay may surface to the parent. The plugin
@@ -922,3 +922,4 @@ func openCodeTransportRefusalReason(err error) string {
 func openCodeTransportStaleAuthority(detail string) error {
 	return &openCodeTransportBindingError{detail: detail, stale: true}
 }
+

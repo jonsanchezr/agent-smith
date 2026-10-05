@@ -1,9 +1,9 @@
 # Telemetry
 
 > [!NOTE]
-> These docs track `main`, which may include unreleased changes. For the latest release, see the [v4.0.0 docs](https://github.com/Gentleman-Programming/gentle-ai/tree/v4.0.0/docs).
+> These docs track `main`, which may include unreleased changes. For the latest release, see the [v4.0.0 docs](https://github.com/jonsanchezr/agent-smith/tree/v4.0.0/docs).
 
-Gentle AI sends a small amount of anonymous usage telemetry so the project
+Agent Smith sends a small amount of anonymous usage telemetry so the project
 knows how many installs stay alive and how the review pipeline gets used,
 without collecting anything about you, your code, your machine, or your
 organization.
@@ -19,7 +19,7 @@ no migration cleanup. Legacy install/heartbeat telemetry below is separate.
 
 ### Pi command contract
 
-Invoke `gentle-ai telemetry runtime send --json` with one sanitized JSON object on
+Invoke `agent-smith telemetry runtime send --json` with one sanitized JSON object on
 stdin, at most **16 KiB**. The CLI allows **500 ms to read stdin**, then discards
 incomplete input. Close stdin normally. Launch asynchronously from the tool event
 hook; **do not await the process or network**. Discard command output/errors and
@@ -34,7 +34,7 @@ is accepted. Example single response observation:
 
 ```json
 {
-  "schema": "gentle-ai.telemetry-runtime-aggregate/v1",
+  "schema": "agent-smith.telemetry-runtime-aggregate/v1",
   "registry": 1,
   "host": "pi",
   "rows": [{
@@ -61,7 +61,7 @@ is accepted. Example single response observation:
 The command returns exactly:
 
 ```json
-{"schema":"gentle-ai.telemetry-runtime-send/v1","decision":"stored"}
+{"schema":"agent-smith.telemetry-runtime-send/v1","decision":"stored"}
 ```
 
 | Decision | Meaning |
@@ -173,7 +173,7 @@ callers must supply bounded input; only the CLI owns this pre-read deadline.
 
 Native code generates a fresh independent cryptorandom 32-hex `delivery_id` and
 converts only the envelope to
-[`gentle-ai.telemetry-runtime-event/v1`](../contracts/telemetry/runtime/v1/schemas/event.schema.json).
+[`agent-smith.telemetry-runtime-event/v1`](../contracts/telemetry/runtime/v1/schemas/event.schema.json).
 Public rows remain unchanged. Neither payload nor ID is saved. There are no
 idempotency headers, replayable request bodies, retries, backoff, or spacing state.
 Every non-200 status (including 400/409/429/500), malformed acknowledgement, lost
@@ -187,12 +187,12 @@ no checkpoint can unsend HTTP already in flight. No policy lock is introduced.
 
 ## Automatic OpenCode collection
 
-The managed plugin invokes `gentle-ai telemetry runtime opencode --json` directly
+The managed plugin invokes `agent-smith telemetry runtime opencode --json` directly
 and asynchronously. Native code checks policy, normalizes one bounded source
 observation, then uses the same one-attempt sender. Example stdin:
 
 ```json
-{"schema":"gentle-ai.telemetry-opencode/v1","info":{"role":"assistant","time":{"created":1,"completed":3},"providerID":"anthropic","modelID":"claude-opus-5","agent":"sdd-apply"}}
+{"schema":"agent-smith.telemetry-opencode/v1","info":{"role":"assistant","time":{"created":1,"completed":3},"providerID":"anthropic","modelID":"claude-opus-5","agent":"sdd-apply"}}
 ```
 
 Only completed non-summary assistant `message.updated` events qualify. Source
@@ -230,7 +230,7 @@ is not an exactly-once guarantee across plugin instances or replayed start/end
 pairs. The existing 32-child, 16-KiB-input, 1-KiB-output and 4-second process
 limits remain. Disposal aborts the subscription and terminates owned children.
 
-The `gentle-ai.telemetry-opencode/v2` envelope carries the bounded selected variant
+The `agent-smith.telemetry-opencode/v2` envelope carries the bounded selected variant
 as `selectedEffort`; V1 rejects that field. Native code maps it to its closed effort
 allowlist and never consults ambient configuration for V2 attribution. The start
 model is a runtime selection, not proof of provider-response identity, so its
@@ -240,9 +240,9 @@ latency**. Runtime installation and end-to-end certification remain separate gat
 
 Missing/default-zero source tokens remain unavailable; available reasoning is
 preserved, and total tokens are not inferred. Native `build` and `plan`, plus
-`gentle-orchestrator`, map to the orchestrator class. OpenCode's managed fallback
+`agent-smith-orchestrator`, map to the orchestrator class. OpenCode's managed fallback
 agents map `explore` to the built-in `explore` class and `general` to the built-in
-`worker` class. Agent names in the runtime contract's named Gentle AI allowlist
+`worker` class. Agent names in the runtime contract's named Agent Smith allowlist
 map to their built-in class. Other non-empty names map to `custom`/`unknown`;
 their raw names never leave native code. Missing names remain `unknown`/`unknown`.
 
@@ -260,7 +260,7 @@ oversized, or invalid configuration falls back to unavailable/unknown attributio
 and never blocks the send.
 
 Install/sync still reconcile the dedicated `plugins/telemetry-runtime.ts` and
-`.gentle-ai-telemetry-runtime.json` ownership manifest for selected OpenCode,
+`.agent-smith-telemetry-runtime.json` ownership manifest for selected OpenCode,
 independently of any workflow and using the existing scope/XDG resolution. These are static
 installation assets, **not metric state**. Managed byte/hash/mode checks, guarded
 rollback, unowned/edited-file preservation, and validated-pair uninstall remain
@@ -273,13 +273,13 @@ or changes exporter settings.
 ## Automatic Claude Code collection
 
 Claude Code installs asynchronous `Stop` and `SubagentStop` command hooks that
-invoke `gentle-ai telemetry runtime claude --json`. Each hook starts one one-shot
+invoke `agent-smith telemetry runtime claude --json`. Each hook starts one one-shot
 process; native code checks the existing telemetry policy before reading stdin,
 uses the same 16 KiB/500 ms input bound, and sends at most once with no daemon,
 queue, persistence, retry, or filesystem mutation.
 
 For `SubagentStop`, the documented `agent_type` names the subagent frontmatter.
-Names in Gentle AI's runtime agent-class registry become `built_in` observations.
+Names in Agent Smith's runtime agent-class registry become `built_in` observations.
 Claude Code's own built-in subagents map by exact, case-sensitive name:
 `general-purpose` to the built-in `worker` class and `Explore` to the built-in
 `explore` class. All other names become `custom`/`unknown` without transmitting
@@ -306,7 +306,7 @@ This is made safe through delivery, not by discarding the evidence. The
 adapter also captures the newest usable assistant record's API message id
 (`message.id`, falling back to the record-level `uuid` when `message.id` is
 absent) and, when one is available, derives the outgoing delivery id as the
-first 16 bytes of `sha256("gentle-ai.telemetry-runtime-claude-stop/v1\x00" +
+first 16 bytes of `sha256("agent-smith.telemetry-runtime-claude-stop/v1\x00" +
 message id)`, hex-encoded. The message id itself never leaves the machine;
 only this one-way hash is transmitted. A `Stop` that re-reads a transcript row
 already sent therefore produces the same delivery id, and the collector drops
@@ -351,7 +351,7 @@ not documented compatibility guarantees in those references.
 ## Automatic Codex collection
 
 Managed Codex `hooks.json` entries invoke
-`gentle-ai telemetry runtime codex --json` asynchronously for `SubagentStop` and
+`agent-smith telemetry runtime codex --json` asynchronously for `SubagentStop` and
 `Stop`. These events and their input fields are documented by the
 [Codex hooks reference](https://developers.openai.com/codex/hooks). Runtime policy is
 checked before hook stdin, local state, or transcript data is read, again after
@@ -378,7 +378,7 @@ that hook `turn_id` has matching semantics in both parent and subagent transcrip
 so sequence segmentation is the bounded fallback and private IDs stay memory-only.
 Codex's [subagent documentation](https://developers.openai.com/codex/subagents)
 describes subagent configuration. `Stop` is classified as the orchestrator.
-When response model evidence is missing, a valid persisted Gentle AI phase or
+When response model evidence is missing, a valid persisted Agent Smith phase or
 orchestrator model assignment is used with `selected` evidence. The transcript
 `effort` or nested `collaboration_mode.settings.reasoning_effort` is effective
 evidence only and never becomes `selected_effort`. Missing, malformed, or
@@ -423,7 +423,7 @@ reported zero; selected effort never substitutes for effective effort.
 HTTP 200 acknowledges a committed `stored` or `duplicate` result:
 
 ```json
-{"schema":"gentle-ai.telemetry-runtime-delivery/v1","decision":"stored"}
+{"schema":"agent-smith.telemetry-runtime-delivery/v1","decision":"stored"}
 ```
 
 Other statuses have no error body: 400 invalid, 409 conflicting delivery identity,
@@ -454,14 +454,14 @@ observations have no durable daily rollup. See [collector operations](telemetry-
 
 ## Read collection policy without side effects
 
-Run `gentle-ai telemetry policy --json` for runtime collection permission,
+Run `agent-smith telemetry policy --json` for runtime collection permission,
 not a send attempt. Omit `--json` for a concise human-readable answer.
 Unlike `status --json`, which still creates missing state for a stable ID,
 `policy` never creates or repairs state, generates IDs, increments counters,
 enrolls an installation, or sends anything.
 
 ```json
-{"schema":"gentle-ai.telemetry-policy/v1","operation":"policy","enabled":true,"source":"default","reason":"enabled"}
+{"schema":"agent-smith.telemetry-policy/v1","operation":"policy","enabled":true,"source":"default","reason":"enabled"}
 ```
 
 The result has exactly these five fields, with no identifiers, endpoints,
@@ -480,18 +480,18 @@ Legacy install/heartbeat scheduling and development-build suppression are separa
 
 Two event kinds, each a single JSON POST under 4 KiB:
 
-- `install` — sent once per installation, the first time `install`, `update`,
+- `install` â€” sent once per installation, the first time `install`, `update`,
   or `sync` completes successfully. An existing installation that predates
   telemetry picks this up on its next `update` or `sync`.
-- `heartbeat` — sent at most once every 24 hours, opportunistically, by
+- `heartbeat` â€” sent at most once every 24 hours, opportunistically, by
   `install`, `update`, or `sync`.
 
 Every event carries:
 
-- a random `install_id` (UUID v4), generated once and stored locally — never
+- a random `install_id` (UUID v4), generated once and stored locally â€” never
   a machine ID, MAC address, or anything else that could be shared with
   another tool
-- the `gentle-ai` version, `os`, and `arch` (the same values `--version`
+- the `agent-smith` version, `os`, and `arch` (the same values `--version`
   effectively describes)
 - the agents and components you have installed (e.g. `claude-code`, `engram`;
   a selection persisted before v4.0.0 can still report the legacy `sdd`
@@ -503,8 +503,8 @@ Every event carries:
 
 Nothing else. In particular: no paths, repository names, usernames,
 hostnames, prompts, diffs, source code, or IP addresses. The collector does
-not store the client IP address either. Run `gentle-ai telemetry preview` at
-any time to see the exact bytes that would be sent next — that command never
+not store the client IP address either. Run `agent-smith telemetry preview` at
+any time to see the exact bytes that would be sent next â€” that command never
 sends anything.
 
 The full JSON contract lives at
@@ -513,21 +513,21 @@ The full JSON contract lives at
 ## When it is sent
 
 The very first time `install`, `update`, or `sync` ever completes on a fresh
-installation, gentle-ai does exactly one thing: it prints this line to
-stderr, synchronously, in that same command —
+installation, agent-smith does exactly one thing: it prints this line to
+stderr, synchronously, in that same command â€”
 
 ```text
-Gentle AI sends anonymous usage metrics (version, OS, agents, counters) and may send anonymous runtime usage from supported Pi/OpenCode/Codex integrations (public model, effort, agent class, available token usage, timing, error categories); runtime usage is never stored locally; run gentle-ai telemetry disable to opt out.
+Agent Smith sends anonymous usage metrics (version, OS, agents, counters) and may send anonymous runtime usage from supported Pi/OpenCode/Codex integrations (public model, effort, agent class, available token usage, timing, error categories); runtime usage is never stored locally; run agent-smith telemetry disable to opt out.
 ```
 
-— and stores a locally generated `install_id`. **Nothing is sent on that
+â€” and stores a locally generated `install_id`. **Nothing is sent on that
 first run.** The first actual `install` event is only sent starting from the
 *next* trigger: the following `install`/`update`/`sync`, or the 24-hour
 heartbeat window, whichever comes first. This means if you run
-`gentle-ai telemetry disable` before that next run, nothing was ever sent
+`agent-smith telemetry disable` before that next run, nothing was ever sent
 about your installation.
 
-That notice line is printed exactly once, ever, per installation — every
+That notice line is printed exactly once, ever, per installation â€” every
 run after the first behaves purely as described below.
 
 From the second trigger onward, sending is fire-and-forget: a detached
@@ -537,10 +537,10 @@ finishes. It never blocks the triggering command and never changes its exit
 code or output.
 
 A review's outcome (approved, one bounded correction, or escalated) increments its local counter
-first, and only then opportunistically check whether a heartbeat is due —
+first, and only then opportunistically check whether a heartbeat is due â€”
 the same 24-hour limit and failure backoff apply, so this adds at most one
 send per day even for a host that finishes many reviews in a
-row. This is what lets a host such as Gentle Pi, which drives gentle-ai only
+row. This is what lets a host such as Gentle Pi, which drives agent-smith only
 through `review ...` and never through
 `install`/`update`/`sync`, still send a heartbeat.
 
@@ -554,20 +554,20 @@ Telemetry respects, in this order:
 2. `GENTLE_AI_TELEMETRY=0`
 3. `CI` or `GITHUB_ACTIONS` set to anything but empty, `0`, or `false` (most CI providers export one of them)
 
-Legacy install/heartbeat builds without a release identity (`gentle-ai --version` reporting `dev` or `0.0.0-dev`, which is what a plain `go build` or a test harness produces) never send those events or write their telemetry state; the legacy collector refuses such versions too. Pseudo-versions from `go install ...@main` carry a commit stamp and count as real installs. Runtime observations carry no version and use the existing enrolled policy checks above.
-4. `gentle-ai telemetry disable`
+Legacy install/heartbeat builds without a release identity (`agent-smith --version` reporting `dev` or `0.0.0-dev`, which is what a plain `go build` or a test harness produces) never send those events or write their telemetry state; the legacy collector refuses such versions too. Pseudo-versions from `go install ...@main` carry a commit stamp and count as real installs. Runtime observations carry no version and use the existing enrolled policy checks above.
+4. `agent-smith telemetry disable`
 
 Any one of these disables sending; nothing else needs to change. Re-enable a
-local opt-out with `gentle-ai telemetry enable`.
+local opt-out with `agent-smith telemetry enable`.
 
 ## Commands
 
 ```
-gentle-ai telemetry status [--json]
-gentle-ai telemetry enable
-gentle-ai telemetry disable
-gentle-ai telemetry preview [--json]
-gentle-ai telemetry trigger [--json]
+agent-smith telemetry status [--json]
+agent-smith telemetry enable
+agent-smith telemetry disable
+agent-smith telemetry preview [--json]
+agent-smith telemetry trigger [--json]
 ```
 
 - `status` reports whether sending is enabled and which of the sources above
@@ -576,14 +576,14 @@ gentle-ai telemetry trigger [--json]
   history, or the counters. It also reports `last_failure_at` and, while a
   failed send is still in its 6-hour backoff window, `backoff_until`.
 - `enable` / `disable` set the local opt-out persisted next to the rest of
-  gentle-ai's state.
+  agent-smith's state.
 - `preview` prints the exact event that would be sent next, without sending
   it.
 - `trigger` is the host entry point: it runs exactly the same opportunistic
   check `install`/`update`/`sync` already run internally (enrollment,
   install-once, the 24-hour heartbeat limit, the failure backoff, and every
-  kill switch all apply). A host that only ever drives gentle-ai through
-  `review ...` — Gentle Pi, for example — can call this
+  kill switch all apply). A host that only ever drives agent-smith through
+  `review ...` â€” Gentle Pi, for example â€” can call this
   once per session to still get a heartbeat instead of never sending one.
   Finishing a native review already
   triggers this internally too, so `trigger` mainly matters for a host that
@@ -601,3 +601,4 @@ nothing to look up or delete on request.
 The default collector is `https://telemetry.gentlemanprogramming.com/v1/events`,
 overridable with `GENTLE_AI_TELEMETRY_ENDPOINT` (useful for self-hosting or
 testing against a local collector).
+

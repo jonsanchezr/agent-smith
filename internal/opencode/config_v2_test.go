@@ -5,7 +5,7 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
 )
 
 func TestConfigV2Assignments(t *testing.T) {
@@ -138,3 +138,4 @@ func TestConfigLegacyPartialLayerPreservesFields(t *testing.T) {
 		t.Fatalf("partial assignment layer lost fields: %+v", a)
 	}
 }
+

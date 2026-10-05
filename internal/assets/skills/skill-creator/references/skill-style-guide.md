@@ -1,4 +1,4 @@
-# LLM-first Skill Style Guide
+﻿# LLM-first Skill Style Guide
 
 Use this guide when creating or refactoring skills in this repo. A skill is a **runtime instruction contract for an LLM**, not human-facing documentation: it tells the model when to activate, what rules are non-negotiable, how to decide, what to do, and what to return.
 
@@ -6,13 +6,13 @@ Use this guide when creating or refactoring skills in this repo. A skill is a **
 
 Every `SKILL.md` MUST use this order unless a section is truly irrelevant:
 
-1. **Frontmatter** — complete metadata for skill discovery.
-2. **Activation Contract** — exact situations that load the skill.
-3. **Hard Rules** — constraints the LLM MUST NOT violate.
-4. **Decision Gates** — short tables or bullets for branching choices.
-5. **Execution Steps** — ordered operational workflow.
-6. **Output Contract** — required final format or artifacts.
-7. **References** — local files only; supporting detail lives outside the skill.
+1. **Frontmatter** â€” complete metadata for skill discovery.
+2. **Activation Contract** â€” exact situations that load the skill.
+3. **Hard Rules** â€” constraints the LLM MUST NOT violate.
+4. **Decision Gates** â€” short tables or bullets for branching choices.
+5. **Execution Steps** â€” ordered operational workflow.
+6. **Output Contract** â€” required final format or artifacts.
+7. **References** â€” local files only; supporting detail lives outside the skill.
 
 `## Compact Rules` is not required. The skill registry indexes skill names, triggers, scopes, and paths; agents load the full `SKILL.md` as the source of truth.
 
@@ -26,7 +26,7 @@ Every `SKILL.md` MUST use this order unless a section is truly irrelevant:
 
 ## Body Budget
 
-- Target **180–450 tokens** for the skill body.
+- Target **180â€“450 tokens** for the skill body.
 - Recommended maximum: **700 tokens**.
 - Hard maximum: **1000 tokens**. Move examples, schemas, and background into `assets/` or `references/`.
 
@@ -34,7 +34,7 @@ Every `SKILL.md` MUST use this order unless a section is truly irrelevant:
 
 ### DO
 
-- Write imperative runtime instructions: “Load X”, “Check Y”, “Return Z”.
+- Write imperative runtime instructions: â€œLoad Xâ€, â€œCheck Yâ€, â€œReturn Zâ€.
 - Lead with the activation trigger and hard constraints.
 - Use compact tables for decision gates.
 - Keep examples minimal and executable.
@@ -56,7 +56,7 @@ Every `SKILL.md` MUST use this order unless a section is truly irrelevant:
 
 ## Registry Behavior
 
-- `gentle-ai skill-registry refresh` indexes skills; it does not summarize or rewrite them.
+- `agent-smith skill-registry refresh` indexes skills; it does not summarize or rewrite them.
 - The registry records `name`, `description` trigger text, scope, and exact `SKILL.md` path.
 - Delegators pass matching paths to subagents, and subagents read the full skill before work.
 - Use `skill-improver` to audit and refactor existing skills against this guide.
@@ -77,3 +77,4 @@ Every `SKILL.md` MUST use this order unless a section is truly irrelevant:
 - [ ] Replace prose branches with a decision table.
 - [ ] Trim examples to the smallest useful case.
 - [ ] Recheck description length and trigger words.
+

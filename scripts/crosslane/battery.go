@@ -11,7 +11,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/cli"
+	"github.com/jonsanchezr/agent-smith/v4/internal/cli"
 )
 
 // commandTimeout bounds every non-host command: the --with-model lane drives
@@ -24,7 +24,7 @@ const (
 	statusFail = "FAIL"
 	statusSkip = "SKIP"
 
-	reviewContract = "gentle-ai.review-integration/v2"
+	reviewContract = "agent-smith.review-integration/v2"
 )
 
 type check struct {
@@ -270,7 +270,7 @@ func (b *battery) admitStatusScope(repo string, doc map[string]any) error {
 // because their operation and ordered argument tokens are already structured.
 func (b *battery) runCommandLine(source, dir, command string) (map[string]any, string, int) {
 	words, err := cli.SplitPrintedCommandWords(command)
-	if err != nil || len(words) < 2 || words[0] != "gentle-ai" {
+	if err != nil || len(words) < 2 || words[0] != "agent-smith" {
 		return nil, fmt.Sprintf("unexpected provider command %q", command), 1
 	}
 	return b.runJSON(source, dir, words[1:]...)
@@ -342,7 +342,7 @@ func (b *battery) startCommittedMedium(lane, repo, agent, baseTree string) bool 
 		return false
 	}
 	consent, stderr, code := b.runTransitionExecution("start", repo, nil, execution)
-	if code != 0 || getString(consent, "schema") != "gentle-ai.review-integration.consent/v3" || getString(consent, "action") != "consent_required" {
+	if code != 0 || getString(consent, "schema") != "agent-smith.review-integration.consent/v3" || getString(consent, "action") != "consent_required" {
 		b.fail(lane, "committed START consent", fmt.Sprintf("exit=%d schema=%q action=%q %s",
 			code, getString(consent, "schema"), getString(consent, "action"), firstLine(stderr)))
 		return false
@@ -519,9 +519,9 @@ func operationState(doc map[string]any) string {
 // no longer hands control to FINALIZE: it closes the review itself.
 func admittedCapture(doc map[string]any) bool {
 	switch getString(doc, "schema") {
-	case "gentle-ai.review-result-artifact/v2":
+	case "agent-smith.review-result-artifact/v2":
 		return getString(doc, "admission_decision") == "completed"
-	case "gentle-ai.review-last-event-closure/v1":
+	case "agent-smith.review-last-event-closure/v1":
 		switch operationState(doc) {
 		case "approved", "correction_required", "escalated":
 			return true
@@ -662,3 +662,4 @@ func sameCrosslaneExecution(want, got map[string]any) bool {
 	gotPayload, gotErr := json.Marshal(got)
 	return wantErr == nil && gotErr == nil && bytes.Equal(wantPayload, gotPayload)
 }
+

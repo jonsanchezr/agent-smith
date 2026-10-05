@@ -6,9 +6,9 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/reviewtransaction"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/state"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
+	"github.com/jonsanchezr/agent-smith/v4/internal/reviewtransaction"
+	"github.com/jonsanchezr/agent-smith/v4/internal/state"
 )
 
 var errStateUnreadableForTest = errors.New("state unreadable")
@@ -186,3 +186,4 @@ func TestRunSyncWithSelectionMigratesAliasOnNoOpSync(t *testing.T) {
 		t.Fatalf("notice not printed on no-op sync; got %q", buf.String())
 	}
 }
+

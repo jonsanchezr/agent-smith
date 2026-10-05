@@ -7,7 +7,7 @@ import (
 	"os"
 	"os/exec"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
 )
 
 // ClaudeAdapter invokes Claude Code with an opaque provider invocation and
@@ -52,7 +52,7 @@ func (adapter *ClaudeAdapter) Review(ctx context.Context, invocation Invocation)
 		return nil, fmt.Errorf("claude reviewer transport unavailable: %w", err)
 	}
 
-	scratch, err := os.MkdirTemp("", "gentle-ai-claude-reviewer-*")
+	scratch, err := os.MkdirTemp("", "agent-smith-claude-reviewer-*")
 	if err != nil {
 		return nil, fmt.Errorf("claude reviewer transport unavailable: create scratch directory: %w", err)
 	}
@@ -82,3 +82,4 @@ func (adapter *ClaudeAdapter) Review(ctx context.Context, invocation Invocation)
 	}
 	return stdout.Bytes(), nil
 }
+

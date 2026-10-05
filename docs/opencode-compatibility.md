@@ -1,9 +1,9 @@
 # OpenCode compatibility
 
 > [!NOTE]
-> These docs track `main`, which may include unreleased changes. For the latest release, see the [v4.0.0 docs](https://github.com/Gentleman-Programming/gentle-ai/tree/v4.0.0/docs).
+> These docs track `main`, which may include unreleased changes. For the latest release, see the [v4.0.0 docs](https://github.com/jonsanchezr/agent-smith/tree/v4.0.0/docs).
 
-Gentle AI selects integrations from the detected OpenCode major version. It does
+Agent Smith selects integrations from the detected OpenCode major version. It does
 not silently migrate an existing installation. Unknown, unsupported or ambiguous
 version evidence refuses incompatible writes rather than assuming V2.
 
@@ -30,7 +30,7 @@ proof, not model quality, authority or consent.
 
 The native capability gate admits OpenCode review only for a matching pair: no
 relay declaration with a detected V1 runtime, or the exact managed V2 relay
-declaration (`GENTLE_AI_OPENCODE_RELAY_CONTRACT=gentle-ai.opencode-relay/v2-staged`)
+declaration (`GENTLE_AI_OPENCODE_RELAY_CONTRACT=agent-smith.opencode-relay/v2-staged`)
 with a detected V2 runtime. Any other declaration refuses before the version
 probe, and a disagreeing pair refuses, so a V2 host whose PATH resolves a
 coexisting V1 binary never inherits V1 capability (or the reverse).
@@ -109,7 +109,7 @@ This mode checks only generic foreground dispatch, raw output, hooks, inherited
 instructions and tool inventory. It does not copy a native binary, call shell or
 review APIs, or configure a review actor; the V2 review proof above uses the
 separate `--review-scenario` mode (`--capability-gate stubbed|real`). The legacy
-`--loopback /path/to/gentle-ai` review check is mutually exclusive with this mode.
+`--loopback /path/to/agent-smith` review check is mutually exclusive with this mode.
 The harness has 66 fixture unit tests (`python3 -m unittest test_opencode_v2_host_test`
 from `scripts/`). An isolated OpenCode 2.0.18 run with SDK 2.0.4
 also passed in both global and project scopes: four managed plugins activated,
@@ -117,3 +117,4 @@ the foreground child returned the expected raw output, hook ordering and
 instruction inheritance matched expectations, and the deny-all child exposed
 no tools. External network access was blocked. This does not prove the TUI
 installation path or positive native review admission.
+

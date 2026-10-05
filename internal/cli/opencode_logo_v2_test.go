@@ -5,9 +5,9 @@ import (
 	"os"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/opencode"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/pipeline"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
+	"github.com/jonsanchezr/agent-smith/v4/internal/opencode"
+	"github.com/jonsanchezr/agent-smith/v4/internal/pipeline"
 )
 
 func TestOpenCodeV2LogoSkippedWithoutWrites(t *testing.T) {
@@ -35,3 +35,4 @@ func TestOpenCodeV2LogoSkippedWithoutWrites(t *testing.T) {
 		t.Fatalf("skip mutated files: %v %v %v", entries, changed, err)
 	}
 }
+

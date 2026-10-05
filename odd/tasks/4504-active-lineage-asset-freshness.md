@@ -10,7 +10,7 @@ Managed-asset freshness is checked before START and again at capture admission. 
 
 ## Why
 
-Gentle AI issue #4504 item 5 reported a post-freeze managed-assets refusal with uncertain operation outcome. Issue #4434 fixed a separate non-converging continuation caused by invoking a different binary. Current tests prove START-time and capture-time guards, but not active-lineage STATUS → stale stop → sync → same-slot resume.
+Agent Smith issue #4504 item 5 reported a post-freeze managed-assets refusal with uncertain operation outcome. Issue #4434 fixed a separate non-converging continuation caused by invoking a different binary. Current tests prove START-time and capture-time guards, but not active-lineage STATUS â†’ stale stop â†’ sync â†’ same-slot resume.
 
 ## Scope
 
@@ -33,13 +33,13 @@ Gentle AI issue #4504 item 5 reported a post-freeze managed-assets refusal with 
 - Mode: strict TDD enabled.
 - Source: `openspec/config.yaml` and persisted project testing capabilities (`strict_tdd: true`).
 - Focused runner: `go test ./internal/cli -count=1 -run '<focused test name>'`.
-- Required cycle: RED → GREEN → REFACTOR.
+- Required cycle: RED â†’ GREEN â†’ REFACTOR.
 
 ## Tasks
 
-- [x] **T1 — Prove the active-lineage timing gap.** Add a focused regression that creates an active capture transition, introduces managed-asset skew, observes bound STATUS, converges assets, and observes the same slot resume; record RED.
-- [x] **T2 — Gate active STATUS without mutating authority.** Reuse the existing provenance check and typed stop before returning an active capture transition, then preserve normal routing after convergence.
-- [x] **T3 — Verify the work unit.** Run focused provenance/transport tests, the complete `internal/cli` package, gofmt check, and `git diff --check`; record observed results.
+- [x] **T1 â€” Prove the active-lineage timing gap.** Add a focused regression that creates an active capture transition, introduces managed-asset skew, observes bound STATUS, converges assets, and observes the same slot resume; record RED.
+- [x] **T2 â€” Gate active STATUS without mutating authority.** Reuse the existing provenance check and typed stop before returning an active capture transition, then preserve normal routing after convergence.
+- [x] **T3 â€” Verify the work unit.** Run focused provenance/transport tests, the complete `internal/cli` package, gofmt check, and `git diff --check`; record observed results.
 
 ## Acceptance Criteria
 
@@ -74,8 +74,9 @@ Gentle AI issue #4504 item 5 reported a post-freeze managed-assets refusal with 
 - Parent spot check: the exact focused regression passed again in 4.732s; `git diff --check` passed and repository scope remained the two Go files plus this task document.
 - Native risk assessment was unavailable because the native command returned empty output; policy treated the candidate as high risk and required the completed independent verification.
 - Work-unit commit: `6b5eeb0d672701ac9954a8bbb04b5cc3d862890f` (`fix(review): gate stale active capture status`).
-- Engram mirror: full document saved under `odd/4504-active-lineage-asset-freshness/tasks`, project `gentle-ai`. Readback is unavailable in the worker's tool set; save acknowledgements were observed.
+- Engram mirror: full document saved under `odd/4504-active-lineage-asset-freshness/tasks`, project `agent-smith`. Readback is unavailable in the worker's tool set; save acknowledgements were observed.
 
 ## Next Step
 
 Run the authorized native review over the committed work unit, then push and open the authorized PR.
+

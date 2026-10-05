@@ -1,4 +1,4 @@
-# v1 Independent Verification Report: Quick-Fix Readiness Handoff
+﻿# v1 Independent Verification Report: Quick-Fix Readiness Handoff
 
 > [!WARNING]
 > **Historical record.** This document is a point-in-time snapshot kept for traceability. It is not maintained and may not describe current behavior.
@@ -198,7 +198,7 @@ No test was executed in this verification. A listed oracle is not treated as ver
 - The target has no fragment links, so it has no GitHub Markdown anchors to resolve.
 - All referenced relative Markdown paths exist at evidence HEAD.
 - All cited issue and pull-request URLs were queried read-only.
-- “No active related PR discovered” is necessarily limited: issue timelines and title/body search cannot prove the absence of every semantically related future or non-textual PR.
+- â€œNo active related PR discoveredâ€ is necessarily limited: issue timelines and title/body search cannot prove the absence of every semantically related future or non-textual PR.
 - RDD state, review transaction state, historical clean worktree, source taxonomy ledger, and exact Engram key provenance remain unsupported claims unless separate receipts are supplied.
 
 ## Recommended Corrections
@@ -239,7 +239,7 @@ git describe --tags --always HEAD
 For each concrete ID below, exactly one command was submitted in listed order:
 
 ```powershell
-gh issue view <N> --repo Gentleman-Programming/gentle-ai --json number,url,title,state,labels,author,createdAt,updatedAt,closedAt
+gh issue view <N> --repo jonsanchezr/agent-smith --json number,url,title,state,labels,author,createdAt,updatedAt,closedAt
 ```
 
 Concrete `N` values, in submission order:
@@ -249,7 +249,7 @@ Concrete `N` values, in submission order:
 For each concrete ID below, exactly one command was submitted in listed order:
 
 ```powershell
-gh pr view <N> --repo Gentleman-Programming/gentle-ai --json number,url,title,state,isDraft,author,createdAt,updatedAt,closedAt,mergedAt,headRefName,baseRefName
+gh pr view <N> --repo jonsanchezr/agent-smith --json number,url,title,state,isDraft,author,createdAt,updatedAt,closedAt,mergedAt,headRefName,baseRefName
 ```
 
 Concrete `N` values, in submission order:
@@ -261,7 +261,7 @@ Concrete `N` values, in submission order:
 For each concrete ID below, exactly one command was submitted in listed order:
 
 ```powershell
-gh api -H "Accept: application/vnd.github+json" repos/Gentleman-Programming/gentle-ai/issues/<N>/timeline --paginate --jq '.[] | select(.event == "cross-referenced") | {number: .source.issue.number, state: .source.issue.state, url: .source.issue.html_url}'
+gh api -H "Accept: application/vnd.github+json" repos/jonsanchezr/agent-smith/issues/<N>/timeline --paginate --jq '.[] | select(.event == "cross-referenced") | {number: .source.issue.number, state: .source.issue.state, url: .source.issue.html_url}'
 ```
 
 Concrete `N` values, in submission order:
@@ -273,7 +273,7 @@ Concrete `N` values, in submission order:
 For each concrete ID below, exactly one command was submitted in listed order, except `1644`, which was submitted twice exactly as shown:
 
 ```powershell
-gh search prs --repo Gentleman-Programming/gentle-ai --state open --match title,body --json number,title,url,updatedAt -- "#<N>"
+gh search prs --repo jonsanchezr/agent-smith --state open --match title,body --json number,title,url,updatedAt -- "#<N>"
 ```
 
 Concrete `N` values, in submission order:
@@ -283,12 +283,12 @@ Concrete `N` values, in submission order:
 ## Focused Live Verification Commands
 
 ```powershell
-gh issue view 1770 --repo Gentleman-Programming/gentle-ai --json number,title,state,body,comments,labels,author,createdAt,updatedAt,url
-gh issue view 1806 --repo Gentleman-Programming/gentle-ai --json number,title,state,body,comments,labels,author,createdAt,updatedAt,url
-gh issue view 1834 --repo Gentleman-Programming/gentle-ai --json number,title,state,body,comments,labels,author,createdAt,updatedAt,url
-gh issue view 1839 --repo Gentleman-Programming/gentle-ai --json number,title,state,body,comments,labels,author,createdAt,updatedAt,url
-gh pr view 1073 --repo Gentleman-Programming/gentle-ai --json number,title,state,body,files,commits,closingIssuesReferences,url
-gh pr view 973 --repo Gentleman-Programming/gentle-ai --json number,title,state,body,files,commits,closingIssuesReferences,url
+gh issue view 1770 --repo jonsanchezr/agent-smith --json number,title,state,body,comments,labels,author,createdAt,updatedAt,url
+gh issue view 1806 --repo jonsanchezr/agent-smith --json number,title,state,body,comments,labels,author,createdAt,updatedAt,url
+gh issue view 1834 --repo jonsanchezr/agent-smith --json number,title,state,body,comments,labels,author,createdAt,updatedAt,url
+gh issue view 1839 --repo jonsanchezr/agent-smith --json number,title,state,body,comments,labels,author,createdAt,updatedAt,url
+gh pr view 1073 --repo jonsanchezr/agent-smith --json number,title,state,body,files,commits,closingIssuesReferences,url
+gh pr view 973 --repo jonsanchezr/agent-smith --json number,title,state,body,files,commits,closingIssuesReferences,url
 git status --short
 git branch --show-current
 git rev-parse HEAD
@@ -313,3 +313,4 @@ Get-Date -AsUTC -Format 'yyyy-MM-ddTHH:mm:ss.fffZ'
 - Engram received external audit/session persistence; it did not mutate repository files, Git, GitHub, or CodeGraph.
 - The original target remained untracked and byte-identical to the stated identity.
 - This verification report is the only intended additional untracked file.
+

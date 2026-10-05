@@ -1,4 +1,4 @@
-name: CI
+﻿name: CI
 
 on:
   pull_request:
@@ -11,7 +11,7 @@ on:
   # Without this the only way to re-run CI on main is to push another commit.
   workflow_dispatch:
   schedule:
-    # 03:00 UTC daily — full Tier 1+2+3 across all platforms as a safety net
+    # 03:00 UTC daily â€” full Tier 1+2+3 across all platforms as a safety net
     - cron: "0 3 * * *"
 
 jobs:
@@ -90,14 +90,14 @@ jobs:
       - name: Build, vet, and test benchmark module
         working-directory: bench
         run: |
-          go build -o "$RUNNER_TEMP/gentle-ai-bench" .
+          go build -o "$RUNNER_TEMP/agent-smith-bench" .
           go vet ./...
           go test ./...
 
       - name: Run benchmark evidence
         run: |
-          go build -trimpath -o "$RUNNER_TEMP/gentle-ai" ./cmd/gentle-ai
-          "$RUNNER_TEMP/gentle-ai-bench" run --binary "$RUNNER_TEMP/gentle-ai" --out "$RUNNER_TEMP/bench-portable.json"
+          go build -trimpath -o "$RUNNER_TEMP/agent-smith" ./cmd/agent-smith
+          "$RUNNER_TEMP/agent-smith-bench" run --binary "$RUNNER_TEMP/agent-smith" --out "$RUNNER_TEMP/bench-portable.json"
           jq -e '
             def completed_once($id):
               [.journeys[] | select(.id == $id)] as $matches
@@ -116,7 +116,7 @@ jobs:
             completed_once("j123-rejected-provider-validator-starts-fresh-high-risk-review") and
             completed_once("j4435-selected-untracked-correction-continuation-is-selectorless")
           ' "$RUNNER_TEMP/bench-portable.json"
-          "$RUNNER_TEMP/gentle-ai-bench" run --binary "$RUNNER_TEMP/gentle-ai" --only j105-compiled-provider-capture-retries-same-binding --out "$RUNNER_TEMP/bench-provider-capture.json"
+          "$RUNNER_TEMP/agent-smith-bench" run --binary "$RUNNER_TEMP/agent-smith" --only j105-compiled-provider-capture-retries-same-binding --out "$RUNNER_TEMP/bench-provider-capture.json"
           jq -e '
             def completed_once($id):
               [.journeys[] | select(.id == $id)] as $matches
@@ -125,7 +125,7 @@ jobs:
           ' "$RUNNER_TEMP/bench-provider-capture.json"
           # #4612 retires SDD attempt transitions; the standalone review-mode
           # transition must still execute exactly once and complete.
-          "$RUNNER_TEMP/gentle-ai-bench" run --binary "$RUNNER_TEMP/gentle-ai" --axis transition --out "$RUNNER_TEMP/bench-transition.json"
+          "$RUNNER_TEMP/agent-smith-bench" run --binary "$RUNNER_TEMP/agent-smith" --axis transition --out "$RUNNER_TEMP/bench-transition.json"
           jq -e '
             def completed_once($id):
               [.journeys[] | select(.id == $id)] as $matches
@@ -134,15 +134,15 @@ jobs:
             ([.journeys[] | select((.id | startswith("tr")) and .status == "completed")] | length) == 1 and
             completed_once("tr09-mode-flip-while-a-review-lineage-is-open")
           ' "$RUNNER_TEMP/bench-transition.json"
-          "$RUNNER_TEMP/gentle-ai-bench" run --binary "$RUNNER_TEMP/gentle-ai" --axis model-picker --only j97-opencode-custom-agent-model-picker-runtime --out "$RUNNER_TEMP/bench-model-picker-untagged.json"
+          "$RUNNER_TEMP/agent-smith-bench" run --binary "$RUNNER_TEMP/agent-smith" --axis model-picker --only j97-opencode-custom-agent-model-picker-runtime --out "$RUNNER_TEMP/bench-model-picker-untagged.json"
           jq -e '
             def unsupported_once($id):
               [.journeys[] | select(.id == $id)] as $matches
               | ($matches | length == 1) and ($matches[0].status == "unsupported");
             unsupported_once("j97-opencode-custom-agent-model-picker-runtime")
           ' "$RUNNER_TEMP/bench-model-picker-untagged.json"
-          go build -tags bench_fixture -trimpath -o "$RUNNER_TEMP/gentle-ai-bench-fixture" ./cmd/gentle-ai
-          "$RUNNER_TEMP/gentle-ai-bench" run --binary "$RUNNER_TEMP/gentle-ai-bench-fixture" --axis model-picker --only j97-opencode-custom-agent-model-picker-runtime --out "$RUNNER_TEMP/bench-model-picker.json"
+          go build -tags bench_fixture -trimpath -o "$RUNNER_TEMP/agent-smith-bench-fixture" ./cmd/agent-smith
+          "$RUNNER_TEMP/agent-smith-bench" run --binary "$RUNNER_TEMP/agent-smith-bench-fixture" --axis model-picker --only j97-opencode-custom-agent-model-picker-runtime --out "$RUNNER_TEMP/bench-model-picker.json"
           jq -e '
             def completed_once($id):
               [.journeys[] | select(.id == $id)] as $matches
@@ -172,14 +172,14 @@ jobs:
           repository: ${{ github.event.pull_request.head.repo.full_name || github.repository }}
           ref: ${{ github.event.pull_request.head.sha || github.sha }}
       - name: Build pinned Claude runtime proof image
-        run: docker build -f e2e/Dockerfile.claude-network-none -t gentle-ai-claude-network-none:ci .
+        run: docker build -f e2e/Dockerfile.claude-network-none -t agent-smith-claude-network-none:ci .
       - name: Prove Claude transport without external networking
         run: |
           docker run --rm --pull=never --network none --cap-drop=ALL \
             --security-opt=no-new-privileges --read-only \
             --tmpfs /tmp:rw,noexec,nosuid,nodev,mode=1777 \
             -e GENTLE_AI_PARENT_NETNS="$(stat -Lc %i /proc/self/ns/net)" \
-            gentle-ai-claude-network-none:ci
+            agent-smith-claude-network-none:ci
 
   windows-runtime:
     name: Windows Runtime
@@ -214,7 +214,7 @@ jobs:
         run: |
           Add-MpPreference -ExclusionPath $env:GITHUB_WORKSPACE -ErrorAction SilentlyContinue
           Add-MpPreference -ExclusionPath $env:RUNNER_TEMP -ErrorAction SilentlyContinue
-          Add-MpPreference -ExclusionProcess 'git.exe','go.exe','gentle-ai.exe' -ErrorAction SilentlyContinue
+          Add-MpPreference -ExclusionProcess 'git.exe','go.exe','agent-smith.exe' -ErrorAction SilentlyContinue
 
       - name: Checkout exact event candidate
         uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd  # v5.0.1
@@ -263,13 +263,13 @@ jobs:
 
       - name: Build native test binary
         shell: pwsh
-        run: go build -trimpath -ldflags="-s -w -X main.version=ci" -o "$env:RUNNER_TEMP\gentle-ai.exe" ./cmd/gentle-ai
+        run: go build -trimpath -ldflags="-s -w -X main.version=ci" -o "$env:RUNNER_TEMP\agent-smith.exe" ./cmd/agent-smith
 
       - name: Run Windows release-blocker tests
         shell: pwsh
         timeout-minutes: 10
         env:
-          GENTLE_AI_TEST_BINARY: ${{ runner.temp }}\gentle-ai.exe
+          GENTLE_AI_TEST_BINARY: ${{ runner.temp }}\agent-smith.exe
           GENTLE_AI_REQUIRE_DISTINCT_WINDOWS_TOKEN_OWNER: "1"
         run: |
           $packages = @('./internal/cli', './internal/reviewtransaction', './internal/components/engram')
@@ -326,12 +326,12 @@ jobs:
   # executes Darwin semantics; GOOS=darwin cross-builds prove compilation, not
   # APFS aliasing, advisory-lock timing, or rename fallbacks. macOS runners
   # bill ~10x Linux minutes, so this job runs only the curated manifest in
-  # scripts/darwin-release-blockers.manifest — tests whose failure mode is
-  # platform-dependent — never the full suite. The full suite stays on Linux.
+  # scripts/darwin-release-blockers.manifest â€” tests whose failure mode is
+  # platform-dependent â€” never the full suite. The full suite stays on Linux.
   #
   # REQUIRED FOR MERGE: the maintainer must add the status check
   # "Darwin Runtime" to the branch protection required status checks
-  # (repository settings — this cannot be done from the workflow file).
+  # (repository settings â€” this cannot be done from the workflow file).
   darwin-runtime:
     name: Darwin Runtime
     needs: go-format
@@ -408,13 +408,13 @@ jobs:
 
       - name: Install Claude Code runtime
         # This suite drives the real install pipeline end to end, so it needs
-        # the real binary the same way it needs OpenCode above — gentle-ai
+        # the real binary the same way it needs OpenCode above â€” agent-smith
         # itself no longer installs this (agentInstallStep in
         # internal/cli/run.go refuses instead), so CI installs what it needs
         # to test, same as any other test dependency. No exact-pin test
         # applies here the way TestOrganicRuntimeE2EUsesInstalledOpenCodePin
         # asserts for OpenCode: there is no versions.go constant backing this
-        # one, since gentle-ai's own display-only refusal for Claude Code
+        # one, since agent-smith's own display-only refusal for Claude Code
         # advises "latest" too (see internal/installcmd/resolver.go).
         run: npm install --global @anthropic-ai/claude-code@latest
 
@@ -455,7 +455,7 @@ jobs:
         # (TestRealAgentOrganicJourneys) is included via its env switch.
         # -tags real_agent_e2e additionally compiles in
         # TestOrganicConfiguredAgentReceivesRoutingGuidanceRealAgents, which
-        # `go test ./...` never does — see that file's build-tag comment.
+        # `go test ./...` never does â€” see that file's build-tag comment.
         env:
           GENTLE_AI_REAL_AGENT_E2E: "1"
           # The Linux-only Codex journey invokes the registered adapter through
@@ -506,7 +506,7 @@ jobs:
         with:
           context: .
           file: e2e/${{ matrix.platform.dockerfile }}
-          tags: gentle-ai-e2e-${{ matrix.platform.name }}:ci
+          tags: agent-smith-e2e-${{ matrix.platform.name }}:ci
           load: true
           cache-from: type=gha,scope=e2e-${{ matrix.platform.name }}
           cache-to: type=gha,mode=max,scope=e2e-${{ matrix.platform.name }}
@@ -520,7 +520,7 @@ jobs:
       - name: Diagnose pinned OpenCode runtime before E2E
         run: |
           docker run --rm --pull=never --network none --entrypoint /bin/bash \
-            gentle-ai-e2e-${{ matrix.platform.name }}:ci -c '
+            agent-smith-e2e-${{ matrix.platform.name }}:ci -c '
               set -u
               export HOME=$(mktemp -d)
               export XDG_CONFIG_HOME="$HOME/config" XDG_DATA_HOME="$HOME/data"
@@ -543,4 +543,5 @@ jobs:
             -e RUN_FULL_E2E \
             -e RUN_BACKUP_TESTS \
             -e GITHUB_TOKEN \
-            gentle-ai-e2e-${{ matrix.platform.name }}:ci
+            agent-smith-e2e-${{ matrix.platform.name }}:ci
+

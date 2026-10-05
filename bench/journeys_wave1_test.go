@@ -9,14 +9,14 @@ import (
 )
 
 func TestWaveReviewInvocationArgs(t *testing.T) {
-	got, err := waveReviewInvocationArgs("gentle-ai review start --contract=gentle-ai.review-integration/v2 --consent=relay")
+	got, err := waveReviewInvocationArgs("agent-smith review start --contract=agent-smith.review-integration/v2 --consent=relay")
 	if err != nil {
 		t.Fatal(err)
 	}
-	if joined := strings.Join(got, "\x00"); joined != "review\x00start\x00--contract=gentle-ai.review-integration/v2\x00--consent=relay" {
+	if joined := strings.Join(got, "\x00"); joined != "review\x00start\x00--contract=agent-smith.review-integration/v2\x00--consent=relay" {
 		t.Fatalf("review invocation args = %q", joined)
 	}
-	for _, invalid := range []string{"", "other review start", "gentle-ai status"} {
+	for _, invalid := range []string{"", "other review start", "agent-smith status"} {
 		if _, err := waveReviewInvocationArgs(invalid); err == nil {
 			t.Fatalf("accepted invalid review invocation %q", invalid)
 		}
@@ -24,7 +24,7 @@ func TestWaveReviewInvocationArgs(t *testing.T) {
 }
 
 const correctionPlanStatusJSON = `{
-  "schema": "gentle-ai.review-integration/v2",
+  "schema": "agent-smith.review-integration/v2",
   "authority": {
     "lineage_id": "carried-correction-plan",
     "state": "correction_required",
@@ -108,7 +108,7 @@ func TestRememberCorrectionStatusContinuationPreservesExactRawStatusJSON(t *test
 	if err := json.Unmarshal([]byte(payload), &status); err != nil {
 		t.Fatal(err)
 	}
-	if status.Schema != "gentle-ai.review-integration/v2" || status.Receipt.Identity != "receipt-identity" ||
+	if status.Schema != "agent-smith.review-integration/v2" || status.Receipt.Identity != "receipt-identity" ||
 		status.Action != "capture the bounded correction plan" || status.ValidationRequest == nil ||
 		status.ValidationRequest.RequestHash == "" || status.NextTransition == nil ||
 		len(status.NextTransition.Collect.Inputs) != 1 || status.NextTransition.Collect.Inputs[0].Submission == nil {
@@ -153,7 +153,7 @@ func TestCorrectionSubmissionArgumentsRejectsShortDescriptor(t *testing.T) {
       "submission": {
         "operation_token": "finalize",
         "argument_tokens": [
-          "--contract=gentle-ai.review-integration/v2",
+          "--contract=agent-smith.review-integration/v2",
           "--lineage=lineage",
           "--expected-revision=sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
           "--target=sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
@@ -185,3 +185,4 @@ func TestRequireCandidateDeclineGateDeniesGenerically(t *testing.T) {
 		t.Fatal("accepted an allowed candidate-declined gate")
 	}
 }
+

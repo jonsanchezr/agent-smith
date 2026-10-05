@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+﻿#!/usr/bin/env python3
 """Isolated host activation with optional generic or legacy review conformance."""
 from contextlib import ExitStack, contextmanager
 import argparse
@@ -20,11 +20,11 @@ import time
 import urllib.parse
 import urllib.request
 
-PLUGIN_IDS = {"gentle-ai." + name for name in (
+PLUGIN_IDS = {"agent-smith." + name for name in (
     "model-variants", "skill-registry", "telemetry-runtime",
     "opencode-review-transport",
 )}
-DECLARATION = "gentle-ai.opencode-relay/v2-staged"
+DECLARATION = "agent-smith.opencode-relay/v2-staged"
 MISSING_SDK_CAUSE = "Cannot find package '@opencode/plugin'"
 
 
@@ -159,7 +159,7 @@ def parse_args(argv=None):
     modes.add_argument("--installed-activation-only", action="store_true")
     modes.add_argument("--review-scenario", metavar="FILE",
                        help="replay Go-computed review steps through the real managed review plugin (global scope)")
-    parser.add_argument("--gentle-ai", metavar="SHIM", help="review mode: executable placed on the host PATH as gentle-ai")
+    parser.add_argument("--agent-smith", metavar="SHIM", help="review mode: executable placed on the host PATH as agent-smith")
     parser.add_argument("--host-project", metavar="DIR", help="review mode: registered sibling worktree used as host cwd")
     parser.add_argument("--evidence", metavar="FILE", help="review mode: JSON evidence output path")
     parser.add_argument("--capability-gate", choices=("stubbed", "real"),
@@ -203,7 +203,7 @@ def parse_args(argv=None):
         args.evidence = evidence
         args.capability_gate = args.capability_gate or "stubbed"
     elif any(review):
-        parser.error("--gentle-ai, --host-project, --evidence, and --capability-gate require --review-scenario")
+        parser.error("--agent-smith, --host-project, --evidence, and --capability-gate require --review-scenario")
     return args
 
 
@@ -262,7 +262,7 @@ def installed_hashes(config, require_sdk=True):
         else:
             raise ValueError("installed inputs must be regular files or directories: " + str(path))
         hashes[str(path.relative_to(config))] = (stat.S_IFMT(mode), stat.S_IMODE(mode), digest)
-    required = {"opencode.json"} | {"plugins/" + name.removeprefix("gentle-ai.") + ".ts" for name in PLUGIN_IDS}
+    required = {"opencode.json"} | {"plugins/" + name.removeprefix("agent-smith.") + ".ts" for name in PLUGIN_IDS}
     if require_sdk:
         required.add("node_modules/@opencode/plugin/package.json")
     elif any(name == "node_modules/@opencode/plugin" or name.startswith("node_modules/@opencode/plugin/")
@@ -359,14 +359,14 @@ def installed_activation(args):
                     for item in response["data"]:
                         if item.get("id") in PLUGIN_IDS:
                             source = item.get("source")
-                            expected = config / "plugins" / (item["id"].removeprefix("gentle-ai.") + ".ts")
+                            expected = config / "plugins" / (item["id"].removeprefix("agent-smith.") + ".ts")
                             # Plugin.Source documents local provenance as {type: "local", path: string}.
                             if (not isinstance(source, dict) or source.get("type") != "local"
                                     or source.get("path") != str(expected.resolve(strict=True))):
                                 raise RuntimeError("managed plugin source differs from installed input")
                     return response
                 if missing:
-                    sources = {str((config / "plugins" / (name.removeprefix("gentle-ai.") + ".ts")).resolve(strict=True)): name
+                    sources = {str((config / "plugins" / (name.removeprefix("agent-smith.") + ".ts")).resolve(strict=True)): name
                                for name in PLUGIN_IDS}
                     refusals = wait_for_missing_sdk_refusal(inventory, sources)
                 else:
@@ -418,7 +418,7 @@ def review_scenario(args):
         raise ValueError("requires the released SDK dependency fixture")
     assets = Path(__file__).resolve().parents[1] / "internal/assets/opencode/plugins-v2"
     script = ReviewScript(scenario["steps"])
-    with tempfile.TemporaryDirectory(prefix="gentle-ai-opencode-v2-review-", dir=args.temp_root) as directory, ExitStack() as stack:
+    with tempfile.TemporaryDirectory(prefix="agent-smith-opencode-v2-review-", dir=args.temp_root) as directory, ExitStack() as stack:
         root = Path(directory).resolve()
         for name in ("home", "config", "data", "state", "cache", "tmp", "bin"):
             (root / name).mkdir()
@@ -429,7 +429,7 @@ def review_scenario(args):
         provider, requests, failures = stack.enter_context(
             local_provider(review_script=script, max_requests=6 * len(scenario["steps"]) + 6))
         log = prepare_review_fixture(config, provider, root / "observations.jsonl")
-        shutil.copy2(args.gentle_ai, root / "bin/gentle-ai")
+        shutil.copy2(args.gentle_ai, root / "bin/agent-smith")
         env = {
             "HOME": str(root / "home"), "XDG_CONFIG_HOME": str(root / "config"),
             "XDG_DATA_HOME": str(root / "data"), "XDG_STATE_HOME": str(root / "state"),
@@ -476,7 +476,7 @@ def main(argv=None):
     assets = Path(__file__).resolve().parents[1] / "internal/assets/opencode/plugins-v2"
     # Separate fixtures prove each discovery scope without duplicate plugin IDs.
     for scope in ("global", "project"):
-        with tempfile.TemporaryDirectory(prefix="gentle-ai-opencode-v2-host-", dir=args.temp_root) as directory, ExitStack() as stack:
+        with tempfile.TemporaryDirectory(prefix="agent-smith-opencode-v2-host-", dir=args.temp_root) as directory, ExitStack() as stack:
             root = Path(directory).resolve()
             for name in ("home", "config", "data", "state", "cache", "tmp", "project"):
                 (root / name).mkdir()
@@ -491,7 +491,7 @@ def main(argv=None):
                 observation_log = prepare_fixture(root, config / "plugins", provider, generic_task_only=generic)
             if loopback:
                 (root / "bin").mkdir()
-                shutil.copy2(Path(args.loopback).resolve(strict=True), root / "bin/gentle-ai")
+                shutil.copy2(Path(args.loopback).resolve(strict=True), root / "bin/agent-smith")
             env = {
                 "HOME": str(root / "home"), "XDG_CONFIG_HOME": str(root / "config"),
                 "XDG_DATA_HOME": str(root / "data"), "XDG_STATE_HOME": str(root / "state"),
@@ -560,3 +560,4 @@ def main(argv=None):
 
 if __name__ == "__main__":
     main()
+

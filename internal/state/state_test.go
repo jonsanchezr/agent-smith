@@ -10,7 +10,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
 )
 
 // TestWriteReconciledAcceptsDesiredStateVisibleAfterWriteError verifies that
@@ -26,7 +26,7 @@ func TestWriteReconciledAcceptsDesiredStateVisibleAfterWriteError(t *testing.T) 
 	if err != nil {
 		t.Fatal(err)
 	}
-	target := filepath.Join(home, ".gentle-ai", "persisted-state.json")
+	target := filepath.Join(home, ".agent-smith", "persisted-state.json")
 	if err := os.Rename(statePath, target); err != nil {
 		t.Fatal(err)
 	}
@@ -316,9 +316,9 @@ func TestWriteAndRead(t *testing.T) {
 }
 
 // TestPersonaRoundTrip verifies the Persona field round-trips through
-// Write/Read. Both `gentle-ai install` (CLI in run.go) and the TUI app
+// Write/Read. Both `agent-smith install` (CLI in run.go) and the TUI app
 // (internal/app/app.go) write this field after a successful install so that
-// `gentle-ai sync` regenerates the persona the user actually selected — not a
+// `agent-smith sync` regenerates the persona the user actually selected — not a
 // hard-coded default.
 func TestPersonaRoundTrip(t *testing.T) {
 	for _, persona := range []string{"gentleman", "neutral", "custom"} {
@@ -387,7 +387,7 @@ func TestPersonaPresenceDistinguishesOmittedAndExplicitEmpty(t *testing.T) {
 	}
 }
 
-// TestWriteCreatesStateDir verifies that Write creates the .gentle-ai directory
+// TestWriteCreatesStateDir verifies that Write creates the .agent-smith directory
 // when it does not exist yet.
 func TestWriteCreatesStateDir(t *testing.T) {
 	home := t.TempDir()
@@ -405,7 +405,7 @@ func TestWriteCreatesStateDir(t *testing.T) {
 func TestWriteStateFilePath(t *testing.T) {
 	home := t.TempDir()
 	got := Path(home)
-	want := filepath.Join(home, ".gentle-ai", "state.json")
+	want := filepath.Join(home, ".agent-smith", "state.json")
 	if got != want {
 		t.Errorf("Path() = %q, want %q", got, want)
 	}
@@ -1263,3 +1263,4 @@ func findSub(s, sub string) bool {
 	}
 	return false
 }
+

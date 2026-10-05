@@ -1,10 +1,10 @@
-#Requires -Version 5.1
+﻿#Requires -Version 5.1
 <#
 .SYNOPSIS
-    Gentle-AI source installer for Windows.
+    agent-smith source installer for Windows.
 
 .DESCRIPTION
-    Installs Gentle AI from source with Go. Official Windows binary distribution
+    Installs Agent Smith from source with Go. Official Windows binary distribution
     and Scoop are temporarily unavailable until public-trust Authenticode signing
     is enforced. Accepted channels: stable (default), beta, nightly.
 
@@ -25,11 +25,11 @@ $ErrorActionPreference = "Stop"
 $null = & chcp 65001 2>$null
 try { [Console]::OutputEncoding = [System.Text.Encoding]::UTF8 } catch {}
 
-$GITHUB_OWNER = "Gentleman-Programming"
-$GITHUB_REPO = "gentle-ai"
-$BINARY_NAME = "gentle-ai"
+$GITHUB_OWNER = "jonsanchezr"
+$GITHUB_REPO = "agent-smith"
+$BINARY_NAME = "agent-smith"
 $WINDOWS_DISTRIBUTION_HOLD = "Windows binary distribution and Scoop are temporarily unavailable until publicly trusted Authenticode signing is enforced."
-$STABLE_SOURCE_COMMAND = "go install github.com/gentleman-programming/gentle-ai/v4/cmd/gentle-ai@latest"
+$STABLE_SOURCE_COMMAND = "go install github.com/jonsanchezr/agent-smith/v4/cmd/agent-smith@latest"
 
 function Write-Info    { param([string]$Message) Write-Host "[info]    $Message" -ForegroundColor Blue }
 function Write-Success { param([string]$Message) Write-Host "[ok]      $Message" -ForegroundColor Green }
@@ -51,7 +51,7 @@ function Show-Banner {
     Write-Host " | |_| |  __/ | | | |_| |  __/_____/ ___ \ | | " -ForegroundColor Cyan
     Write-Host "  \____|\___|_| |_|\__|_|\___|    /_/   \_\___|" -ForegroundColor Cyan
     Write-Host ""
-    Write-Host "  Gentle-AI - Ecosystem, Frameworks, Workflows" -ForegroundColor DarkGray
+    Write-Host "  agent-smith - Ecosystem, Frameworks, Workflows" -ForegroundColor DarkGray
     Write-Host ""
 }
 
@@ -118,9 +118,9 @@ function Install-ViaGo {
     Write-Info "Running: go install $goPackage"
 
     if ($Channel -eq "beta") {
-        Add-GoEnvPattern -Name "GONOSUMDB" -Pattern "github.com/gentleman-programming/gentle-ai/v4"
-        Add-GoEnvPattern -Name "GOPRIVATE" -Pattern "github.com/gentleman-programming/gentle-ai/v4"
-        Add-GoEnvPattern -Name "GONOPROXY" -Pattern "github.com/gentleman-programming/gentle-ai/v4"
+        Add-GoEnvPattern -Name "GONOSUMDB" -Pattern "github.com/jonsanchezr/agent-smith/v4"
+        Add-GoEnvPattern -Name "GOPRIVATE" -Pattern "github.com/jonsanchezr/agent-smith/v4"
+        Add-GoEnvPattern -Name "GONOPROXY" -Pattern "github.com/jonsanchezr/agent-smith/v4"
     }
 
     & go install $goPackage
@@ -225,3 +225,4 @@ function Main {
 }
 
 Main @args
+

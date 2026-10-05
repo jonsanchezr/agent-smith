@@ -5,8 +5,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/assets"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/opencode"
+	"github.com/jonsanchezr/agent-smith/v4/internal/assets"
+	"github.com/jonsanchezr/agent-smith/v4/internal/opencode"
 )
 
 func TestManagedV2SelectionAndProvenance(t *testing.T) {
@@ -43,3 +43,4 @@ func TestManagedV2SelectionAndProvenance(t *testing.T) {
 		t.Fatal("custom bytes adopted")
 	}
 }
+

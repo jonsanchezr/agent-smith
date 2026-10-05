@@ -8,7 +8,7 @@ import (
 	"runtime"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
 )
 
 // stubEngramSetupRunner resolves engram to a fake binary with setup enabled and
@@ -121,3 +121,4 @@ func TestInstallEngramRunsSetupForSafeOpenCodeSettings(t *testing.T) {
 		t.Fatalf("setup calls = %v, want one `engram setup opencode`", *setupCalls)
 	}
 }
+

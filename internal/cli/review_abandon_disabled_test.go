@@ -9,7 +9,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/reviewtransaction"
+	"github.com/jonsanchezr/agent-smith/v4/internal/reviewtransaction"
 )
 
 // pristineReviewingCLIFixture starts one reviewing compact lineage through the
@@ -238,7 +238,7 @@ func breakForeignCompactSnapshotIdentity(t *testing.T, repo, lineage string) {
 }
 
 // TestReviewAbandonOfAPristineLineageIgnoresAnUnrelatedUnloadableLineage is
-// issue #3124 driven through the live `gentle-ai review abandon` command. An
+// issue #3124 driven through the live `agent-smith review abandon` command. An
 // unreadable foreign compact entry must not refuse the sanctioned exit for a
 // pristine reviewing lineage.
 func TestReviewAbandonOfAPristineLineageIgnoresAnUnrelatedUnloadableLineage(t *testing.T) {
@@ -272,3 +272,4 @@ func TestReviewAbandonOfAPristineLineageIgnoresAnUnrelatedUnloadableLineage(t *t
 		t.Fatal("the unrelated lineage became readable, so this test proved nothing about scoping")
 	}
 }
+

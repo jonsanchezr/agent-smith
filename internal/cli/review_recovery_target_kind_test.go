@@ -10,7 +10,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/reviewtransaction"
+	"github.com/jonsanchezr/agent-smith/v4/internal/reviewtransaction"
 )
 
 // TestReviewRecoverEscalatedBaseDiffSuccessorOverCurrentChangesPredecessor
@@ -361,3 +361,4 @@ func reviewRecoverBaseDiffSuccessorIdentity(t *testing.T, repo, baseRef string) 
 	}
 	return snapshot.Identity
 }
+

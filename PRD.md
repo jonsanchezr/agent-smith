@@ -1,6 +1,6 @@
-# PRD: Gentleman AI Installer
+﻿# PRD: Gentleman AI Installer
 
-> **One command. Any agent. Any OS. The Gentleman AI ecosystem — configured and ready.**
+> **One command. Any agent. Any OS. The Gentleman AI ecosystem â€” configured and ready.**
 
 **Version**: 0.1.0-draft
 **Author**: Gentleman Programming
@@ -11,18 +11,18 @@
 
 ## 1. Problem Statement
 
-AI-assisted development in 2026 is no longer optional — it's the standard. Every developer uses at least one AI coding agent. But here's the real problem:
+AI-assisted development in 2026 is no longer optional â€” it's the standard. Every developer uses at least one AI coding agent. But here's the real problem:
 
 **Installing an AI agent is the EASY part. Making it ACTUALLY useful is where everyone fails.**
 
-A raw AI agent out of the box is like a sports car with no tuning — it runs, but it's nowhere near its potential. To get real value you need:
+A raw AI agent out of the box is like a sports car with no tuning â€” it runs, but it's nowhere near its potential. To get real value you need:
 
-1. **Persistent memory** (Engram) — so the agent remembers decisions, bugs, and conventions across sessions
-2. **MCP servers** (Context7, Notion, Jira, etc.) — so the agent can access real documentation and project management tools
-3. **Coding skills** — curated best-practice patterns for React 19, Next.js 15, TypeScript, Tailwind 4, Zod 4, testing, etc.
-4. **SDD workflow** (Spec-Driven Development) — so the agent plans before coding, not the other way around
-5. **Proper permissions & security** — block `.env` access, require confirmation on destructive git operations
-6. **A persona that teaches, not just completes** — an agent that pushes back on bad practices and explains the WHY
+1. **Persistent memory** (Engram) â€” so the agent remembers decisions, bugs, and conventions across sessions
+2. **MCP servers** (Context7, Notion, Jira, etc.) â€” so the agent can access real documentation and project management tools
+3. **Coding skills** â€” curated best-practice patterns for React 19, Next.js 15, TypeScript, Tailwind 4, Zod 4, testing, etc.
+4. **SDD workflow** (Spec-Driven Development) â€” so the agent plans before coding, not the other way around
+5. **Proper permissions & security** â€” block `.env` access, require confirmation on destructive git operations
+6. **A persona that teaches, not just completes** â€” an agent that pushes back on bad practices and explains the WHY
 7. All of this configured DIFFERENTLY for each agent (Claude Code, OpenCode, Cursor, VSCode, Gemini CLI, etc.) because each has its own config format, paths, and plugin systems
 
 Most developers either:
@@ -30,25 +30,25 @@ Most developers either:
 - Spend DAYS manually configuring one agent, then can't replicate it on another machine or tool
 - Never set up memory, MCP, or skills because the setup is fragmented across 5 different repos
 
-**This installer eliminates that gap entirely.** You pick your agent(s), you pick your config level, and the entire Gentleman AI ecosystem gets injected into your tools — ready to go. From zero to championship-level AI development in minutes.
+**This installer eliminates that gap entirely.** You pick your agent(s), you pick your config level, and the entire Gentleman AI ecosystem gets injected into your tools â€” ready to go. From zero to championship-level AI development in minutes.
 
 ---
 
 ## 2. Vision
 
-**The Gentleman AI ecosystem — installable by anyone, on any agent, on any OS, in one command.**
+**The Gentleman AI ecosystem â€” installable by anyone, on any agent, on any OS, in one command.**
 
 This is NOT an "AI agent installer." Most agents are already easy to install (`npm i -g @anthropic-ai/claude-code`, `brew install opencode`, etc.). This is an **ecosystem configurator**: it takes whatever AI agent(s) you use and supercharges them with the Gentleman stack:
 
-- **Engram** — persistent cross-session memory
-- **SDD** — Spec-Driven Development workflow (plan before you code)
-- **Skills** — curated coding patterns for modern stacks
-- **MCP servers** — real documentation, Notion, Jira, and more
-- **Persona & config** — security-first permissions, teaching-oriented persona, themes
+- **Engram** â€” persistent cross-session memory
+- **SDD** â€” Spec-Driven Development workflow (plan before you code)
+- **Skills** â€” curated coding patterns for modern stacks
+- **MCP servers** â€” real documentation, Notion, Jira, and more
+- **Persona & config** â€” security-first permissions, teaching-oriented persona, themes
 
 **Before**: "I installed Claude Code / OpenCode / Cursor / whatever, but it's just a chatbot that writes code."
 
-**After**: `curl -sL get.gentleman.ai/ai | sh` → Pick your agent(s) → Pick your config → Your agent now has memory, skills, workflow, MCP tools, and a persona that actually teaches you. Same ecosystem regardless of which tool you use.
+**After**: `curl -sL get.gentleman.ai/ai | sh` â†’ Pick your agent(s) â†’ Pick your config â†’ Your agent now has memory, skills, workflow, MCP tools, and a persona that actually teaches you. Same ecosystem regardless of which tool you use.
 
 ---
 
@@ -83,7 +83,7 @@ This is NOT an "AI agent installer." Most agents are already easy to install (`n
 
 ## 5. Prerequisites & Dependency Management
 
-The installer MUST handle installing all prerequisites automatically. A user on a **clean machine** should be able to run the installer and have everything work — no manual `brew install node` beforehand.
+The installer MUST handle installing all prerequisites automatically. A user on a **clean machine** should be able to run the installer and have everything work â€” no manual `brew install node` beforehand.
 
 ### 5.0.1 Dependency Resolution Strategy
 
@@ -96,29 +96,29 @@ The installer follows a **dependency-first** approach:
 5. **Verify** each dependency after installation
 
 ```
-┌──────────────────────────────────────────────────────────────────┐
-│  DEPENDENCY TREE (shown to user before install)                  │
-│                                                                  │
-│  Base tools:                                                     │
-│    ✓ git (already installed: 2.43.0)                             │
-│    ✓ curl (already installed)                                    │
-│    ✓ bash (already installed: 5.2)                               │
-│    ◌ Homebrew (will install)                                     │
-│                                                                  │
-│  Runtimes (needed by selected agents):                           │
-│    ◌ Node.js 20 (needed by: Claude Code, Gemini CLI)            │
-│    ✓ Go 1.25 (already installed — not needed for binary installs)│
-│                                                                  │
-│  AI Agents:                                                      │
-│    ◌ Claude Code (via npm)                                       │
-│    ◌ OpenCode (native binary)                                    │
-│                                                                  │
-│  Ecosystem:                                                      │
-│    ◌ Engram (via Homebrew — no runtime deps)                     │
-│    ◌ GGA (via Homebrew — needs bash + git + provider CLI)        │
-│    ◌ SDD skills (file copy — no deps)                            │
-│    ◌ Skills library (file copy — no deps)                        │
-└──────────────────────────────────────────────────────────────────┘
+â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
+â”‚  DEPENDENCY TREE (shown to user before install)                  â”‚
+â”‚                                                                  â”‚
+â”‚  Base tools:                                                     â”‚
+â”‚    âœ“ git (already installed: 2.43.0)                             â”‚
+â”‚    âœ“ curl (already installed)                                    â”‚
+â”‚    âœ“ bash (already installed: 5.2)                               â”‚
+â”‚    â—Œ Homebrew (will install)                                     â”‚
+â”‚                                                                  â”‚
+â”‚  Runtimes (needed by selected agents):                           â”‚
+â”‚    â—Œ Node.js 20 (needed by: Claude Code, Gemini CLI)            â”‚
+â”‚    âœ“ Go 1.25 (already installed â€” not needed for binary installs)â”‚
+â”‚                                                                  â”‚
+â”‚  AI Agents:                                                      â”‚
+â”‚    â—Œ Claude Code (via npm)                                       â”‚
+â”‚    â—Œ OpenCode (native binary)                                    â”‚
+â”‚                                                                  â”‚
+â”‚  Ecosystem:                                                      â”‚
+â”‚    â—Œ Engram (via Homebrew â€” no runtime deps)                     â”‚
+â”‚    â—Œ GGA (via Homebrew â€” needs bash + git + provider CLI)        â”‚
+â”‚    â—Œ SDD skills (file copy â€” no deps)                            â”‚
+â”‚    â—Œ Skills library (file copy â€” no deps)                        â”‚
+â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
 ```
 
 ### 5.0.2 System-Level Dependencies
@@ -138,7 +138,7 @@ These are the base tools the installer itself and the ecosystem need.
 | Dependency | Min Version | When Needed | Install Method |
 |-----------|-------------|-------------|----------------|
 | **Homebrew** | Any | macOS (primary pkg manager), Linux (recommended for Engram, agents) | Official install script |
-| **Node.js** | 20+ | Claude Code (needs 18+), Gemini CLI (needs 20+) — installer picks the highest required version | `brew install node` / `nvm` / `fnm` / distro package |
+| **Node.js** | 20+ | Claude Code (needs 18+), Gemini CLI (needs 20+) â€” installer picks the highest required version | `brew install node` / `nvm` / `fnm` / distro package |
 | **npm** | Comes with Node.js | Installing Claude Code, Gemini CLI, Codex | Bundled with Node.js |
 | **Go** | 1.25+ | ONLY if building Engram from source (NOT needed for binary/Homebrew install) | `brew install go` / distro package |
 | **python3** | 3.x | GGA with Ollama API mode or LM Studio provider (has fallback without it) | Pre-installed on macOS, `apt`/`pacman`/`dnf` on Linux |
@@ -149,16 +149,16 @@ These are the base tools the installer itself and the ecosystem need.
 | Platform | Pre-installed | Needs Installation | Special Handling |
 |----------|--------------|-------------------|------------------|
 | **macOS** | bash 3.2, curl, shasum, python3 | Homebrew (if not present), Node.js, git (via Xcode CLT) | `xcode-select --install` for git; `shasum` (not `sha256sum`); BSD `sed -i ''` |
-| **Ubuntu/Debian** | bash, curl, git, sha256sum | Homebrew (optional), Node.js (apt version is often outdated → use NodeSource or fnm) | Node.js from apt is often v12/v16 — MUST use NodeSource repo or version manager for v20+ |
-| **Arch** | bash, curl, git, python3, sha256sum | Node.js (`pacman -S nodejs npm`) | Arch packages are usually current — `pacman` versions are fine |
+| **Ubuntu/Debian** | bash, curl, git, sha256sum | Homebrew (optional), Node.js (apt version is often outdated â†’ use NodeSource or fnm) | Node.js from apt is often v12/v16 â€” MUST use NodeSource repo or version manager for v20+ |
+| **Arch** | bash, curl, git, python3, sha256sum | Node.js (`pacman -S nodejs npm`) | Arch packages are usually current â€” `pacman` versions are fine |
 | **Fedora/RHEL** | bash, curl, git, sha256sum | Node.js (`dnf install nodejs`) | May need `dnf module enable nodejs:20` for correct version |
 | **WSL 2** | Same as host Linux distro | Same as Linux + note about Windows-side agents (Cursor, VSCode) | Windows-side agents use Windows paths; WSL agents use Linux paths |
-| **Windows native** | None guaranteed | Everything: git (Git for Windows), Node.js (winget/scoop), bash (Git Bash) | GGA needs bash — Git for Windows includes Git Bash |
+| **Windows native** | None guaranteed | Everything: git (Git for Windows), Node.js (winget/scoop), bash (Git Bash) | GGA needs bash â€” Git for Windows includes Git Bash |
 | **Termux** | bash, curl, git | Node.js (`pkg install nodejs`), python (`pkg install python`) | No sudo, no Homebrew. Commands run directly, not via `sh -c`. Go cross-compile has limitations on Android. |
 
 ### 5.0.3 Node.js Version Management
 
-Node.js is the most critical dependency — multiple agents depend on it, and distro-packaged versions are often outdated.
+Node.js is the most critical dependency â€” multiple agents depend on it, and distro-packaged versions are often outdated.
 
 **Strategy:**
 
@@ -173,29 +173,29 @@ Node.js is the most critical dependency — multiple agents depend on it, and di
 - R-DEP-01: The installer MUST detect all required dependencies and their versions BEFORE starting installation
 - R-DEP-02: The installer MUST show the complete dependency tree to the user and get confirmation before installing anything
 - R-DEP-03: The installer MUST install missing dependencies automatically (with user consent) using the platform's preferred package manager
-- R-DEP-04: The installer MUST handle Node.js version requirements intelligently — Claude Code needs 18+, Gemini CLI needs 20+, so install 20+ to satisfy both
+- R-DEP-04: The installer MUST handle Node.js version requirements intelligently â€” Claude Code needs 18+, Gemini CLI needs 20+, so install 20+ to satisfy both
 - R-DEP-05: The installer MUST NOT install Go unless the user explicitly chooses to build Engram from source (pre-compiled binaries are the default)
-- R-DEP-06: On Linux, the installer MUST NOT use distro-default Node.js if it's below v20 — use NodeSource, fnm, or Homebrew instead
+- R-DEP-06: On Linux, the installer MUST NOT use distro-default Node.js if it's below v20 â€” use NodeSource, fnm, or Homebrew instead
 - R-DEP-07: The installer MUST handle platform-specific differences transparently (BSD sed vs GNU sed, sha256sum vs shasum, Xcode CLT on macOS)
 - R-DEP-08: The installer MUST detect existing version managers (fnm, nvm, n) and use them instead of installing Node.js system-wide
 - R-DEP-09: If a dependency installation fails, the installer MUST show a clear error with manual installation instructions
 - R-DEP-10: The installer MUST NOT require root/sudo for dependency installation except when absolutely necessary (e.g., `apt install`), and MUST explain why when it does
 - R-DEP-11: Homebrew MUST be offered as an option on macOS, NOT forced. On Linux, the installer SHOULD prefer native package managers (pacman, dnf) where appropriate, falling back to Homebrew only when native packages are unavailable or outdated
 
-### 5.0.4 Component → Dependency Matrix
+### 5.0.4 Component â†’ Dependency Matrix
 
 | Component | bash | git | curl | Node.js | Homebrew | python3 | gh CLI |
 |-----------|------|-----|------|---------|----------|---------|--------|
-| **Engram** (binary) | — | — | ✓ (download) | — | ✓ (preferred) | — | — |
-| **GGA** | ✓ | ✓ | ◌ (some providers) | — | ✓ (preferred) | ◌ (some providers) | ◌ (github provider) |
-| **Claude Code** | ✓ (hooks) | ✓ | — | ✓ (20+) | ◌ | — | — |
-| **OpenCode** | — | — | ✓ (download) | — | — | — | — |
-| **Gemini CLI** | — | — | — | ✓ (20+) | ◌ | — | — |
-| **Codex** | — | — | — | ✓ (18+) | — | — | — |
-| **SDD Skills** | ✓ (install script) | ✓ (clone) | — | — | — | — | — |
-| **Coding Skills** | — | ✓ (clone) | — | — | — | — | — |
+| **Engram** (binary) | â€” | â€” | âœ“ (download) | â€” | âœ“ (preferred) | â€” | â€” |
+| **GGA** | âœ“ | âœ“ | â—Œ (some providers) | â€” | âœ“ (preferred) | â—Œ (some providers) | â—Œ (github provider) |
+| **Claude Code** | âœ“ (hooks) | âœ“ | â€” | âœ“ (20+) | â—Œ | â€” | â€” |
+| **OpenCode** | â€” | â€” | âœ“ (download) | â€” | â€” | â€” | â€” |
+| **Gemini CLI** | â€” | â€” | â€” | âœ“ (20+) | â—Œ | â€” | â€” |
+| **Codex** | â€” | â€” | â€” | âœ“ (18+) | â€” | â€” | â€” |
+| **SDD Skills** | âœ“ (install script) | âœ“ (clone) | â€” | â€” | â€” | â€” | â€” |
+| **Coding Skills** | â€” | âœ“ (clone) | â€” | â€” | â€” | â€” | â€” |
 
-✓ = required, ◌ = optional/conditional, — = not needed
+âœ“ = required, â—Œ = optional/conditional, â€” = not needed
 
 ---
 
@@ -203,7 +203,7 @@ Node.js is the most critical dependency — multiple agents depend on it, and di
 
 ### 6.1 AI Coding Agents
 
-The installer supports configuring the Gentleman ecosystem into ANY AI coding agent. The user selects which ones they use (or want to use). **The primary job is CONFIGURATION, not installation** — most agents have their own install methods. The installer CAN install agents that are missing, but the core value is injecting the ecosystem.
+The installer supports configuring the Gentleman ecosystem into ANY AI coding agent. The user selects which ones they use (or want to use). **The primary job is CONFIGURATION, not installation** â€” most agents have their own install methods. The installer CAN install agents that are missing, but the core value is injecting the ecosystem.
 
 #### Terminal-Based Agents (CLI)
 
@@ -224,7 +224,7 @@ The installer supports configuring the Gentleman ecosystem into ANY AI coding ag
 | Windsurf (Codeium) | `~/.windsurf/` or similar | Partial: rules, MCP | P2 |
 | Xcode + AI extensions | Xcode config paths | Minimal: persona via project rules | P2 |
 | JetBrains + AI Assistant | IDE config paths | Partial: rules, MCP via plugins | P2 |
-| Antigravity | TBD (emerging agent) | TBD — implement via Agent interface when stable | P2 |
+| Antigravity | TBD (emerging agent) | TBD â€” implement via Agent interface when stable | P2 |
 | Zed + AI | `~/.config/zed/` | Partial: assistant rules, MCP | P2 |
 
 #### Ecosystem Support Tiers
@@ -236,7 +236,7 @@ The installer supports configuring the Gentleman ecosystem into ANY AI coding ag
 | **Partial** | Skills via system instructions + MCP where supported + GGA provider config + persona | Gemini CLI, Codex, Windsurf, JetBrains, Zed |
 | **Minimal** | Persona and coding conventions via project/workspace rules | Xcode, Antigravity, any emerging agent |
 
-> **Note:** GGA (Guardian Angel) is agent-agnostic — it works with ANY provider for review execution, independent of which AI coding agent the user chose. It's a cross-cutting concern, not tied to a specific agent tier.
+> **Note:** GGA (Guardian Angel) is agent-agnostic â€” it works with ANY provider for review execution, independent of which AI coding agent the user chose. It's a cross-cutting concern, not tied to a specific agent tier.
 
 **Requirements:**
 - R-AGENT-01: The installer MUST detect already-installed agents and offer configuration only (not re-install)
@@ -245,7 +245,7 @@ The installer supports configuring the Gentleman ecosystem into ANY AI coding ag
 - R-AGENT-04: The installer MUST detect the user's existing agent configurations and offer to preserve, merge, or replace them
 - R-AGENT-05: The installer MUST clearly show the "Ecosystem Support Tier" for each agent so users understand what they're getting
 - R-AGENT-06: For agents the user doesn't have installed, the installer SHOULD offer to install them (with a clear note about what's being installed)
-- R-AGENT-07: The installer architecture MUST allow adding new agents by implementing a single interface — no changes to TUI or core logic required
+- R-AGENT-07: The installer architecture MUST allow adding new agents by implementing a single interface â€” no changes to TUI or core logic required
 - R-AGENT-08: The installer MUST be forward-compatible: when new AI agents emerge, a community contributor can add support by implementing the Agent interface and submitting a PR
 
 ### 6.2 Engram (Persistent Memory System)
@@ -285,19 +285,19 @@ The full SDD Agent Team skill set (9 skills):
 - R-SDD-01: SDD skills MUST be installed to the correct path for each selected agent (Claude Code: `~/.claude/skills/`, OpenCode: `~/.config/opencode/skills/`, Cursor: `~/.cursor/skills/`)
 - R-SDD-02: The SDD orchestrator configuration MUST be injected into the agent's global config (CLAUDE.md, opencode.json agents, .cursorrules)
 - R-SDD-03: OpenCode slash commands for SDD phases MUST be installed when OpenCode is selected, enabling the agent to invoke SDD organically when it detects a substantial change
-- R-SDD-04: The installer MUST pull SDD skills from the latest release of `Gentleman-Programming/sdd-agent-team`
+- R-SDD-04: The installer MUST pull SDD skills from the latest release of `jonsanchezr/sdd-agent-team`
 
-### 6.4 GGA — Gentleman Guardian Angel (AI Code Review)
+### 6.4 GGA â€” Gentleman Guardian Angel (AI Code Review)
 
 GGA is a zero-dependency, pure Bash CLI tool that performs **AI-powered code review on every git commit**. It acts as a pre-commit git hook: staged files are sent to any AI provider, validated against team coding standards (defined in `AGENTS.md`), and the commit is allowed or blocked based on the AI's verdict.
 
-**This is the quality gate of the ecosystem.** While skills teach the agent HOW to write code, and SDD ensures the agent PLANS before coding, GGA ensures the code that gets committed actually meets standards — even code the developer wrote manually.
+**This is the quality gate of the ecosystem.** While skills teach the agent HOW to write code, and SDD ensures the agent PLANS before coding, GGA ensures the code that gets committed actually meets standards â€” even code the developer wrote manually.
 
 | Component | What It Does |
 |-----------|-------------|
 | `gga` binary | Pure Bash CLI, installs via Homebrew or direct download |
 | Git hook | Pre-commit or commit-msg hook that runs `gga run` |
-| `AGENTS.md` rules file | Team coding standards the AI validates against — single source of truth |
+| `AGENTS.md` rules file | Team coding standards the AI validates against â€” single source of truth |
 | Smart cache | SHA256-based, two-level invalidation (metadata + file content). Only `PASSED` files are cached. |
 | PR mode | `gga run --pr-mode` reviews all changed files in a branch vs base |
 | CI mode | `gga run --ci` for pipeline integration |
@@ -319,7 +319,7 @@ GGA is a zero-dependency, pure Bash CLI tool that performs **AI-powered code rev
 - R-GGA-02: When GGA is selected, the installer MUST install the `gga` binary to the system PATH (via Homebrew or direct download)
 - R-GGA-03: The installer MUST ask which AI provider to configure for GGA reviews and write the appropriate `.gga` config
 - R-GGA-04: The installer SHOULD offer to install the git hook globally (`git config --global core.hooksPath`) or explain per-project setup via `gga install`
-- R-GGA-05: The installer MUST NOT configure GGA's provider with API keys — only the provider name. Keys are managed separately by the user.
+- R-GGA-05: The installer MUST NOT configure GGA's provider with API keys â€” only the provider name. Keys are managed separately by the user.
 - R-GGA-06: The installer SHOULD create a starter `AGENTS.md` template in the user's home directory with common coding standards, or link to examples
 - R-GGA-07: If the user selected an AI agent (e.g., Claude Code) AND GGA, the installer SHOULD auto-configure GGA to use that same provider (e.g., `GGA_PROVIDER=claude`)
 
@@ -363,13 +363,13 @@ Beyond SDD, additional coding skills that encode best practices:
 
 ### 6.7 Agent Configuration (Persona, Theme, Permissions)
 
-#### Persona Selection — "Your own Gentleman!"
+#### Persona Selection â€” "Your own Gentleman!"
 
 The Gentleman persona is the heart of this ecosystem, but it's **100% optional**. The user chooses their experience:
 
 | Persona Option | Description | What it Configures |
 |---------------|-------------|-------------------|
-| **Gentleman Mode** | "Your own Gentleman!" — The Senior Architect mentor who teaches, challenges, and pushes you to understand concepts before code. Rioplatense Spanish for Spanish input, direct English otherwise. Uses Tony Stark/Jarvis analogies. | Full persona in CLAUDE.md / opencode agents / .cursorrules, custom thinking verbs, teaching-first behavior |
+| **Gentleman Mode** | "Your own Gentleman!" â€” The Senior Architect mentor who teaches, challenges, and pushes you to understand concepts before code. Rioplatense Spanish for Spanish input, direct English otherwise. Uses Tony Stark/Jarvis analogies. | Full persona in CLAUDE.md / opencode agents / .cursorrules, custom thinking verbs, teaching-first behavior |
 | **Neutral Mode** | Professional, helpful, no personality overlay. The agent stays with its default behavior. | Security permissions only, no persona injection |
 | **Custom Persona** | Bring your own! User provides a persona description or selects from community presets. | User-provided text injected into agent instructions |
 
@@ -381,14 +381,14 @@ The Gentleman persona is the heart of this ecosystem, but it's **100% optional**
 | Permissions | Security-first defaults: deny .env, ask on destructive git ops, allow standard tools |
 | Editor mode | vim / emacs / default |
 | Statusline | Custom statusline with model info, git status, context usage (Claude Code) |
-| Thinking verbs | Custom spinner text — Rioplatense phrases like "Tomando un Cafecito mientras Pienso" (only with Gentleman persona) |
+| Thinking verbs | Custom spinner text â€” Rioplatense phrases like "Tomando un Cafecito mientras Pienso" (only with Gentleman persona) |
 | Keybindings | Vim-style or default |
 
 **Requirements:**
 - R-CONFIG-01: The persona selection MUST be a first-class step in the installation flow, presented clearly with personality descriptions
 - R-CONFIG-02: Selecting "Gentleman Mode" MUST display the tagline "Your own Gentleman!" and a brief preview of how the agent will behave
 - R-CONFIG-03: The installer MUST offer a "Custom" mode where the user can pick individual config aspects
-- R-CONFIG-04: Permission defaults MUST follow the security-first model: block .env access, require confirmation for destructive git operations — REGARDLESS of persona choice (security is not optional)
+- R-CONFIG-04: Permission defaults MUST follow the security-first model: block .env access, require confirmation for destructive git operations â€” REGARDLESS of persona choice (security is not optional)
 - R-CONFIG-05: The installer MUST NOT overwrite existing agent configurations without explicit user consent
 - R-CONFIG-06: The installer SHOULD offer to backup existing configs before making changes (same pattern as Gentleman.Dots)
 - R-CONFIG-07: Thinking verbs and Rioplatense expressions MUST only be configured when Gentleman persona is selected
@@ -402,129 +402,129 @@ The Gentleman persona is the heart of this ecosystem, but it's **100% optional**
 
 ```
 curl -sL get.gentleman.ai/ai | sh
-                  │
-                  ▼
-     ┌─────────────────────┐
-     │   Download binary    │
-     │   (detect OS/arch)   │
-     └──────────┬──────────┘
-                │
-                ▼
-     ┌─────────────────────────────────┐
-     │   TUI: Welcome                   │
-     │   "Gentleman AI Ecosystem"       │
-     │   Supercharge your AI agents.    │
-     └──────────┬──────────────────────┘
-                │
-                ▼
-     ┌─────────────────────────────────┐
-     │  System Scan                     │
-     │  Detected: Claude Code ✓         │
-     │            OpenCode ✓            │
-     │            Cursor ✗              │
-     │            Engram ✗              │
-     │  OS: macOS (Apple Silicon)       │
-     └──────────┬──────────────────────┘
-                │
-                ▼
-     ┌─────────────────────────────────┐
-     │  Select AI Agents                │  ← Shows detected (pre-checked) + available
-     │  ☑ Claude Code (installed)       │
-     │  ☑ OpenCode (installed)          │
-     │  ☐ Gemini CLI                    │
-     │  ☐ Cursor                        │
-     │  ☐ VSCode (Copilot/Cline)       │
-     │  ...                             │
-     └──────────┬──────────────────────┘
-                │
-                ▼
-     ┌─────────────────────────────────┐
-     │  Choose your Persona             │
-     │                                  │
-     │  ★ "Your own Gentleman!"         │  ← Senior Architect mentor, teaches,
-     │     The mentor who pushes you     │     challenges, Rioplatense Spanish
-     │     to understand before coding.  │
-     │                                  │
-     │  ○ Neutral                       │  ← No persona, default agent behavior
-     │  ○ Custom                        │  ← Bring your own persona text
-     └──────────┬──────────────────────┘
-                │
-                ▼
-     ┌─────────────────────────────────┐
-     │  Select Ecosystem Preset         │
-     │                                  │
-     │  ★ Dev Stack + Polish             │  ← Everything: Engram + SDD + Skills
-     │     (Engram + SDD + All Skills   │     + MCP + Theme + Permissions
-     │      + MCP + Theme)              │
-     │                                  │
-     │  ○ Dev Stack                     │  ← Tools without persona
-     │  ○ Memory Only                   │  ← Just Engram + basics
-     │  ○ Custom                        │  ← Pick each component
-     └──────────┬──────────────────────┘
-                │
-        ┌───────┴───────┐
-        │ If "Custom":  │
-        │               ▼
-        │  ┌──────────────────────┐
-        │  │ ☑ Engram (memory)    │
-        │  │ ☑ SDD (workflow)     │
-        │  │ ☑ GGA (code review)  │
-        │  │ Select Skills...     │
-        │  │ Select MCP servers...│
-        │  │ Select Theme...      │
-        │  └────────┬─────────────┘
-        │           │
-        └───────┬───┘
-                │
-                ▼
-     ┌─────────────────────────────────┐
-     │  Review & Confirm                │
-     │                                  │
-     │  Agents: Claude Code, OpenCode   │
-     │  Persona: Gentleman              │
-     │  Memory: Engram ✓                │
-     │  Workflow: SDD (9 skills) ✓      │
-     │  Code Review: GGA (claude) ✓     │
-     │  Coding Skills: 15 skills ✓      │
-     │  MCP: Context7, Notion ✓         │
-     │  Theme: Gentleman Dark ✓         │
-     │                                  │
-     │  [Install]  [Back]               │
-     └──────────┬──────────────────────┘
-                │
-                ▼
-     ┌─────────────────────────────────┐
-     │  Configuring...                  │
-     │                                  │
-     │  ✓ Installing Engram             │
-     │  ✓ Installing GGA               │
-     │  ✓ Configuring Claude Code       │
-     │    ✓ Skills (22 files)           │
-     │    ✓ MCP servers                 │
-     │    ✓ Engram plugin               │
-     │    ✓ Permissions & theme         │
-     │  ✓ Configuring GGA (claude)      │
-     │  ◌ Configuring OpenCode...       │
-     │    [████████░░] 80%              │
-     └──────────┬──────────────────────┘
-                │
-                ▼
-     ┌─────────────────────────────────┐
-     │  Done! Your AI agents are ready. │
-     │                                  │
-     │  Next steps:                     │
-     │  1. Set API keys (see below)     │
-     │  2. Try: claude "hello"          │
-     │                                  │
-     │  For larger features, the agent  │
-     │  will automatically offer SDD    │
-     │  (Spec-Driven Development) to    │
-     │  plan and implement step by step.│
-     │                                  │
-     │  Agents configured: 2            │
-     │  Skills installed: 22            │
-     │  Memory: Engram running ✓        │
-     └─────────────────────────────────┘
+                  â”‚
+                  â–¼
+     â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
+     â”‚   Download binary    â”‚
+     â”‚   (detect OS/arch)   â”‚
+     â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¬â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
+                â”‚
+                â–¼
+     â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
+     â”‚   TUI: Welcome                   â”‚
+     â”‚   "Gentleman AI Ecosystem"       â”‚
+     â”‚   Supercharge your AI agents.    â”‚
+     â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¬â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
+                â”‚
+                â–¼
+     â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
+     â”‚  System Scan                     â”‚
+     â”‚  Detected: Claude Code âœ“         â”‚
+     â”‚            OpenCode âœ“            â”‚
+     â”‚            Cursor âœ—              â”‚
+     â”‚            Engram âœ—              â”‚
+     â”‚  OS: macOS (Apple Silicon)       â”‚
+     â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¬â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
+                â”‚
+                â–¼
+     â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
+     â”‚  Select AI Agents                â”‚  â† Shows detected (pre-checked) + available
+     â”‚  â˜‘ Claude Code (installed)       â”‚
+     â”‚  â˜‘ OpenCode (installed)          â”‚
+     â”‚  â˜ Gemini CLI                    â”‚
+     â”‚  â˜ Cursor                        â”‚
+     â”‚  â˜ VSCode (Copilot/Cline)       â”‚
+     â”‚  ...                             â”‚
+     â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¬â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
+                â”‚
+                â–¼
+     â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
+     â”‚  Choose your Persona             â”‚
+     â”‚                                  â”‚
+     â”‚  â˜… "Your own Gentleman!"         â”‚  â† Senior Architect mentor, teaches,
+     â”‚     The mentor who pushes you     â”‚     challenges, Rioplatense Spanish
+     â”‚     to understand before coding.  â”‚
+     â”‚                                  â”‚
+     â”‚  â—‹ Neutral                       â”‚  â† No persona, default agent behavior
+     â”‚  â—‹ Custom                        â”‚  â† Bring your own persona text
+     â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¬â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
+                â”‚
+                â–¼
+     â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
+     â”‚  Select Ecosystem Preset         â”‚
+     â”‚                                  â”‚
+     â”‚  â˜… Dev Stack + Polish             â”‚  â† Everything: Engram + SDD + Skills
+     â”‚     (Engram + SDD + All Skills   â”‚     + MCP + Theme + Permissions
+     â”‚      + MCP + Theme)              â”‚
+     â”‚                                  â”‚
+     â”‚  â—‹ Dev Stack                     â”‚  â† Tools without persona
+     â”‚  â—‹ Memory Only                   â”‚  â† Just Engram + basics
+     â”‚  â—‹ Custom                        â”‚  â† Pick each component
+     â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¬â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
+                â”‚
+        â”Œâ”€â”€â”€â”€â”€â”€â”€â”´â”€â”€â”€â”€â”€â”€â”€â”
+        â”‚ If "Custom":  â”‚
+        â”‚               â–¼
+        â”‚  â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
+        â”‚  â”‚ â˜‘ Engram (memory)    â”‚
+        â”‚  â”‚ â˜‘ SDD (workflow)     â”‚
+        â”‚  â”‚ â˜‘ GGA (code review)  â”‚
+        â”‚  â”‚ Select Skills...     â”‚
+        â”‚  â”‚ Select MCP servers...â”‚
+        â”‚  â”‚ Select Theme...      â”‚
+        â”‚  â””â”€â”€â”€â”€â”€â”€â”€â”€â”¬â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
+        â”‚           â”‚
+        â””â”€â”€â”€â”€â”€â”€â”€â”¬â”€â”€â”€â”˜
+                â”‚
+                â–¼
+     â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
+     â”‚  Review & Confirm                â”‚
+     â”‚                                  â”‚
+     â”‚  Agents: Claude Code, OpenCode   â”‚
+     â”‚  Persona: Gentleman              â”‚
+     â”‚  Memory: Engram âœ“                â”‚
+     â”‚  Workflow: SDD (9 skills) âœ“      â”‚
+     â”‚  Code Review: GGA (claude) âœ“     â”‚
+     â”‚  Coding Skills: 15 skills âœ“      â”‚
+     â”‚  MCP: Context7, Notion âœ“         â”‚
+     â”‚  Theme: Gentleman Dark âœ“         â”‚
+     â”‚                                  â”‚
+     â”‚  [Install]  [Back]               â”‚
+     â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¬â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
+                â”‚
+                â–¼
+     â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
+     â”‚  Configuring...                  â”‚
+     â”‚                                  â”‚
+     â”‚  âœ“ Installing Engram             â”‚
+     â”‚  âœ“ Installing GGA               â”‚
+     â”‚  âœ“ Configuring Claude Code       â”‚
+     â”‚    âœ“ Skills (22 files)           â”‚
+     â”‚    âœ“ MCP servers                 â”‚
+     â”‚    âœ“ Engram plugin               â”‚
+     â”‚    âœ“ Permissions & theme         â”‚
+     â”‚  âœ“ Configuring GGA (claude)      â”‚
+     â”‚  â—Œ Configuring OpenCode...       â”‚
+     â”‚    [â–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–‘â–‘] 80%              â”‚
+     â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¬â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
+                â”‚
+                â–¼
+     â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
+     â”‚  Done! Your AI agents are ready. â”‚
+     â”‚                                  â”‚
+     â”‚  Next steps:                     â”‚
+     â”‚  1. Set API keys (see below)     â”‚
+     â”‚  2. Try: claude "hello"          â”‚
+     â”‚                                  â”‚
+     â”‚  For larger features, the agent  â”‚
+     â”‚  will automatically offer SDD    â”‚
+     â”‚  (Spec-Driven Development) to    â”‚
+     â”‚  plan and implement step by step.â”‚
+     â”‚                                  â”‚
+     â”‚  Agents configured: 2            â”‚
+     â”‚  Skills installed: 22            â”‚
+     â”‚  Memory: Engram running âœ“        â”‚
+     â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
 ```
 
 ### 7.2 Non-Interactive Mode
@@ -532,7 +532,7 @@ curl -sL get.gentleman.ai/ai | sh
 For CI, automation, and team provisioning:
 
 ```bash
-gentle-ai install \
+agent-smith install \
   --agents claude-code,opencode \
   --preset gentleman \
   --skills full-stack \
@@ -571,7 +571,7 @@ gentle-ai install \
 
 ## 8. Technical Architecture
 
-### 8.0 Ecosystem Architecture — How Everything Connects
+### 8.0 Ecosystem Architecture â€” How Everything Connects
 
 This section describes how all Gentleman ecosystem components interact with each other, both at **install time** (what the installer does) and at **runtime** (what the developer experiences daily).
 
@@ -579,22 +579,22 @@ This section describes how all Gentleman ecosystem components interact with each
 
 ```mermaid
 graph TB
-    subgraph INSTALLER["🔧 GENTLEMAN AI INSTALLER (one-time setup)"]
+    subgraph INSTALLER["ðŸ”§ GENTLEMAN AI INSTALLER (one-time setup)"]
         direction TB
-        GAI[gentle-ai binary]
+        GAI[agent-smith binary]
         GAI --> DEP_ENGINE[Dependency Engine]
         GAI --> AGENT_ENGINE[Agent Configurator]
         GAI --> ECO_ENGINE[Ecosystem Injector]
     end
 
-    subgraph DEPS["📦 DEPENDENCIES (installed first)"]
+    subgraph DEPS["ðŸ“¦ DEPENDENCIES (installed first)"]
         BREW[Homebrew]
         NODE[Node.js 20+]
         GIT[git]
         BASH_DEP[bash]
     end
 
-    subgraph AGENTS["🤖 AI CODING AGENTS (user's choice)"]
+    subgraph AGENTS["ðŸ¤– AI CODING AGENTS (user's choice)"]
         CC[Claude Code]
         OC[OpenCode]
         GEM[Gemini CLI]
@@ -604,17 +604,17 @@ graph TB
         OTHER[Other agents...]
     end
 
-    subgraph ECOSYSTEM["⚡ GENTLEMAN ECOSYSTEM (injected into agents)"]
+    subgraph ECOSYSTEM["âš¡ GENTLEMAN ECOSYSTEM (injected into agents)"]
         direction TB
-        ENGRAM[🧠 Engram<br/>Persistent Memory]
-        SDD[📋 SDD Skills<br/>Spec-Driven Development]
-        GGA_COMP[🛡️ GGA<br/>Guardian Angel Code Review]
-        SKILLS[📚 Coding Skills<br/>React, TS, Tailwind, etc.]
-        MCP[🔌 MCP Servers<br/>Context7, Notion, Jira]
-        PERSONA[🎭 Persona & Config<br/>Gentleman / Neutral / Custom]
+        ENGRAM[ðŸ§  Engram<br/>Persistent Memory]
+        SDD[ðŸ“‹ SDD Skills<br/>Spec-Driven Development]
+        GGA_COMP[ðŸ›¡ï¸ GGA<br/>Guardian Angel Code Review]
+        SKILLS[ðŸ“š Coding Skills<br/>React, TS, Tailwind, etc.]
+        MCP[ðŸ”Œ MCP Servers<br/>Context7, Notion, Jira]
+        PERSONA[ðŸŽ­ Persona & Config<br/>Gentleman / Neutral / Custom]
     end
 
-    subgraph RUNTIME["🏃 DAILY DEVELOPMENT (after install)"]
+    subgraph RUNTIME["ðŸƒ DAILY DEVELOPMENT (after install)"]
         DEV[Developer]
     end
 
@@ -654,7 +654,7 @@ graph TB
 
 #### 8.0.2 Runtime Component Interaction
 
-This is what happens AFTER installation — the daily developer experience:
+This is what happens AFTER installation â€” the daily developer experience:
 
 ```mermaid
 graph LR
@@ -691,7 +691,7 @@ graph LR
     subgraph SDD_LAYER["SDD Workflow"]
         direction TB
         SDD_ORCH[Orchestrator<br/>in CLAUDE.md / agent config]
-        SDD_SKILLS_2[9 Phase Skills<br/>explore → propose →<br/>spec → design → tasks →<br/>apply → verify → archive]
+        SDD_SKILLS_2[9 Phase Skills<br/>explore â†’ propose â†’<br/>spec â†’ design â†’ tasks â†’<br/>apply â†’ verify â†’ archive]
         SDD_ORCH --> SDD_SKILLS_2
     end
 
@@ -723,11 +723,11 @@ graph LR
     style GGA_LAYER fill:#1a1b26,stroke:#FF9E64,color:#FF9E64
 ```
 
-#### 8.0.3 Installation Pipeline — Dependency Resolution Order
+#### 8.0.3 Installation Pipeline â€” Dependency Resolution Order
 
 ```mermaid
 flowchart TD
-    START([gentle-ai install]) --> DETECT
+    START([agent-smith install]) --> DETECT
 
     subgraph PHASE_1["Phase 1: System Detection"]
         DETECT[Detect OS / Arch / WSL / Termux]
@@ -748,7 +748,7 @@ flowchart TD
     REVIEW --> BACKUP
 
     subgraph PHASE_3["Phase 3: Backup"]
-        BACKUP[Backup existing configs<br/>~/.gentle-ai-backup-TIMESTAMP/]
+        BACKUP[Backup existing configs<br/>~/.agent-smith-backup-TIMESTAMP/]
     end
 
     BACKUP --> DEP_INSTALL
@@ -790,10 +790,10 @@ flowchart TD
     subgraph PHASE_7["Phase 7: Verification"]
         direction TB
         VERIFY[Health checks]
-        VERIFY --> CHECK_ENGRAM[Engram: GET /health ✓]
-        CHECK_ENGRAM --> CHECK_SKILLS[Skills: files exist ✓]
-        CHECK_SKILLS --> CHECK_MCP[MCP: configs valid ✓]
-        CHECK_MCP --> CHECK_GGA[GGA: gga --version ✓]
+        VERIFY --> CHECK_ENGRAM[Engram: GET /health âœ“]
+        CHECK_ENGRAM --> CHECK_SKILLS[Skills: files exist âœ“]
+        CHECK_SKILLS --> CHECK_MCP[MCP: configs valid âœ“]
+        CHECK_MCP --> CHECK_GGA[GGA: gga --version âœ“]
     end
 
     CHECK_GGA --> DONE([Complete!<br/>Show next steps])
@@ -807,14 +807,14 @@ flowchart TD
     style PHASE_7 fill:#1a1b26,stroke:#73DACA,color:#73DACA
 ```
 
-#### 8.0.4 Agent Configuration Matrix — What Gets Injected Where
+#### 8.0.4 Agent Configuration Matrix â€” What Gets Injected Where
 
 ```mermaid
 graph TD
     subgraph SOURCES["Source Repositories (fetched at install time)"]
-        REPO_SDD[Gentleman-Programming/<br/>sdd-agent-team]
-        REPO_ENGRAM[Gentleman-Programming/<br/>engram]
-        REPO_GGA[Gentleman-Programming/<br/>gentleman-guardian-angel]
+        REPO_SDD[jonsanchezr/<br/>sdd-agent-team]
+        REPO_ENGRAM[jonsanchezr/<br/>engram]
+        REPO_GGA[jonsanchezr/<br/>gentleman-guardian-angel]
         REPO_SKILLS[Skills Registry<br/>30+ skill files]
     end
 
@@ -873,7 +873,7 @@ graph TD
     style GGA_CONFIG fill:#1a1b26,stroke:#CB7C94,color:#CB7C94
 ```
 
-#### 8.0.5 Memory & Knowledge Flow — How the Agent Learns Over Time
+#### 8.0.5 Memory & Knowledge Flow â€” How the Agent Learns Over Time
 
 This diagram shows the continuous learning loop that Engram enables across sessions:
 
@@ -904,7 +904,7 @@ sequenceDiagram
     Engram-->>Agent: "Last time we used JWT with httpOnly cookies"
 
     Agent->>SDD: Detects substantial feature,<br/>initiates SDD workflow
-    Note over SDD: explore → propose → spec<br/>→ design → tasks → apply
+    Note over SDD: explore â†’ propose â†’ spec<br/>â†’ design â†’ tasks â†’ apply
 
     Agent->>Dev: Implementation + explanation
 
@@ -916,9 +916,9 @@ sequenceDiagram
     Dev->>GGA: git commit -m "feat: add auth"
     GGA->>GGA: Read staged files<br/>+ AGENTS.md rules
     GGA->>Agent: Review code against standards
-    Agent-->>GGA: STATUS: PASSED ✓
+    Agent-->>GGA: STATUS: PASSED âœ“
     GGA->>GGA: Cache passed files (SHA256)
-    GGA-->>Dev: Commit allowed ✓
+    GGA-->>Dev: Commit allowed âœ“
 
     Note over Dev,GGA: === SESSION END ===
 
@@ -1056,68 +1056,68 @@ graph TB
 ### 8.2 Package Structure (Proposed)
 
 ```
-gentle-ai/
-├── cmd/
-│   └── gentle-ai/
-│       └── main.go                 # CLI entrypoint
-├── internal/
-│   ├── system/
-│   │   ├── detect.go               # OS, arch, WSL, Termux detection
-│   │   ├── exec.go                 # Command execution, logging
-│   │   └── deps.go                 # Dependency detection, version checks, install logic
-│   ├── agents/
-│   │   ├── agent.go                # Agent interface
-│   │   ├── claude_code.go          # Claude Code install + config
-│   │   ├── opencode.go             # OpenCode install + config
-│   │   ├── cursor.go               # Cursor install + config
-│   │   ├── gemini_cli.go           # Gemini CLI install + config
-│   │   ├── codex.go                # Codex install + config
-│   │   └── windsurf.go             # Windsurf install + config
-│   ├── components/
-│   │   ├── engram.go               # Engram install + config per agent
-│   │   ├── gga.go                  # GGA install + provider config
-│   │   ├── sdd.go                  # SDD skills install + orchestrator config
-│   │   ├── mcp.go                  # MCP server configuration per agent
-│   │   ├── skills.go               # Skills library install
-│   │   └── config.go               # Persona, theme, permissions, etc.
-│   ├── presets/
-│   │   ├── gentleman.go            # Dev Stack + Polish preset definition (`full-gentleman`)
-│   │   ├── minimal.go              # Memory Only preset definition (`minimal`)
-│   │   └── preset.go               # Preset interface
-│   ├── backup/
-│   │   └── backup.go               # Config backup & restore
-│   └── tui/
-│       ├── model.go                # State model
-│       ├── update.go               # Message handling
-│       ├── view.go                 # Rendering
-│       ├── styles.go               # Lipgloss styles
-│       └── screens/
-│           ├── welcome.go
-│           ├── detection.go
-│           ├── agents.go
-│           ├── presets.go
-│           ├── mcp.go
-│           ├── skills.go
-│           ├── config.go
-│           ├── review.go
-│           ├── installing.go
-│           ├── complete.go
-│           └── backup.go
-├── e2e/
-│   ├── Dockerfile.*                # Per-OS test containers
-│   └── e2e_test.sh
-├── scripts/
-│   └── install.sh                  # curl-able installer script
-├── go.mod
-├── go.sum
-├── README.md
-├── LICENSE
-└── .goreleaser.yaml
+agent-smith/
+â”œâ”€â”€ cmd/
+â”‚   â””â”€â”€ agent-smith/
+â”‚       â””â”€â”€ main.go                 # CLI entrypoint
+â”œâ”€â”€ internal/
+â”‚   â”œâ”€â”€ system/
+â”‚   â”‚   â”œâ”€â”€ detect.go               # OS, arch, WSL, Termux detection
+â”‚   â”‚   â”œâ”€â”€ exec.go                 # Command execution, logging
+â”‚   â”‚   â””â”€â”€ deps.go                 # Dependency detection, version checks, install logic
+â”‚   â”œâ”€â”€ agents/
+â”‚   â”‚   â”œâ”€â”€ agent.go                # Agent interface
+â”‚   â”‚   â”œâ”€â”€ claude_code.go          # Claude Code install + config
+â”‚   â”‚   â”œâ”€â”€ opencode.go             # OpenCode install + config
+â”‚   â”‚   â”œâ”€â”€ cursor.go               # Cursor install + config
+â”‚   â”‚   â”œâ”€â”€ gemini_cli.go           # Gemini CLI install + config
+â”‚   â”‚   â”œâ”€â”€ codex.go                # Codex install + config
+â”‚   â”‚   â””â”€â”€ windsurf.go             # Windsurf install + config
+â”‚   â”œâ”€â”€ components/
+â”‚   â”‚   â”œâ”€â”€ engram.go               # Engram install + config per agent
+â”‚   â”‚   â”œâ”€â”€ gga.go                  # GGA install + provider config
+â”‚   â”‚   â”œâ”€â”€ sdd.go                  # SDD skills install + orchestrator config
+â”‚   â”‚   â”œâ”€â”€ mcp.go                  # MCP server configuration per agent
+â”‚   â”‚   â”œâ”€â”€ skills.go               # Skills library install
+â”‚   â”‚   â””â”€â”€ config.go               # Persona, theme, permissions, etc.
+â”‚   â”œâ”€â”€ presets/
+â”‚   â”‚   â”œâ”€â”€ gentleman.go            # Dev Stack + Polish preset definition (`full-gentleman`)
+â”‚   â”‚   â”œâ”€â”€ minimal.go              # Memory Only preset definition (`minimal`)
+â”‚   â”‚   â””â”€â”€ preset.go               # Preset interface
+â”‚   â”œâ”€â”€ backup/
+â”‚   â”‚   â””â”€â”€ backup.go               # Config backup & restore
+â”‚   â””â”€â”€ tui/
+â”‚       â”œâ”€â”€ model.go                # State model
+â”‚       â”œâ”€â”€ update.go               # Message handling
+â”‚       â”œâ”€â”€ view.go                 # Rendering
+â”‚       â”œâ”€â”€ styles.go               # Lipgloss styles
+â”‚       â””â”€â”€ screens/
+â”‚           â”œâ”€â”€ welcome.go
+â”‚           â”œâ”€â”€ detection.go
+â”‚           â”œâ”€â”€ agents.go
+â”‚           â”œâ”€â”€ presets.go
+â”‚           â”œâ”€â”€ mcp.go
+â”‚           â”œâ”€â”€ skills.go
+â”‚           â”œâ”€â”€ config.go
+â”‚           â”œâ”€â”€ review.go
+â”‚           â”œâ”€â”€ installing.go
+â”‚           â”œâ”€â”€ complete.go
+â”‚           â””â”€â”€ backup.go
+â”œâ”€â”€ e2e/
+â”‚   â”œâ”€â”€ Dockerfile.*                # Per-OS test containers
+â”‚   â””â”€â”€ e2e_test.sh
+â”œâ”€â”€ scripts/
+â”‚   â””â”€â”€ install.sh                  # curl-able installer script
+â”œâ”€â”€ go.mod
+â”œâ”€â”€ go.sum
+â”œâ”€â”€ README.md
+â”œâ”€â”€ LICENSE
+â””â”€â”€ .goreleaser.yaml
 ```
 
 ### 8.3 Agent Interface
 
-Every AI agent MUST implement a common interface. Methods return `ErrNotSupported` for capabilities the agent doesn't support (e.g., Xcode can't do MCP). The installer handles this gracefully — it skips unsupported steps and shows the user what WAS configured vs what COULDN'T be.
+Every AI agent MUST implement a common interface. Methods return `ErrNotSupported` for capabilities the agent doesn't support (e.g., Xcode can't do MCP). The installer handles this gracefully â€” it skips unsupported steps and shows the user what WAS configured vs what COULDN'T be.
 
 ```go
 type Agent interface {
@@ -1127,7 +1127,7 @@ type Agent interface {
 
     // Detection
     Detect() (*DetectionResult, error)     // Is it installed? What version? What config exists?
-    Install(ctx context.Context) error     // Install the agent binary (optional — user may already have it)
+    Install(ctx context.Context) error     // Install the agent binary (optional â€” user may already have it)
 
     // Ecosystem configuration (each returns ErrNotSupported if agent can't do it)
     ConfigureEngram() error                // Set up Engram integration (plugin, MCP, or instructions)
@@ -1147,7 +1147,7 @@ type Agent interface {
 }
 ```
 
-This interface is the **extension point** for community contributions. Adding support for a new AI agent (e.g., Antigravity, a new JetBrains AI, whatever comes next) means implementing this interface — nothing else changes.
+This interface is the **extension point** for community contributions. Adding support for a new AI agent (e.g., Antigravity, a new JetBrains AI, whatever comes next) means implementing this interface â€” nothing else changes.
 
 ### 8.4 Preset System
 
@@ -1184,10 +1184,10 @@ Persona is selected separately on the Persona screen and applied independently o
 | Method | Command | Priority |
 |--------|---------|----------|
 | curl (recommended) | `curl -sL get.gentleman.ai/ai \| sh` | P0 |
-| Homebrew | `brew install Gentleman-Programming/tap/gentle-ai` | P0 |
-| Go install | `go install github.com/Gentleman-Programming/gentle-ai/cmd/gentle-ai@latest` | P1 |
+| Homebrew | `brew install jonsanchezr/tap/agent-smith` | P0 |
+| Go install | `go install github.com/jonsanchezr/agent-smith/cmd/agent-smith@latest` | P1 |
 | Direct binary | Download from GitHub Releases | P1 |
-| winget (Windows) | `winget install gentle-ai` | P2 |
+| winget (Windows) | `winget install agent-smith` | P2 |
 
 ### 9.2 Cross-Compilation Targets
 
@@ -1215,9 +1215,9 @@ Persona is selected separately on the Persona screen and applied independently o
 ### 10.1 Self-Update
 
 **Requirements:**
-- R-UPDATE-01: The installer MUST support `gentle-ai update` to check for and install newer versions of itself
-- R-UPDATE-02: The installer MUST support `gentle-ai update --skills` to pull latest skill versions for all configured agents
-- R-UPDATE-03: The installer MUST support `gentle-ai update --engram` to update Engram to the latest version
+- R-UPDATE-01: The installer MUST support `agent-smith update` to check for and install newer versions of itself
+- R-UPDATE-02: The installer MUST support `agent-smith update --skills` to pull latest skill versions for all configured agents
+- R-UPDATE-03: The installer MUST support `agent-smith update --engram` to update Engram to the latest version
 - R-UPDATE-04: The installer SHOULD check for updates on launch and notify (not auto-update)
 
 ### 10.2 Config Sync
@@ -1237,17 +1237,17 @@ Persona is selected separately on the Persona screen and applied independently o
 When the installer completes with "Dev Stack + Polish" (`full-gentleman`) preset + Claude Code + OpenCode:
 
 **Claude Code:**
-- `~/.claude/CLAUDE.md` — Gentleman persona with SDD orchestrator
-- `~/.claude/settings.json` — Security-first permissions, Gentleman theme, vim mode, custom statusline, thinking verbs
-- `~/.claude/skills/` — All selected skills (SDD + coding skills)
-- `~/.claude/plugins/` — Engram plugin installed and active
-- `~/.claude.json` — Context7 MCP server configured
+- `~/.claude/CLAUDE.md` â€” Gentleman persona with SDD orchestrator
+- `~/.claude/settings.json` â€” Security-first permissions, Gentleman theme, vim mode, custom statusline, thinking verbs
+- `~/.claude/skills/` â€” All selected skills (SDD + coding skills)
+- `~/.claude/plugins/` â€” Engram plugin installed and active
+- `~/.claude.json` â€” Context7 MCP server configured
 
 **OpenCode:**
-- `~/.config/opencode/opencode.json` — Agents (gentleman, sdd-orchestrator), MCP servers (engram, context7), Engram plugin, Gentleman theme
-- `~/.config/opencode/skills/` — All selected skills mirrored
-- `~/.config/opencode/commands/` — SDD slash commands
-- `~/.config/opencode/plugins/` — Engram TypeScript plugin
+- `~/.config/opencode/opencode.json` â€” Agents (gentleman, sdd-orchestrator), MCP servers (engram, context7), Engram plugin, Gentleman theme
+- `~/.config/opencode/skills/` â€” All selected skills mirrored
+- `~/.config/opencode/commands/` â€” SDD slash commands
+- `~/.config/opencode/plugins/` â€” Engram TypeScript plugin
 
 **Engram:**
 - `engram` binary in PATH
@@ -1269,13 +1269,13 @@ When the installer completes with "Dev Stack + Polish" (`full-gentleman`) preset
 
 The completion screen MUST show:
 
-1. **Set your API keys** — exact commands/paths for each agent:
+1. **Set your API keys** â€” exact commands/paths for each agent:
    - Claude Code: `export ANTHROPIC_API_KEY=sk-...` (or link to auth docs)
    - OpenCode: auth plugin setup
    - Gemini: `export GEMINI_API_KEY=...`
-2. **Try it out** — first command to run per agent
-3. **Learn SDD** — brief explanation + link to SDD docs
-4. **Join the community** — Discord/YouTube links
+2. **Try it out** â€” first command to run per agent
+3. **Learn SDD** â€” brief explanation + link to SDD docs
+4. **Join the community** â€” Discord/YouTube links
 
 ---
 
@@ -1296,7 +1296,7 @@ The completion screen MUST show:
 ### 12.3 Reliability
 - R-REL-01: Every installation step MUST be idempotent (safe to re-run)
 - R-REL-02: If a step fails, the installer MUST continue with remaining steps and report failures at the end
-- R-REL-03: The installer MUST support `gentle-ai repair` to re-run failed steps
+- R-REL-03: The installer MUST support `agent-smith repair` to re-run failed steps
 - R-REL-04: The backup system MUST create timestamped snapshots before any config modification
 
 ### 12.4 Extensibility
@@ -1318,13 +1318,13 @@ The completion screen MUST show:
 |--------|---------------|----------------------|
 | Purpose | Dev environment (editors, shells, terminals) | AI development layer (agents, memory, skills) |
 | What it installs | Neovim, Fish/Zsh/Nushell, Tmux/Zellij, Ghostty/Kitty/etc. | Claude Code, OpenCode, Engram, SDD, MCP servers, skills |
-| Overlap | None — complementary tools | None — different layer |
-| Can use together | Yes — install Gentleman.Dots first for dev env, then Gentleman AI for AI layer | Same |
+| Overlap | None â€” complementary tools | None â€” different layer |
+| Can use together | Yes â€” install Gentleman.Dots first for dev env, then Gentleman AI for AI layer | Same |
 | Shared patterns | Go + Bubbletea + Lipgloss, multi-OS detection, backup system | Same architecture, consistent UX |
 
 **Requirements:**
 - R-DOTS-01: The installer SHOULD detect if Gentleman.Dots is already installed and acknowledge it ("Great, you already have Gentleman.Dots! This installer adds the AI layer on top.")
-- R-DOTS-02: The installer MUST work independently — Gentleman.Dots is NOT a prerequisite
+- R-DOTS-02: The installer MUST work independently â€” Gentleman.Dots is NOT a prerequisite
 - R-DOTS-03: The two installers SHOULD share the same Gentleman visual identity (theme, branding)
 
 ---
@@ -1333,14 +1333,14 @@ The completion screen MUST show:
 
 These are NOT requirements for v1 but should inform architectural decisions:
 
-1. **Team profiles** — Shareable config profiles for standardizing AI setup across a team
-2. **Plugin marketplace** — Browse and install community-created skills from a central registry
-3. **AI agent health dashboard** — TUI screen showing status of all installed agents, Engram memory stats, MCP server connectivity
-4. **Auto-detection of project stack** — When entering a project directory, suggest relevant skills to install
-5. **Migration tool** — Import settings from one agent to another (e.g., Cursor user switching to Claude Code)
-6. **Gentleman.Dots integration** — Combined installer that does BOTH dev environment + AI layer in one flow
-7. **Remote provisioning** — SSH-based installation on remote servers/VMs
-8. **Nix flake** — Declarative alternative to imperative installation (see Gentleman.Dots2 experiment)
+1. **Team profiles** â€” Shareable config profiles for standardizing AI setup across a team
+2. **Plugin marketplace** â€” Browse and install community-created skills from a central registry
+3. **AI agent health dashboard** â€” TUI screen showing status of all installed agents, Engram memory stats, MCP server connectivity
+4. **Auto-detection of project stack** â€” When entering a project directory, suggest relevant skills to install
+5. **Migration tool** â€” Import settings from one agent to another (e.g., Cursor user switching to Claude Code)
+6. **Gentleman.Dots integration** â€” Combined installer that does BOTH dev environment + AI layer in one flow
+7. **Remote provisioning** â€” SSH-based installation on remote servers/VMs
+8. **Nix flake** â€” Declarative alternative to imperative installation (see Gentleman.Dots2 experiment)
 
 ---
 
@@ -1351,14 +1351,14 @@ These are NOT requirements for v1 but should inform architectural decisions:
 | Time from curl to working AI environment | < 5 minutes |
 | Supported OS coverage | macOS + 3 Linux distros + WSL at launch |
 | Agent coverage | Claude Code + OpenCode at launch, 2+ more within 3 months |
-| Idempotency | 100% — re-running produces same result |
+| Idempotency | 100% â€” re-running produces same result |
 | User needs to manually edit configs after install | 0 files (except API keys) |
 
 ---
 
 ## 16. Open Questions
 
-1. **Naming**: `gentle-ai`, `gentle-ai`, `gai`, or something else? Should it be part of the `Gentleman-Programming` org or standalone?
+1. **Naming**: `agent-smith`, `agent-smith`, `gai`, or something else? Should it be part of the `jonsanchezr` org or standalone?
 2. **Skills registry**: Should skills be embedded in the binary, fetched from GitHub at install time, or pulled from a dedicated registry service?
 3. **Windows native**: How much effort to invest in native Windows (not WSL) support for v1? Most AI coding tools have limited Windows support anyway.
 4. **Config format**: Should the installer's own config (what was installed, preferences) be stored as JSON, YAML, or TOML? Where?
@@ -1378,7 +1378,7 @@ These are NOT requirements for v1 but should inform architectural decisions:
 | `gga` install | Installs GGA for one project | Code review only, no ecosystem |
 | Various dotfile managers | Stow, chezmoi, etc. | Generic, not AI-specific |
 
-**None of these solve the full problem.** Each handles one piece. This installer orchestrates ALL of them — Engram, SDD, GGA, skills, MCP, persona, theme — into a coherent, working AI development ecosystem across any agent the user chooses.
+**None of these solve the full problem.** Each handles one piece. This installer orchestrates ALL of them â€” Engram, SDD, GGA, skills, MCP, persona, theme â€” into a coherent, working AI development ecosystem across any agent the user chooses.
 
 ---
 
@@ -1386,30 +1386,31 @@ These are NOT requirements for v1 but should inform architectural decisions:
 
 ```bash
 # Dev Stack + Polish preset with Claude Code + OpenCode
-gentle-ai install --preset gentleman --agents claude-code,opencode
+agent-smith install --preset gentleman --agents claude-code,opencode
 
 # Memory Only setup, just Claude Code with basic security
-gentle-ai install --preset minimal --agents claude-code
+agent-smith install --preset minimal --agents claude-code
 
 # Team provisioning from shared profile
-gentle-ai install --profile ./team-ai-config.yaml
+agent-smith install --profile ./team-ai-config.yaml
 
 # Update all skills to latest
-gentle-ai update --skills
+agent-smith update --skills
 
 # Update Engram
-gentle-ai update --engram
+agent-smith update --engram
 
 # Backup current configs
-gentle-ai backup
+agent-smith backup
 
 # Restore from backup
-gentle-ai restore --list
-gentle-ai restore --id 2026-02-27-143022
+agent-smith restore --list
+agent-smith restore --id 2026-02-27-143022
 
 # Repair failed installation
-gentle-ai repair
+agent-smith repair
 
 # Show what's installed
-gentle-ai status
+agent-smith status
 ```
+

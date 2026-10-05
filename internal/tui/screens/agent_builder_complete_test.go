@@ -4,8 +4,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/agentbuilder"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
+	"github.com/jonsanchezr/agent-smith/v4/internal/agentbuilder"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
 )
 
 func TestRenderABComplete_NonEmpty(t *testing.T) {
@@ -103,3 +103,4 @@ func TestRenderABComplete_DoneOptionPresent(t *testing.T) {
 		t.Errorf("Done option not found; output:\n%s", out)
 	}
 }
+

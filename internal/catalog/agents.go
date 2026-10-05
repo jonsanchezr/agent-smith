@@ -1,6 +1,6 @@
 package catalog
 
-import "github.com/gentleman-programming/gentle-ai/v4/internal/model"
+import "github.com/jonsanchezr/agent-smith/v4/internal/model"
 
 type Agent struct {
 	ID         model.AgentID
@@ -33,10 +33,10 @@ var allAgents = []Agent{
 	{ID: model.AgentTrae, Name: "Trae IDE", Tier: model.TierFull, ConfigPath: "~/.trae"},
 	{ID: model.AgentHermes, Name: "Hermes", Tier: model.TierFull, ConfigPath: "~/.hermes"},
 	// Conductor is detection/catalog-only: its workspaces inherit Claude Code
-	// configuration, and Gentle AI writes no Conductor-specific files. The note
+	// configuration, and Agent Smith writes no Conductor-specific files. The note
 	// sets that expectation before the user confirms the install.
 	{ID: model.AgentConductor, Name: "Conductor", Tier: model.TierFull, ConfigPath: "~/.conductor",
-		ReviewNote: "Conductor workspaces inherit Claude Code configuration; Gentle AI writes no Conductor-specific files."},
+		ReviewNote: "Conductor workspaces inherit Claude Code configuration; Agent Smith writes no Conductor-specific files."},
 }
 
 // mvpAgents are the original MVP agents (Claude Code, OpenCode).
@@ -76,3 +76,4 @@ func IsSupportedAgent(agent model.AgentID) bool {
 
 	return false
 }
+

@@ -3,9 +3,9 @@
 // isolated from install, pipeline, planner, and config-sync code paths.
 //
 // Import boundary: this package MUST NOT import:
-//   - github.com/gentleman-programming/gentle-ai/v4/internal/pipeline
-//   - github.com/gentleman-programming/gentle-ai/v4/internal/planner
-//   - github.com/gentleman-programming/gentle-ai/v4/internal/cli
+//   - github.com/jonsanchezr/agent-smith/v4/internal/pipeline
+//   - github.com/jonsanchezr/agent-smith/v4/internal/planner
+//   - github.com/jonsanchezr/agent-smith/v4/internal/cli
 package upgrade
 
 import (
@@ -20,21 +20,21 @@ import (
 	"strings"
 	"time"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/agents"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/agents/claude"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/assets"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/backup"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/components/gga"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/components/legacyassets"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/components/opencodedefault"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/components/opencoderuntimeplugins"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/components/skills"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/components/theme"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/opencode"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/state"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/system"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/update"
+	"github.com/jonsanchezr/agent-smith/v4/internal/agents"
+	"github.com/jonsanchezr/agent-smith/v4/internal/agents/claude"
+	"github.com/jonsanchezr/agent-smith/v4/internal/assets"
+	"github.com/jonsanchezr/agent-smith/v4/internal/backup"
+	"github.com/jonsanchezr/agent-smith/v4/internal/components/gga"
+	"github.com/jonsanchezr/agent-smith/v4/internal/components/legacyassets"
+	"github.com/jonsanchezr/agent-smith/v4/internal/components/opencodedefault"
+	"github.com/jonsanchezr/agent-smith/v4/internal/components/opencoderuntimeplugins"
+	"github.com/jonsanchezr/agent-smith/v4/internal/components/skills"
+	"github.com/jonsanchezr/agent-smith/v4/internal/components/theme"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
+	"github.com/jonsanchezr/agent-smith/v4/internal/opencode"
+	"github.com/jonsanchezr/agent-smith/v4/internal/state"
+	"github.com/jonsanchezr/agent-smith/v4/internal/system"
+	"github.com/jonsanchezr/agent-smith/v4/internal/update"
 )
 
 // Package-level vars for testability — same pattern as internal/update/detect.go.
@@ -49,7 +49,7 @@ var snapshotCreator = func(snapshotDir string, paths []string) (backup.Manifest,
 	return backup.NewSnapshotter().Create(snapshotDir, paths)
 }
 
-// AppVersion is the gentle-ai version written into backup manifests created by
+// AppVersion is the agent-smith version written into backup manifests created by
 // the upgrade executor. Set by app.go before calling Execute so that upgrade
 // backups record the version that created them.
 // Default "dev" matches the ldflags default in app.Version.
@@ -125,11 +125,11 @@ var backupExcludeSubdirs = map[string]bool{
 	"tmp":                         true, // Antigravity temporary runtime artifacts
 }
 
-// configPathsForBackup returns the explicit Gentle AI-managed file paths that
+// configPathsForBackup returns the explicit Agent Smith-managed file paths that
 // the backup snapshot must include before any upgrade execution.
 //
 // This is intentionally NOT a recursive backup of agent config directories.
-// Upgrade backups are rollback artifacts for files Gentle AI may create or
+// Upgrade backups are rollback artifacts for files Agent Smith may create or
 // modify, not general-purpose backups of conversations, sessions, caches,
 // sockets, package installs, or other runtime state.
 //
@@ -137,7 +137,7 @@ var backupExcludeSubdirs = map[string]bool{
 // deliberately configured empty selection. Filesystem detection is used only for
 // missing or incidental pre-install state; unreadable state contributes no agent
 // paths. This prevents snapshot bloat from agent config dirs that the user never
-// actually installed via gentle-ai (issue #354: snapshots could reach ~25 GiB
+// actually installed via agent-smith (issue #354: snapshots could reach ~25 GiB
 // from unmanaged config dirs).
 func configPathsForBackup(homeDir string, diagnostics ...io.Writer) []string {
 	dw := firstWriter(diagnostics...)
@@ -441,7 +441,7 @@ func writeBackupDiagnostic(w io.Writer, format string, args ...any) {
 //
 // The backup snapshot is created before any executable upgrade — this is the
 // architectural guarantee that config is safe even if an upgrade fails mid-way.
-// Windows gentle-ai provenance is preflighted first because its manual fallback
+// Windows agent-smith provenance is preflighted first because its manual fallback
 // must remain a true zero-mutation outcome.
 func Execute(ctx context.Context, results []update.UpdateResult, profile system.PlatformProfile, homeDir string, dryRun bool, progress ...io.Writer) UpgradeReport {
 	options := ExecuteOptions{}
@@ -490,7 +490,7 @@ func ExecuteWithOptions(ctx context.Context, results []update.UpdateResult, prof
 	backupWarning := ""
 	if !dryRun && len(executable) > 0 && !options.SkipBackup {
 		sp := NewSpinner(pw, "Creating pre-upgrade backup")
-		snapshotDir := filepath.Join(homeDir, ".gentle-ai", "backups",
+		snapshotDir := filepath.Join(homeDir, ".agent-smith", "backups",
 			fmt.Sprintf("upgrade-%s", time.Now().UTC().Format("20060102T150405Z")))
 		manifest, err := snapshotCreator(snapshotDir, configPathsForBackup(homeDir, options.BackupDiagnostics))
 		if err != nil {
@@ -516,7 +516,7 @@ func ExecuteWithOptions(ctx context.Context, results []update.UpdateResult, prof
 		// snapshot fails due to disk pressure caused by prior accumulated
 		// backups, pruning is the recovery path. Non-fatal: a prune failure
 		// must not prevent the upgrade from completing.
-		backupRoot := filepath.Join(homeDir, ".gentle-ai", "backups")
+		backupRoot := filepath.Join(homeDir, ".agent-smith", "backups")
 		if _, pruneErr := backup.Prune(backupRoot, backup.DefaultRetentionCount); pruneErr != nil {
 			log.Printf("backup: prune: %v", pruneErr)
 		}
@@ -533,7 +533,7 @@ func ExecuteWithOptions(ctx context.Context, results []update.UpdateResult, prof
 			NewVersion: r.LatestVersion,
 			Method:     effectiveMethod(r.Tool, profile),
 			Status:     UpgradeSkipped,
-			ManualHint: fmt.Sprintf("source build — upgrade manually or install a release binary from https://github.com/Gentleman-Programming/%s/releases", r.Tool.Repo),
+			ManualHint: fmt.Sprintf("source build — upgrade manually or install a release binary from https://github.com/jonsanchezr/%s/releases", r.Tool.Repo),
 		})
 	}
 
@@ -604,7 +604,7 @@ func preflightWindowsGentleAIUpgrades(executable []executableUpdate, profile sys
 	skipped := make([]ToolUpgradeResult, 0)
 	for _, candidate := range executable {
 		r := candidate.result
-		if profile.OS != "windows" || r.Tool.Name != "gentle-ai" || effectiveMethod(r.Tool, profile) != update.InstallGoInstall {
+		if profile.OS != "windows" || r.Tool.Name != "agent-smith" || effectiveMethod(r.Tool, profile) != update.InstallGoInstall {
 			remaining = append(remaining, candidate)
 			continue
 		}
@@ -679,12 +679,12 @@ func executeOne(ctx context.Context, r update.UpdateResult, profile system.Platf
 }
 
 // effectiveMethod resolves the actual upgrade strategy for a tool on a given platform.
-// Priority order: plugin → brew-owned package → gentle-ai self-upgrade policy →
+// Priority order: plugin → brew-owned package → agent-smith self-upgrade policy →
 // go-install → declared method.
 //
 //  1. OpenCode plugins are always handled by their own method — never overridden.
 //  2. Homebrew is used only when Homebrew confirms it owns this specific tool.
-//  3. gentle-ai's own upgrade never falls through to the generic rules below; it
+//  3. agent-smith's own upgrade never falls through to the generic rules below; it
 //     is resolved entirely by gentleAISelfUpgradeMethod, which is what keeps
 //     Linux and macOS on the signed release download.
 //  4. For every other tool: when Go is available on PATH and the tool declares a
@@ -697,7 +697,7 @@ func effectiveMethod(tool update.ToolInfo, profile system.PlatformProfile) updat
 	if profile.PackageManager == "brew" && homebrewPackageInstalled(tool.Name) {
 		return update.InstallBrew
 	}
-	if tool.Name == "gentle-ai" {
+	if tool.Name == "agent-smith" {
 		return gentleAISelfUpgradeMethod(tool, profile)
 	}
 	if profile.GoAvailable && tool.GoImportPath != "" {
@@ -706,7 +706,7 @@ func effectiveMethod(tool update.ToolInfo, profile system.PlatformProfile) updat
 	return tool.InstallMethod
 }
 
-// gentleAISelfUpgradeMethod resolves how gentle-ai upgrades itself, once
+// gentleAISelfUpgradeMethod resolves how agent-smith upgrades itself, once
 // Homebrew ownership has already been ruled out.
 //
 // Trust anchors differ by platform, and that is the whole point of this
@@ -714,9 +714,9 @@ func effectiveMethod(tool update.ToolInfo, profile system.PlatformProfile) updat
 //
 //   - Linux and macOS publish signed release binaries. Those are downloaded over
 //     an authenticated connection and verified with minisign, so they always
-//     return InstallBinary. This function is the ONLY place gentle-ai's method is
+//     return InstallBinary. This function is the ONLY place agent-smith's method is
 //     decided, which is what makes that guarantee structural rather than
-//     incidental: gentle-ai never reaches the generic
+//     incidental: agent-smith never reaches the generic
 //     `GoAvailable && GoImportPath != ""` rule, so declaring a GoImportPath for
 //     the Windows path below cannot silently move Linux or macOS off minisign.
 //     Regression guards: TestGentleAIOnLinuxNeverRoutesToGoInstall and
@@ -748,3 +748,4 @@ func gentleAISelfUpgradeMethod(tool update.ToolInfo, profile system.PlatformProf
 	}
 	return update.InstallBinary
 }
+

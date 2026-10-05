@@ -1,4 +1,4 @@
-name: Bug Report
+﻿name: Bug Report
 description: File a bug report for Gentle AI
 labels: ["type:bug", "status:needs-review"]
 
@@ -6,9 +6,9 @@ body:
   - type: markdown
     attributes:
       value: |
-        ## 📋 How this works
+        ## ðŸ“‹ How this works
 
-        1. **Submit** this bug report → it gets the `status:needs-review` label automatically
+        1. **Submit** this bug report â†’ it gets the `status:needs-review` label automatically
         2. **Review** precedes approval: adding `status:approved` follows the canonical issue-creation workflow contract, requiring a current direct human instruction for the exact target/action and verified actor `MAINTAIN`/`ADMIN` capability (or a separately authorized closure)
         3. **Only then** should you (or anyone) open a PR to fix it
 
@@ -19,7 +19,7 @@ body:
     attributes:
       label: Pre-flight Checklist
       options:
-        - label: I have searched [existing issues](https://github.com/Gentleman-Programming/gentle-ai/issues) and this is not a duplicate
+        - label: I have searched [existing issues](https://github.com/jonsanchezr/agent-smith/issues) and this is not a duplicate
           required: true
         - label: I understand that PRs will be rejected if the linked issue does not have `status:approved`
           required: true
@@ -27,7 +27,7 @@ body:
   - type: textarea
     id: description
     attributes:
-      label: 📝 Bug Description
+      label: ðŸ“ Bug Description
       description: A clear and concise description of what the bug is.
       placeholder: Describe the bug...
     validations:
@@ -36,7 +36,7 @@ body:
   - type: textarea
     id: steps
     attributes:
-      label: 🔄 Steps to Reproduce
+      label: ðŸ”„ Steps to Reproduce
       description: Steps to reproduce the behavior.
       value: |
         1. 
@@ -48,7 +48,7 @@ body:
   - type: textarea
     id: expected
     attributes:
-      label: ✅ Expected Behavior
+      label: âœ… Expected Behavior
       description: What did you expect to happen?
     validations:
       required: true
@@ -56,7 +56,7 @@ body:
   - type: textarea
     id: actual
     attributes:
-      label: ❌ Actual Behavior
+      label: âŒ Actual Behavior
       description: What actually happened?
     validations:
       required: true
@@ -65,7 +65,7 @@ body:
     attributes:
       value: |
         ---
-        ## 🖥️ Environment
+        ## ðŸ–¥ï¸ Environment
 
   - type: input
     id: version
@@ -109,7 +109,7 @@ body:
   - type: dropdown
     id: area
     attributes:
-      label: 📋 Affected Area
+      label: ðŸ“‹ Affected Area
       options:
         - CLI (commands, flags)
         - TUI (terminal UI)
@@ -125,7 +125,7 @@ body:
   - type: textarea
     id: logs
     attributes:
-      label: 💡 Logs / Error Output
+      label: ðŸ’¡ Logs / Error Output
       description: Paste any relevant log output. This will be auto-formatted as code.
       render: shell
     validations:
@@ -138,3 +138,4 @@ body:
       description: Add any other context about the problem here (screenshots, config files, etc.)
     validations:
       required: false
+

@@ -4,7 +4,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/reviewtransaction"
+	"github.com/jonsanchezr/agent-smith/v4/internal/reviewtransaction"
 )
 
 // Coming back after switching reviews off, the operator sees "scope-changed"
@@ -31,7 +31,7 @@ func TestScopeChangedDenialNamesTheUncoveredScopeBeforeTheMechanism(t *testing.T
 	if !strings.Contains(message, "no terminal receipt covers") {
 		t.Errorf("denial names the mechanism but not the situation.\n got: %s", message)
 	}
-	if !strings.Contains(message, "gentle-ai review recover") {
+	if !strings.Contains(message, "agent-smith review recover") {
 		t.Errorf("denial lost its recovery.\n got: %s", message)
 	}
 	assertNamesNoDottedOperation(t, message)
@@ -52,3 +52,4 @@ func TestScopeChangedDenialSaysNothingAboutScopeWithoutADerivedCount(t *testing.
 		t.Fatalf("denial invented a scope it never derived: %s", message)
 	}
 }
+

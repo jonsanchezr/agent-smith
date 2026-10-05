@@ -9,18 +9,18 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/agents"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/agents/antigravity"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/agents/claude"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/agents/codex"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/agents/hermes"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/agents/kilocode"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/agents/kimi"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/agents/openclaw"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/agents/opencode"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/assets"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/components/filemerge"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
+	"github.com/jonsanchezr/agent-smith/v4/internal/agents"
+	"github.com/jonsanchezr/agent-smith/v4/internal/agents/antigravity"
+	"github.com/jonsanchezr/agent-smith/v4/internal/agents/claude"
+	"github.com/jonsanchezr/agent-smith/v4/internal/agents/codex"
+	"github.com/jonsanchezr/agent-smith/v4/internal/agents/hermes"
+	"github.com/jonsanchezr/agent-smith/v4/internal/agents/kilocode"
+	"github.com/jonsanchezr/agent-smith/v4/internal/agents/kimi"
+	"github.com/jonsanchezr/agent-smith/v4/internal/agents/openclaw"
+	"github.com/jonsanchezr/agent-smith/v4/internal/agents/opencode"
+	"github.com/jonsanchezr/agent-smith/v4/internal/assets"
+	"github.com/jonsanchezr/agent-smith/v4/internal/components/filemerge"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
 )
 
 func antigravityAdapter() agents.Adapter { return antigravity.NewAdapter() }
@@ -289,10 +289,10 @@ func TestInjectClaudeGentlemanWritesSectionWithRealContent(t *testing.T) {
 	}
 
 	text := string(content)
-	if !strings.Contains(text, "<!-- gentle-ai:persona -->") {
+	if !strings.Contains(text, "<!-- agent-smith:persona -->") {
 		t.Fatal("CLAUDE.md missing open marker for persona")
 	}
-	if !strings.Contains(text, "<!-- /gentle-ai:persona -->") {
+	if !strings.Contains(text, "<!-- /agent-smith:persona -->") {
 		t.Fatal("CLAUDE.md missing close marker for persona")
 	}
 
@@ -727,7 +727,7 @@ func TestInjectOpenCodeGentlemanWritesAgentsFile(t *testing.T) {
 	if !strings.Contains(text, "Senior Architect") {
 		t.Fatal("AGENTS.md missing real persona content")
 	}
-	if !strings.Contains(text, "<!-- gentle-ai:persona -->") {
+	if !strings.Contains(text, "<!-- agent-smith:persona -->") {
 		t.Fatal("AGENTS.md missing persona marker")
 	}
 }
@@ -757,9 +757,9 @@ func TestInjectAntigravityGentlemanWritesMarkedPersonaSection(t *testing.T) {
 	text := string(content)
 	for _, want := range []string{
 		"# User Gemini rules",
-		"<!-- gentle-ai:persona -->",
+		"<!-- agent-smith:persona -->",
 		"Senior Architect",
-		"<!-- /gentle-ai:persona -->",
+		"<!-- /agent-smith:persona -->",
 	} {
 		if !strings.Contains(text, want) {
 			t.Fatalf("GEMINI.md missing %q; got:\n%s", want, text)
@@ -778,7 +778,7 @@ func TestInjectAntigravityGentlemanWritesMarkedPersonaSection(t *testing.T) {
 	if err != nil {
 		t.Fatalf("ReadFile() after second inject error = %v", err)
 	}
-	if got := strings.Count(string(content), "<!-- gentle-ai:persona -->"); got != 1 {
+	if got := strings.Count(string(content), "<!-- agent-smith:persona -->"); got != 1 {
 		t.Fatalf("persona marker count = %d, want 1", got)
 	}
 }
@@ -800,8 +800,8 @@ func TestInjectOpenCodeGentlemanDoesNotCreateSDDConductor(t *testing.T) {
 	if strings.Contains(text, `"sdd-orchestrator"`) {
 		t.Fatal("persona injection must not create legacy sdd-orchestrator conductor")
 	}
-	if strings.Contains(text, `"gentle-orchestrator"`) {
-		t.Fatal("persona injection must not create SDD conductor; SDD component owns gentle-orchestrator")
+	if strings.Contains(text, `"agent-smith-orchestrator"`) {
+		t.Fatal("persona injection must not create SDD conductor; SDD component owns agent-smith-orchestrator")
 	}
 	if !strings.Contains(text, `"gentleman"`) {
 		t.Fatal("persona injection should still create the gentleman persona agent")
@@ -914,7 +914,7 @@ func TestInjectOpenCodePreservesUserContentInsteadOfOverwriting(t *testing.T) {
 	if !strings.Contains(text, "Do not overwrite this file.") {
 		t.Fatal("AGENTS.md user content was overwritten")
 	}
-	if !strings.Contains(text, "<!-- gentle-ai:persona -->") {
+	if !strings.Contains(text, "<!-- agent-smith:persona -->") {
 		t.Fatal("AGENTS.md missing managed persona section after inject")
 	}
 }
@@ -941,7 +941,7 @@ func TestInjectOpenClawWritesPersonaToWorkspaceSoulAndNotAgents(t *testing.T) {
 		t.Fatalf("ReadFile(SOUL.md) error = %v", err)
 	}
 	soulText := string(soulContent)
-	if !strings.Contains(soulText, "<!-- gentle-ai:persona -->") {
+	if !strings.Contains(soulText, "<!-- agent-smith:persona -->") {
 		t.Fatalf("SOUL.md missing managed persona marker; got:\n%s", soulText)
 	}
 	if !strings.Contains(soulText, "Senior Architect") {
@@ -959,7 +959,7 @@ func TestInjectOpenClawWritesPersonaToWorkspaceSoulAndNotAgents(t *testing.T) {
 	if !strings.Contains(agentsText, "Keep SDD here.") {
 		t.Fatalf("AGENTS.md user protocol content was modified; got:\n%s", agentsText)
 	}
-	if strings.Contains(agentsText, "<!-- gentle-ai:persona -->") || strings.Contains(agentsText, "Senior Architect") {
+	if strings.Contains(agentsText, "<!-- agent-smith:persona -->") || strings.Contains(agentsText, "Senior Architect") {
 		t.Fatalf("OpenClaw persona must not be written to AGENTS.md; got:\n%s", agentsText)
 	}
 }
@@ -995,7 +995,7 @@ func TestInjectOpenClawSoulPersonaIsIdempotentAndPreservesUserContent(t *testing
 	if !strings.Contains(text, "Keep my tone note.") {
 		t.Fatalf("SOUL.md user content was lost; got:\n%s", text)
 	}
-	if count := strings.Count(text, "<!-- gentle-ai:persona -->"); count != 1 {
+	if count := strings.Count(text, "<!-- agent-smith:persona -->"); count != 1 {
 		t.Fatalf("SOUL.md has %d persona markers, want exactly 1", count)
 	}
 }
@@ -1042,7 +1042,7 @@ func TestInjectOpenCodeDoesNotStripLookalikeUserContent(t *testing.T) {
 	if !strings.Contains(text, "Do not delete this custom preface.") {
 		t.Fatal("OpenCode AGENTS.md lookalike user content was stripped")
 	}
-	if !strings.Contains(text, "<!-- gentle-ai:persona -->") {
+	if !strings.Contains(text, "<!-- agent-smith:persona -->") {
 		t.Fatal("AGENTS.md missing managed persona section after inject")
 	}
 }
@@ -1079,7 +1079,7 @@ func TestInjectOpenCodePreservesUserPrefaceAboveATLBlock(t *testing.T) {
 	if strings.Contains(text, "BEGIN:agent-teams-lite") {
 		t.Fatal("ATL block should have been stripped by StripLegacyATLBlock")
 	}
-	if !strings.Contains(text, "<!-- gentle-ai:persona -->") {
+	if !strings.Contains(text, "<!-- agent-smith:persona -->") {
 		t.Fatal("AGENTS.md missing managed persona section")
 	}
 }
@@ -1109,9 +1109,9 @@ func TestInjectOpenCodeReplacesExactLegacyAssetWithoutDuplication(t *testing.T) 
 
 	text := string(content)
 	// Must have exactly ONE persona marker — no duplication.
-	if strings.Count(text, "<!-- gentle-ai:persona -->") != 1 {
+	if strings.Count(text, "<!-- agent-smith:persona -->") != 1 {
 		t.Fatalf("expected exactly 1 persona marker, got %d — legacy asset was not replaced cleanly",
-			strings.Count(text, "<!-- gentle-ai:persona -->"))
+			strings.Count(text, "<!-- agent-smith:persona -->"))
 	}
 	if !strings.Contains(text, "Senior Architect") {
 		t.Fatal("persona content missing after replacing legacy asset")
@@ -1129,7 +1129,7 @@ func TestInjectOpenCodePreservesUserPrefaceAboveManagedMarkers(t *testing.T) {
 	// existing managed markers. This is the exact scenario where aggressive
 	// legacy stripping would destroy user content.
 	existing := "## Rules\n\n- My team's custom rules.\n\n## Personality\n\nSenior Architect in my org.\n\n" +
-		"<!-- gentle-ai:engram-protocol -->\nEngram protocol here.\n<!-- /gentle-ai:engram-protocol -->\n"
+		"<!-- agent-smith:engram-protocol -->\nEngram protocol here.\n<!-- /agent-smith:engram-protocol -->\n"
 	if err := os.WriteFile(path, []byte(existing), 0o644); err != nil {
 		t.Fatalf("WriteFile() error = %v", err)
 	}
@@ -1148,10 +1148,10 @@ func TestInjectOpenCodePreservesUserPrefaceAboveManagedMarkers(t *testing.T) {
 	if !strings.Contains(text, "My team's custom rules.") {
 		t.Fatal("user preface above managed markers was stripped — should be preserved")
 	}
-	if !strings.Contains(text, "<!-- gentle-ai:persona -->") {
+	if !strings.Contains(text, "<!-- agent-smith:persona -->") {
 		t.Fatal("AGENTS.md missing managed persona section after inject")
 	}
-	if !strings.Contains(text, "<!-- gentle-ai:engram-protocol -->") {
+	if !strings.Contains(text, "<!-- agent-smith:engram-protocol -->") {
 		t.Fatal("existing engram section was lost")
 	}
 }
@@ -1172,7 +1172,7 @@ func TestInjectOpenCodeNeutralPreservesManagedSections(t *testing.T) {
 	if err != nil {
 		t.Fatalf("ReadFile() error = %v", err)
 	}
-	withSections := string(existing) + "\n\n<!-- gentle-ai:sdd-orchestrator -->\nSDD orchestrator content here\n<!-- /gentle-ai:sdd-orchestrator -->\n\n<!-- gentle-ai:engram-protocol -->\nEngram protocol content here\n<!-- /gentle-ai:engram-protocol -->\n"
+	withSections := string(existing) + "\n\n<!-- agent-smith:sdd-orchestrator -->\nSDD orchestrator content here\n<!-- /agent-smith:sdd-orchestrator -->\n\n<!-- agent-smith:engram-protocol -->\nEngram protocol content here\n<!-- /agent-smith:engram-protocol -->\n"
 	if err := os.WriteFile(path, []byte(withSections), 0o644); err != nil {
 		t.Fatalf("WriteFile() error = %v", err)
 	}
@@ -1201,10 +1201,10 @@ func TestInjectOpenCodeNeutralPreservesManagedSections(t *testing.T) {
 	}
 
 	// Managed sections MUST be preserved
-	if !strings.Contains(text, "<!-- gentle-ai:sdd-orchestrator -->") {
+	if !strings.Contains(text, "<!-- agent-smith:sdd-orchestrator -->") {
 		t.Fatal("AGENTS.md lost SDD orchestrator section after switching to neutral persona")
 	}
-	if !strings.Contains(text, "<!-- gentle-ai:engram-protocol -->") {
+	if !strings.Contains(text, "<!-- agent-smith:engram-protocol -->") {
 		t.Fatal("AGENTS.md lost engram protocol section after switching to neutral persona")
 	}
 
@@ -1339,7 +1339,7 @@ func TestInjectVSCodeNeutralPreservesManagedSections(t *testing.T) {
 	if err != nil {
 		t.Fatalf("ReadFile() error = %v", err)
 	}
-	withSections := string(existing) + "\n\n<!-- gentle-ai:sdd-orchestrator -->\nSDD content\n<!-- /gentle-ai:sdd-orchestrator -->\n"
+	withSections := string(existing) + "\n\n<!-- agent-smith:sdd-orchestrator -->\nSDD content\n<!-- /agent-smith:sdd-orchestrator -->\n"
 	if err := os.WriteFile(path, []byte(withSections), 0o644); err != nil {
 		t.Fatalf("WriteFile() error = %v", err)
 	}
@@ -1361,7 +1361,7 @@ func TestInjectVSCodeNeutralPreservesManagedSections(t *testing.T) {
 	if strings.Contains(text, "Rioplatense") {
 		t.Fatal("instructions file has Rioplatense language in neutral persona")
 	}
-	if !strings.Contains(text, "<!-- gentle-ai:sdd-orchestrator -->") {
+	if !strings.Contains(text, "<!-- agent-smith:sdd-orchestrator -->") {
 		t.Fatal("instructions file lost SDD section after switching to neutral persona")
 	}
 	if !strings.Contains(text, "---\nname:") {
@@ -1383,7 +1383,7 @@ func TestInjectNeutralPreservesWhenMarkerAtByteZero(t *testing.T) {
 	}
 
 	// File starts DIRECTLY with a managed marker at byte 0 — no persona preamble.
-	markerOnly := "<!-- gentle-ai:sdd-orchestrator -->\nSDD content\n<!-- /gentle-ai:sdd-orchestrator -->\n"
+	markerOnly := "<!-- agent-smith:sdd-orchestrator -->\nSDD content\n<!-- /agent-smith:sdd-orchestrator -->\n"
 	if err := os.WriteFile(promptPath, []byte(markerOnly), 0o644); err != nil {
 		t.Fatalf("WriteFile() error = %v", err)
 	}
@@ -1402,7 +1402,7 @@ func TestInjectNeutralPreservesWhenMarkerAtByteZero(t *testing.T) {
 	if !strings.Contains(text, "Senior Architect") {
 		t.Fatal("missing neutral persona content")
 	}
-	if !strings.Contains(text, "<!-- gentle-ai:sdd-orchestrator -->") {
+	if !strings.Contains(text, "<!-- agent-smith:sdd-orchestrator -->") {
 		t.Fatal("SDD section destroyed when marker was at byte 0")
 	}
 }
@@ -1424,7 +1424,7 @@ func TestInjectNeutralIdempotentWithManagedSections(t *testing.T) {
 	// Simulate a file with neutral persona + managed sections.
 	// Use a fingerprint from the real neutral asset so the test is realistic.
 	neutralContent := assets.MustRead("generic/persona-neutral.md")
-	initial := neutralContent + "\n\n<!-- gentle-ai:sdd-orchestrator -->\nSDD content\n<!-- /gentle-ai:sdd-orchestrator -->\n\n<!-- gentle-ai:engram-protocol -->\nEngram content\n<!-- /gentle-ai:engram-protocol -->\n"
+	initial := neutralContent + "\n\n<!-- agent-smith:sdd-orchestrator -->\nSDD content\n<!-- /agent-smith:sdd-orchestrator -->\n\n<!-- agent-smith:engram-protocol -->\nEngram content\n<!-- /agent-smith:engram-protocol -->\n"
 	if err := os.WriteFile(promptPath, []byte(initial), 0o644); err != nil {
 		t.Fatalf("WriteFile() error = %v", err)
 	}
@@ -1452,13 +1452,13 @@ func TestInjectNeutralIdempotentWithManagedSections(t *testing.T) {
 	text := string(content)
 
 	// Verify no duplication
-	if strings.Count(text, "<!-- gentle-ai:sdd-orchestrator -->") != 1 {
+	if strings.Count(text, "<!-- agent-smith:sdd-orchestrator -->") != 1 {
 		t.Fatal("SDD section duplicated after idempotent neutral inject")
 	}
 	if strings.Count(text, "## Rules") != 1 {
 		t.Fatal("neutral persona duplicated after idempotent inject")
 	}
-	if strings.Count(text, "<!-- gentle-ai:engram-protocol -->") != 1 {
+	if strings.Count(text, "<!-- agent-smith:engram-protocol -->") != 1 {
 		t.Fatal("engram section duplicated after idempotent neutral inject")
 	}
 }
@@ -1579,7 +1579,7 @@ func TestInjectCursorGentlemanWritesRulesFileWithRealContent(t *testing.T) {
 	}
 
 	// Verify the generic persona content was used — not just neutral one-liner.
-	path := filepath.Join(home, ".cursor", "rules", "gentle-ai.mdc")
+	path := filepath.Join(home, ".cursor", "rules", "agent-smith.mdc")
 	content, readErr := os.ReadFile(path)
 	if readErr != nil {
 		t.Fatalf("ReadFile(%q) error = %v", path, readErr)
@@ -1702,7 +1702,7 @@ func TestInjectClaudeAutoHealsStaleFreeTextPersona(t *testing.T) {
 
 	// Simulate a stale install: free-text persona block at top, then a different
 	// marked section below (e.g., from a previous SDD install).
-	stalePreamble := legacyClaudePersonaBlock + "\n<!-- gentle-ai:sdd -->\nOld SDD content.\n<!-- /gentle-ai:sdd -->\n"
+	stalePreamble := legacyClaudePersonaBlock + "\n<!-- agent-smith:sdd -->\nOld SDD content.\n<!-- /agent-smith:sdd -->\n"
 	if err := os.WriteFile(claudeMD, []byte(stalePreamble), 0o644); err != nil {
 		t.Fatalf("WriteFile error = %v", err)
 	}
@@ -1722,15 +1722,15 @@ func TestInjectClaudeAutoHealsStaleFreeTextPersona(t *testing.T) {
 	text := string(content)
 
 	// The file should now have the persona inside markers, not as free text.
-	if !strings.Contains(text, "<!-- gentle-ai:persona -->") {
+	if !strings.Contains(text, "<!-- agent-smith:persona -->") {
 		t.Fatal("CLAUDE.md missing persona marker after heal")
 	}
-	if !strings.Contains(text, "<!-- /gentle-ai:persona -->") {
+	if !strings.Contains(text, "<!-- /agent-smith:persona -->") {
 		t.Fatal("CLAUDE.md missing persona close marker after heal")
 	}
 
 	// The existing SDD section must be preserved.
-	if !strings.Contains(text, "<!-- gentle-ai:sdd -->") {
+	if !strings.Contains(text, "<!-- agent-smith:sdd -->") {
 		t.Fatal("CLAUDE.md lost the sdd section during heal")
 	}
 	if !strings.Contains(text, "Old SDD content.") {
@@ -1744,8 +1744,8 @@ func TestInjectClaudeAutoHealsStaleFreeTextPersona(t *testing.T) {
 		t.Fatal("CLAUDE.md still contains legacy 'Senior Architect' text — legacy block not fully stripped")
 	}
 
-	openMarkerIdx := strings.Index(text, "<!-- gentle-ai:persona -->")
-	closeMarkerIdx := strings.Index(text, "<!-- /gentle-ai:persona -->")
+	openMarkerIdx := strings.Index(text, "<!-- agent-smith:persona -->")
+	closeMarkerIdx := strings.Index(text, "<!-- /agent-smith:persona -->")
 	if openMarkerIdx < 0 || closeMarkerIdx < 0 || closeMarkerIdx < openMarkerIdx {
 		t.Fatal("CLAUDE.md missing a valid persona marker section after heal")
 	}
@@ -1785,12 +1785,12 @@ func TestInjectClaudeAutoHealStalePersonaOnlyFile(t *testing.T) {
 	text := string(content)
 
 	// Must have markers now.
-	if !strings.Contains(text, "<!-- gentle-ai:persona -->") {
+	if !strings.Contains(text, "<!-- agent-smith:persona -->") {
 		t.Fatal("CLAUDE.md missing persona marker")
 	}
 
 	// Must NOT have the legacy free-text block before markers.
-	openMarkerIdx := strings.Index(text, "<!-- gentle-ai:persona -->")
+	openMarkerIdx := strings.Index(text, "<!-- agent-smith:persona -->")
 	if openMarkerIdx >= 0 {
 		before := text[:openMarkerIdx]
 		if strings.Contains(before, "## Rules") {
@@ -1840,7 +1840,7 @@ func TestInjectClaudeHealDoesNotTouchNonPersonaContent(t *testing.T) {
 		t.Fatal("user content was erased — heal was too aggressive")
 	}
 	// Persona section must be appended.
-	if !strings.Contains(text, "<!-- gentle-ai:persona -->") {
+	if !strings.Contains(text, "<!-- agent-smith:persona -->") {
 		t.Fatal("persona section not appended")
 	}
 }
@@ -3360,7 +3360,7 @@ func TestRemoveJSONKeyIfValueScenarios(t *testing.T) {
 }
 
 // TestInjectHermesGentlemanWritesSOULMD verifies that Inject writes the Hermes
-// gentleman persona into ~/.hermes/SOUL.md with <!-- gentle-ai:persona --> markers.
+// gentleman persona into ~/.hermes/SOUL.md with <!-- agent-smith:persona --> markers.
 func TestInjectHermesGentlemanWritesSOULMD(t *testing.T) {
 	home := t.TempDir()
 	adapter := hermesAdapter()
@@ -3380,11 +3380,11 @@ func TestInjectHermesGentlemanWritesSOULMD(t *testing.T) {
 	}
 	text := string(content)
 
-	if !strings.Contains(text, "<!-- gentle-ai:persona -->") {
-		t.Fatal("SOUL.md missing <!-- gentle-ai:persona --> open marker")
+	if !strings.Contains(text, "<!-- agent-smith:persona -->") {
+		t.Fatal("SOUL.md missing <!-- agent-smith:persona --> open marker")
 	}
-	if !strings.Contains(text, "<!-- /gentle-ai:persona -->") {
-		t.Fatal("SOUL.md missing <!-- /gentle-ai:persona --> close marker")
+	if !strings.Contains(text, "<!-- /agent-smith:persona -->") {
+		t.Fatal("SOUL.md missing <!-- /agent-smith:persona --> close marker")
 	}
 	if strings.Contains(text, availableSkillsIsAuthoritative) {
 		t.Fatal("SOUL.md contains the generic <available_skills> instruction — Hermes-specific asset not used")
@@ -3415,8 +3415,8 @@ func TestInjectHermesNeutralWritesSOULMD(t *testing.T) {
 	}
 	text := string(content)
 
-	if !strings.Contains(text, "<!-- gentle-ai:persona -->") {
-		t.Fatal("SOUL.md missing <!-- gentle-ai:persona --> open marker")
+	if !strings.Contains(text, "<!-- agent-smith:persona -->") {
+		t.Fatal("SOUL.md missing <!-- agent-smith:persona --> open marker")
 	}
 	if strings.Contains(text, availableSkillsIsAuthoritative) {
 		t.Fatal("SOUL.md contains the generic <available_skills> instruction — generic neutral used instead of Hermes-specific")
@@ -3424,9 +3424,9 @@ func TestInjectHermesNeutralWritesSOULMD(t *testing.T) {
 }
 
 // TestHermesPersonaAssetsContainIdentitySection verifies that both Hermes persona
-// assets include an explicit ## Identity section that names "Gentle AI" and "Hermes".
+// assets include an explicit ## Identity section that names "Agent Smith" and "Hermes".
 // This ensures that when a user asks "who are you?" the agent does not fall back to a
-// generic assistant identity — it answers as Gentle AI running on Hermes Agent.
+// generic assistant identity — it answers as Agent Smith running on Hermes Agent.
 func TestHermesPersonaAssetsContainIdentitySection(t *testing.T) {
 	paths := []string{
 		"hermes/persona-gentleman.md",
@@ -3440,8 +3440,8 @@ func TestHermesPersonaAssetsContainIdentitySection(t *testing.T) {
 			if !strings.Contains(content, "## Identity") {
 				t.Fatalf("%s missing ## Identity section", path)
 			}
-			if !strings.Contains(content, "Gentle AI") {
-				t.Fatalf("%s ## Identity section must mention \"Gentle AI\"", path)
+			if !strings.Contains(content, "Agent Smith") {
+				t.Fatalf("%s ## Identity section must mention \"Agent Smith\"", path)
 			}
 			if !strings.Contains(content, "Hermes") {
 				t.Fatalf("%s ## Identity section must mention \"Hermes\"", path)
@@ -3741,7 +3741,7 @@ func codexAgentsMDPath(home string) string {
 
 // TestInjectCodexGentlemanFreshInstallWrapsPersonaInMarkers is the #981
 // regression test: a fresh Codex persona install must write the persona
-// inside a managed <!-- gentle-ai:persona --> marker section in
+// inside a managed <!-- agent-smith:persona --> marker section in
 // ~/.codex/AGENTS.md, not as markerless prose that owns the whole file.
 func TestInjectCodexGentlemanFreshInstallWrapsPersonaInMarkers(t *testing.T) {
 	home := t.TempDir()
@@ -3762,18 +3762,18 @@ func TestInjectCodexGentlemanFreshInstallWrapsPersonaInMarkers(t *testing.T) {
 		t.Fatalf("ReadFile() error = %v", err)
 	}
 	text := string(content)
-	if strings.Count(text, "<!-- gentle-ai:persona -->") != 1 {
-		t.Fatalf("expected exactly 1 persona open marker, got %d", strings.Count(text, "<!-- gentle-ai:persona -->"))
+	if strings.Count(text, "<!-- agent-smith:persona -->") != 1 {
+		t.Fatalf("expected exactly 1 persona open marker, got %d", strings.Count(text, "<!-- agent-smith:persona -->"))
 	}
-	if strings.Count(text, "<!-- /gentle-ai:persona -->") != 1 {
-		t.Fatalf("expected exactly 1 persona close marker, got %d", strings.Count(text, "<!-- /gentle-ai:persona -->"))
+	if strings.Count(text, "<!-- /agent-smith:persona -->") != 1 {
+		t.Fatalf("expected exactly 1 persona close marker, got %d", strings.Count(text, "<!-- /agent-smith:persona -->"))
 	}
 	if !strings.Contains(text, "Senior Architect") {
 		t.Fatal("AGENTS.md missing real persona content")
 	}
 	// No markerless persona prose may exist outside the managed section:
 	// everything before the open marker must be free of persona fingerprints.
-	beforeMarker := text[:strings.Index(text, "<!-- gentle-ai:persona -->")]
+	beforeMarker := text[:strings.Index(text, "<!-- agent-smith:persona -->")]
 	if strings.Contains(beforeMarker, "Senior Architect") {
 		t.Fatalf("markerless persona prose found before the managed section:\n%s", beforeMarker)
 	}
@@ -3808,8 +3808,8 @@ func TestInjectCodexPreservesUserPrefaceContent(t *testing.T) {
 	if !strings.Contains(text, "Always answer in Spanish.") || !strings.Contains(text, "Keep PRs small.") {
 		t.Fatal("user-authored rules were stripped")
 	}
-	if strings.Count(text, "<!-- gentle-ai:persona -->") != 1 {
-		t.Fatalf("expected exactly 1 persona marker, got %d", strings.Count(text, "<!-- gentle-ai:persona -->"))
+	if strings.Count(text, "<!-- agent-smith:persona -->") != 1 {
+		t.Fatalf("expected exactly 1 persona marker, got %d", strings.Count(text, "<!-- agent-smith:persona -->"))
 	}
 }
 
@@ -3874,8 +3874,8 @@ func TestInjectCodexReplacesExactLegacyAssetWithoutDuplication(t *testing.T) {
 		t.Fatalf("ReadFile() error = %v", err)
 	}
 	text := string(content)
-	if strings.Count(text, "<!-- gentle-ai:persona -->") != 1 {
-		t.Fatalf("expected exactly 1 persona marker after legacy replacement, got %d", strings.Count(text, "<!-- gentle-ai:persona -->"))
+	if strings.Count(text, "<!-- agent-smith:persona -->") != 1 {
+		t.Fatalf("expected exactly 1 persona marker after legacy replacement, got %d", strings.Count(text, "<!-- agent-smith:persona -->"))
 	}
 	if !strings.Contains(text, "Senior Architect") {
 		t.Fatal("persona content missing after replacing legacy asset")
@@ -3894,8 +3894,8 @@ func TestInjectCodexMigratesLegacyPersonaAboveManagedSections(t *testing.T) {
 	}
 	legacy := assets.MustRead("generic/persona-gentleman.md")
 	existing := legacy + "\n" +
-		"<!-- gentle-ai:engram-protocol -->\nEngram protocol here.\n<!-- /gentle-ai:engram-protocol -->\n\n" +
-		"<!-- gentle-ai:sdd-orchestrator -->\nSDD orchestrator here.\n<!-- /gentle-ai:sdd-orchestrator -->\n"
+		"<!-- agent-smith:engram-protocol -->\nEngram protocol here.\n<!-- /agent-smith:engram-protocol -->\n\n" +
+		"<!-- agent-smith:sdd-orchestrator -->\nSDD orchestrator here.\n<!-- /agent-smith:sdd-orchestrator -->\n"
 	if err := os.WriteFile(codexAgentsMDPath(home), []byte(existing), 0o644); err != nil {
 		t.Fatalf("WriteFile() error = %v", err)
 	}
@@ -3909,33 +3909,33 @@ func TestInjectCodexMigratesLegacyPersonaAboveManagedSections(t *testing.T) {
 		t.Fatalf("ReadFile() error = %v", err)
 	}
 	text := string(content)
-	if strings.Count(text, "<!-- gentle-ai:persona -->") != 1 {
-		t.Fatalf("expected exactly 1 persona marker after migration, got %d", strings.Count(text, "<!-- gentle-ai:persona -->"))
+	if strings.Count(text, "<!-- agent-smith:persona -->") != 1 {
+		t.Fatalf("expected exactly 1 persona marker after migration, got %d", strings.Count(text, "<!-- agent-smith:persona -->"))
 	}
 	// The legacy prose must be gone: the fingerprint may only appear inside
 	// the managed persona section (exactly once in the whole file).
 	if got := strings.Count(text, "Senior Architect, 15+ years experience, GDE & MVP"); got != 1 {
 		t.Fatalf("legacy persona prose survived migration — %d occurrences of the fingerprint, want exactly 1 (inside the managed section)", got)
 	}
-	beforeMarker := text[:strings.Index(text, "<!-- gentle-ai:persona -->")]
+	beforeMarker := text[:strings.Index(text, "<!-- agent-smith:persona -->")]
 	if strings.Contains(beforeMarker, "Senior Architect") {
 		t.Fatalf("markerless legacy persona prose found before the managed section:\n%s", beforeMarker)
 	}
-	engramIdx := strings.Index(text, "<!-- gentle-ai:engram-protocol -->")
+	engramIdx := strings.Index(text, "<!-- agent-smith:engram-protocol -->")
 	if engramIdx < 0 {
 		t.Fatal("managed engram section was not preserved during migration")
 	}
-	if !strings.Contains(text, "<!-- gentle-ai:engram-protocol -->\nEngram protocol here.\n<!-- /gentle-ai:engram-protocol -->") {
+	if !strings.Contains(text, "<!-- agent-smith:engram-protocol -->\nEngram protocol here.\n<!-- /agent-smith:engram-protocol -->") {
 		t.Fatal("managed engram section body was not preserved during migration")
 	}
-	sddIdx := strings.Index(text, "<!-- gentle-ai:sdd-orchestrator -->")
+	sddIdx := strings.Index(text, "<!-- agent-smith:sdd-orchestrator -->")
 	if sddIdx < 0 {
 		t.Fatal("managed SDD section was not preserved during migration")
 	}
-	if !strings.Contains(text, "<!-- gentle-ai:sdd-orchestrator -->\nSDD orchestrator here.\n<!-- /gentle-ai:sdd-orchestrator -->") {
+	if !strings.Contains(text, "<!-- agent-smith:sdd-orchestrator -->\nSDD orchestrator here.\n<!-- /agent-smith:sdd-orchestrator -->") {
 		t.Fatal("managed SDD section body was not preserved during migration")
 	}
-	personaIdx := strings.Index(text, "<!-- gentle-ai:persona -->")
+	personaIdx := strings.Index(text, "<!-- agent-smith:persona -->")
 	if !(personaIdx < engramIdx && personaIdx < sddIdx) {
 		t.Fatalf("persona section must precede existing managed sections; persona=%d engram=%d sdd=%d\n%s", personaIdx, engramIdx, sddIdx, text)
 	}
@@ -3967,8 +3967,8 @@ func TestInjectCodexIsIdempotent(t *testing.T) {
 		t.Fatalf("ReadFile() error = %v", err)
 	}
 	text := string(content)
-	if strings.Count(text, "<!-- gentle-ai:persona -->") != 1 {
-		t.Fatalf("expected exactly 1 persona marker after re-injection, got %d", strings.Count(text, "<!-- gentle-ai:persona -->"))
+	if strings.Count(text, "<!-- agent-smith:persona -->") != 1 {
+		t.Fatalf("expected exactly 1 persona marker after re-injection, got %d", strings.Count(text, "<!-- agent-smith:persona -->"))
 	}
 	if strings.Count(text, "Senior Architect") != 1 {
 		t.Fatalf("expected persona content exactly once after re-injection, got %d occurrences", strings.Count(text, "Senior Architect"))
@@ -3989,10 +3989,11 @@ func TestInjectCodexNeutralFreshInstallWrapsPersonaInMarkers(t *testing.T) {
 		t.Fatalf("ReadFile() error = %v", err)
 	}
 	text := string(content)
-	if strings.Count(text, "<!-- gentle-ai:persona -->") != 1 {
-		t.Fatalf("expected exactly 1 persona marker, got %d", strings.Count(text, "<!-- gentle-ai:persona -->"))
+	if strings.Count(text, "<!-- agent-smith:persona -->") != 1 {
+		t.Fatalf("expected exactly 1 persona marker, got %d", strings.Count(text, "<!-- agent-smith:persona -->"))
 	}
 	if !strings.Contains(text, assets.MustRead("generic/persona-neutral.md")) {
 		t.Fatal("neutral persona content missing from managed section")
 	}
 }
+

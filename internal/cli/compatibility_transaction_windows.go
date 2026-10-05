@@ -16,10 +16,10 @@ import (
 	"strings"
 	"unsafe"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/components/filemerge"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/components/skills"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/reviewtransaction"
+	"github.com/jonsanchezr/agent-smith/v4/internal/components/filemerge"
+	"github.com/jonsanchezr/agent-smith/v4/internal/components/skills"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
+	"github.com/jonsanchezr/agent-smith/v4/internal/reviewtransaction"
 	"golang.org/x/sys/windows"
 )
 
@@ -505,7 +505,7 @@ func createWindowsCompatibilityTempFile(parent windows.Handle, perm fs.FileMode)
 		if _, err := rand.Read(token[:]); err != nil {
 			return "", nil, fmt.Errorf("generate compatibility temp file name: %w", err)
 		}
-		name := ".gentle-ai-" + hex.EncodeToString(token[:]) + ".tmp"
+		name := ".agent-smith-" + hex.EncodeToString(token[:]) + ".tmp"
 		handle, err := openWindowsCompatibilityFileAt(parent, name, windows.FILE_GENERIC_READ|windows.FILE_GENERIC_WRITE|windows.DELETE, windows.FILE_CREATE)
 		if windowsCompatibilityAlreadyExists(err) {
 			continue
@@ -588,3 +588,4 @@ func slicesContainsComponent(components []model.ComponentID, target model.Compon
 	}
 	return false
 }
+

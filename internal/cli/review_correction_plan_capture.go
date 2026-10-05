@@ -6,7 +6,7 @@ import (
 	"io"
 	"strings"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/reviewtransaction"
+	"github.com/jonsanchezr/agent-smith/v4/internal/reviewtransaction"
 )
 
 const reviewCaptureCorrectionPlanOperation = "review.capture-correction-plan"
@@ -72,14 +72,14 @@ func RunReviewCaptureCorrectionPlan(args []string, stdout io.Writer) error {
 	}
 	if record.State.CapturePhaseRevision != strings.TrimSpace(*revision) || record.State.State != reviewtransaction.StateCorrectionRequired ||
 		record.State.CurrentSnapshot.Identity != strings.TrimSpace(*target) {
-		return reviewPreflightRefusal(reviewPreflightCaptureBindingMismatchReason, errors.New("correction-plan capture binding does not match the current correction authority; rerun `gentle-ai review status --cwd <repo> --contract gentle-ai.review-integration/v2 --next-transition` before retrying"))
+		return reviewPreflightRefusal(reviewPreflightCaptureBindingMismatchReason, errors.New("correction-plan capture binding does not match the current correction authority; rerun `agent-smith review status --cwd <repo> --contract agent-smith.review-integration/v2 --next-transition` before retrying"))
 	}
 	request, err := reviewtransaction.BuildCorrectionPlanRequest(record.State, record.State.CapturePhaseRevision)
 	if err != nil {
 		return reviewPreflightRefusal(reviewPreflightCaptureBindingMismatchReason, err)
 	}
 	if request.RequestHash != strings.TrimSpace(*requestHash) || request.TargetIdentity != strings.TrimSpace(*target) {
-		return reviewPreflightRefusal(reviewPreflightCaptureBindingMismatchReason, errors.New("correction-plan capture request does not match current authority; rerun `gentle-ai review status --cwd <repo> --contract gentle-ai.review-integration/v2 --next-transition` before retrying"))
+		return reviewPreflightRefusal(reviewPreflightCaptureBindingMismatchReason, errors.New("correction-plan capture request does not match current authority; rerun `agent-smith review status --cwd <repo> --contract agent-smith.review-integration/v2 --next-transition` before retrying"))
 	}
 	state := record.State
 	if err := state.BeginCorrection(*correctionLines); err != nil {
@@ -110,3 +110,4 @@ func RunReviewCaptureCorrectionPlan(args []string, stdout io.Writer) error {
 		CorrectionLines: *correctionLines, State: state.State, StoreRevision: nextRevision,
 	})
 }
+

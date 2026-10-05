@@ -3,7 +3,7 @@ package tui
 import (
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/pipeline"
+	"github.com/jonsanchezr/agent-smith/v4/internal/pipeline"
 )
 
 func TestProgressPercentTracksCompletedSteps(t *testing.T) {
@@ -40,3 +40,4 @@ func TestProgressSkippedIsTerminalNotSuccess(t *testing.T) {
 		t.Fatalf("skip progress: %#v", progress)
 	}
 }
+

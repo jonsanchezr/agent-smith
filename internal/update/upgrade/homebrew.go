@@ -5,7 +5,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/update"
+	"github.com/jonsanchezr/agent-smith/v4/internal/update"
 )
 
 var homebrewPackageInstalled = defaultHomebrewPackageInstalled
@@ -61,3 +61,4 @@ func pathWithinPrefix(path, prefix string) bool {
 	}
 	return strings.HasPrefix(path, prefix+string(filepath.Separator))
 }
+

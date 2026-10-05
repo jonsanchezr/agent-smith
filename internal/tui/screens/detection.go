@@ -6,8 +6,8 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/system"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/tui/styles"
+	"github.com/jonsanchezr/agent-smith/v4/internal/system"
+	"github.com/jonsanchezr/agent-smith/v4/internal/tui/styles"
 )
 
 func DetectionOptions() []string {
@@ -109,3 +109,4 @@ func RenderDetection(result system.DetectionResult, cursor int) string {
 
 	return b.String()
 }
+

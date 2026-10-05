@@ -1,6 +1,6 @@
 package planner
 
-import "github.com/gentleman-programming/gentle-ai/v4/internal/model"
+import "github.com/jonsanchezr/agent-smith/v4/internal/model"
 
 type Graph struct {
 	dependencies map[model.ComponentID][]model.ComponentID
@@ -71,3 +71,4 @@ var softOrderingPairs = [][2]model.ComponentID{
 func SoftOrderingConstraints() [][2]model.ComponentID {
 	return softOrderingPairs
 }
+

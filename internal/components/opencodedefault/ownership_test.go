@@ -25,7 +25,7 @@ func TestLegacyUninstallOwnership(t *testing.T) {
 				t.Fatal(err)
 			}
 			ownerPath := OwnershipPath(settings)
-			metadata := []byte(`{"schema":"gentle-ai.opencode-default-agent","version":1,"state":"managed","previous_state":"` + tt.previousState + `","previous_default":"` + tt.previousDefault + `"}`)
+			metadata := []byte(`{"schema":"agent-smith.opencode-default-agent","version":1,"state":"managed","previous_state":"` + tt.previousState + `","previous_default":"` + tt.previousDefault + `"}`)
 			if err := os.WriteFile(ownerPath, metadata, 0600); err != nil {
 				t.Fatal(err)
 			}
@@ -65,7 +65,7 @@ func TestLegacyUninstallOwnership(t *testing.T) {
 
 func TestUninstallWithoutOwnershipPreservesDefault(t *testing.T) {
 	settings := filepath.Join(t.TempDir(), "opencode.json")
-	original := []byte(`{"default_agent":"gentle-orchestrator","unrelated":true}`)
+	original := []byte(`{"default_agent":"agent-smith-orchestrator","unrelated":true}`)
 	if err := os.WriteFile(settings, original, 0600); err != nil {
 		t.Fatal(err)
 	}
@@ -85,7 +85,7 @@ func TestUninstallWithoutOwnershipPreservesDefault(t *testing.T) {
 
 func TestMalformedLegacyOwnershipRefusesUninstall(t *testing.T) {
 	settings := filepath.Join(t.TempDir(), "opencode.json")
-	original := []byte(`{"default_agent":"gentle-orchestrator"}`)
+	original := []byte(`{"default_agent":"agent-smith-orchestrator"}`)
 	if err := os.WriteFile(settings, original, 0600); err != nil {
 		t.Fatal(err)
 	}
@@ -141,7 +141,7 @@ func TestInstallOwnershipLifecycle(t *testing.T) {
 		}
 	}
 
-	write(`{"default_agent":"build","agent":{"gentle-orchestrator":{}},"profile":true}`)
+	write(`{"default_agent":"build","agent":{"agent-smith-orchestrator":{}},"profile":true}`)
 	install()
 	wantDefault(ManagedAgent)
 	first := read()
@@ -226,3 +226,4 @@ func TestApplyShareDefaultPreservesPrivateMode(t *testing.T) {
 		t.Fatalf("settings mode = %v, want 0600", got)
 	}
 }
+

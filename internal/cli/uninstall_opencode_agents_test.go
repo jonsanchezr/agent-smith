@@ -7,8 +7,8 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/components/opencodeagents"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/system"
+	"github.com/jonsanchezr/agent-smith/v4/internal/components/opencodeagents"
+	"github.com/jonsanchezr/agent-smith/v4/internal/system"
 )
 
 func TestUninstallRemovesUntouchedInstalledOrchestrator(t *testing.T) {
@@ -34,7 +34,7 @@ func TestUninstallRemovesUntouchedInstalledOrchestrator(t *testing.T) {
 	if err := json.Unmarshal(body, &root); err != nil {
 		t.Fatal(err)
 	}
-	if agents, ok := root["agent"].(map[string]any); ok && agents["gentle-orchestrator"] != nil {
+	if agents, ok := root["agent"].(map[string]any); ok && agents["agent-smith-orchestrator"] != nil {
 		t.Fatalf("untouched managed orchestrator retained: %s", body)
 	}
 }
@@ -74,7 +74,7 @@ func TestFullPresetUninstallOpenCodeFamilyAgents(t *testing.T) {
 			agents["my-agent"] = map[string]any{"prompt": "User owned"}
 			agents["jd-judge-a"].(map[string]any)["prompt"] = "User modified judge"
 			agents["gentleman"].(map[string]any)["prompt"] = "User modified gentleman"
-			orchestrator := agents["gentle-orchestrator"].(map[string]any)
+			orchestrator := agents["agent-smith-orchestrator"].(map[string]any)
 			permission := orchestrator["permission"].(map[string]any)
 			task := permission["task"].(map[string]any)
 			task["my-agent"] = "allow"
@@ -122,9 +122,9 @@ func TestFullPresetUninstallOpenCodeFamilyAgents(t *testing.T) {
 					t.Fatalf("managed %s retained: %s", name, first)
 				}
 			}
-			if owner, ok := remaining["gentle-orchestrator"].(map[string]any); ok {
+			if owner, ok := remaining["agent-smith-orchestrator"].(map[string]any); ok {
 				prompt, _ := owner["prompt"].(string)
-				if bytes.Contains([]byte(prompt), []byte("<!-- gentle-ai:")) {
+				if bytes.Contains([]byte(prompt), []byte("<!-- agent-smith:")) {
 					t.Fatalf("orchestrator markers retained: %s", first)
 				}
 				tasks := owner["permission"].(map[string]any)["task"].(map[string]any)
@@ -149,3 +149,4 @@ func TestFullPresetUninstallOpenCodeFamilyAgents(t *testing.T) {
 		})
 	}
 }
+

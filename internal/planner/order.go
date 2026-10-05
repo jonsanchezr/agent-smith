@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"slices"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
 )
 
 var ErrDependencyCycle = errors.New("dependency cycle detected")
@@ -102,3 +102,4 @@ func applySoftOrdering(ordered []model.ComponentID, pairs [][2]model.ComponentID
 
 	return result
 }
+

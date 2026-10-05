@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"slices"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
 )
 
 type Registry struct {
@@ -64,3 +64,4 @@ func (r *Registry) SupportedAgents() []model.AgentID {
 	slices.Sort(ids)
 	return ids
 }
+

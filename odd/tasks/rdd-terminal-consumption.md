@@ -1,4 +1,4 @@
-# Feature: RDD terminal consumption
+﻿# Feature: RDD terminal consumption
 
 ## Objective
 Prevent an unchanged candidate whose approved review was acknowledged and burned from being offered as a fresh review by selectorless STATUS or the Claude Code Stop hook.
@@ -137,10 +137,11 @@ CI's Go tests passed, but j111 still expected selectorless STATUS after burn to 
 Observed validation (all exit 0):
 
 1. From `bench/`: `go vet ./...` passed; `go test ./...` passed (4.763s).
-2. From `bench/`: `go build -o "$TMPDIR/gentle-ai-bench-4405" .` passed.
-3. From the repository root: `go build -trimpath -o "$TMPDIR/gentle-ai-4405" ./cmd/gentle-ai` passed.
-4. `"$TMPDIR/gentle-ai-bench-4405" run --binary "$TMPDIR/gentle-ai-4405" --only j111-approved-transaction-burns-and-shipped-gates-are-unmanaged --out "$TMPDIR/bench-4405.json"` passed: **1 completed, 0 unsupported, 0 failed**. Reported 26 commands and 8 out-of-band blocks, including expected acknowledgement refusals, unmanaged gates, and terminal STATUS. Reviewer results were synthesized; no model was called.
+2. From `bench/`: `go build -o "$TMPDIR/agent-smith-bench-4405" .` passed.
+3. From the repository root: `go build -trimpath -o "$TMPDIR/agent-smith-4405" ./cmd/agent-smith` passed.
+4. `"$TMPDIR/agent-smith-bench-4405" run --binary "$TMPDIR/agent-smith-4405" --only j111-approved-transaction-burns-and-shipped-gates-are-unmanaged --out "$TMPDIR/bench-4405.json"` passed: **1 completed, 0 unsupported, 0 failed**. Reported 26 commands and 8 out-of-band blocks, including expected acknowledgement refusals, unmanaged gates, and terminal STATUS. Reviewer results were synthesized; no model was called.
 5. `go run ./internal/gofmtcheck` passed (no output).
 6. `git diff --check` passed (no output).
 
 Rollback boundary: the j111 helper/declaration and its declaration tests, plus this correction record; no product behavior changes. Full corpus driven execution and the root Go suite were not rerun. Completion remains pending parent review and commit; this worker performed no commit, push, or GitHub mutation.
+

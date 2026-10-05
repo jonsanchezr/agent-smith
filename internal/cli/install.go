@@ -25,11 +25,11 @@ type InstallFlags struct {
 	PiBackgroundSubagentsSet bool
 }
 
-const installChannelHelp = "Gentle AI channel: stable (default), beta, or nightly (alias for beta) — env: GENTLE_AI_CHANNEL"
+const installChannelHelp = "Agent Smith channel: stable (default), beta, or nightly (alias for beta) — env: GENTLE_AI_CHANNEL"
 
 func PrintInstallHelp(w io.Writer) {
 	fmt.Fprint(w, `USAGE
-  gentle-ai install [flags]
+  agent-smith install [flags]
 
 FLAGS
   --agent, --agents <list>           Agents to install
@@ -121,3 +121,4 @@ type ioDiscard struct{}
 func (ioDiscard) Write(p []byte) (int, error) {
 	return len(p), nil
 }
+

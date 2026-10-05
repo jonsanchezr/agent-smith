@@ -9,9 +9,9 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/reviewerprovider"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/reviewtransaction"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
+	"github.com/jonsanchezr/agent-smith/v4/internal/reviewerprovider"
+	"github.com/jonsanchezr/agent-smith/v4/internal/reviewtransaction"
 )
 
 // TestCommittedCorrectionStatusAfterCommitAnswersTheTransitionItBinds is the
@@ -214,3 +214,4 @@ func committedCorrectionStatusAfterCommit(t *testing.T, evidence reviewtransacti
 		t.Fatalf("targeted validation input = %#v, want bound to %s and the corrected candidate", transition.Collect.Inputs[0], model.AgentClaudeCode)
 	}
 }
+

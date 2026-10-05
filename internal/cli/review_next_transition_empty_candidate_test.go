@@ -5,7 +5,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/reviewtransaction"
+	"github.com/jonsanchezr/agent-smith/v4/internal/reviewtransaction"
 )
 
 // emptyWorkspaceCandidateStatus reproduces the status a clean workspace
@@ -505,3 +505,4 @@ func TestNegotiatedStatusAmbiguousCommittedRangeFallsBackToCollect(t *testing.T)
 		})
 	}
 }
+

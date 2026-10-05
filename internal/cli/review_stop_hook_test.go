@@ -83,7 +83,7 @@ func decodeReviewStopHookResult(t *testing.T, stdout []byte) reviewStopHookOutpu
 }
 
 func reviewStopHookStateFile(home, sessionID string) string {
-	return filepath.Join(home, ".gentle-ai", "review-stop-hook", "v1", sessionID+".json")
+	return filepath.Join(home, ".agent-smith", "review-stop-hook", "v1", sessionID+".json")
 }
 
 func TestReviewStopHookFailedWriteDoesNotPersistReminder(t *testing.T) {
@@ -128,11 +128,11 @@ func TestReviewStopHookBlocksWithReasonAndBothCommands(t *testing.T) {
 	if result.Schema != reviewStopHookSchema || result.Decision != "block" {
 		t.Fatalf("result = %#v", result)
 	}
-	wantStatusCommand := fmt.Sprintf("gentle-ai review status --cwd %s --contract %s --agent claude-code --next-transition", repo, ReviewIntegrationContractV2)
+	wantStatusCommand := fmt.Sprintf("agent-smith review status --cwd %s --contract %s --agent claude-code --next-transition", repo, ReviewIntegrationContractV2)
 	if !strings.Contains(result.Reason, wantStatusCommand) {
 		t.Fatalf("reason missing canonical STATUS command:\n%s", result.Reason)
 	}
-	if !strings.Contains(result.Reason, "gentle-ai review start") || !strings.Contains(result.Reason, "--consent=relay") {
+	if !strings.Contains(result.Reason, "agent-smith review start") || !strings.Contains(result.Reason, "--consent=relay") {
 		t.Fatalf("reason missing the returned START command with --consent=relay:\n%s", result.Reason)
 	}
 	if !strings.Contains(result.Reason, "next_transition") {
@@ -277,7 +277,7 @@ func TestReviewStopHookInvalidSessionIDRemindsWithoutPersisting(t *testing.T) {
 	if decodeReviewStopHookResult(t, stdout.Bytes()).Decision != "block" {
 		t.Fatalf("invalid session id should still remind: %s", stdout.String())
 	}
-	dir := filepath.Join(home, ".gentle-ai", "review-stop-hook", "v1")
+	dir := filepath.Join(home, ".agent-smith", "review-stop-hook", "v1")
 	entries, err := os.ReadDir(dir)
 	if err != nil && !os.IsNotExist(err) {
 		t.Fatal(err)
@@ -575,3 +575,4 @@ func TestReviewStopHookRemindsWhenConsentStaleMarkerExpired(t *testing.T) {
 		t.Fatalf("expired consent-stale marker must restore the reminder: %s", stdout.String())
 	}
 }
+

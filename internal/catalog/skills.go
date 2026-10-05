@@ -1,6 +1,6 @@
 package catalog
 
-import "github.com/gentleman-programming/gentle-ai/v4/internal/model"
+import "github.com/jonsanchezr/agent-smith/v4/internal/model"
 
 type Skill struct {
 	ID       model.SkillID
@@ -25,7 +25,7 @@ var mvpSkills = []Skill{
 	{ID: model.SkillSDDOnboard, Name: "sdd-onboard", Category: "sdd", Priority: "p0"},
 	// Foundation skills
 	{ID: model.SkillGoTesting, Name: "go-testing", Category: "testing", Priority: "p0"},
-	{ID: model.SkillGentleAIBench, Name: "gentle-ai-bench", Category: "testing", Priority: "p0"},
+	{ID: model.SkillAgentSmithBench, Name: "agent-smith-bench", Category: "testing", Priority: "p0"},
 	{ID: model.SkillCreator, Name: "skill-creator", Category: "workflow", Priority: "p0"},
 	{ID: model.SkillImprover, Name: "skill-improver", Category: "workflow", Priority: "p0"},
 	{ID: model.SkillJudgmentDay, Name: "judgment-day", Category: "workflow", Priority: "p0"},
@@ -39,6 +39,16 @@ var mvpSkills = []Skill{
 	{ID: model.SkillWorkUnitCommits, Name: "work-unit-commits", Category: "workflow", Priority: "p0"},
 	{ID: model.SkillRDDDefectWorkflow, Name: "rdd-defect-workflow", Category: "workflow", Priority: "p0"},
 	{ID: model.SkillSystemicIssueTriage, Name: "systemic-issue-triage", Category: "workflow", Priority: "p0"},
+	// Spec Kit skills
+	{ID: model.SkillSpecKitConstitution, Name: "speckit-constitution", Category: "spec-kit", Priority: "p0"},
+	{ID: model.SkillSpecKitSpecify, Name: "speckit-specify", Category: "spec-kit", Priority: "p0"},
+	{ID: model.SkillSpecKitClarify, Name: "speckit-clarify", Category: "spec-kit", Priority: "p0"},
+	{ID: model.SkillSpecKitPlan, Name: "speckit-plan", Category: "spec-kit", Priority: "p0"},
+	{ID: model.SkillSpecKitChecklist, Name: "speckit-checklist", Category: "spec-kit", Priority: "p0"},
+	{ID: model.SkillSpecKitTasks, Name: "speckit-tasks", Category: "spec-kit", Priority: "p0"},
+	{ID: model.SkillSpecKitAnalyze, Name: "speckit-analyze", Category: "spec-kit", Priority: "p0"},
+	{ID: model.SkillSpecKitImplement, Name: "speckit-implement", Category: "spec-kit", Priority: "p0"},
+	{ID: model.SkillSpecKitConverge, Name: "speckit-converge", Category: "spec-kit", Priority: "p0"},
 }
 
 func MVPSkills() []Skill {
@@ -46,3 +56,4 @@ func MVPSkills() []Skill {
 	copy(skills, mvpSkills)
 	return skills
 }
+

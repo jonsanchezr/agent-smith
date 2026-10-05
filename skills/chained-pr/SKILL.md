@@ -1,9 +1,9 @@
----
-name: gentle-ai-chained-pr
+﻿---
+name: agent-smith-chained-pr
 description: "Trigger: PRs over 400 lines, stacked PRs, review slices. Split oversized changes into chained PRs that protect review focus."
 license: Apache-2.0
 metadata:
-  author: gentleman-programming
+  author: jonsanchezr
   version: "1.0"
 ---
 
@@ -14,10 +14,10 @@ Load this skill when a planned PR may exceed **400 changed lines**, SDD forecast
 ## Hard Rules
 
 - Split PRs over **400 changed lines** unless a maintainer explicitly accepts `size:exception`.
-- Keep each PR reviewable in about **≤60 minutes**.
+- Keep each PR reviewable in about **â‰¤60 minutes**.
 - Use one deliverable work unit per PR; keep tests/docs with the unit they verify.
 - State start, end, prior dependencies, follow-up work, and out-of-scope items in every chained PR.
-- Every child PR must include a dependency diagram marking the current PR with `📍`.
+- Every child PR must include a dependency diagram marking the current PR with `ðŸ“`.
 - In Feature Branch Chain, create a draft/no-merge tracker PR; child PR #1 targets the tracker branch, later children target the immediate parent branch.
 - Treat polluted diffs as base bugs: retarget or rebase until only the current work unit appears.
 - Do not mix chain strategies after the user chooses one.
@@ -26,7 +26,7 @@ Load this skill when a planned PR may exceed **400 changed lines**, SDD forecast
 
 | Condition | Action |
 |---|---|
-| PR ≤400 changed lines and focused | Keep single PR. |
+| PR â‰¤400 changed lines and focused | Keep single PR. |
 | PR >400, each slice can land independently | Use Stacked PRs to main. |
 | PR >400, feature must integrate before main | Use Feature Branch Chain with tracker. |
 | Generated/vendor/migration diff cannot split cleanly | Ask maintainer for `size:exception`. |
@@ -47,4 +47,5 @@ Return the chosen strategy, PR order, current PR boundary, dependency diagram, r
 
 ## References
 
-- [references/chaining-details.md](references/chaining-details.md) — strategy diagrams, PR body section, branch commands, and reviewer guidance.
+- [references/chaining-details.md](references/chaining-details.md) â€” strategy diagrams, PR body section, branch commands, and reviewer guidance.
+

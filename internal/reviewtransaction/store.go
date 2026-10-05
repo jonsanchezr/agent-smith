@@ -18,7 +18,7 @@ import (
 	"syscall"
 )
 
-const RecordSchema = "gentle-ai.review-record/v1"
+const RecordSchema = "agent-smith.review-record/v1"
 
 var ErrConcurrentUpdate = errors.New("review transaction changed concurrently")
 var ErrInvalidSuccessor = errors.New("review transaction successor is invalid")
@@ -160,7 +160,7 @@ func reviewAuthorityRoot(ctx context.Context, repo string) (string, string, erro
 	if err != nil {
 		return "", "", fmt.Errorf("resolve repository Git identity: %w", err)
 	}
-	authorityRoot := filepath.Join(identity.GitCommonDir, "gentle-ai", "review-transactions")
+	authorityRoot := filepath.Join(identity.GitCommonDir, "agent-smith", "review-transactions")
 	return authorityRoot, identity.RepositoryRoot, nil
 }
 
@@ -823,7 +823,7 @@ func validInitialStoreRecord(record Record) bool {
 
 func chainIdentity(revisions []string) string {
 	hash := sha256.New()
-	_, _ = hash.Write([]byte("gentle-ai.review-chain/v1\x00"))
+	_, _ = hash.Write([]byte("agent-smith.review-chain/v1\x00"))
 	for _, revision := range revisions {
 		writeLengthPrefixed(hash, []byte(revision))
 	}
@@ -957,3 +957,4 @@ func writeAtomic(path string, payload []byte, mode os.FileMode) error {
 	}
 	return nil
 }
+

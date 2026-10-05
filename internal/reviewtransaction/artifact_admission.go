@@ -14,7 +14,7 @@ import (
 	"unicode/utf8"
 )
 
-const ArtifactAdmissionSchema = "gentle-ai.review-artifact-admission/v1"
+const ArtifactAdmissionSchema = "agent-smith.review-artifact-admission/v1"
 
 type ArtifactAdmissionDecision string
 
@@ -104,7 +104,7 @@ func ValidationCheckInconclusive(inspection *ValidationInspection, evidence []st
 		case ValidationInspectionUnavailable:
 			return true, nil
 		default:
-			return false, fmt.Errorf("targeted validator inspection.status %q is invalid; the only admitted values are %q and %q; rerun gentle-ai review capture-validation --execute=true with a corrected result", inspection.Status, ValidationInspectionCompleted, ValidationInspectionUnavailable)
+			return false, fmt.Errorf("targeted validator inspection.status %q is invalid; the only admitted values are %q and %q; rerun agent-smith review capture-validation --execute=true with a corrected result", inspection.Status, ValidationInspectionCompleted, ValidationInspectionUnavailable)
 		}
 	}
 	for _, line := range evidence {
@@ -395,7 +395,7 @@ func (admission ArtifactAdmission) Validate(subject ArtifactSubject, canonicalPa
 // is what keeps the two messages from drifting into promising different
 // recoveries for the same recoverable state.
 const artifactRecaptureContinuation = "the rejected admission did not consume the lens slot, " +
-	"so re-run the lens and invoke gentle-ai review capture-result again on the same lineage " +
+	"so re-run the lens and invoke agent-smith review capture-result again on the same lineage " +
 	"with a result that echoes the binding's top-level subject_hash"
 
 // AdmitArtifact performs the single provider-owned admission decision. It
@@ -1083,3 +1083,4 @@ func evidenceReportsUnavailableInspection(value string) bool {
 	}
 	return false
 }
+

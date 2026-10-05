@@ -18,7 +18,7 @@ import (
 )
 
 const (
-	compactRecordSchema = "gentle-ai.review-state-record/v2"
+	compactRecordSchema = "agent-smith.review-state-record/v2"
 
 	compactMaxAdmittedRoleResults = 6
 	compactNonRoleStateSizeLimit  = 7 << 20
@@ -33,7 +33,7 @@ const (
 	compactReceiptFileName         = "review-receipt.json"
 	compactFinalizeJournalFileName = "finalize-attempt-journal.json"
 )
-const CompactTransportSchema = "gentle-ai.review-transport/v2"
+const CompactTransportSchema = "agent-smith.review-transport/v2"
 const LegacyReadOnlyErrorCode = "legacy_v1_read_only"
 
 var compactStartLockTimeout = 2 * time.Second
@@ -113,7 +113,7 @@ func (err *CompactRecoveryAuthorizationInexactError) Unwrap() error {
 
 // compactRecoveryAuthorizationSchema is the first line of the exact six-line
 // escalated-recovery maintainer authorization binding.
-const compactRecoveryAuthorizationSchema = "gentle-ai.review-recovery-authorization/v1"
+const compactRecoveryAuthorizationSchema = "agent-smith.review-recovery-authorization/v1"
 
 // ErrHistoricalCompatReadOnly denies ordinary mutation of authority loaded
 // through the retired-field compatibility path.
@@ -288,7 +288,7 @@ type CompactRecoveryRequest struct {
 	MaintainerAuthorization     string
 }
 
-const ReleaseScopeRecoveryAuthorization = "gentle-ai.release-scope-recovery/v1"
+const ReleaseScopeRecoveryAuthorization = "agent-smith.release-scope-recovery/v1"
 
 func BuildReleaseScopeSnapshot(ctx context.Context, repo string) (Snapshot, error) {
 	builder := SnapshotBuilder{Repo: repo}
@@ -1908,7 +1908,7 @@ func validateCompactRecordWritePayload(payload []byte) error {
 }
 
 func compactStateRevision(statePayload []byte) string {
-	sum := sha256.Sum256(append([]byte("gentle-ai.review-state/v2\x00"), statePayload...))
+	sum := sha256.Sum256(append([]byte("agent-smith.review-state/v2\x00"), statePayload...))
 	return "sha256:" + hex.EncodeToString(sum[:])
 }
 
@@ -2121,11 +2121,11 @@ func forensicRetiredReopenAuditCoherent(state CompactState) bool {
 func retiredCompactSnapshotIdentity(snapshot Snapshot) string {
 	hash := sha256.New()
 	if snapshot.Kind == TargetBaseWorkspaceOverlay {
-		hash.Write([]byte("gentle-ai.review-snapshot/base-workspace-overlay/v1\x00"))
+		hash.Write([]byte("agent-smith.review-snapshot/base-workspace-overlay/v1\x00"))
 	} else if snapshot.Projection == ProjectionStaged {
-		hash.Write([]byte("gentle-ai.review-snapshot/v2\x00"))
+		hash.Write([]byte("agent-smith.review-snapshot/v2\x00"))
 	} else {
-		hash.Write([]byte("gentle-ai.review-snapshot/v1\x00"))
+		hash.Write([]byte("agent-smith.review-snapshot/v1\x00"))
 	}
 	values := []string{string(snapshot.Kind), snapshot.BaseTree, snapshot.CandidateTree, snapshot.PathsDigest, snapshot.IntendedUntrackedProof}
 	if snapshot.Projection == ProjectionStaged {
@@ -2156,8 +2156,8 @@ func retiredCompactSnapshotIdentity(snapshot Snapshot) string {
 // older binary parse newer bytes. The message therefore names the only thing
 // that does resolve it: run a build at least as new as the writer.
 var ErrCompactAuthorityFromNewerRelease = errors.New(
-	"this compact review authority was written by a newer gentle-ai than the one reading it, which cannot parse it; " +
-		"upgrade the reading gentle-ai to at least the build that wrote this authority",
+	"this compact review authority was written by a newer agent-smith than the one reading it, which cannot parse it; " +
+		"upgrade the reading agent-smith to at least the build that wrote this authority",
 )
 
 // compactAuthorityFromNewerRelease reports whether a strict-decode failure is
@@ -2370,7 +2370,7 @@ type CompactTraceOutcome struct {
 // trace path and wants to confirm they are looking at the same event, rather
 // than a different one, can compare this instead of trusting free-form text.
 func (outcome CompactTraceOutcome) Identity() string {
-	sum := sha256.Sum256([]byte("gentle-ai.compact-trace-entry/v1\n" + outcome.Operation + "\n" + outcome.Revision))
+	sum := sha256.Sum256([]byte("agent-smith.compact-trace-entry/v1\n" + outcome.Operation + "\n" + outcome.Revision))
 	return "sha256:" + hex.EncodeToString(sum[:])
 }
 
@@ -2627,6 +2627,7 @@ func compactTransportDigest(transport CompactTransport) string {
 	copy := transport
 	copy.BundleDigest = ""
 	payload, _ := json.Marshal(copy)
-	sum := sha256.Sum256(append([]byte("gentle-ai.review-transport/v2\x00"), payload...))
+	sum := sha256.Sum256(append([]byte("agent-smith.review-transport/v2\x00"), payload...))
 	return "sha256:" + hex.EncodeToString(sum[:])
 }
+

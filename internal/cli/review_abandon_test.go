@@ -8,7 +8,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/reviewtransaction"
+	"github.com/jonsanchezr/agent-smith/v4/internal/reviewtransaction"
 )
 
 // pristineInvalidatedCLIFixture persists one pristine invalidated docs-only
@@ -122,3 +122,4 @@ func TestReviewHelpListsAbandon(t *testing.T) {
 		t.Fatalf("review abandon help does not describe non-terminal lineages: %s", output.String())
 	}
 }
+

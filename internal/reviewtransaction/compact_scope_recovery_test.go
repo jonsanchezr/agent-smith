@@ -419,7 +419,7 @@ func TestValidateCompactRecoveryEdgeRefusesForgedSchemaAuthorization(t *testing.
 }
 
 func recoveryAuthorizationFixture(request CompactRecoveryRequest) string {
-	return "gentle-ai.review-recovery-authorization/v1\npredecessor_lineage=" + request.PredecessorLineageID +
+	return "agent-smith.review-recovery-authorization/v1\npredecessor_lineage=" + request.PredecessorLineageID +
 		"\npredecessor_revision=" + request.ExpectedPredecessorRevision + "\ntarget_identity=" + request.Successor.InitialSnapshot.Identity +
 		"\nactor=" + strings.TrimSpace(request.Actor) + "\nreason=" + strings.TrimSpace(request.Reason)
 }
@@ -445,3 +445,4 @@ func correctionRequiredAuthorityFixture(t *testing.T, repo, lineage string) (Com
 	t.Helper()
 	return correctionRequiredCompactAuthority(t, repo, lineage)
 }
+

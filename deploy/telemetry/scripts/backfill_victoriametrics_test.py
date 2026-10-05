@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+﻿#!/usr/bin/env python3
 """Tests for backfill-victoriametrics.py.
 
 Run with:
@@ -92,7 +92,7 @@ def make_db(path, deliveries):
     for delivery_id, received_at_ns, host, rows in deliveries:
         payload = json.dumps(
             {
-                "schema": "gentle-ai.telemetry-runtime-event/v1",
+                "schema": "agent-smith.telemetry-runtime-event/v1",
                 "registry": 1,
                 "delivery_id": delivery_id,
                 "host": host,
@@ -479,3 +479,4 @@ class EndToEndImportAndVerifyTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+

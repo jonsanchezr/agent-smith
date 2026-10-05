@@ -1,9 +1,9 @@
 # Release signing and key rotation
 
 > [!NOTE]
-> These docs track `main`, which may include unreleased changes. For the latest release, see the [v4.0.0 docs](https://github.com/Gentleman-Programming/gentle-ai/tree/v4.0.0/docs).
+> These docs track `main`, which may include unreleased changes. For the latest release, see the [v4.0.0 docs](https://github.com/jonsanchezr/agent-smith/tree/v4.0.0/docs).
 
-Gentle AI™ releases only when the protected `release` environment provides a real Minisign credential whose public key matches the trust anchors embedded in the binary. An unset, malformed, placeholder, or isolated test key stops both the updater and release workflow.
+Agent Smithâ„¢ releases only when the protected `release` environment provides a real Minisign credential whose public key matches the trust anchors embedded in the binary. An unset, malformed, placeholder, or isolated test key stops both the updater and release workflow.
 
 ## User verification
 
@@ -16,7 +16,7 @@ Gentle AI™ releases only when the protected `release` environment provides a r
      -x checksums.txt.minisig \
      -P "$GENTLE_AI_MINISIGN_PUBLIC_KEY"
    # Must print exactly:
-   # repo=Gentleman-Programming/gentle-ai;tag=vMAJOR.MINOR.PATCH
+   # repo=jonsanchezr/agent-smith;tag=vMAJOR.MINOR.PATCH
 
    sha256sum --check --strict --ignore-missing checksums.txt
    ```
@@ -30,17 +30,17 @@ The public key is not secret, but its provenance is security-critical. A key fet
 1. Generate the production pair on a controlled maintainer system. The CI key must be unencrypted because the runner is non-interactive; GitHub's protected environment secret provides encryption at rest and access control.
 
    ```bash
-   minisign -G -W -p gentle-ai-release.pub -s gentle-ai-release.key
+   minisign -G -W -p agent-smith-release.pub -s agent-smith-release.key
    ```
 
-2. Extract the base64 payload from line 2 of `gentle-ai-release.pub`. Publish that payload and a separately computed fingerprint through the project website or another maintainer-authenticated channel **before** publishing the first signed release.
+2. Extract the base64 payload from line 2 of `agent-smith-release.pub`. Publish that payload and a separately computed fingerprint through the project website or another maintainer-authenticated channel **before** publishing the first signed release.
 3. Create or protect the GitHub Actions environment named `release`. Require appropriate reviewers and restrict it to protected stable-version tags.
 4. Configure the public trust anchor as a repository Actions variable so the read-only preflight job can validate it. Configure the private key only inside the protected `release` environment:
 
    | Name | Kind | Exact value |
    |---|---|---|
    | `MINISIGN_PUBLIC_KEYS` | Repository Actions variable | One canonical Minisign base64 public-key payload; during rotation, exactly two distinct payloads separated by one comma, with no whitespace or trailing separator |
-   | `MINISIGN_SECRET_KEY_BASE64` | Protected `release` environment secret | Base64 of the complete `gentle-ai-release.key` file |
+   | `MINISIGN_SECRET_KEY_BASE64` | Protected `release` environment secret | Base64 of the complete `agent-smith-release.key` file |
 
 5. Keep the existing `HOMEBREW_TAP_TOKEN` environment secret. Do not add the Minisign private key to repository variables, files, logs, artifacts, caches, or command-line arguments.
 6. Run no release until `scripts/release-signing-preflight.sh` proves that the private key derives one configured public key, rejects the isolated test key, and signs/verifies an exact repository/tag canary.
@@ -48,7 +48,7 @@ The public key is not secret, but its provenance is security-critical. A key fet
 The workflow validates the complete repository-variable value, exports a separate canonical value, and permits GoReleaser to inject only that validated output through this exact linker variable:
 
 ```text
-github.com/gentleman-programming/gentle-ai/v4/internal/update/upgrade.releaseMinisignPublicKeys
+github.com/jonsanchezr/agent-smith/v4/internal/update/upgrade.releaseMinisignPublicKeys
 ```
 
 Source/test builds retain `UNSET`; their binary self-updater refuses network replacement. There is no grace version and no unsigned fallback.
@@ -78,7 +78,7 @@ If a key may be compromised, stop releases. Do not silently replace a trust anch
 Every release note that tells users to replace or upgrade the binary must include this step:
 
 ```bash
-gentle-ai sync
+agent-smith sync
 ```
 
 Never publish binary-only upgrade guidance. Managed reviewer and runtime assets are version-bound to the binary, and review lifecycle operations fail closed until sync repairs missing or mismatched writer provenance.
@@ -91,8 +91,8 @@ Because there is no signed Windows asset to download, Windows never downloads an
 unsigned executable and never executes a remote update script. Instead:
 
 - With Go 1.25.10+ on `PATH`, the built-in upgrader runs
-  `go install github.com/gentleman-programming/gentle-ai/v4/cmd/gentle-ai@vX.Y.Z`,
-  pinned to the exact release tag. This is verified — just against a different
+  `go install github.com/jonsanchezr/agent-smith/v4/cmd/agent-smith@vX.Y.Z`,
+  pinned to the exact release tag. This is verified â€” just against a different
   trust anchor: the module is checked against the Go checksum database
   (`sum.golang.org`) rather than our minisign release signature. The upgrader
   does not disable the checksum database on this path.
@@ -127,3 +127,4 @@ The tag workflow fails unless all of these hold:
 - the Windows/Scoop omission policy passes before any publication;
 - GoReleaser signs the full `${artifact}` path with the exact trusted comment;
 - the published GitHub asset set is exact, the remote signature is valid, and every remote checksum verifies.
+

@@ -10,7 +10,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/reviewtransaction"
+	"github.com/jonsanchezr/agent-smith/v4/internal/reviewtransaction"
 )
 
 // Issues #2044 and #2132: negotiated review status failed in `pre_native` with
@@ -62,7 +62,7 @@ func requireNoReviewProcessTempResidue(t *testing.T, repo string) {
 				return err
 			}
 			name := entry.Name()
-			if strings.HasPrefix(name, ".gentle-ai-review-index-") || strings.HasPrefix(name, ".gentle-ai-frozen-git-") {
+			if strings.HasPrefix(name, ".agent-smith-review-index-") || strings.HasPrefix(name, ".agent-smith-frozen-git-") {
 				t.Errorf("review left a temporary Git artifact behind: %s", path)
 			}
 			return nil
@@ -267,3 +267,4 @@ func TestNegotiatedStatusLeavesNoTemporaryGitArtifactsAfterFailure(t *testing.T)
 	}
 	requireNoReviewProcessTempResidue(t, repo)
 }
+

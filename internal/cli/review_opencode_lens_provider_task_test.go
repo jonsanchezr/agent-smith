@@ -9,8 +9,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/opencode"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
+	"github.com/jonsanchezr/agent-smith/v4/internal/opencode"
 )
 
 func TestOpenCodeV1StatusEmitsProviderOwnedLensTasks(t *testing.T) {
@@ -19,7 +19,7 @@ func TestOpenCodeV1StatusEmitsProviderOwnedLensTasks(t *testing.T) {
 	repo, _, _, record := newArtifactReview(t, true)
 
 	status, raw := openCodeLensTaskStatus(t, repo, record.State.LineageID)
-	if status.Schema != "gentle-ai.review-integration.status/v9" {
+	if status.Schema != "agent-smith.review-integration.status/v9" {
 		t.Fatalf("STATUS schema = %q, want v9", status.Schema)
 	}
 	if status.NextTransition == nil || status.NextTransition.Collect == nil ||
@@ -196,3 +196,4 @@ func cloneReviewStatusForLensTaskTest(t *testing.T, status ReviewTargetStatusRes
 	decodeStrictReviewJSON(t, payload, &clone)
 	return clone
 }
+

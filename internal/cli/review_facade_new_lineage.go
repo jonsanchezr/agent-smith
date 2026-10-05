@@ -3,9 +3,9 @@ package cli
 import (
 	"context"
 	"fmt"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/reviewtransaction"
+	"github.com/jonsanchezr/agent-smith/v4/internal/reviewtransaction"
 )
 
 // prepareReviewFacadeCompactAtomicStart freezes compact state and its immutable
@@ -73,3 +73,4 @@ func runReviewFacadeCompactAtomicStart(ctx context.Context, root string, request
 	}
 	return store.CreateOrReplayAtomicStart(ctx, request)
 }
+

@@ -6,7 +6,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/reviewtransaction"
+	"github.com/jonsanchezr/agent-smith/v4/internal/reviewtransaction"
 )
 
 // startLowRiskFacadeReview creates a zero-lens candidate. START closes it
@@ -31,3 +31,4 @@ func startLowRiskFacadeReview(t *testing.T, repo string) string {
 	}
 	return started.LineageID
 }
+

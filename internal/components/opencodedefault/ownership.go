@@ -8,13 +8,13 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/components/filemerge"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/components/mutationjournal"
+	"github.com/jonsanchezr/agent-smith/v4/internal/components/filemerge"
+	"github.com/jonsanchezr/agent-smith/v4/internal/components/mutationjournal"
 )
 
 const (
-	ManagedAgent = "gentle-orchestrator"
-	schema       = "gentle-ai.opencode-default-agent"
+	ManagedAgent = "agent-smith-orchestrator"
+	schema       = "agent-smith.opencode-default-agent"
 	version      = 1
 )
 
@@ -45,7 +45,7 @@ type UninstallPlan struct {
 }
 
 func OwnershipPath(settingsPath string) string {
-	return filepath.Join(filepath.Dir(settingsPath), ".gentle-ai-default-agent.json")
+	return filepath.Join(filepath.Dir(settingsPath), ".agent-smith-default-agent.json")
 }
 
 // PrepareInstall must run before the managed orchestrator is merged. When the
@@ -127,7 +127,7 @@ func PrepareUninstall(settingsPath string) (*UninstallPlan, error) {
 	return &UninstallPlan{settingsPath: settingsPath, settingsExist: exists, current: current, owned: owned}, nil
 }
 func (p *UninstallPlan) Apply(cleaned []byte, settingsExist bool) (changed, removed bool, err error) {
-	// Only an ownership record proves that gentle-ai may roll back this
+	// Only an ownership record proves that agent-smith may roll back this
 	// field. A user-modified default is not ours to change or release.
 	if p.owned == nil || !p.settingsExist || !p.current.present || p.current.value != ManagedAgent {
 		return false, false, nil
@@ -266,3 +266,4 @@ func writePair(settingsPath string, settings []byte, keepSettings bool, ownerPat
 	}
 	return nil
 }
+

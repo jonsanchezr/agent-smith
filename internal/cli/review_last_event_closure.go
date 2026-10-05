@@ -7,11 +7,11 @@ import (
 	"io"
 	"os"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/reviewtransaction"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
+	"github.com/jonsanchezr/agent-smith/v4/internal/reviewtransaction"
 )
 
-const reviewLastEventClosureSchema = "gentle-ai.review-last-event-closure/v1"
+const reviewLastEventClosureSchema = "agent-smith.review-last-event-closure/v1"
 
 const reviewApprovedLastEventAcknowledgementAction = "the approved review completed on the last admitted event and awaits its exact acknowledgement"
 
@@ -45,7 +45,7 @@ func reviewApprovedAcknowledgementTransition(repo string, acknowledgement review
 // reviewAcknowledgedSchema names the terminal answer the burn prints. Consumers
 // use this envelope directly; no post-burn STATUS is required. Later incidental
 // STATUS calls can recognize the consumed target but cannot replay authority.
-const reviewAcknowledgedSchema = "gentle-ai.review-acknowledged/v1"
+const reviewAcknowledgedSchema = "agent-smith.review-acknowledged/v1"
 
 type reviewAcknowledgedResult struct {
 	Schema           string `json:"schema"`
@@ -230,7 +230,7 @@ func closeReviewOnLastCapturedLens(
 			if _, captured, err := reviewProviderCaptureRefuter(ctx, repo, store, state, state.CapturePhaseRevision, runtime); err != nil {
 				return nil, err
 			} else if !captured {
-				return nil, errors.New("compiled provider refuter was required but no result was captured; rerun `gentle-ai review status --cwd <repo> --contract gentle-ai.review-integration/v2 --next-transition` and follow its capture route")
+				return nil, errors.New("compiled provider refuter was required but no result was captured; rerun `agent-smith review status --cwd <repo> --contract agent-smith.review-integration/v2 --next-transition` and follow its capture route")
 			}
 			current, err := store.LoadContext(ctx)
 			if err != nil {
@@ -344,3 +344,4 @@ func reviewCorrectionStatusContinuation(repo string, state reviewtransaction.Com
 		ReviewTransitionBinding{LineageID: state.LineageID, Revision: revision, TargetIdentity: state.InitialSnapshot.Identity}, nil,
 	).Execute
 }
+

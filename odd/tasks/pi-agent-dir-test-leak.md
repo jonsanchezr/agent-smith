@@ -1,4 +1,4 @@
-# Pi agent dir override leaks tests into the real user home
+﻿# Pi agent dir override leaks tests into the real user home
 
 ## Objective
 
@@ -48,7 +48,7 @@ Every other relocatable adapter (vscode, windsurf, kiro, trae) already honors it
 
 ## Progress
 
-- Worktree: `../gentle-ai-worktrees/pi-agent-dir-test-leak`, branch `fix/pi-agent-dir-test-leak` from `origin/main` (d23f49010).
+- Worktree: `../agent-smith-worktrees/pi-agent-dir-test-leak`, branch `fix/pi-agent-dir-test-leak` from `origin/main` (d23f49010).
 
 ## Caller audit
 
@@ -63,3 +63,4 @@ Every other relocatable adapter (vscode, windsurf, kiro, trae) already honors it
 ## Next step
 
 Deliver: approved issue, then pull request.
+

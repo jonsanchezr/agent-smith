@@ -8,7 +8,7 @@ import (
 	"runtime"
 	"strconv"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/releaseprovenance"
+	"github.com/jonsanchezr/agent-smith/v4/internal/releaseprovenance"
 )
 
 func main() {
@@ -56,7 +56,7 @@ func run(args []string) error {
 	if !anyReleaseIdentityPresent() {
 		return releaseprovenance.WriteLocal(*output, *config)
 	}
-	if os.Getenv("GITHUB_REPOSITORY") != "Gentleman-Programming/gentle-ai" {
+	if os.Getenv("GITHUB_REPOSITORY") != "jonsanchezr/agent-smith" {
 		return fmt.Errorf("release provenance input is invalid")
 	}
 	runAttempt, err := strconv.Atoi(os.Getenv("GITHUB_RUN_ATTEMPT"))
@@ -69,3 +69,4 @@ func run(args []string) error {
 		ProviderContractSemver: os.Getenv("PROVIDER_CONTRACT_SEMVER"), GoReleaserVersion: *goReleaser,
 	})
 }
+

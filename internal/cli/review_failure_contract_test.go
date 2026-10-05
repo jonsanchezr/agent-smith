@@ -14,7 +14,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/reviewtransaction"
+	"github.com/jonsanchezr/agent-smith/v4/internal/reviewtransaction"
 )
 
 func TestNegotiatedReviewFailuresUseOneEnvelopeAcrossRoutes(t *testing.T) {
@@ -56,7 +56,7 @@ func TestNegotiatedReviewContractFailuresArePreMutationAndLegacyErrorsStayCompat
 		args []string
 		code string
 	}{
-		{name: "capabilities unsupported", args: []string{"capabilities", "--contract", "gentle-ai.review-integration/v3"}, code: "unsupported_contract"},
+		{name: "capabilities unsupported", args: []string{"capabilities", "--contract", "agent-smith.review-integration/v3"}, code: "unsupported_contract"},
 		{name: "start empty", args: []string{"start", "--contract="}, code: "empty_contract"},
 	}
 	for _, tt := range tests {
@@ -918,3 +918,4 @@ func TestNegotiatedStatusPreNativeFailurePreservesScrubbedCause(t *testing.T) {
 		t.Fatalf("read-only catch-all cause is not scrubbed: %q", scrubbed.Cause)
 	}
 }
+

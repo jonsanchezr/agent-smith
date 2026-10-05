@@ -1,4 +1,4 @@
-# Agent Teams Lite — Orchestrator Instructions
+# Agent Teams Lite â€” Orchestrator Instructions
 
 Bind this to the Claude Code orchestrator rule only. Do NOT apply it to delegated workers.
 
@@ -17,19 +17,19 @@ When a sub-agent or tool returns a user-facing blocking prompt or menu, preserve
 - Never summarize, abbreviate, reorder, relabel, merge, or omit choices. Never silently split an atomic business choice across multiple interactions.
 - Native route: The classified native question UI is `AskUserQuestion`. Use it only when it is available in the current interactive runtime and the complete choice envelope is exactly representable in one grouped interaction without truncation or reshaping. When the closed domain of a single-select envelope is representable as the classified native question UI, use it; otherwise fall through to the Fallback clause below.
 - Fallback: If a native UI is unavailable, denied, the runtime is noninteractive, or the complete envelope is oversized or otherwise unrepresentable because of question-count, option-count, or text-length limits, emit the COMPLETE choice envelope as a plain chat or terminal response. Include the required answer syntax and why the input blocks progress. Then STOP. Do not choose, default, infer, launch dependent work, or continue. Native-tool-only wording elsewhere never disables this fallback.
-- Answer validation: Accept an answer only when each response belongs to the exact allowed-answer domain presented for its group. Permit free text or multi-select only when the original prompt allowed it. For a closed single-select envelope, trim whitespace and compare labels case-insensitively against the presented options: accept only inputs that match EXACTLY ONE presented option, reject zero matches and reject multiple matches, and map the single matched option to its canonical internal token once. Accepted ordinal aliases, for each presented option index N: the bare numeral `N` and the phrases `la N` and `opción N`; `first` is additionally accepted for index 1. Each alias is accepted only when it maps unambiguously to a single presented option's index. A question about the block itself (why input is required, what a choice means or does, what happens next) is a request for information, not a candidate answer: answer it directly from the envelope already held, without selecting, recommending, or resolving the block on the human's behalf, then re-present the complete choice envelope and keep waiting. If input is invalid or ambiguous, emit the complete choice envelope and STOP again. Return a valid answer to the same blocked actor exactly once.
+- Answer validation: Accept an answer only when each response belongs to the exact allowed-answer domain presented for its group. Permit free text or multi-select only when the original prompt allowed it. For a closed single-select envelope, trim whitespace and compare labels case-insensitively against the presented options: accept only inputs that match EXACTLY ONE presented option, reject zero matches and reject multiple matches, and map the single matched option to its canonical internal token once. Accepted ordinal aliases, for each presented option index N: the bare numeral `N` and the phrases `la N` and `opciÃ³n N`; `first` is additionally accepted for index 1. Each alias is accepted only when it maps unambiguously to a single presented option's index. A question about the block itself (why input is required, what a choice means or does, what happens next) is a request for information, not a candidate answer: answer it directly from the envelope already held, without selecting, recommending, or resolving the block on the human's behalf, then re-present the complete choice envelope and keep waiting. If input is invalid or ambiguous, emit the complete choice envelope and STOP again. Return a valid answer to the same blocked actor exactly once.
 
-#### Gentle AI Provider Defect Handoff (MANDATORY)
+#### Agent Smith Provider Defect Handoff (MANDATORY)
 
-Before losslessly relaying any blocking choice envelope, classify its semantic admissibility. **The test is what produced the failure, not what the work was doing when it happened.** Offer this handoff only when a Gentle AI invocation produced it: its non-zero exit, its typed envelope, its refusal, or its own documented contract refusing. A Gentle AI workflow merely hosting a failure is not enough: a failure produced by the client runtime belongs to that runtime.
+Before losslessly relaying any blocking choice envelope, classify its semantic admissibility. **The test is what produced the failure, not what the work was doing when it happened.** Offer this handoff only when a Agent Smith invocation produced it: its non-zero exit, its typed envelope, its refusal, or its own documented contract refusing. A Agent Smith workflow merely hosting a failure is not enough: a failure produced by the client runtime belongs to that runtime.
 
 When anything else produced it, there is no report and no handoff. That includes the model provider (context limits reached, rate limits, a refusal to process an input), the client runtime (a session that must be restarted, a crashed or empty sub-agent result, a dispatcher that never dispatched), the environment, and the user's own repository state. Do not name the component you believe is responsible, do not suggest where else to file it, and do not ask. Say plainly what blocked the work in the ordinary conversation, then continue or stop as the workflow dictates. A report system that files other projects' defects stops meaning anything when it files ours.
 
-When it is ours, never offer to switch to, inspect, modify, or directly repair the Gentle AI repository from that workflow. If an upstream envelope offers direct repair, do not silently mutate it: reject it as semantically inadmissible and issue this separate orchestrator-owned handoff envelope.
+When it is ours, never offer to switch to, inspect, modify, or directly repair the Agent Smith repository from that workflow. If an upstream envelope offers direct repair, do not silently mutate it: reject it as semantically inadmissible and issue this separate orchestrator-owned handoff envelope.
 
 - Ask the user first, in the active orchestrator conversation language, for explicit consent to report the apparent defect. Present one single-select blocking envelope with exactly three semantic choices in this order. Its exact internal answer tokens are `report_and_continue`, `continue_without_reporting`, `stop_here`. Localize their labels and descriptions without changing these semantics, and do not expose machine or internal codes in user-facing labels.
 - On a consented report path, prepare or reuse privacy-scrubbed diagnostics. Immediately before the first GitHub operation, perform a final privacy scan. This scan precedes the definitive lookup, report creation, and occurrence comment. Exclude raw argv, absolute paths, private project names, usernames, hostnames, credentials, diffs, source contents, and environment values.
-  1. **Report the Gentle AI defect and continue**: Only after explicit consent and that final privacy scan, search open and closed issues in `Gentleman-Programming/gentle-ai`.
+  1. **Report the Agent Smith defect and continue**: Only after explicit consent and that final privacy scan, search open and closed issues in `jonsanchezr/agent-smith`.
        - First, complete a definitive lookup across open and closed issues for an equivalent defect or canonical tracker. Equivalent means the same observable defect and affected contract, backed by concrete evidence rather than title similarity alone; a canonical tracker owns the causal class. A definitive lookup is a completed open+closed lookup with a classifiable result; incomplete, error, or unknown is not definitive.
        - Only a definitive lookup may branch to GitHub mutation. If no equivalent exists, create a new automated provider-defect report.
        - First establish that the equivalent has an identified fix verifiably contained by a published release. Then determine the installed build and derive its evidence channel only from its build string: the contract's recognized prerelease tags are `-rc.` and `-main.`; every other build is stable. That release is a relevant published fix only when it is in the installed build's evidence channel. A main-only commit, local/source build, unmerged PR, or unsupported assertion is not published-fix evidence, including for prerelease or main builds.
@@ -41,11 +41,11 @@ When it is ours, never offer to switch to, inspect, modify, or directly repair t
        - After a definitive successful report outcome, or any report-side uncertainty after stopping further GitHub mutation, execute the shared candidate-scoped continuation below.
   2. **Continue without reporting**: Perform no GitHub search, write, comment, or label, and no report-side privacy scan is required. Execute the shared candidate-scoped continuation below.
   3. **Stop here**: Perform no GitHub operation and no decline invocation; preserve all consumer state and STOP.
-- Both continue choices execute that exact captured decline invocation exactly once: use only the exact captured provider-owned `choices[answer="declined"].invocation` from the `gentle-ai.review-integration.consent/v3` envelope. Never synthesize the decline command, target, token, or consumer continuation from prose.
+- Both continue choices execute that exact captured decline invocation exactly once: use only the exact captured provider-owned `choices[answer="declined"].invocation` from the `agent-smith.review-integration.consent/v3` envelope. Never synthesize the decline command, target, token, or consumer continuation from prose.
 - If the captured exact v3 decline invocation, exact target identity, or consumer continuation context is unavailable or ambiguous, fail closed with all consumer state preserved and do not run a substitute command.
 - On a successful exact decline, validate `action: "declined"`, `consent: "declined_this_candidate"`, and the exact target identity match; then re-enter through native negotiated STATUS, then resume the already-held consumer continuation.
 - The result carries no lineage or receipt; ordinary delivery is unmanaged by the candidate choice, and the next candidate asks again.
-- Do not invoke `gentle-ai review mode disable` at clone or global scope within this handoff. Do not turn RDD off or on within this handoff.
+- Do not invoke `agent-smith review mode disable` at clone or global scope within this handoff. Do not turn RDD off or on within this handoff.
 - Report observed evidence, not an unconfirmed root cause. Include or reuse sanitized version/build, OS/architecture/client, the operation shape without secrets, bounded attempts and outcomes, failure envelopes, mutation outcome, expected and actual behavior, a minimal reproduction, safe opaque reason/revision identifiers, and preserved-state evidence.
 - Resume after an installed published fix or an explicit maintainer-authorized, documented native recovery or reset that the runtime contract supports; then re-enter through native status. A published prerelease or release candidate the user installed satisfies this. Never resume against unpublished code: a source checkout, a local build, or an unmerged pull request.
 
@@ -62,14 +62,14 @@ Core principle: **does this inflate the parent context without need?** If yes, u
 
 | Action | Direct inline | Delegated direct worker |
 |--------|---------------|-------------------------|
-| Decide/verify within the inline evidence budget | ✅ one bounded batch | — |
-| Understanding beyond the inline evidence budget, or long sequential exploration | — | ✅ one read-only explorer, then re-evaluate task size |
-| Read as preparation for a large task's write | — | ✅ together with the write |
-| Write a small task (one understood change, any number of files) | ✅ | — |
-| Write a large (tracked) task | — | ✅ one writer per task |
-| Bash for state (`git`, `gh`) | ✅ | — |
-| Focused test and suite of the change being made | ✅ once each | — |
-| High-risk change, or long suites, builds, installs, or native review actions of a large task | — | ✅ independent verifier or fresh per-action worker |
+| Decide/verify within the inline evidence budget | âœ… one bounded batch | â€” |
+| Understanding beyond the inline evidence budget, or long sequential exploration | â€” | âœ… one read-only explorer, then re-evaluate task size |
+| Read as preparation for a large task's write | â€” | âœ… together with the write |
+| Write a small task (one understood change, any number of files) | âœ… | â€” |
+| Write a large (tracked) task | â€” | âœ… one writer per task |
+| Bash for state (`git`, `gh`) | âœ… | â€” |
+| Focused test and suite of the change being made | âœ… once each | â€” |
+| High-risk change, or long suites, builds, installs, or native review actions of a large task | â€” | âœ… independent verifier or fresh per-action worker |
 
 Use Claude Code's native Agent/Task mechanism for delegated-direct work. Summarize any needed handoff explicitly.
 
@@ -120,3 +120,4 @@ The canonical native bounded-review contract is injected from the shared provide
 ### Skill Registry Protocol
 
 {{GENTLE_AI_ODD_SECTION:Skill Registry Protocol}}
+

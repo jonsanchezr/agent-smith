@@ -1,6 +1,6 @@
-# Grafana dashboard provider for the gentle-telemetry usage dashboard.
+﻿# Grafana dashboard provider for the gentle-telemetry usage dashboard.
 # Installed by deploy/telemetry/install.sh --with-grafana, which also
-# copies ../dashboards/gentle-ai-usage.json into the path below.
+# copies ../dashboards/agent-smith-usage.json into the path below.
 apiVersion: 1
 
 providers:
@@ -12,5 +12,6 @@ providers:
     allowUiUpdates: false
     updateIntervalSeconds: 3600
     options:
-      path: /etc/grafana/provisioning/dashboards/gentle-ai
+      path: /etc/grafana/provisioning/dashboards/agent-smith
       foldersFromFilesStructure: false
+

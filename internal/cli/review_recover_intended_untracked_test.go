@@ -10,8 +10,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/reviewtransaction"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
+	"github.com/jonsanchezr/agent-smith/v4/internal/reviewtransaction"
 )
 
 // escalatedIntendedUntrackedRecoveryFixture is the #3159 predecessor: an
@@ -288,3 +288,4 @@ func TestReviewRecoverInheritsDeclarationAfterDeclaredPathWasCommitted(t *testin
 		t.Fatalf("successor identity %s does not bind the authorized candidate %s", successor.State.InitialSnapshot.Identity, complete.Identity)
 	}
 }
+

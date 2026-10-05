@@ -5,7 +5,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
 )
 
 func TestLoadRegistry_NonExistentFile_ReturnsEmptyRegistry(t *testing.T) {
@@ -193,3 +193,4 @@ func TestRegistry_VersionPreservedAcrossSaveLoad(t *testing.T) {
 		t.Errorf("Version = %d, want 42", loaded.Version)
 	}
 }
+

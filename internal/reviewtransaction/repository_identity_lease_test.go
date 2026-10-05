@@ -171,7 +171,7 @@ func TestRepositoryIdentityLeaseRejectsCommonControlContentMutation(t *testing.T
 func TestRepositoryIdentityLeaseOpenAndValidateAreReadOnly(t *testing.T) {
 	requireSnapshotGit(t)
 	repo := initSnapshotRepo(t)
-	storageRoot := filepath.Join(repo, ".git", "gentle-ai")
+	storageRoot := filepath.Join(repo, ".git", "agent-smith")
 	if _, err := os.Lstat(storageRoot); !os.IsNotExist(err) {
 		t.Fatalf("unexpected pre-existing authority storage: %v", err)
 	}
@@ -245,3 +245,4 @@ func assertRepositoryIdentityStorageKey(t *testing.T, lease *RepositoryIdentityL
 		t.Fatalf("RepositoryRef = %q, StorageKey = %q", lease.Identity().RepositoryRef, key)
 	}
 }
+

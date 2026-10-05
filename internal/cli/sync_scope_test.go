@@ -11,12 +11,12 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/backup"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/components/opencoderuntimeplugins"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/opencode"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/state"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/verify"
+	"github.com/jonsanchezr/agent-smith/v4/internal/backup"
+	"github.com/jonsanchezr/agent-smith/v4/internal/components/opencoderuntimeplugins"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
+	"github.com/jonsanchezr/agent-smith/v4/internal/opencode"
+	"github.com/jonsanchezr/agent-smith/v4/internal/state"
+	"github.com/jonsanchezr/agent-smith/v4/internal/verify"
 )
 
 // ─── Parser: sync --scope ────────────────────────────────────────────────────
@@ -217,7 +217,7 @@ func TestSyncWorkspaceScopeDeclaresAndVerifiesPersonaWorkspaceTarget(t *testing.
 }
 
 // TestRunSyncWorkspaceScopeUpdatesWorkspaceWithoutGlobalMutation is the
-// isolated CLI regression for issue #1074: `gentle-ai sync --scope=workspace`
+// isolated CLI regression for issue #1074: `agent-smith sync --scope=workspace`
 // must refresh workspace-scoped managed files while every global file —
 // including persisted state, telemetry counters, backups, and plugins —
 // stays byte-identical with identical permissions.
@@ -709,3 +709,4 @@ func TestRunSyncWorkspaceScopeWritesProjectOpenCodeSettings(t *testing.T) {
 		})
 	}
 }
+

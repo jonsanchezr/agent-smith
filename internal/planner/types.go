@@ -1,8 +1,8 @@
 package planner
 
 import (
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/system"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
+	"github.com/jonsanchezr/agent-smith/v4/internal/system"
 )
 
 type Resolver interface {
@@ -70,3 +70,4 @@ type ComponentAction struct {
 	ID     model.ComponentID
 	Action string
 }
+

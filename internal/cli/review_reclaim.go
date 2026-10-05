@@ -7,7 +7,7 @@ import (
 	"io"
 	"strings"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/reviewtransaction"
+	"github.com/jonsanchezr/agent-smith/v4/internal/reviewtransaction"
 )
 
 type ReviewReclaimResult struct {
@@ -50,3 +50,4 @@ func RunReviewReclaim(args []string, stdout io.Writer) error {
 	}
 	return encodeReviewJSON(stdout, ReviewReclaimResult{Operation: "review/reclaim", Record: record})
 }
+

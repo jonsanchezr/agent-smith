@@ -12,12 +12,12 @@ import (
 	"unicode"
 	"unicode/utf8"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/agents"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/catalog"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/components/filemerge"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/components/opencodedefault"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
-	opencoderuntime "github.com/gentleman-programming/gentle-ai/v4/internal/opencode"
+	"github.com/jonsanchezr/agent-smith/v4/internal/agents"
+	"github.com/jonsanchezr/agent-smith/v4/internal/catalog"
+	"github.com/jonsanchezr/agent-smith/v4/internal/components/filemerge"
+	"github.com/jonsanchezr/agent-smith/v4/internal/components/opencodedefault"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
+	opencoderuntime "github.com/jonsanchezr/agent-smith/v4/internal/opencode"
 )
 
 func TestCodexODDRoutingInjectionPreservesUserTextAndResync(t *testing.T) {
@@ -46,7 +46,7 @@ func TestCodexODDRoutingInjectionPreservesUserTextAndResync(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	for _, want := range []string{personal, "<!-- gentle-ai:agent-routing -->", "| `odd-worker` | `gpt-custom-worker` | `xhigh` |", "| `odd-explorer` | `gpt-custom-cheap` |", "| `odd-verify` | `gpt-custom-strong` |"} {
+	for _, want := range []string{personal, "<!-- agent-smith:agent-routing -->", "| `odd-worker` | `gpt-custom-worker` | `xhigh` |", "| `odd-explorer` | `gpt-custom-cheap` |", "| `odd-verify` | `gpt-custom-strong` |"} {
 		if !strings.Contains(string(body), want) {
 			t.Errorf("installed guidance missing %q", want)
 		}
@@ -84,7 +84,7 @@ func TestRemoteAuthorizationSectionPreservesUserText(t *testing.T) {
 // This compares against the pre-existing merger, NOT native last-match semantics.
 // That merger sorts maps; this slice must not claim to fix custom rule ordering.
 func TestRemoteAuthorizationRetainsExistingPermissionMergeBehavior(t *testing.T) {
-	const seed = `{"permission":{"bash":{"ssh *":"allow","*":"deny"}},"agent":{"gentle-orchestrator":{"prompt":"Personal instructions","permission":{"bash":"deny","task":"deny"}}}}`
+	const seed = `{"permission":{"bash":{"ssh *":"allow","*":"deny"}},"agent":{"agent-smith-orchestrator":{"prompt":"Personal instructions","permission":{"bash":"deny","task":"deny"}}}}`
 	baseline, err := filemerge.MergeJSONObjects([]byte(seed), []byte(`{}`))
 	if err != nil {
 		t.Fatal(err)
@@ -98,7 +98,7 @@ func TestRemoteAuthorizationRetainsExistingPermissionMergeBehavior(t *testing.T)
 		if err := json.Unmarshal(root["agent"], &agents); err != nil {
 			t.Fatal(err)
 		}
-		return string(root["permission"]) + string(agents["gentle-orchestrator"]["permission"])
+		return string(root["permission"]) + string(agents["agent-smith-orchestrator"]["permission"])
 	}
 	for _, agent := range []model.AgentID{model.AgentOpenCode, model.AgentKilocode} {
 		t.Run(string(agent), func(t *testing.T) {
@@ -145,7 +145,7 @@ func TestRemoteAuthorizationPrimaryCarriers(t *testing.T) {
 			}
 			prompt := deliveredGuidance(t, first.Files[0])
 			for _, required := range []string{
-				"<!-- gentle-ai:remote-authorization -->",
+				"<!-- agent-smith:remote-authorization -->",
 				"destination", "operation", "credential/session",
 				"SSH agents", "ControlMaster", "not a sandbox",
 			} {
@@ -230,10 +230,10 @@ func TestInjectRoutingInstallsGuidanceForEverySupportedAgent(t *testing.T) {
 			if !strings.Contains(written, rendered) {
 				t.Fatalf("InjectRouting(%q) did not write the rendered guidance:\n%s", agent.ID, written)
 			}
-			if !strings.Contains(written, "<!-- gentle-ai:"+RoutingSectionID+" -->") {
+			if !strings.Contains(written, "<!-- agent-smith:"+RoutingSectionID+" -->") {
 				t.Fatalf("InjectRouting(%q) did not open the managed section:\n%s", agent.ID, written)
 			}
-			if !strings.Contains(written, "<!-- /gentle-ai:"+RoutingSectionID+" -->") {
+			if !strings.Contains(written, "<!-- /agent-smith:"+RoutingSectionID+" -->") {
 				t.Fatalf("InjectRouting(%q) did not close the managed section:\n%s", agent.ID, written)
 			}
 			if !strings.Contains(written, "First establish whether the requested outcome explicitly authorizes a change.") {
@@ -512,7 +512,7 @@ func TestInjectRoutingCurrentKimiReportsRenderedHubWrite(t *testing.T) {
 	}
 
 	hub := readFile(t, wantHub)
-	if !strings.Contains(hub, "<!-- gentle-ai:kimi-agents-hub -->") || !strings.Contains(hub, "Organic Driven Development") {
+	if !strings.Contains(hub, "<!-- agent-smith:kimi-agents-hub -->") || !strings.Contains(hub, "Organic Driven Development") {
 		t.Fatalf("current Kimi hub does not contain rendered managed guidance:\n%s", hub)
 	}
 }
@@ -553,8 +553,8 @@ func TestInjectRoutingUsesAlwaysLoadedOrchestratorScope(t *testing.T) {
 			if !strings.Contains(prompt, rendered) {
 				t.Fatalf("orchestrator prompt for %q carries no routing guidance:\n%s", agent, prompt)
 			}
-			if !strings.Contains(prompt, "<!-- gentle-ai:"+RoutingSectionID+" -->") ||
-				!strings.Contains(prompt, "<!-- /gentle-ai:"+RoutingSectionID+" -->") {
+			if !strings.Contains(prompt, "<!-- agent-smith:"+RoutingSectionID+" -->") ||
+				!strings.Contains(prompt, "<!-- /agent-smith:"+RoutingSectionID+" -->") {
 				t.Fatalf("orchestrator prompt for %q carries no managed section:\n%s", agent, prompt)
 			}
 
@@ -936,11 +936,11 @@ func orchestratorPrompt(t *testing.T, path string) string {
 	return settings.Agent[opencodedefault.ManagedAgent].Prompt
 }
 
-// managedRoutingBlock returns only the content Gentle AI owns, so assertions
+// managedRoutingBlock returns only the content Agent Smith owns, so assertions
 // about the block never accidentally inspect surrounding user content.
 func managedRoutingBlock(content string) string {
-	open := "<!-- gentle-ai:" + RoutingSectionID + " -->"
-	closing := "<!-- /gentle-ai:" + RoutingSectionID + " -->"
+	open := "<!-- agent-smith:" + RoutingSectionID + " -->"
+	closing := "<!-- /agent-smith:" + RoutingSectionID + " -->"
 
 	start := strings.Index(content, open)
 	end := strings.Index(content, closing)
@@ -984,3 +984,4 @@ func readFile(t *testing.T, path string) string {
 	}
 	return string(data)
 }
+

@@ -3,8 +3,8 @@ package agentguidance
 import (
 	"strings"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/assets"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/components/filemerge"
+	"github.com/jonsanchezr/agent-smith/v4/internal/assets"
+	"github.com/jonsanchezr/agent-smith/v4/internal/components/filemerge"
 )
 
 // InjectRemoteAuthorization projects the canonical behavioral boundary into a
@@ -14,3 +14,4 @@ func InjectRemoteAuthorization(prompt string) string {
 	contract := assets.MustRead("generic/remote-authorization-contract.md")
 	return filemerge.InjectMarkdownSection(prompt, "remote-authorization", strings.TrimSpace(contract))
 }
+

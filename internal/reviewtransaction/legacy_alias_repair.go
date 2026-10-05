@@ -13,7 +13,7 @@ import (
 )
 
 const (
-	legacyAliasRepairAuthorizationSchema = "gentle-ai.review-legacy-alias-repair-authorization/v1"
+	legacyAliasRepairAuthorizationSchema = "agent-smith.review-legacy-alias-repair-authorization/v1"
 	LegacyAliasRepairDisposition         = "quarantine-approved-historical-alias"
 	legacyAliasRepairDiagnostic          = "unsupported historical v1 operation alias"
 )
@@ -291,3 +291,4 @@ func replayCommittedLegacyAliasRepair(base, repository string, request LegacyAli
 	}
 	return CompactReclaimRecord{}, fmt.Errorf("review repair-legacy-alias refused: lineage %q is absent and no committed repair record matches; inspect prepared records under %s", request.LineageID, filepath.Join(base, "quarantine"))
 }
+

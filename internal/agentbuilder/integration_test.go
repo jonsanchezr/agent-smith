@@ -8,7 +8,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
 )
 
 // cannedSKILL is a valid SKILL.md response that the MockEngine returns.
@@ -149,3 +149,4 @@ func TestIntegration_FullAgentBuilderFlow(t *testing.T) {
 		t.Errorf("registry entry GenerationEngine = %q, want %q", found.GenerationEngine, model.AgentClaudeCode)
 	}
 }
+

@@ -7,7 +7,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/telemetry"
+	"github.com/jonsanchezr/agent-smith/v4/internal/telemetry"
 )
 
 // twoRowRuntimeFixture returns a valid runtime event with two distinct rows,
@@ -29,7 +29,7 @@ func twoRowRuntimeFixture(t *testing.T) telemetry.RuntimeEvent {
 	}
 	rowB += `"error_category":"rate_limit","duration":{"kind":"unavailable","measured_count":0,"sum_ms":null}}`
 
-	raw := []byte(`{"schema":"gentle-ai.telemetry-runtime-event/v1","registry":1,"delivery_id":"0123456789abcdef0123456789abcdef","host":"pi","rows":[` + rowA + `,` + rowB + `]}`)
+	raw := []byte(`{"schema":"agent-smith.telemetry-runtime-event/v1","registry":1,"delivery_id":"0123456789abcdef0123456789abcdef","host":"pi","rows":[` + rowA + `,` + rowB + `]}`)
 	event, err := telemetry.ParseRuntimeEvent(raw)
 	if err != nil {
 		t.Fatalf("parse fixture: %v", err)
@@ -318,3 +318,4 @@ func TestRuntimeMetricsWriteTo_DeterministicAcrossCalls(t *testing.T) {
 		t.Errorf("missing TYPE line for gentle_runtime_rows_total:\n%s", first.String())
 	}
 }
+

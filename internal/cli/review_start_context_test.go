@@ -14,7 +14,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/reviewtransaction"
+	"github.com/jonsanchezr/agent-smith/v4/internal/reviewtransaction"
 )
 
 func TestNegotiatedReviewStartContextIsFrozenWhileLegacyBytesStayPrivate(t *testing.T) {
@@ -457,3 +457,4 @@ func runReviewCLIGitInput(t *testing.T, repo string, input []byte, args ...strin
 	}
 	return string(output)
 }
+

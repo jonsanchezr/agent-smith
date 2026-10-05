@@ -4,7 +4,7 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
 )
 
 func TestManagedOpenCodePluginInventory(t *testing.T) {
@@ -35,3 +35,4 @@ func TestManagedOpenCodePluginInventory(t *testing.T) {
 		t.Errorf("default inventory = %v", got)
 	}
 }
+

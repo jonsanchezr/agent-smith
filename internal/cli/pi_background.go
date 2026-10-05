@@ -8,9 +8,9 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/components/filemerge"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/state"
+	"github.com/jonsanchezr/agent-smith/v4/internal/components/filemerge"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
+	"github.com/jonsanchezr/agent-smith/v4/internal/state"
 )
 
 // PiBackgroundSubagentsEnv is the environment source for the managed Pi
@@ -149,14 +149,14 @@ func ResolvePiBackgroundInteractive(prior model.PiBackgroundIntent) (PiBackgroun
 }
 
 // piBackgroundPolicyPath resolves the gentle-pi-readable policy location:
-// <base>/gentle-ai/background-subagents.json where base is
+// <base>/agent-smith/background-subagents.json where base is
 // GENTLE_PI_CONFIG_HOME when set, otherwise ~/.pi.
 func piBackgroundPolicyPath(homeDir string) string {
 	base := strings.TrimSpace(os.Getenv(PiConfigHomeEnv))
 	if base == "" {
 		base = filepath.Join(homeDir, ".pi")
 	}
-	return filepath.Join(base, "gentle-ai", "background-subagents.json")
+	return filepath.Join(base, "agent-smith", "background-subagents.json")
 }
 
 // piBackgroundProjectionPlan writes the RESOLVED effective on/off policy to
@@ -277,3 +277,4 @@ func (s piBackgroundProjectionStep) Run() error {
 }
 
 func (s piBackgroundProjectionStep) Rollback() error { return s.plan.Rollback() }
+

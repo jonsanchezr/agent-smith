@@ -1,49 +1,49 @@
-# 🧪 How to test — Organic RDD (prerelease 2.2.0-rc.1)
+﻿# ðŸ§ª How to test â€” Organic RDD (prerelease 2.2.0-rc.1)
 
 > [!IMPORTANT]
 > **Current closure and delivery semantics.** A zero-lens START, or the final admitted lens, refuter, or validation capture, closes and burns a review. Delivery always follows ordinary repository policy; review closure is informational.
 
 > [!WARNING]
-> **Historical and superseded guide.** This document preserves the candidate-specific validation procedure for `v2.2.0-rc.1` and PR [#1801](https://github.com/Gentleman-Programming/gentle-ai/pull/1801). It is not current installation or validation guidance for stable [`v2.6.0`](https://github.com/Gentleman-Programming/gentle-ai/releases/tag/v2.6.0) or unreleased `main`. Use the [Quickstart version policy](../quickstart.md#version-policy) for current installation channels and validation entry points.
+> **Historical and superseded guide.** This document preserves the candidate-specific validation procedure for `v2.2.0-rc.1` and PR [#1801](https://github.com/jonsanchezr/agent-smith/pull/1801). It is not current installation or validation guidance for stable [`v2.6.0`](https://github.com/jonsanchezr/agent-smith/releases/tag/v2.6.0) or unreleased `main`. Use the [Quickstart version policy](../quickstart.md#version-policy) for current installation channels and validation entry points.
 >
-> Community testing guide for the candidate built from PR [#1801](https://github.com/Gentleman-Programming/gentle-ai/pull/1801). Every **Expected** here was validated against real output before publication. The guide uses a throwaway HOME precisely so it does not touch your real config — do not skip the setup.
+> Community testing guide for the candidate built from PR [#1801](https://github.com/jonsanchezr/agent-smith/pull/1801). Every **Expected** here was validated against real output before publication. The guide uses a throwaway HOME precisely so it does not touch your real config â€” do not skip the setup.
 
 > [!IMPORTANT]
-> **This guide moves; a published asset does not.** It tracks the PR head and describes behaviour that may have landed *after* the binary you downloaded was built. Running it literally against an older asset produces false regressions — that is the guide's fault, not the product's.
+> **This guide moves; a published asset does not.** It tracks the PR head and describes behaviour that may have landed *after* the binary you downloaded was built. Running it literally against an older asset produces false regressions â€” that is the guide's fault, not the product's.
 >
 > Before you start, write down which candidate you are testing:
 >
 > ```
-> gentle-ai --version          # or "$RC_BIN" --version
+> agent-smith --version          # or "$RC_BIN" --version
 > ```
 >
 > **Put that string in your report.** If a step disagrees with what you see, the first question is always whether the guide is describing a newer commit than your binary. Say which one you ran and we can tell the difference; without it we cannot.
 
 ## How to get this binary
 
-The binaries are on the prerelease page: **https://github.com/Gentleman-Programming/gentle-ai/releases/tag/v2.2.0-rc.1**
+The binaries are on the prerelease page: **https://github.com/jonsanchezr/agent-smith/releases/tag/v2.2.0-rc.1**
 
 1. Download the asset for your platform from the Assets section of that page.
 2. Verify the checksum against `SHA256SUMS.txt`:
    ```
    sha256sum -c SHA256SUMS.txt --ignore-missing
    ```
-3. Make it runnable and confirm which build you have. **You do not need gentle-ai installed already** — this works on a clean machine:
+3. Make it runnable and confirm which build you have. **You do not need agent-smith installed already** â€” this works on a clean machine:
    ```
-   RC_BIN="$(pwd)/gentle-ai_2.2.0-rc.1_<os>_<arch>"
+   RC_BIN="$(pwd)/agent-smith_2.2.0-rc.1_<os>_<arch>"
    chmod +x "$RC_BIN"
    "$RC_BIN" --version
    ```
 4. Either invoke `"$RC_BIN"` explicitly for every step, or put it on your PATH under a throwaway directory:
    ```
-   mkdir -p /tmp/rdd-bin && ln -sf "$RC_BIN" /tmp/rdd-bin/gentle-ai
+   mkdir -p /tmp/rdd-bin && ln -sf "$RC_BIN" /tmp/rdd-bin/agent-smith
    export PATH="/tmp/rdd-bin:$PATH"
    ```
-5. **Only if you already had gentle-ai installed** and want to replace it, back the old one up first:
+5. **Only if you already had agent-smith installed** and want to replace it, back the old one up first:
    ```
-   command -v gentle-ai && cp "$(command -v gentle-ai)" ~/gentle-ai.backup
+   command -v agent-smith && cp "$(command -v agent-smith)" ~/agent-smith.backup
    ```
-   Roll back with `mv ~/gentle-ai.backup "$(command -v gentle-ai)"` when you are done.
+   Roll back with `mv ~/agent-smith.backup "$(command -v agent-smith)"` when you are done.
 
 ## Setup (once)
 
@@ -60,28 +60,28 @@ The binaries are on the prerelease page: **https://github.com/Gentleman-Programm
 
 ### Flow 1: Routing without SDD (the main fix)
 
-1. [ ] `gentle-ai install --scope workspace --agents claude-code --components permissions` → **Expected**: it installs and ends with "You're ready", without asking anything about SDD.
-2. [ ] Open `$HOME/demo/.claude/CLAUDE.md` → **Expected**: a routing section with **direct inline**, **delegated direct** and **optional SDD**.
-3. [ ] Search for `WorkRun` or `work-capabilities` → **Expected**: **zero results**. If it shows up, that is a bug.
-4. [ ] Search for `review mode` → **Expected**: `gentle-ai review mode enable|disable|status` shows up.
-5. [ ] Run the same install again → **Expected**: same output and the files do NOT change.
+1. [ ] `agent-smith install --scope workspace --agents claude-code --components permissions` â†’ **Expected**: it installs and ends with "You're ready", without asking anything about SDD.
+2. [ ] Open `$HOME/demo/.claude/CLAUDE.md` â†’ **Expected**: a routing section with **direct inline**, **delegated direct** and **optional SDD**.
+3. [ ] Search for `WorkRun` or `work-capabilities` â†’ **Expected**: **zero results**. If it shows up, that is a bug.
+4. [ ] Search for `review mode` â†’ **Expected**: `agent-smith review mode enable|disable|status` shows up.
+5. [ ] Run the same install again â†’ **Expected**: same output and the files do NOT change.
 
 ### Flow 2: Kill switch
 
-1. [ ] `gentle-ai review mode status --cwd $HOME/demo --json` → **Expected**: effective `on`, source `default`, with both sources unset — receipt-driven development defaults to ON without persisting a user decision. This check requires a fresh home and clone with no explicit preference.
-2. [ ] Repeat `status` → **Expected**: the same unset sources and default ON; read-only status must not save a preference. Candidate consent remains separate from this mode default.
-3. [ ] `gentle-ai review mode enable --scope global --cwd $HOME/demo` then `status` → **Expected**: effective `on`, source `global`.
-4. [ ] `gentle-ai review mode disable --cwd $HOME/demo` → **Expected**: it confirms reviews are off.
-5. [ ] `status` again → **Expected**: effective `off`, source `global` (an explicit off, not the default).
-6. [ ] `gentle-ai review start --cwd $HOME/demo` → **Expected**: refused without reviewer work, naming the global OFF source and `gentle-ai review mode enable --scope=global`. If you turned it off at clone scope, the message must name `--scope=global` **then** `--scope=clone`: both may be OFF. Clearing only the clone override inherits global mode or default ON; an explicit global OFF still wins.
-7. [ ] `enable --scope global` and `status` → **Expected**: `on` again.
-8. [ ] `disable --scope clone`, clone (`git clone $HOME/demo $HOME/demo2`) and `status` in `demo2` → **Expected**: `demo2` gives **on** (the global enable still applies) — turning a clone off is NOT inherited.
-9. [ ] **Before moving on**: `enable --scope clone` in `demo` → **Expected**: `on`.
+1. [ ] `agent-smith review mode status --cwd $HOME/demo --json` â†’ **Expected**: effective `on`, source `default`, with both sources unset â€” receipt-driven development defaults to ON without persisting a user decision. This check requires a fresh home and clone with no explicit preference.
+2. [ ] Repeat `status` â†’ **Expected**: the same unset sources and default ON; read-only status must not save a preference. Candidate consent remains separate from this mode default.
+3. [ ] `agent-smith review mode enable --scope global --cwd $HOME/demo` then `status` â†’ **Expected**: effective `on`, source `global`.
+4. [ ] `agent-smith review mode disable --cwd $HOME/demo` â†’ **Expected**: it confirms reviews are off.
+5. [ ] `status` again â†’ **Expected**: effective `off`, source `global` (an explicit off, not the default).
+6. [ ] `agent-smith review start --cwd $HOME/demo` â†’ **Expected**: refused without reviewer work, naming the global OFF source and `agent-smith review mode enable --scope=global`. If you turned it off at clone scope, the message must name `--scope=global` **then** `--scope=clone`: both may be OFF. Clearing only the clone override inherits global mode or default ON; an explicit global OFF still wins.
+7. [ ] `enable --scope global` and `status` â†’ **Expected**: `on` again.
+8. [ ] `disable --scope clone`, clone (`git clone $HOME/demo $HOME/demo2`) and `status` in `demo2` â†’ **Expected**: `demo2` gives **on** (the global enable still applies) â€” turning a clone off is NOT inherited.
+9. [ ] **Before moving on**: `enable --scope clone` in `demo` â†’ **Expected**: `on`.
 
 ### Flow 3: Documentation-only change (zero ceremony)
 
 1. [ ] Edit `README.md` (plain text) and stage **only that file**: `git add README.md`.
-2. [ ] `gentle-ai review start --cwd $HOME/demo` → **Expected**: `risk_level: low`, `selected_lenses: []` — zero reviewers, no question; START closes and burns the review.
+2. [ ] `agent-smith review start --cwd $HOME/demo` â†’ **Expected**: `risk_level: low`, `selected_lenses: []` â€” zero reviewers, no question; START closes and burns the review.
 
 ### Current review lifecycle (use for every flow below)
 
@@ -93,15 +93,15 @@ The binaries are on the prerelease page: **https://github.com/Gentleman-Programm
 ### Flow 4: The review is chosen by evidence, not by size
 
 1. [ ] `mkdir -p internal/auth && echo "func CheckToken() {}" > internal/auth/session.go`, `git add internal/auth`.
-2. [ ] `review start` → **Expected**: `risk_level: high`, 4 lenses, and `risk_evidence` naming the reason (e.g. `"authentication in internal/auth/session.go"`).
-3. [ ] Commit that (`git commit -am "auth"`). Generate 1000+ lines of text across several `.md` files, `git add *.md`, `review start` → **Expected**: `low`, 0 lenses. It does NOT escalate on size.
+2. [ ] `review start` â†’ **Expected**: `risk_level: high`, 4 lenses, and `risk_evidence` naming the reason (e.g. `"authentication in internal/auth/session.go"`).
+3. [ ] Commit that (`git commit -am "auth"`). Generate 1000+ lines of text across several `.md` files, `git add *.md`, `review start` â†’ **Expected**: `low`, 0 lenses. It does NOT escalate on size.
 
 ### Flow 5: The consent question (needs a real terminal)
 
-1. [ ] With a tier 1/2 change ready, `review start` in an interactive terminal → **Expected**: **two** options — `1) Run the review now` / `2) Not now, just this once` — and a final line naming `gentle-ai review mode disable`. **There is no option 3.**
-2. [ ] Answer `2` → **Expected**: it does not review this candidate.
-3. [ ] ANOTHER change and `review start` → **Expected**: it asks again.
-4. [ ] Answer `1` → **Expected**: it reviews, and the next change no longer asks.
+1. [ ] With a tier 1/2 change ready, `review start` in an interactive terminal â†’ **Expected**: **two** options â€” `1) Run the review now` / `2) Not now, just this once` â€” and a final line naming `agent-smith review mode disable`. **There is no option 3.**
+2. [ ] Answer `2` â†’ **Expected**: it does not review this candidate.
+3. [ ] ANOTHER change and `review start` â†’ **Expected**: it asks again.
+4. [ ] Answer `1` â†’ **Expected**: it reviews, and the next change no longer asks.
 
 **If you are driving this from a script or an agent**: the answer is read as one whole line, so it must end with a newline. Sending the bare character `2` over a pseudo-terminal is echoed but never completes the read, and the command waits until your harness kills it. Send `2\n`. There is no timeout on this prompt, so a missing newline looks exactly like a hang.
 
@@ -115,24 +115,24 @@ cd $HOME/demo && git remote add origin $HOME/demo-remote.git
 git push -u origin HEAD
 ```
 
-1. [ ] Turn reviews off, make a change, and commit → **Expected**: the commit works normally.
-2. [ ] Push the commit → **Expected**: ordinary repository policy decides delivery; no review lifecycle command is part of the push.
-3. [ ] Turn reviews back on, make and commit another docs change, then push → **Expected**: delivery remains ordinary unmanaged policy.
+1. [ ] Turn reviews off, make a change, and commit â†’ **Expected**: the commit works normally.
+2. [ ] Push the commit â†’ **Expected**: ordinary repository policy decides delivery; no review lifecycle command is part of the push.
+3. [ ] Turn reviews back on, make and commit another docs change, then push â†’ **Expected**: delivery remains ordinary unmanaged policy.
 
 ### Flow 7: Turning it off mid-work and coming back
 
-1. [ ] With reviews on, a change **staged but not committed**. Turn reviews off → **Expected**: everything flows.
-2. [ ] Turn them on and `review start` → **Expected**: it works — it freezes and reviews from scratch. Nothing is lost. (If you already committed, the result carries a `hint` with `--base-ref`.)
+1. [ ] With reviews on, a change **staged but not committed**. Turn reviews off â†’ **Expected**: everything flows.
+2. [ ] Turn them on and `review start` â†’ **Expected**: it works â€” it freezes and reviews from scratch. Nothing is lost. (If you already committed, the result carries a `hint` with `--base-ref`.)
 
 ### Flow 8: No phantom SDD artifacts
 
-1. [ ] `git rev-parse --git-common-dir` and look inside → **Expected**: inside `gentle-ai/` only review state; nothing like `sdd*`, `trace`, `evaluation`.
+1. [ ] `git rev-parse --git-common-dir` and look inside â†’ **Expected**: inside `agent-smith/` only review state; nothing like `sdd*`, `trace`, `evaluation`.
 
 ---
 
 ## Flows 9 to 13: what we fixed with your feedback
 
-These flows are new. Each one reproduces a bug someone in the community found in earlier rounds. They need a binary **later than Refresh 4**. Check which build you have with `gentle-ai doctor`: it names the binary you actually invoked and its version, and warns when that differs from the one on your `PATH`. If yours predates the current refresh, download it again from the release page or build from the PR branch.
+These flows are new. Each one reproduces a bug someone in the community found in earlier rounds. They need a binary **later than Refresh 4**. Check which build you have with `agent-smith doctor`: it names the binary you actually invoked and its version, and warns when that differs from the one on your `PATH`. If yours predates the current refresh, download it again from the release page or build from the PR branch.
 
 ### Flow 9: Published commits stay ordinary delivery
 
@@ -140,10 +140,10 @@ Reported by @Wladimirfn, @Denver2828, @MarsSall and @Freedom2828. The old candid
 
 You need the remote from Flow 6.
 
-1. [ ] Make a docs change and run `review start` → **Expected**: its zero-lens START closes and burns the review.
+1. [ ] Make a docs change and run `review start` â†’ **Expected**: its zero-lens START closes and burns the review.
 2. [ ] Commit and push the change.
 3. [ ] Turn reviews off, make and commit another docs change, then push it.
-4. [ ] Turn reviews on and make a third docs change → **Expected**: a new START concerns only this new candidate; previously closed reviews and published commits do not govern ordinary delivery.
+4. [ ] Turn reviews on and make a third docs change â†’ **Expected**: a new START concerns only this new candidate; previously closed reviews and published commits do not govern ordinary delivery.
 
 ### Flow 10: First commit in a repo with no history
 
@@ -151,8 +151,8 @@ Reported by @lu149e, with the root cause confirmed by @Denver2828.
 
 1. [ ] `mkdir $HOME/unborn && cd $HOME/unborn && git init -b main`.
 2. [ ] Create a code file, `gofmt` if it applies, and `git add -A`. **Do not commit yet.**
-3. [ ] `git rev-parse --verify HEAD` → **Expected**: it fails, because there is no first commit yet. That is correct.
-4. [ ] `gentle-ai review start --cwd "$PWD"` → **Expected**: the review **starts**. It used to blow up with `Needed a single revision`.
+3. [ ] `git rev-parse --verify HEAD` â†’ **Expected**: it fails, because there is no first commit yet. That is correct.
+4. [ ] `agent-smith review start --cwd "$PWD"` â†’ **Expected**: the review **starts**. It used to blow up with `Needed a single revision`.
 
 ### Flow 11: STATUS transitions run exactly as returned
 
@@ -161,24 +161,24 @@ This one is for people using agents. A controller must not infer a lifecycle act
 1. [ ] With a review in progress, ask for the next transition:
 
 ```
-gentle-ai review status --next-transition --contract gentle-ai.review-integration/v2
+agent-smith review status --next-transition --contract agent-smith.review-integration/v2
 ```
 
-2. [ ] First read `next_transition.kind`. If it is `execute`, run the returned operation with its ordered argument tokens exactly as returned → **Expected**: the transition runs without reordered, synthesized, or added arguments.
-3. [ ] If it is `collect`, inspect `inputs[].arguments` → **Expected**: each carries a complete token for the bound capture. A model must first produce that bound reviewer result; do not invent an execute action.
+2. [ ] First read `next_transition.kind`. If it is `execute`, run the returned operation with its ordered argument tokens exactly as returned â†’ **Expected**: the transition runs without reordered, synthesized, or added arguments.
+3. [ ] If it is `collect`, inspect `inputs[].arguments` â†’ **Expected**: each carries a complete token for the bound capture. A model must first produce that bound reviewer result; do not invent an execute action.
 4. [ ] Submit a completed result only through the returned collect input. Do **not** add `--cwd`: inputs that carry `--repository-context` refuse both contexts together.
 5. [ ] After any malformed, incomplete, unavailable, or ambiguous capture result, query STATUS again. Relaunch only if it reoffers the same bound slot; otherwise follow the returned state.
 
 ### Flow 12: Final capture closes the review
 
 1. [ ] Start a review that selects lenses and follow only the STATUS-issued `capture-result` route for each selected lens.
-2. [ ] Submit the final admitted capture → **Expected**: the final reviewer, refuter, or targeted-validator capture closes the review and burns its authority. No additional close or retry command follows it; delivery remains ordinary unmanaged policy.
+2. [ ] Submit the final admitted capture â†’ **Expected**: the final reviewer, refuter, or targeted-validator capture closes the review and burns its authority. No additional close or retry command follows it; delivery remains ordinary unmanaged policy.
 
 If a capture is malformed, incomplete, or unavailable, query the same exact-lineage STATUS and relaunch only when it reoffers the same bound slot.
 
 ### Flow 13: Flag combinations we do not support
 
-1. [ ] `review start --projection staged --base-ref HEAD~1` → **Expected**: a typed rejection naming **both escapes**: `--projection staged` alone (to review the index) or `--base-ref <ref> --committed-only` (to review base-diff). It does not guess which one you meant.
+1. [ ] `review start --projection staged --base-ref HEAD~1` â†’ **Expected**: a typed rejection naming **both escapes**: `--projection staged` alone (to review the index) or `--base-ref <ref> --committed-only` (to review base-diff). It does not guess which one you meant.
 
 ---
 
@@ -192,37 +192,37 @@ The bug @decode2 and @fisidj found. You need the remote from Flow 6.
 
 1. [ ] Make **three** docs changes. For each one, run `review start`, confirm that the zero-lens START closes, then commit. Push the first two.
 2. [ ] Turn reviews off and make a fourth commit **without reviewing it**, then push it.
-3. [ ] Turn reviews on and run `review status --contract gentle-ai.review-integration/v2` → **Expected**: STATUS does not make any prior closed review govern the fourth commit or its delivery.
+3. [ ] Turn reviews on and run `review status --contract agent-smith.review-integration/v2` â†’ **Expected**: STATUS does not make any prior closed review govern the fourth commit or its delivery.
 
 ### Flow 15: Corrections use the STATUS-bound plan
 
 1. [ ] Reach a correction state and query STATUS for the review lineage.
-2. [ ] Use only the bound `capture-correction-plan` STATUS returns → **Expected**: it identifies the admitted correction scope.
-3. [ ] After the bounded correction, query STATUS again and use the terminal `capture-validation` it returns → **Expected**: the admitted validation capture closes and burns the review.
+2. [ ] Use only the bound `capture-correction-plan` STATUS returns â†’ **Expected**: it identifies the admitted correction scope.
+3. [ ] After the bounded correction, query STATUS again and use the terminal `capture-validation` it returns â†’ **Expected**: the admitted validation capture closes and burns the review.
 4. [ ] If either capture result is ambiguous, query STATUS again before doing anything else; it reconciles closure or reoffers the same bound slot.
 
 ### Flow 16: STATUS says which capture comes next
 
-1. [ ] With a selected-lens review waiting for results, run `review status --next-transition --contract gentle-ai.review-integration/v2`.
-2. [ ] Read the returned collect input → **Expected**: it identifies the exact bound capture to submit; do not assemble or substitute a different route.
-3. [ ] Submit the result only through that route, then query STATUS → **Expected**: STATUS identifies the next capture or the closed state.
+1. [ ] With a selected-lens review waiting for results, run `review status --next-transition --contract agent-smith.review-integration/v2`.
+2. [ ] Read the returned collect input â†’ **Expected**: it identifies the exact bound capture to submit; do not assemble or substitute a different route.
+3. [ ] Submit the result only through that route, then query STATUS â†’ **Expected**: STATUS identifies the next capture or the closed state.
 
 ### Flow 17: Visible numbers when a correction escalates
 
-1. [ ] Push a correction past its line budget → **Expected**: the message says **spent, remaining and total** with distinct labels. It used to escalate with a number that was not printed anywhere.
+1. [ ] Push a correction past its line budget â†’ **Expected**: the message says **spent, remaining and total** with distinct labels. It used to escalate with a number that was not printed anywhere.
 
 ### Flow 18: Ambiguous capture output is reconciled by STATUS
 
 1. [ ] Start a selected-lens review and retain the exact STATUS-issued capture input.
 2. [ ] Produce a malformed, incomplete, unavailable, or otherwise ambiguous capture outcome.
-3. [ ] Query STATUS for that same lineage → **Expected**: it reconciles any admitted outcome. It reoffers a capture only when the identical bound slot is still open.
+3. [ ] Query STATUS for that same lineage â†’ **Expected**: it reconciles any admitted outcome. It reoffers a capture only when the identical bound slot is still open.
 4. [ ] Follow the reoffered route only when the lineage, target, revision, subject, lens, and order all match the original input. Otherwise stop and report the mismatch with the STATUS output.
 
 ### Flow 19: First-run hygiene
 
-1. [ ] `install --agents opencode` (OpenCode only) → **Expected**: the last line names only OpenCode, not "run claude".
-2. [ ] `doctor` running the binary **by absolute path** → **Expected**: it reports the binary you ran with its version, and warns if it differs from the one on the PATH.
-3. [ ] `review start --committed-only true` (with a space) → **Expected**: the error explains that a boolean flag is passed as `--flag` or `--flag=true`, never with a separate value.
+1. [ ] `install --agents opencode` (OpenCode only) â†’ **Expected**: the last line names only OpenCode, not "run claude".
+2. [ ] `doctor` running the binary **by absolute path** â†’ **Expected**: it reports the binary you ran with its version, and warns if it differs from the one on the PATH.
+3. [ ] `review start --committed-only true` (with a space) â†’ **Expected**: the error explains that a boolean flag is passed as `--flag` or `--flag=true`, never with a separate value.
 
 ---
 
@@ -238,20 +238,20 @@ Cross-compiling with `GOOS=darwin` proves the code builds. It proves nothing abo
 
 macOS puts `$TMPDIR` under `/var/folders/...`, and `/var` is a symlink to `/private/var`. The same repository therefore has two valid absolute paths, and authority bound to one must be found from the other.
 
-1. [ ] `cd "$(mktemp -d)"` and set up a throwaway repo there → note the path `git rev-parse --show-toplevel` prints.
+1. [ ] `cd "$(mktemp -d)"` and set up a throwaway repo there â†’ note the path `git rev-parse --show-toplevel` prints.
 2. [ ] Make a change **and stage it**, then run the full cycle:
 
 ```
 echo "one more line" >> guide.md
 git add guide.md
-gentle-ai review start --cwd .
+agent-smith review start --cwd .
 # For this docs-only low-risk case, START closes and burns the review.
 ```
 
-→ **Expected**: the zero-lens START closes and burns the review. No "no discoverable review lineage" or path-shaped error.
+â†’ **Expected**: the zero-lens START closes and burns the review. No "no discoverable review lineage" or path-shaped error.
 
 **The `git add` is not optional and it is not tidiness.** START with the default workspace projection freezes your uncommitted change. Staging keeps the snapshot stable while this flow verifies that `/var` and `/private/var` resolve to the same review state. Reported by @edwinsaavedran after the old path handling produced a false signal.
-3. [ ] Now `cd` into the **other** spelling of the same directory (add or remove the `/private` prefix) and run `review status --cwd "$PWD"` → **Expected**: the same lineage, same state. If it reports no authority, that is the defect: paste both paths.
+3. [ ] Now `cd` into the **other** spelling of the same directory (add or remove the `/private` prefix) and run `review status --cwd "$PWD"` â†’ **Expected**: the same lineage, same state. If it reports no authority, that is the defect: paste both paths.
 
 ### Flow 21: Reviewer results on ExFAT (#1804)
 
@@ -267,10 +267,10 @@ hdiutil attach /tmp/rddtest.dmg
 If `hdiutil` rejects the filesystem name, `hdiutil create -help` lists the ones your macOS version accepts. A real ExFAT USB stick works just as well, and any external volume you already have formatted that way is fine.
 
 2. [ ] Create a throwaway repo **on that volume** (`/Volumes/RDDTEST`), make a change, start the review, and follow each STATUS-issued capture route.
-3. [ ] → **Expected**: the reviewer result publishes, and the final admitted capture closes and burns the review. A raw `ENOTSUP`, `EINVAL` or `operation not supported` reaching you is the defect.
+3. [ ] â†’ **Expected**: the reviewer result publishes, and the final admitted capture closes and burns the review. A raw `ENOTSUP`, `EINVAL` or `operation not supported` reaching you is the defect.
 4. [ ] Detach with `hdiutil detach /Volumes/RDDTEST` when done.
 
-### Flow 22: First-use store contention (#1850) — retired historical oracle
+### Flow 22: First-use store contention (#1850) â€” retired historical oracle
 
 @edwinsaavedran reported that concurrent first use of the former SDD runtime store leaked a raw `ENOENT` to losing writers instead of a typed conflict. It was fail-closed and no ledger was corrupted, but a controller could not classify or retry an untyped errno. The published Refresh 5 asset (`2551c0a5`) failed 181/200 attempts; the branch after `0bcff694` passed 200/200. The original failure produced no Go data-race report: it was a filesystem race.
 
@@ -280,7 +280,7 @@ The `internal/sddstatus` package and its test oracle are retired on the ODD-only
 
 Only reproducible on a Mac under an MDM or corporate configuration profile, which cannot be staged on a personal machine.
 
-1. [ ] If your Mac is company-managed, start a review and follow its STATUS-issued capture route → **Expected**: it closes on the final admitted capture, or fails with a typed permission error naming what to do.
+1. [ ] If your Mac is company-managed, start a review and follow its STATUS-issued capture route â†’ **Expected**: it closes on the final admitted capture, or fails with a typed permission error naming what to do.
 2. [ ] A raw `EPERM` or `operation not permitted` with no continuation is the defect. Say which profile restrictions apply if you can.
 
 ---
@@ -298,11 +298,11 @@ Run everything below with output going **outside** the repo.
 1. [ ] Ask for the next transition and retain its execute operation and ordered argument tokens:
 
 ```
-gentle-ai review status --next-transition --contract gentle-ai.review-integration/v2 --cwd . > /tmp/rdd-out/nt.json
+agent-smith review status --next-transition --contract agent-smith.review-integration/v2 --cwd . > /tmp/rdd-out/nt.json
 ```
 
 2. [ ] Now change the workspace, exactly as a linter would: `echo "lint output" > lint-report.txt` **inside the repo**.
-3. [ ] Run the returned execute transition unchanged → **Expected**: it refuses with
+3. [ ] Run the returned execute transition unchanged â†’ **Expected**: it refuses with
 
 ```
 code:        stale_target_identity
@@ -312,36 +312,36 @@ cause:       review start target does not match the freshly built snapshot
 
 The `cause` naming the real reason is the point. A bare `invalid_request` with an empty `required_inputs` is the defect.
 
-4. [ ] **Follow the continuation it named**: ask for the transition again → **Expected**: a **different** target identity.
-5. [ ] Run that new returned execute transition → **Expected**: exit 0, review starts. If following the named continuation does not unblock you, that is the report.
+4. [ ] **Follow the continuation it named**: ask for the transition again â†’ **Expected**: a **different** target identity.
+5. [ ] Run that new returned execute transition â†’ **Expected**: exit 0, review starts. If following the named continuation does not unblock you, that is the report.
 
 ### Flow 25: Windows updates itself (**never tested on real Windows**)
 
-Windows never auto-updated: it detected a new version and handed you a command to run yourself. With Go on PATH it now upgrades through a pinned `go install`. All the evidence we have is synthetic — this flow is the first real execution.
+Windows never auto-updated: it detected a new version and handed you a command to run yourself. With Go on PATH it now upgrades through a pinned `go install`. All the evidence we have is synthetic â€” this flow is the first real execution.
 
-1. [ ] On Windows with Go 1.25.10+ on PATH, run a command that triggers the update check with an older gentle-ai installed → **Expected**: it upgrades itself. It does **not** print "requires manual update", and it does **not** send you to a releases page.
-2. [ ] `gentle-ai --version` afterwards → **Expected**: the new version.
+1. [ ] On Windows with Go 1.25.10+ on PATH, run a command that triggers the update check with an older agent-smith installed â†’ **Expected**: it upgrades itself. It does **not** print "requires manual update", and it does **not** send you to a releases page.
+2. [ ] `agent-smith --version` afterwards â†’ **Expected**: the new version.
 3. [ ] **Report the full output even when it works.** This path has never run outside a test double.
-4. [ ] On Windows **without** Go → **Expected**: it still refuses, and the refusal names the exact `go install github.com/...@vX.Y.Z` command plus the Go version needed. A releases URL as the only guidance is the defect.
+4. [ ] On Windows **without** Go â†’ **Expected**: it still refuses, and the refusal names the exact `go install github.com/...@vX.Y.Z` command plus the Go version needed. A releases URL as the only guidance is the defect.
 
 ### Flow 26: The upgrade tells you if it landed somewhere else
 
 `go install` writes to `GOBIN`, or `GOPATH/bin` when that is unset, which is not necessarily the directory holding the binary you run. Previously an upgrade could report success while you kept executing the old one.
 
 1. [ ] Arrange the mismatch on purpose: `export GOBIN=$HOME/go-elsewhere` (a directory that is **not** on your PATH), then trigger the upgrade.
-2. [ ] → **Expected**: the upgrade still reports success, **and** warns naming **both absolute paths** — where it wrote and what your shell runs.
-3. [ ] → **Expected**: it never silently reports a clean success. If it does, you would keep running the old binary believing you updated, which is the defect this replaced.
-4. [ ] If your `gentle-ai` is a symlink into the go-install directory → **Expected**: treated as a match, no warning. A spurious warning there is also a defect.
+2. [ ] â†’ **Expected**: the upgrade still reports success, **and** warns naming **both absolute paths** â€” where it wrote and what your shell runs.
+3. [ ] â†’ **Expected**: it never silently reports a clean success. If it does, you would keep running the old binary believing you updated, which is the defect this replaced.
+4. [ ] If your `agent-smith` is a symlink into the go-install directory â†’ **Expected**: treated as a match, no warning. A spurious warning there is also a defect.
 
 ---
 
 ## Flows 27 to 33: environments we cannot reach
 
-**Why these exist.** Everything the friction harness in `bench/` can build — a
+**Why these exist.** Everything the friction harness in `bench/` can build â€” a
 linked worktree, a detached HEAD, a bare repository, a path full of spaces and
 kanji, a submodule, a symlink, a mode-only change, a merge or rebase or
 cherry-pick in progress, the kill switch flipped mid-review, a recovery of a
-recovery, and now the whole SDD remediation successor cycle — now runs on every
+recovery, and now the whole SDD remediation successor cycle â€” now runs on every
 loop iteration on Linux. These seven cannot be built in a temp directory on a
 normal machine, so they are the ones only you can answer. Flow 34 below is a
 different kind of gap: reachable everywhere, but written in a document the
@@ -354,7 +354,7 @@ open.
 
 Run everything below with output going **outside** the repository under test.
 
-### Flow 27: A repository on a network mount — **needs NFS or SMB**
+### Flow 27: A repository on a network mount â€” **needs NFS or SMB**
 
 The review store lives under the Git common directory and takes an advisory
 lock (`LOCK`) before it writes. On a local filesystem a lock is held, busy, or
@@ -364,33 +364,33 @@ because the mount does not support it at all. None of those is "busy" and none
 is "missing", and code written against a local filesystem tends to fold them
 into whichever of the two it happens to reach first.
 
-1. [ ] Put a throwaway repo on a real network mount — an NFS export or an SMB
+1. [ ] Put a throwaway repo on a real network mount â€” an NFS export or an SMB
    share, not a loopback image. Note the mount options (`mount | grep <path>`)
    in your report; `nolock` and `local_lock=` change the answer.
 2. [ ] Run the ordinary review lifecycle there:
 
 ```
-gentle-ai review start --cwd .
+agent-smith review start --cwd .
 # Follow each STATUS-issued review capture-result invocation.
 # The final admitted capture closes and burns the review.
 ```
 
-→ **Expected**: the final admitted capture closes and burns the review, exactly as on a local disk.
+â†’ **Expected**: the final admitted capture closes and burns the review, exactly as on a local disk.
 
 3. [ ] Now run two reviews at once against the same repo from two machines (or
    two shells on two mounts of the same export), started within a second of each
-   other → **Expected**: one wins and the other gets a **typed conflict** naming
+   other â†’ **Expected**: one wins and the other gets a **typed conflict** naming
    what to do. A raw `ENOLCK`, `EOPNOTSUPP`, `Stale file handle` or
-   `no locks available` reaching you is the defect — a controller cannot
+   `no locks available` reaching you is the defect â€” a controller cannot
    classify or retry an untyped errno.
-4. [ ] Mount the same export with `-o nolock` and repeat step 2 →
+4. [ ] Mount the same export with `-o nolock` and repeat step 2 â†’
    **Expected**: either it works, or it refuses with a message that says
    locking is unavailable on this mount. Silently proceeding without the lock
    is the worst outcome and the one worth reporting loudest.
 5. [ ] **Report the mount type and options either way, including a PASS.** This
    path has never run on a network filesystem.
 
-### Flow 28: A read-only filesystem — **needs a read-only mount**
+### Flow 28: A read-only filesystem â€” **needs a read-only mount**
 
 Reviews write. A read-only repository is a legitimate state (a checked-out
 artifact, a mounted snapshot, a container image layer), and the answer must be
@@ -402,17 +402,17 @@ a typed refusal, not a stack of failed writes.
 sudo mount -o remount,ro <mountpoint>     # or: sudo mount -o ro,bind /src /ro-copy
 ```
 
-2. [ ] `gentle-ai review status --cwd .` → **Expected**: it works. Status is
+2. [ ] `agent-smith review status --cwd .` â†’ **Expected**: it works. Status is
    read-only by contract and must not need to write anything, not even a lock
    file.
-3. [ ] `gentle-ai review start --cwd .` → **Expected**: a typed refusal naming
+3. [ ] `agent-smith review start --cwd .` â†’ **Expected**: a typed refusal naming
    that the store is not writable. A raw `EROFS` or
    `read-only file system` with no continuation is the defect.
-4. [ ] → **Expected**: nothing was half-created. After the refusal,
+4. [ ] â†’ **Expected**: nothing was half-created. After the refusal,
    `git status` shows no new untracked files and the common dir holds no partial
-   `gentle-ai/` tree.
+   `agent-smith/` tree.
 
-### Flow 29: The disk fills during capture publication — **needs a small filesystem you can fill**
+### Flow 29: The disk fills during capture publication â€” **needs a small filesystem you can fill**
 
 `ENOSPC` while publishing a capture must not create an ambiguous closed review.
 This flow checks that the next STATUS query remains the authority for the
@@ -429,13 +429,13 @@ sudo chown "$USER" /tmp/tiny
 2. [ ] Set up a repo there, stage a selected-lens change, start the review, and
    retain the STATUS-issued capture input.
 3. [ ] Fill the remaining space (`fallocate -l <n> /tmp/tiny/ballast` until
-   `df` reports 100%), then submit that capture → **Expected**: a typed failure
+   `df` reports 100%), then submit that capture â†’ **Expected**: a typed failure
    naming the disk; the review is not reported as closed.
-4. [ ] Delete the ballast and query STATUS for the same lineage → **Expected**:
+4. [ ] Delete the ballast and query STATUS for the same lineage â†’ **Expected**:
    it reconciles the result or reoffers the identical bound capture. Submit it
    only when reoffered; its final admitted capture closes and burns the review.
 
-### Flow 30: A case-insensitive, Unicode-normalizing volume — **needs APFS, HFS+, exFAT or NTFS**
+### Flow 30: A case-insensitive, Unicode-normalizing volume â€” **needs APFS, HFS+, exFAT or NTFS**
 
 The identity policy defers to the volume: paths are compared as the filesystem
 presents them. On a case-insensitive volume `Docs/Guide.md` and `docs/guide.md`
@@ -456,31 +456,31 @@ truncate -s 200M /tmp/rddcase.img && mkfs.exfat /tmp/rddcase.img
 ```
 
 2. [ ] Repo on that volume. Stage `docs/guide.md`, run `review start`, and
-   follow the STATUS-issued capture route → **Expected**: the review closes on
+   follow the STATUS-issued capture route â†’ **Expected**: the review closes on
    its final admitted capture.
 3. [ ] Now `cd` in with a **differently cased** path
    (`cd /volumes/rddcase/...` instead of `/Volumes/RDDCASE/...`) and run
-   `review status --cwd "$PWD"` → **Expected**: the same lineage and closed
-   state. If it reports no authority, paste **both** spellings — that is the
+   `review status --cwd "$PWD"` â†’ **Expected**: the same lineage and closed
+   state. If it reports no authority, paste **both** spellings â€” that is the
    identity policy failing to defer to the volume.
 4. [ ] Create a file whose name has a composed accent (NFC), for example
-   `printf 'x\n' > "docs/café.md"` typed with a single é, stage it, and start a
-   new review → **Expected**: it follows the STATUS-issued capture lifecycle.
+   `printf 'x\n' > "docs/cafÃ©.md"` typed with a single Ã©, stage it, and start a
+   new review â†’ **Expected**: it follows the STATUS-issued capture lifecycle.
    On HFS+ the volume stores the name decomposed (NFD), so the name git reports
    back differs byte-for-byte from the one you typed. A `path not found` or a
    scope mismatch on a file that is plainly there is the defect. Report the
    output of `git ls-files | xxd | head` alongside it, because the bytes are the
    finding.
 5. [ ] Rename `docs/guide.md` to `docs/Guide.md`, start a new review, and follow
-   STATUS → **Expected**: report whether the volume treats it as the same path.
+   STATUS â†’ **Expected**: report whether the volume treats it as the same path.
    This is the case where "correct" depends entirely on the volume and we want
    the real answer, not the assumed one.
 
-### Flow 31: Antivirus holding a file mid-write — **needs Windows with real-time scanning on**
+### Flow 31: Antivirus holding a file mid-write â€” **needs Windows with real-time scanning on**
 
 On Windows a file can be opened by a scanner between the moment we create it
 and the moment we rename or read it back. The failure is `ERROR_SHARING_VIOLATION`
-(32) or `ERROR_ACCESS_DENIED` (5) on a file that unquestionably exists — a
+(32) or `ERROR_ACCESS_DENIED` (5) on a file that unquestionably exists â€” a
 **transient** condition, and the single most common way a transient gets
 reported as a permanent corruption.
 
@@ -490,29 +490,29 @@ reported as a permanent corruption.
 
 ```powershell
 1..20 | ForEach-Object {
-  gentle-ai review start --cwd .
+  agent-smith review start --cwd .
   # Follow each STATUS-issued review capture-result invocation.
   # The final admitted capture closes and burns the review.
 }
 ```
 
-→ **Expected**: 20 of 20 close on their final admitted capture. Report how many did.
+â†’ **Expected**: 20 of 20 close on their final admitted capture. Report how many did.
 
-2. [ ] Any failure → **Expected**: a typed, retryable message. If you see
+2. [ ] Any failure â†’ **Expected**: a typed, retryable message. If you see
    `authority_corrupted` or a defect report for what is really a scanner
    holding a handle for 40 ms, that is the defect: a transient
    was classified as permanent. Paste the whole message.
-3. [ ] Repeat with the directory **excluded** from scanning → **Expected**: if
+3. [ ] Repeat with the directory **excluded** from scanning â†’ **Expected**: if
    the failures disappear, that confirms the cause. Say so in the report; it is
    the difference between "our locking is wrong" and "we do not retry a
    sharing violation".
-4. [ ] Use `$LASTEXITCODE`, not `$?`, and do not pipe through `tee` — see
+4. [ ] Use `$LASTEXITCODE`, not `$?`, and do not pipe through `tee` â€” see
    "How to measure properly" below.
 
-### Flow 32: Long paths — **needs Windows**
+### Flow 32: Long paths â€” **needs Windows**
 
 The Git common directory sits under `.git/`, the review store adds
-`gentle-ai/review-transactions/v2/<lineage>/`, and the lineage identifier is
+`agent-smith/review-transactions/v2/<lineage>/`, and the lineage identifier is
 long. Start from a deep checkout and the full transaction path passes 260
 characters, which is the classic Win32 `MAX_PATH` wall.
 
@@ -520,11 +520,11 @@ characters, which is the classic Win32 `MAX_PATH` wall.
    that the transaction path exceeds 260 characters. Check it:
 
 ```powershell
-$p = "$(git rev-parse --git-common-dir)\gentle-ai\review-transactions\v2"
+$p = "$(git rev-parse --git-common-dir)\agent-smith\review-transactions\v2"
 $p.Length
 ```
 
-2. [ ] Run the full cycle → **Expected**: it completes. A raw
+2. [ ] Run the full cycle â†’ **Expected**: it completes. A raw
    `The system cannot find the path specified`, `path too long`, or a
    truncated path in the error is the defect.
 3. [ ] Try it **both** with long-path support on and off, and say which you
@@ -535,11 +535,11 @@ Get-ItemProperty HKLM:\SYSTEM\CurrentControlSet\Control\FileSystem LongPathsEnab
 git config --get core.longpaths
 ```
 
-→ **Expected**: with support **off**, a refusal that names the length problem
-and what to enable — not a generic file error. Failing is acceptable there;
+â†’ **Expected**: with support **off**, a refusal that names the length problem
+and what to enable â€” not a generic file error. Failing is acceptable there;
 failing without saying why is not.
 
-### Flow 33: The system clock moves backwards — **needs a VM snapshot or a settable clock**
+### Flow 33: The system clock moves backwards â€” **needs a VM snapshot or a settable clock**
 
 **Read this one carefully, because it is testing a claim rather than a
 behaviour.** Review closure is bound to the captured candidate state, not to a
@@ -551,21 +551,21 @@ read, a restored VM snapshot, a laptop resuming with a dead battery, or a
 container starting with a host clock behind the one that wrote the state.
 
 1. [ ] Establish a baseline: start a review, follow every STATUS-issued capture
-   until it closes, then record `gentle-ai review status --cwd .`.
+   until it closes, then record `agent-smith review status --cwd .`.
 2. [ ] Move the clock backwards by an hour **after** closure:
 
 ```
 sudo date -s "-1 hour"        # or restore a VM snapshot taken an hour ago
 ```
 
-3. [ ] Run `gentle-ai review status --cwd .` → **Expected**: the same lineage
+3. [ ] Run `agent-smith review status --cwd .` â†’ **Expected**: the same lineage
    and closed state. No time-based refusal or `authority_corrupted`.
 4. [ ] The kill switch keeps a timestamp for provenance. Test that directly:
-   `gentle-ai review mode disable`, then `gentle-ai review mode enable`, then
+   `agent-smith review mode disable`, then `agent-smith review mode enable`, then
    move the clock back past `rdd_mode_recorded_at` in
-   `$HOME/.gentle-ai/state.json`, then run `gentle-ai review mode status --json`
-   → **Expected**: `effective: on`, with the source that decided it.
-5. [ ] Move the clock **forwards** by a day and repeat steps 3 and 4 →
+   `$HOME/.agent-smith/state.json`, then run `agent-smith review mode status --json`
+   â†’ **Expected**: `effective: on`, with the source that decided it.
+5. [ ] Move the clock **forwards** by a day and repeat steps 3 and 4 â†’
    **Expected**: identical answers. A rule that only holds in one direction is
    still a rule about the clock.
 6. [ ] **Report the result even when everything passes**, with how you moved the
@@ -578,23 +578,23 @@ sudo date -s "-1 hour"        # or restore a VM snapshot taken an hour ago
 **Historical candidate rationale, superseded.** The `v2.2.0-rc.1` friction
 harness drove the binary but could not drive a document. At that time, its
 candidate procedure treated the product as closed when reviews were off and
-`gentle-ai sdd-status <change> --json` reported the archive dependency `ready`
+`agent-smith sdd-status <change> --json` reported the archive dependency `ready`
 with a `reviewGate` carrying `delivery: "disabled/unmanaged"` whose `result`
 was never `allow`. It then contrasted that result with the candidate
 `sdd-archive` skill, which required `reviewGate.result: allow`. The procedure
 below is preserved only as superseded candidate history, not as current release
 behavior.
 
-1. [ ] `gentle-ai install` (or `gentle-ai sync`) into a throwaway HOME, then
+1. [ ] `agent-smith install` (or `agent-smith sync`) into a throwaway HOME, then
    read the installed `sdd-archive` skill and the shared review-ledger contract
-   → **Historical candidate expectation, superseded:** both require
+   â†’ **Historical candidate expectation, superseded:** both require
    `reviewGate.result: allow`.
 2. [ ] In a repository with a complete, verified SDD change, run
-   `gentle-ai review mode disable` and then
-   `gentle-ai sdd-status <change> --json` → **Historical candidate expectation,
+   `agent-smith review mode disable` and then
+   `agent-smith sdd-status <change> --json` â†’ **Historical candidate expectation,
    superseded:** `archive` is not blocked, `reviewGate.delivery` is
    `disabled/unmanaged`, and `reviewGate.result` is **not** `allow`.
-3. [ ] Ask your agent to archive that change → **Historical candidate observation
+3. [ ] Ask your agent to archive that change â†’ **Historical candidate observation
    to report:** an agent following the candidate skill literally stopped here,
    on a value the candidate product was correct to withhold, which was a rule
    blocking where the product no longer did.
@@ -608,40 +608,40 @@ behavior.
 
 Six things that made earlier reports measure the wrong thing. They are not bugs, they are environment traps:
 
-**Never write command output inside the repository under test.** The review target is derived from the workspace snapshot, so `gentle-ai ... > out.txt` run from inside the repo adds an untracked file and changes the very thing being measured. A transition proposed before the redirect no longer matches after it, and you get a refusal that has nothing to do with what you were testing. Keep a separate directory:
+**Never write command output inside the repository under test.** The review target is derived from the workspace snapshot, so `agent-smith ... > out.txt` run from inside the repo adds an untracked file and changes the very thing being measured. A transition proposed before the redirect no longer matches after it, and you get a refusal that has nothing to do with what you were testing. Keep a separate directory:
 
 ```
 mkdir -p /tmp/rdd-out
 cd $HOME/demo
-gentle-ai review start --cwd . > /tmp/rdd-out/o.txt 2> /tmp/rdd-out/e.txt
+agent-smith review start --cwd . > /tmp/rdd-out/o.txt 2> /tmp/rdd-out/e.txt
 ```
 
 This one cost the maintainer an hour of chasing a defect that was his own redirect. Flow 24 turns it into a deliberate test instead.
 
-**If an agent runs it, set `CI=1`.** The consent question only shows up when there is a real terminal. Many agent harnesses allocate a pseudo-terminal, so the tool asks… and nobody answers: the shell hangs until it is killed, and the flow ends up as PARTIAL for a reason that is not the product's.
+**If an agent runs it, set `CI=1`.** The consent question only shows up when there is a real terminal. Many agent harnesses allocate a pseudo-terminal, so the tool asksâ€¦ and nobody answers: the shell hangs until it is killed, and the flow ends up as PARTIAL for a reason that is not the product's.
 
 ```
-CI=1 gentle-ai review start
+CI=1 agent-smith review start
 ```
 
 With `CI=1` the tool reviews anyway and warns on stderr that it did not ask. It is the same path CI already uses. **Exception: Flow 5 is precisely the test for the question**, so that one needs a real terminal and does not take `CI=1`; if your environment does not have one, mark it N/A.
 
-**Exit codes get lost through a pipe.** In bash, `$?` gives you the status of the **last command in the pipeline**, not the binary's. If you run `gentle-ai ... | tee log.txt`, `$?` is `tee`'s and it is always 0. In PowerShell, `$LASTEXITCODE` does give you the binary's, and that is why the same case "behaved differently" between Windows and Linux. To measure properly:
+**Exit codes get lost through a pipe.** In bash, `$?` gives you the status of the **last command in the pipeline**, not the binary's. If you run `agent-smith ... | tee log.txt`, `$?` is `tee`'s and it is always 0. In PowerShell, `$LASTEXITCODE` does give you the binary's, and that is why the same case "behaved differently" between Windows and Linux. To measure properly:
 
 ```
-gentle-ai review start --projection staged --base-ref HEAD~1 > out.txt 2> err.txt
+agent-smith review start --projection staged --base-ref HEAD~1 > out.txt 2> err.txt
 echo "exit=$?"
 ```
 
 **`--next-transition` needs the explicit contract.** This is not a bug: passing `--contract` is the opt-in to the negotiated envelope, and leaving it out has its own meaning.
 
-**Before reporting, reproduce in the clean setup repo, not your own.** A tester nearly filed a bug that does not exist because their own repository — with its history, its hooks, its accumulated state — produced a failure that six commands in a fresh `mktemp -d` repo could not. Your repo is full of variables you stopped seeing months ago; the setup repo at the top of this guide has none. Run the same steps there first. If the failure survives the clean repo, report it with those steps — that is a reproduction we can run. **If it only reproduces in your repo, that is still a report worth filing** — say so explicitly, because then the shape of your repository IS the finding, and what we need from you is which shape: the worktree layout, the hook, the config that a clean repo does not have.
+**Before reporting, reproduce in the clean setup repo, not your own.** A tester nearly filed a bug that does not exist because their own repository â€” with its history, its hooks, its accumulated state â€” produced a failure that six commands in a fresh `mktemp -d` repo could not. Your repo is full of variables you stopped seeing months ago; the setup repo at the top of this guide has none. Run the same steps there first. If the failure survives the clean repo, report it with those steps â€” that is a reproduction we can run. **If it only reproduces in your repo, that is still a report worth filing** â€” say so explicitly, because then the shape of your repository IS the finding, and what we need from you is which shape: the worktree layout, the hook, the config that a clean repo does not have.
 
-**"2.2.0-rc.1" does not identify a binary.** Release assets get replaced in place, so an asset downloaded two days ago and one downloaded today both call themselves `2.2.0-rc.1` — and a tester reported against the old one without any way to know, because nothing in the binary's own output could tell the two refreshes apart. Refresh 8 binaries solve this at the root: they embed `-pr1801-<shortsha>` in the version string. So paste the **complete `--version` output** in any report, not the release version; they are different things and only one is actionable.
+**"2.2.0-rc.1" does not identify a binary.** Release assets get replaced in place, so an asset downloaded two days ago and one downloaded today both call themselves `2.2.0-rc.1` â€” and a tester reported against the old one without any way to know, because nothing in the binary's own output could tell the two refreshes apart. Refresh 8 binaries solve this at the root: they embed `-pr1801-<shortsha>` in the version string. So paste the **complete `--version` output** in any report, not the release version; they are different things and only one is actionable.
 
 ## Historical reporting instructions
 
-This section is retained to explain the original candidate procedure. Do not open a current issue or comment on PR [#1801](https://github.com/Gentleman-Programming/gentle-ai/pull/1801) for results from `v2.2.0-rc.1`; that candidate process is complete. For a current concern, first reproduce it against stable [`v2.6.0`](https://github.com/Gentleman-Programming/gentle-ai/releases/tag/v2.6.0), then use the repository's current contribution and issue workflow.
+This section is retained to explain the original candidate procedure. Do not open a current issue or comment on PR [#1801](https://github.com/jonsanchezr/agent-smith/pull/1801) for results from `v2.2.0-rc.1`; that candidate process is complete. For a current concern, first reproduce it against stable [`v2.6.0`](https://github.com/jonsanchezr/agent-smith/releases/tag/v2.6.0), then use the repository's current contribution and issue workflow.
 
 ## What is NOT a bug
 
@@ -651,3 +651,4 @@ This section is retained to explain the original candidate procedure. Do not ope
 - **"Not now" asks again on the next piece of work.** Per work unit, on purpose.
 - **A `.md` with executable content escalates.** The content is read, not the extension.
 - **The installed `.claude/CLAUDE.md` escalates if you put it in the diff.** That is what the `.gitignore` in the setup is for.
+

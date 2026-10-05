@@ -1,4 +1,4 @@
-# Runtime telemetry: report effort and classify built-in agents
+﻿# Runtime telemetry: report effort and classify built-in agents
 
 ## Objective
 
@@ -10,7 +10,7 @@ actually knowable, so the public open-data page reflects real usage going forwar
 Emitters initialise the label to `unavailable`/`unknown` and only overwrite it with selection
 evidence; the collector, backfill and exporter pass labels through verbatim (no pipeline bug).
 - OpenCode: `internal/telemetry/runtime_opencode.go:117` defaults to `unavailable`; only replaced
-  when the gentle-ai assignment has an effort (`components/telemetryruntime/opencode.go:146-148`)
+  when the agent-smith assignment has an effort (`components/telemetryruntime/opencode.go:146-148`)
   or the v2 plugin sends `selectedEffort` (`:130-139`). Dominant contributor (~5.67M rows).
 - Claude Code: `internal/telemetry/runtime_claude.go:227` drops the agent definition on `Stop`,
   so the orchestrator never reports effort (`:231`); subagents only when frontmatter has `effort`.
@@ -20,7 +20,7 @@ evidence; the collector, backfill and exporter pass labels through verbatim (no 
 
 ## Scope (authorized by the user, 2026-09-27: "si a todo")
 
-- T1 Claude: map built-in `general-purpose` → worker and `Explore` → explore.
+- T1 Claude: map built-in `general-purpose` â†’ worker and `Explore` â†’ explore.
 - T2 Claude: report the orchestrator's selected effort on `Stop` from the effort Claude Code
   actually exposes (settings/env), only when verified from primary evidence; otherwise keep
   `unavailable` and document why.
@@ -34,7 +34,7 @@ Out of scope: rewriting historical data, collector renormalisation, Codex fallba
 
 - Privacy: only enumerated effort values; never free text.
 - Test-first with `go test ./internal/telemetry/... ./internal/components/telemetryruntime/...`.
-- Only forward-looking: needs a gentle-ai release; push/PR/release are user decisions.
+- Only forward-looking: needs a agent-smith release; push/PR/release are user decisions.
 - Forecast ~300 authored changed lines; delivery strategy ask-on-risk.
 
 ## Tasks
@@ -44,7 +44,7 @@ Out of scope: rewriting historical data, collector renormalisation, Codex fallba
   purpose: it gates reading `~/.claude/agents/<name>.md` and a user agent literally named
   `worker`/`explore` is not a built-in (commit 2c566abef, comment "generic aggregate classes are
   not installable Claude agent names"). A separate exact, case-sensitive map adds only the
-  built-in `general-purpose` → `worker` and `Explore` → `explore`; no definition file is read
+  built-in `general-purpose` â†’ `worker` and `Explore` â†’ `explore`; no definition file is read
   for them. Evidence: RED `TestClaudeRuntimeBuiltInSubagentsMapToAggregateClasses` failed with
   `general-purpose: got custom/unknown, want built_in/worker` and
   `Explore: got custom/unknown, want built_in/explore`; GREEN after the change; the full
@@ -100,7 +100,7 @@ Out of scope: rewriting historical data, collector renormalisation, Codex fallba
   printed nothing; `go build ./...` ok; extra focused `go test ./internal/cli/ -run Claude` ok.
   Runtime harness: N/A (pure normalizer change covered by unit tests).
   Rollback boundary: `claudeBuiltInAgentClass` and its call in `NormalizeClaude` plus the test.
-- Final run after T1–T3 (all with `-count=1` for tests):
+- Final run after T1â€“T3 (all with `-count=1` for tests):
   `go test ./internal/telemetry/... ./internal/components/telemetryruntime/...` ok (both packages);
   `go vet ./internal/telemetry/... ./internal/components/telemetryruntime/...` exit 0;
   `gofmt -l internal/telemetry internal/components/telemetryruntime` printed nothing;
@@ -122,3 +122,4 @@ Out of scope: rewriting historical data, collector renormalisation, Codex fallba
 ## Next step
 
 T4: independent verification (risk tier high), native review, then push/PR as the user decides.
+

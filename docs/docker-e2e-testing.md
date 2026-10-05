@@ -1,9 +1,9 @@
-# Docker E2E Testing
+﻿# Docker E2E Testing
 
 > [!NOTE]
-> These docs track `main`, which may include unreleased changes. For the latest release, see the [v4.0.0 docs](https://github.com/Gentleman-Programming/gentle-ai/tree/v4.0.0/docs).
+> These docs track `main`, which may include unreleased changes. For the latest release, see the [v4.0.0 docs](https://github.com/jonsanchezr/agent-smith/tree/v4.0.0/docs).
 
-End-to-end tests that validate the `gentle-ai` installer binary inside Docker containers running real Linux distributions.
+End-to-end tests that validate the `agent-smith` installer binary inside Docker containers running real Linux distributions.
 
 ## Architecture
 
@@ -30,7 +30,7 @@ RUN_FULL_E2E=1 RUN_BACKUP_TESTS=1 ./e2e/docker-test.sh
 
 | Tier | Env var | What it tests |
 |------|---------|---------------|
-| 1 (default) | — | Binary exists, runs, dry-run output format, flag validation |
+| 1 (default) | â€” | Binary exists, runs, dry-run output format, flag validation |
 | 2 | `RUN_FULL_E2E=1` | Full install: opencode+permissions, claude-code+persona, context7, skills |
 | 3 | `RUN_BACKUP_TESTS=1` | Backup snapshot creation, backup file contents |
 
@@ -56,15 +56,15 @@ RUN_FULL_E2E=1 RUN_BACKUP_TESTS=1 ./e2e/docker-test.sh
 
 ```bash
 # Build and run Ubuntu only
-docker build -f e2e/Dockerfile.ubuntu -t gentle-ai-e2e-ubuntu .
-docker run --rm gentle-ai-e2e-ubuntu
+docker build -f e2e/Dockerfile.ubuntu -t agent-smith-e2e-ubuntu .
+docker run --rm agent-smith-e2e-ubuntu
 
 # Run with full E2E on Arch
-docker build -f e2e/Dockerfile.arch -t gentle-ai-e2e-arch .
-docker run --rm -e RUN_FULL_E2E=1 gentle-ai-e2e-arch
+docker build -f e2e/Dockerfile.arch -t agent-smith-e2e-arch .
+docker run --rm -e RUN_FULL_E2E=1 agent-smith-e2e-arch
 
 # Interactive debugging
-docker run --rm -it gentle-ai-e2e-ubuntu /bin/bash
+docker run --rm -it agent-smith-e2e-ubuntu /bin/bash
 ```
 
 ## Adding a new platform
@@ -72,7 +72,7 @@ docker run --rm -it gentle-ai-e2e-ubuntu /bin/bash
 1. Create `e2e/Dockerfile.<platform>` following the existing pattern
 2. Add the entry to `PLATFORMS` array in `docker-test.sh`
 3. Ensure the Dockerfile creates `testuser` with NOPASSWD sudo
-4. Build the `gentle-ai` binary for `linux/amd64`
+4. Build the `agent-smith` binary for `linux/amd64`
 
 ## Adding new test cases
 
@@ -97,3 +97,4 @@ jobs:
         if: github.ref == 'refs/heads/main'
         run: RUN_FULL_E2E=1 RUN_BACKUP_TESTS=1 ./e2e/docker-test.sh
 ```
+

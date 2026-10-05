@@ -15,9 +15,9 @@ import (
 	"sync"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/reviewerprovider"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/reviewtransaction"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
+	"github.com/jonsanchezr/agent-smith/v4/internal/reviewerprovider"
+	"github.com/jonsanchezr/agent-smith/v4/internal/reviewtransaction"
 )
 
 func assertApprovedCompactAuthorityBurned(t *testing.T, store reviewtransaction.CompactStore, lineage string) {
@@ -1321,3 +1321,4 @@ func TestLineageEscalationPublishesEscalationCauseInClosureAndStatusEnvelopes(t 
 		t.Fatal("status-v7 schema accepted escalated authority without escalation")
 	}
 }
+

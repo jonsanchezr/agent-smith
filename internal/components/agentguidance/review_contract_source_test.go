@@ -7,7 +7,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
 )
 
 // swapPackageReviewContractSource replaces the package-level fallback for one
@@ -118,3 +118,4 @@ func TestInjectRoutingWithoutReviewContractSourceFailsClosedAndWritesNothing(t *
 		t.Fatalf("InjectRoutingWithOptions(gemini) error = %v; an ODD-only runtime needs no contract", err)
 	}
 }
+

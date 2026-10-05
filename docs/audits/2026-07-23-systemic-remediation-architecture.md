@@ -1,4 +1,4 @@
-# Systemic Remediation Architecture for Gentle AI
+# Systemic Remediation Architecture for Agent Smith
 
 > [!WARNING]
 > **Historical record.** This document is a point-in-time snapshot kept for traceability. It is not maintained and may not describe current behavior.
@@ -15,7 +15,7 @@
 
 > **Decision:** Stop ticket-by-ticket remediation. Build the shared architectural seams first, migrate existing behavior and community contributions through those seams, and resume isolated feature delivery only when the owning seam is stable.
 
-This is a consolidation, not a rewrite. Gentle AI should preserve the proven review trust kernel and replace duplicated planning, capability inference, direct mutation, prose authority, and adapter-specific policy with nine bounded contexts. Each fact gets one owner; each lifecycle gets one authority; every side effect is re-observed before success.
+This is a consolidation, not a rewrite. Agent Smith should preserve the proven review trust kernel and replace duplicated planning, capability inference, direct mutation, prose authority, and adapter-specific policy with nine bounded contexts. Each fact gets one owner; each lifecycle gets one authority; every side effect is re-observed before success.
 
 ## 1. Executive decision
 
@@ -43,8 +43,8 @@ The decision explicitly rejects four tempting replacements:
 | Issue snapshot | **241/241** items mapped exactly once; no missing, unexpected, duplicate, title, or URL mismatch | Coverage is complete enough to design systemic boundaries. |
 | PR snapshot | **92/92** items mapped exactly once; no missing, unexpected, duplicate, title, URL, or snapshot-head mismatch | Every snapshot PR has a disposition and canonical context. |
 | Live drift | All 241 issues remained open; snapshot PRs became **90 open / 2 closed** when #1023 and #1769 closed | Snapshot dispositions are evidence, not live merge authorization. |
-| Changed content | #1624 alone changed head, from `b378de3…` to `5ba1ace…`, and grew from 253 to 383 changed lines | Its prior content-bound assessment is stale and must be rerun. |
-| Collision graph | Live-normalized graph: **90 PRs / 499 edges**; component sizes `[74, 3, 1 × 13]` | Integration of the 74-PR component must be serialized. |
+| Changed content | #1624 alone changed head, from `b378de3â€¦` to `5ba1aceâ€¦`, and grew from 253 to 383 changed lines | Its prior content-bound assessment is stale and must be rerun. |
+| Collision graph | Live-normalized graph: **90 PRs / 499 edges**; component sizes `[74, 3, 1 Ã— 13]` | Integration of the 74-PR component must be serialized. |
 | Cross-context pressure | The 74-PR component spans 8 contexts and contains **345 cross-context edges** | Apparent feature independence is not file-level independence. |
 | Direct context span | 40 PRs directly touch more than one context; **16 require decomposition** | Context seams and review-sized slices precede integration. |
 
@@ -52,7 +52,7 @@ The completeness validator returned `NEEDS_RECONCILIATION`, but that verdict app
 
 - six PRs described in the snapshot as metadata-only merge candidates are live `UNSTABLE`;
 - #1624 changed bytes and acquired two new Major findings;
-- #946, #1287, and #1357 overload “linked issues” with closing versus related/intended references;
+- #946, #1287, and #1357 overload â€œlinked issuesâ€ with closing versus related/intended references;
 - the collision graph required removal of now-closed #1769.
 
 ### 2.2 Why green CI is not authorization
@@ -66,7 +66,7 @@ The evidence contains direct counterexamples:
 - #1764 is clean and green, yet nested/interleaved marker topology can delete user bytes or another managed section.
 - #1063, #1064, #1079, #1080, #1105, and #1219 have visible green checks but live `mergeStateStatus=UNSTABLE`, not `CLEAN`.
 
-Therefore “green,” “mergeable,” or a stale review is never authority. The required rule is: **same immutable head, current required gates, clean live merge state, current issue/linkage policy, and final human authorization**.
+Therefore â€œgreen,â€ â€œmergeable,â€ or a stale review is never authority. The required rule is: **same immutable head, current required gates, clean live merge state, current issue/linkage policy, and final human authorization**.
 
 ### 2.3 Method
 
@@ -85,20 +85,20 @@ No issue state was treated as proof of a defect. No CI state was treated as appr
 
 | Evidence artifact | SHA-256 |
 |---|---|
-| `gentle-ai-open-issues-2026-07-23.json` | `c5f3a4547e819feaede2f9558b5d7bed8869b8687984c704bbfa986da8f8f1ac` |
-| `gentle-ai-open-prs-2026-07-23.json` | `5780413ef205bf7ae6dff47f097f2b36b7d72eb786d3a6b6806c904ad0da2a5b` |
-| `gentle-ai-open-prs-enriched-2026-07-23.json` | `6777a16fbb2fd22ccf5714993277aa80921925114b90be942299605f330b19d1` |
-| `gentle-ai-backlog-linkage-2026-07-23.json` | `ab347cfebc4d0154aac264419b9759cefa924d524fba82fadd80101c815b5e55` |
-| `gentle-ai-open-pr-conflict-graph.json` | `f2b154e5d75a04de8fee3aa4b6da6200791079b6ecfa6e41a688a91232d0e16b` |
-| `gentle-ai-backlog-cluster-1.json` | `5b6e6c33402ef594b4737826d0b570dad30e7cc067c09855bff937a986c90733` |
-| `gentle-ai-backlog-cluster-2.json` | `994a439e5a8bd6e0d08e332975a7118078b3a1ba785a52309ff7182260422fdd` |
-| `gentle-ai-backlog-cluster-3.json` | `6fffe0a2efd2fae6b660600bb247c704ad648c40194b8c2047345615ad81f3b8` |
-| `gentle-ai-backlog-cluster-4.json` | `9efb1c414507b0eef0e834beb55f4775addc4bd0b4f331fd0c4f3fe16cc2bf57` |
-| `gentle-ai-backlog-completeness-validation.json` | `c1a85296155ebc3cfd5449f32929036c119e60b71ed80b07bf55ca178be11151` |
+| `agent-smith-open-issues-2026-07-23.json` | `c5f3a4547e819feaede2f9558b5d7bed8869b8687984c704bbfa986da8f8f1ac` |
+| `agent-smith-open-prs-2026-07-23.json` | `5780413ef205bf7ae6dff47f097f2b36b7d72eb786d3a6b6806c904ad0da2a5b` |
+| `agent-smith-open-prs-enriched-2026-07-23.json` | `6777a16fbb2fd22ccf5714993277aa80921925114b90be942299605f330b19d1` |
+| `agent-smith-backlog-linkage-2026-07-23.json` | `ab347cfebc4d0154aac264419b9759cefa924d524fba82fadd80101c815b5e55` |
+| `agent-smith-open-pr-conflict-graph.json` | `f2b154e5d75a04de8fee3aa4b6da6200791079b6ecfa6e41a688a91232d0e16b` |
+| `agent-smith-backlog-cluster-1.json` | `5b6e6c33402ef594b4737826d0b570dad30e7cc067c09855bff937a986c90733` |
+| `agent-smith-backlog-cluster-2.json` | `994a439e5a8bd6e0d08e332975a7118078b3a1ba785a52309ff7182260422fdd` |
+| `agent-smith-backlog-cluster-3.json` | `6fffe0a2efd2fae6b660600bb247c704ad648c40194b8c2047345615ad81f3b8` |
+| `agent-smith-backlog-cluster-4.json` | `9efb1c414507b0eef0e834beb55f4775addc4bd0b4f331fd0c4f3fe16cc2bf57` |
+| `agent-smith-backlog-completeness-validation.json` | `c1a85296155ebc3cfd5449f32929036c119e60b71ed80b07bf55ca178be11151` |
 
 ## 3. What the prior RDD audit proved
 
-The [prior audit](./2026-07-21-rdd-system-audit.md) proved that Gentle AI's review core is not the problem to rewrite. It also proved that the orchestration around that core had become distributed and operation-specific.
+The [prior audit](./2026-07-21-rdd-system-audit.md) proved that Agent Smith's review core is not the problem to rewrite. It also proved that the orchestration around that core had become distributed and operation-specific.
 
 ### 3.1 Trust kernel to preserve
 
@@ -135,8 +135,8 @@ The audit's overengineering lesson is precise: preserve integrity, remove duplic
 
 | Code | Canonical context | Issues | PRs | Depends on |
 |---|---|---:|---:|---|
-| `HCR` | `host-install-command-runtime` | 43 | 15 | — |
-| `PAD` | `product-admission-and-delivery` | 13 | 4 | — |
+| `HCR` | `host-install-command-runtime` | 43 | 15 | â€” |
+| `PAD` | `product-admission-and-delivery` | 13 | 4 | â€” |
 | `MMI` | `managed-mutation-integrity` | 25 | 15 | `HCR` |
 | `ACI` | `agent-capability-and-instruction-projection` | 40 | 26 | `HCR` |
 | `RAR` | `review-authority-and-receipts` | 39 | 4 | `HCR` |
@@ -188,7 +188,7 @@ Dependency rules:
 7. Unknown capability, ownership, provenance, target relation, or cleanup state is unavailable until proven otherwise.
 8. Compatibility lives in version-pinned adapters with removal dates, never as branches inside the current kernel.
 
-### 4.3 `HCR` — host, install, and command runtime
+### 4.3 `HCR` â€” host, install, and command runtime
 
 **Responsibility.** Observe host capabilities once per operation; resolve canonical repository/path/process facts; execute already-authorized argument-array steps with bounded streams, deadlines, environment, descendants, and cleanup; own install/update method provenance and post-action observation.
 
@@ -222,7 +222,7 @@ type InstallMethod interface {
 
 **Fail-closed invariants.**
 
-- Failed probes return `unknown` with evidence, never a false “unsupported.”
+- Failed probes return `unknown` with evidence, never a false â€œunsupported.â€
 - An exit code is evidence, not success; destination, owner, version, and artifact are re-observed.
 - Multiple plausible active installs return `ambiguous`.
 - Process-tree cleanup and output truncation are terminal evidence, not hidden warnings.
@@ -232,9 +232,9 @@ type InstallMethod interface {
 
 **Coverage.** 43 issues / 15 PRs. This context owns the platform, TTY, bounded process, canonical path, installer/update, package-manager, signing, and toolchain recurrence clusters.
 
-### 4.4 `MMI` — managed mutation integrity
+### 4.4 `MMI` â€” managed mutation integrity
 
-**Responsibility.** Execute all managed filesystem/configuration changes through `plan → snapshot → apply → verify → commit-or-rollback`, with path containment, object identity, mode, symlink/junction, ownership, CAS, and crash recovery.
+**Responsibility.** Execute all managed filesystem/configuration changes through `plan â†’ snapshot â†’ apply â†’ verify â†’ commit-or-rollback`, with path containment, object identity, mode, symlink/junction, ownership, CAS, and crash recovery.
 
 **Source of truth.** Three distinct planes: desired operation specification, observed filesystem snapshot, and durable ownership/transaction ledger. None may substitute for another.
 
@@ -270,7 +270,7 @@ type Transaction interface {
 
 **Coverage.** 25 issues / 15 PRs. This context owns backup/restore, symlink/ACL/mode safety, multi-target atomicity, managed-marker ownership, migration, and rollback recurrence.
 
-### 4.5 `ACI` — agent capability and instruction projection
+### 4.5 `ACI` â€” agent capability and instruction projection
 
 **Responsibility.** Own canonical agent IDs, aliases, variants, versioned capability claims, target kinds/resolution, runtime tool vocabulary, and canonical semantic instruction/asset modules rendered for provider-specific formats.
 
@@ -317,7 +317,7 @@ type Projector interface {
 
 **Coverage.** 40 issues / 26 PRs. This context owns agent/rebrand/variant support, target projection, generated persona/skill/SDD assets, language contracts, prompt deduplication, and capability-driven UI recurrence.
 
-### 4.6 `MCA` — model catalog and assignment
+### 4.6 `MCA` â€” model catalog and assignment
 
 **Responsibility.** Discover provider/model observations, normalize canonical IDs and aliases, retain source provenance and freshness, express tri-state capabilities, and resolve namespaced per-agent/profile assignments.
 
@@ -347,7 +347,7 @@ type ModelResolver interface {
 
 **Coverage.** 7 issues / 2 PRs. This context owns custom-provider discovery, capability provenance, per-phase assignment design, and profile-selection isolation.
 
-### 4.7 `RAR` — review authority and receipts
+### 4.7 `RAR` â€” review authority and receipts
 
 **Responsibility.** Own canonical candidate identity, target-relation algebra, the one native review transition graph, authority revisions, correction budget, recovery classification, receipts, and all gate validation.
 
@@ -396,7 +396,7 @@ type OperationResult struct {
 
 **Coverage.** 39 issues / 4 PRs. This context owns applicability, target/base/scope relations, transition/schema parity, recovery, cumulative delivery, receipts, and gate recurrence.
 
-### 4.8 `EPD` — evidence, policy, and diagnostics
+### 4.8 `EPD` â€” evidence, policy, and diagnostics
 
 **Responsibility.** Own bounded actor tickets, provider-captured evidence, content-addressed admission, ordered security-policy semantics, typed diagnostics, and allowlisted remedy IDs.
 
@@ -446,7 +446,7 @@ type PolicyRule struct {
 
 **Coverage.** 21 issues / 6 PRs. This context owns reviewer/refuter/validator evidence, actor budgets, permission precedence, doctor findings, and safe-repair recurrence.
 
-### 4.9 `DSR` — desired-state resource reconciliation
+### 4.9 `DSR` â€” desired-state resource reconciliation
 
 **Responsibility.** Register resource semantics and ownership, discover actual state, compute deterministic budgeted diffs, and coordinate install/sync/uninstall/refresh through `MMI`.
 
@@ -486,7 +486,7 @@ type Reconciler interface {
 
 **Coverage.** 28 issues / 13 PRs. This context owns plugin/skill/theme/persona/registry desired state, source precedence, cache identity, safe retirement, and convergence recurrence.
 
-### 4.10 `SDD` — lifecycle and artifacts
+### 4.10 `SDD` â€” lifecycle and artifacts
 
 **Responsibility.** Own a typed dependency graph, explicit artifact-store identity, durable attempts and budgets, phase result/evidence references, archive transitions, continuation, and review-receipt binding.
 
@@ -537,7 +537,7 @@ type Run struct {
 
 **Coverage.** 25 issues / 7 PRs. This context owns phase/status ambiguity, Strict TDD task kinds, attempt/reset rules, OpenSpec/Engram/hybrid identity, archive safety, and review handoff.
 
-### 4.11 `PAD` — product admission and delivery
+### 4.11 `PAD` â€” product admission and delivery
 
 **Responsibility.** Own issue-first admission, product/design gates, documentation and UX tracks, CI/workflow policy, external-product boundaries, and review-sized delivery planning.
 
@@ -610,7 +610,7 @@ The adapter submits one typed intent and receives only preview, events, and outc
 1. `HCR` observes the running executable, package owner, destination, version, and artifact provenance.
 2. A versioned method authorizes exact argv, environment, privilege, destination, timeout, backup policy, and expected outcome.
 3. `HCR` executes bounded steps and re-observes the installation.
-4. Managed configuration changes, if any, use `DSR → MMI`.
+4. Managed configuration changes, if any, use `DSR â†’ MMI`.
 5. External package actions are a saga boundary: uncompensated effects produce `partial`, never fictional rollback.
 
 This directly addresses #1297/#999/#1298: an updater must resolve the **effective destination** it will mutate and prove that it is the installation currently running.
@@ -764,7 +764,7 @@ Compensation runs only when the method declares it safe and verifies its precond
 | Client routing from historical review `action` | Remove; current clients execute native transitions only. |
 | Raw temporary reviewer `--result` transport | Remove after ticket-bound durable capture migration. |
 | Public cause-specific recovery verbs | Deprecate behind classified `repair`; retain internal audit events and bounded legacy adapters. |
-| Direct component config writes and local backup loops | Remove; all managed roots use `DSR → MMI`. |
+| Direct component config writes and local backup loops | Remove; all managed roots use `DSR â†’ MMI`. |
 | Byte-only rollback ownership | Prohibit immediately in new code. |
 | AgentID/GOOS/distro/PATH/directory branching outside owner modules | Remove progressively with architecture checks. |
 | Manually maintained schemas, enum lists, help copies, and provider feature tables | Replace as authoring surfaces with generated projections and conformance checks. |
@@ -774,7 +774,7 @@ Compensation runs only when the method declares it safe and verifies its precond
 | Claim that local review authority travels through normal Git replication | Delete; independent clones re-review unless a separate authenticated transport is approved. |
 | Unsupported or unsigned distribution fallbacks | Remove; shell availability cannot override release policy. |
 
-Historical receipts, journals, and incident residue remain immutable forensic evidence. “Remove” applies to active routing and mutation, not history.
+Historical receipts, journals, and incident residue remain immutable forensic evidence. â€œRemoveâ€ applies to active routing and mutation, not history.
 
 ### 8.2 Anti-god-object guardrails
 
@@ -788,7 +788,7 @@ Historical receipts, journals, and incident residue remain immutable forensic ev
 
 ## 9. Phased implementation program
 
-This is the sole operational schedule: **Wave 0 → HCR → MMI/ACI/RAR → EPD/MCA → DSR → SDD → removal and standalone delivery**. A wave starts only after the preceding wave meets its acceptance criteria. Tracks separated by `/` have no hidden serial or risk-priority order and may proceed in parallel once their shared prerequisites are proven.
+This is the sole operational schedule: **Wave 0 â†’ HCR â†’ MMI/ACI/RAR â†’ EPD/MCA â†’ DSR â†’ SDD â†’ removal and standalone delivery**. A wave starts only after the preceding wave meets its acceptance criteria. Tracks separated by `/` have no hidden serial or risk-priority order and may proceed in parallel once their shared prerequisites are proven.
 
 Each wave is a program boundary, not a mega-PR. Default slice: one context, one invariant, implementation plus tests, below 400 authored changed lines where practical. Generated goldens remain in candidate identity but do not justify oversized authored changes.
 
@@ -796,9 +796,9 @@ Each wave is a program boundary, not a mega-PR. Default slice: one context, one 
 |---|---|---|---|---|
 | 0. Freeze and fitness baseline | Pause new broad recovery/config/agent/SDD work; inventory direct writers, raw processes, planners, schemas, assets, and capability switches | Inventory has one proposed owner per fact/effect; baseline journeys and architecture checks exist | Remove checks only; runtime behavior unchanged | One inventory/check family per PR |
 | 1. HCR foundation | Immutable host snapshot, canonical path/repository handles, bounded process provider, structured outcomes, install observation | Linux/macOS/Windows process/path matrix; wrong-version/destination and timeout/cleanup tests | New provider stays shadow/read-only; disabling it blocks/degrades instead of invoking unsafe fallback | One platform primitive or one read-only caller |
-| 2. MMI / ACI / RAR foundations | **MMI:** durable plan/snapshot/WAL/CAS/apply/verify/recovery with path/type/mode/ownership identity. **ACI:** capability descriptors, module graph, and provider renderers. **RAR:** native transition/target algebra, parser round-trip, immutable receipts, and gates | **MMI:** fault injection at every write boundary, concurrent edits preserved, second run no-op. **ACI:** descriptor parity and semantic dual-render parity. **RAR:** start→capture→restart→finalize→receipt→all gates with exact replay | MMI mutation flags disable writes; ACI projections become unsupported/unknown; RAR disables new starts. All retain read-only diagnostics and never restore retired paths | One MMI primitive/resource family, ACI adapter/module family, or RAR transition/adapter |
+| 2. MMI / ACI / RAR foundations | **MMI:** durable plan/snapshot/WAL/CAS/apply/verify/recovery with path/type/mode/ownership identity. **ACI:** capability descriptors, module graph, and provider renderers. **RAR:** native transition/target algebra, parser round-trip, immutable receipts, and gates | **MMI:** fault injection at every write boundary, concurrent edits preserved, second run no-op. **ACI:** descriptor parity and semantic dual-render parity. **RAR:** startâ†’captureâ†’restartâ†’finalizeâ†’receiptâ†’all gates with exact replay | MMI mutation flags disable writes; ACI projections become unsupported/unknown; RAR disables new starts. All retain read-only diagnostics and never restore retired paths | One MMI primitive/resource family, ACI adapter/module family, or RAR transition/adapter |
 | 3. EPD / MCA consolidation | **EPD:** issued action tickets, durable provider evidence, and typed diagnostics. **MCA:** model catalog, provenance, precedence, and assignment | **EPD:** bounded actor failures, evidence re-read, and stable diagnostic identity. **MCA:** source/alias/model ambiguity fails closed | Actor execution becomes read-only; model selection becomes unavailable/unknown. Neither falls back to client inference | One evidence slot/check family or model source |
-| 4. DSR cutover | Resource registry, desired/observed diff, ownership adoption/retirement, MMI-backed install/sync/uninstall | Fresh install→sync→second sync no-op; user edits preserved; uninstall removes owned resources only | One active writer per resource; switch disables that resource's mutation, not the whole engine | One resource strategy and one family |
+| 4. DSR cutover | Resource registry, desired/observed diff, ownership adoption/retirement, MMI-backed install/sync/uninstall | Fresh installâ†’syncâ†’second sync no-op; user edits preserved; uninstall removes owned resources only | One active writer per resource; switch disables that resource's mutation, not the whole engine | One resource strategy and one family |
 | 5. SDD typed lifecycle | Explicit store, work graph, CAS attempts, typed results/evidence, native archive, review receipt binding | Restart/cumulative budget, misleading prose, store migration, archive fault, and review handoff tests | Typed advancement disables to read-only; existing runs remain on original authority | One node/transition/store migration at a time |
 | 6. Removal and standalone delivery | Delete retired planners/writers/prose paths; resume genuine standalone tracks on stable seams | Architecture fitness functions pass; no hidden fallback; context trackers reconcile migrated items | Removal waits for support horizon and read-only historical compatibility | One deprecated surface or standalone acceptance track |
 
@@ -814,7 +814,7 @@ For every source PR:
 2. Prefer correction on the contributor branch when it can remain safe and review-sized.
 3. Otherwise extract the smallest verified slice into the owning context.
 4. Link the source issue and PR in the replacement PR and release notes.
-5. Write **“Adapted from #PR by @author”** when code, tests, or assets move without the original commit.
+5. Write **â€œAdapted from #PR by @authorâ€** when code, tests, or assets move without the original commit.
 6. Never add `Co-Authored-By` or AI attribution.
 7. Close the source PR only after the public replacement map accounts for its unique evidence.
 
@@ -824,22 +824,22 @@ The validator identified 16 PRs that must be decomposed because they exceed a di
 
 | PR | Author | Required treatment |
 |---:|---|---|
-| [#731](https://github.com/Gentleman-Programming/gentle-ai/pull/731) | @Snakeblack | Extract VS Code model-assignment descriptor and tests; close cumulative slice after mapping. |
-| [#738](https://github.com/Gentleman-Programming/gentle-ai/pull/738) | @Snakeblack | Split capability projection from managed mutation and installation safety. |
-| [#740](https://github.com/Gentleman-Programming/gentle-ai/pull/740) | @Snakeblack | Separate model flow, UI, docs, and earlier VS Code chain content. |
-| [#765](https://github.com/Gentleman-Programming/gentle-ai/pull/765) | @Alan-TheGentleman | Split Termux host capability, install strategy, and platform acceptance. |
-| [#840](https://github.com/Gentleman-Programming/gentle-ai/pull/840) | @salema97 | Extract Kimi variant/target descriptor; exclude global update behavior. |
-| [#852](https://github.com/Gentleman-Programming/gentle-ai/pull/852) | @statick88 | Extract Kilo capabilities/assets; do not ship provider-specific SDD orchestration. |
-| [#946](https://github.com/Gentleman-Programming/gentle-ai/pull/946) | @mauricioalfarodev | Split provider source, model catalog, and resource reconciliation. |
-| [#973](https://github.com/Gentleman-Programming/gentle-ai/pull/973) | @decode2 | Extract editing UX from mutation/snapshot/ownership engine work. |
-| [#976](https://github.com/Gentleman-Programming/gentle-ai/pull/976) | @decode2 | Separate curated-registry ingestion from managed persistence. |
-| [#1059](https://github.com/Gentleman-Programming/gentle-ai/pull/1059) | @aleka | Recast CodeGraph as the first reconciler-backed extension; split install runtime. |
-| [#1280](https://github.com/Gentleman-Programming/gentle-ai/pull/1280) | @pablon | Extract JSONC/provider/model fixtures into the catalog source seam. |
-| [#1297](https://github.com/Gentleman-Programming/gentle-ai/pull/1297) | @salema97 | Separate runtime provenance from the repository-wide `/v2` release migration. |
-| [#1359](https://github.com/Gentleman-Programming/gentle-ai/pull/1359) | @Sitray | Split shared-skill convergence, backup/rollback, and containment tests. |
-| [#1608](https://github.com/Gentleman-Programming/gentle-ai/pull/1608) | @ardelperal | Extract lifecycle probe/diagnostic fixtures; drop dormant threshold and planning payload. |
-| [#1713](https://github.com/Gentleman-Programming/gentle-ai/pull/1713) | @pablontiv | Split persona projection from migration and transaction-backed writes. |
-| [#1749](https://github.com/Gentleman-Programming/gentle-ai/pull/1749) | @pablontiv | Extract language-contract assets/compiler tests; route writes through reconciliation. |
+| [#731](https://github.com/jonsanchezr/agent-smith/pull/731) | @Snakeblack | Extract VS Code model-assignment descriptor and tests; close cumulative slice after mapping. |
+| [#738](https://github.com/jonsanchezr/agent-smith/pull/738) | @Snakeblack | Split capability projection from managed mutation and installation safety. |
+| [#740](https://github.com/jonsanchezr/agent-smith/pull/740) | @Snakeblack | Separate model flow, UI, docs, and earlier VS Code chain content. |
+| [#765](https://github.com/jonsanchezr/agent-smith/pull/765) | @Alan-TheGentleman | Split Termux host capability, install strategy, and platform acceptance. |
+| [#840](https://github.com/jonsanchezr/agent-smith/pull/840) | @salema97 | Extract Kimi variant/target descriptor; exclude global update behavior. |
+| [#852](https://github.com/jonsanchezr/agent-smith/pull/852) | @statick88 | Extract Kilo capabilities/assets; do not ship provider-specific SDD orchestration. |
+| [#946](https://github.com/jonsanchezr/agent-smith/pull/946) | @mauricioalfarodev | Split provider source, model catalog, and resource reconciliation. |
+| [#973](https://github.com/jonsanchezr/agent-smith/pull/973) | @decode2 | Extract editing UX from mutation/snapshot/ownership engine work. |
+| [#976](https://github.com/jonsanchezr/agent-smith/pull/976) | @decode2 | Separate curated-registry ingestion from managed persistence. |
+| [#1059](https://github.com/jonsanchezr/agent-smith/pull/1059) | @aleka | Recast CodeGraph as the first reconciler-backed extension; split install runtime. |
+| [#1280](https://github.com/jonsanchezr/agent-smith/pull/1280) | @pablon | Extract JSONC/provider/model fixtures into the catalog source seam. |
+| [#1297](https://github.com/jonsanchezr/agent-smith/pull/1297) | @salema97 | Separate runtime provenance from the repository-wide `/v2` release migration. |
+| [#1359](https://github.com/jonsanchezr/agent-smith/pull/1359) | @Sitray | Split shared-skill convergence, backup/rollback, and containment tests. |
+| [#1608](https://github.com/jonsanchezr/agent-smith/pull/1608) | @ardelperal | Extract lifecycle probe/diagnostic fixtures; drop dormant threshold and planning payload. |
+| [#1713](https://github.com/jonsanchezr/agent-smith/pull/1713) | @pablontiv | Split persona projection from migration and transaction-backed writes. |
+| [#1749](https://github.com/jonsanchezr/agent-smith/pull/1749) | @pablontiv | Extract language-contract assets/compiler tests; route writes through reconciliation. |
 
 ### 10.3 Snapshot carrier posture
 
@@ -860,7 +860,7 @@ The validator identified 16 PRs that must be decomposed because they exceed a di
 | Fault injection | Crash/restart before and after write, chmod, fsync, rename, directory sync, state CAS, receipt publication, and rollback. |
 | Platform tests | Linux glibc/musl and ARM64, macOS path/case variants, Windows ACL/junction/long-path/system-drive variants, and claimed Termux paths. |
 | Adversarial/security tests | Path escape, symlink/junction race, same-byte recreation, wildcard policy precedence, output/resource exhaustion, stale authorization, and evidence replay. |
-| Journey tests | Install→sync→no-op, user edit preservation, uninstall ownership, update ambiguity, SDD misleading prose, review restart, and compatible-base validation. |
+| Journey tests | Installâ†’syncâ†’no-op, user edit preservation, uninstall ownership, update ambiguity, SDD misleading prose, review restart, and compatible-base validation. |
 
 ### 11.2 Versioned initial budgets
 
@@ -918,7 +918,7 @@ Maintainers should approve:
 
 ### 12.2 Keep as design or information work
 
-The 63 `needs-design` issues remain product/architecture decisions, and the 20 `needs-info` issues remain evidence requests. Creating a context tracker does not approve their implementation. Standalone product questions—new agents, external services, cloud/auth, quota, platform support, workflow modes, and provider semantics—retain their own acceptance criteria.
+The 63 `needs-design` issues remain product/architecture decisions, and the 20 `needs-info` issues remain evidence requests. Creating a context tracker does not approve their implementation. Standalone product questionsâ€”new agents, external services, cloud/auth, quota, platform support, workflow modes, and provider semanticsâ€”retain their own acceptance criteria.
 
 ### 12.3 Do not resume yet
 
@@ -958,7 +958,7 @@ Live notes:
 - #1769 closed at `2026-07-23T18:01:42Z`, superseded by #1786.
 - #1624 is the only snapshot PR whose head changed in the final refresh.
 - Linkage matched GraphQL closing references for 89/92 PRs. For #946, ledger issue #771 is intended but not a GraphQL closing reference; for #1287, #896 is related while #497 is closing; for #1357, #1128 is a PR, not an issue.
-- Body-regex parsing also produced template phantoms on #905, #1071–#1073, #1695, and #1752; GraphQL closing references are authoritative.
+- Body-regex parsing also produced template phantoms on #905, #1071â€“#1073, #1695, and #1752; GraphQL closing references are authoritative.
 - Integration planning uses the live-normalized **90-node / 499-edge** graph, not the stale 91-node graph containing #1769.
 
 ### A.2 Context codes
@@ -990,10 +990,10 @@ Live notes:
 | `P3` | Fix recorded blockers and rebase/re-scope; fresh-review the new exact head. |
 | `P4` | Extract unique code/tests/assets into context slices with credit, then close source PR. |
 | `P5` | Close/no merge; preserve unique evidence, fixtures, and contributor credit. |
-| `P6` | Do not merge #956 head `e95d10f…`; fix wildcard ordering and aggregate solver budget, extract the policy seam, then fresh-review. |
+| `P6` | Do not merge #956 head `e95d10fâ€¦`; fix wildcard ordering and aggregate solver budget, extract the policy seam, then fresh-review. |
 | `P7` | Rebase/split #1297; fix exact Go destination, v2 imports/tags, metadata, and CI before 4R review. |
 | `P8` | Rebase #1642 to the two-file Engram slice; do not restore the prohibited Windows remote installer. |
-| `P9` | Re-audit #1624 head `5ba1ace…`, including nil `UninstallFn` and full-Engram scope selection. |
+| `P9` | Re-audit #1624 head `5ba1aceâ€¦`, including nil `UninstallFn` and full-Engram scope selection. |
 | `P10` | Bind #1756 rollback to object/path/type/mode identity plus byte CAS; add the three differential regressions. |
 | `P11` | Make #1764 marker handling ownership-aware; preserve ambiguous/nested/interleaved user bytes. |
 | `P12` | #1023 is already closed/superseded; retain its tests as reference. |
@@ -1002,9 +1002,9 @@ Live notes:
 
 ## Appendix B. Complete snapshot ledger
 
-Numbers in the issue table refer to `Gentleman-Programming/gentle-ai` issues; numbers in the PR table refer to pull requests in the same repository. Each snapshot item appears exactly once in its table.
+Numbers in the issue table refer to `jonsanchezr/agent-smith` issues; numbers in the PR table refer to pull requests in the same repository. Each snapshot item appears exactly once in its table.
 
-### B.1 Issues — 241/241
+### B.1 Issues â€” 241/241
 
 <!-- ISSUE_LEDGER_START -->
 | # | Context | Snapshot disposition | Action |
@@ -1252,7 +1252,7 @@ Numbers in the issue table refer to `Gentleman-Programming/gentle-ai` issues; nu
 | 1785 | `HCR` | `valid-standalone` | `I4` |
 <!-- ISSUE_LEDGER_END -->
 
-### B.2 Pull requests — 92/92
+### B.2 Pull requests â€” 92/92
 
 <!-- PR_LEDGER_START -->
 | # | Context | Snapshot disposition | Action |
@@ -1360,3 +1360,4 @@ The delivered document is valid only when an automated check confirms:
 - every row has one recognized canonical context, disposition, and action code;
 - reconciliation totals equal the validator totals;
 - no unclosed Markdown fence and no whitespace error reported by `git diff --check`.
+

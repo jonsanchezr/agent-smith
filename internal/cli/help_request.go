@@ -46,7 +46,7 @@ func parseCommandFlags(fs *flag.FlagSet, args []string) error {
 	if text == "" {
 		return err
 	}
-	return fmt.Errorf("%w — run `gentle-ai %s --help` for the supported flags:\n%s", err, fs.Name(), text)
+	return fmt.Errorf("%w — run `agent-smith %s --help` for the supported flags:\n%s", err, fs.Name(), text)
 }
 
 // writeHelpRequest answers a help request by printing the derived usage and
@@ -70,3 +70,4 @@ func derivedUsageText(usage *bytes.Buffer) string {
 	}
 	return strings.TrimRight(text, "\n")
 }
+

@@ -9,8 +9,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/agents/claude"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/components/reviewassets"
+	"github.com/jonsanchezr/agent-smith/v4/internal/agents/claude"
+	"github.com/jonsanchezr/agent-smith/v4/internal/components/reviewassets"
 )
 
 // gentleAIMarkerToken matches every envelope marker either half of the
@@ -60,3 +60,4 @@ func TestLensContextBlockCarriesEveryMarkerInstalledClaudeLensAgentsRequire(t *t
 			lens, missing, slices.Compact(gentleAIMarkerToken.FindAllString(block, -1)))
 	}
 }
+

@@ -20,7 +20,7 @@ func TestBuildEventNeverLeaksIdentifyingData(t *testing.T) {
 	// The fixture home directory embeds a realistic-looking username and
 	// path shape (/Users/<name>/...), but lives under t.TempDir() so the
 	// test never touches the real filesystem outside its own sandbox.
-	realHomeDir := filepath.Join(t.TempDir(), "Users", realUsername, "gentle-ai-real-home")
+	realHomeDir := filepath.Join(t.TempDir(), "Users", realUsername, "agent-smith-real-home")
 
 	if err := os.MkdirAll(realHomeDir, 0o755); err != nil {
 		t.Fatal(err)
@@ -98,3 +98,4 @@ func TestBuildHeartbeatEventCarriesCountersEvenWhenZero(t *testing.T) {
 		t.Fatalf("heartbeat event must always carry counters: %s", payload)
 	}
 }
+

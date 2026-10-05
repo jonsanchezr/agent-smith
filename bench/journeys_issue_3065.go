@@ -19,7 +19,7 @@ func issue3065Journeys() []Journey {
 		ID:     "j115-recovery-selector-is-collected-before-authorization",
 		Review: reviewOptedIn,
 		Title:  "Default workspace-overlay recovery collects an unrepresentable selector before authorization",
-		Source: "https://github.com/Gentleman-Programming/gentle-ai/issues/3065",
+		Source: "https://github.com/jonsanchezr/agent-smith/issues/3065",
 		Steps: []Step{
 			{Name: "fixture: linked worktree and remote", Fixture: linkedWorktreeWithRemote},
 			{Name: "fixture: commit base-diff predecessor candidate", Fixture: prepareIssue3065CurrentChangeCandidate},
@@ -96,7 +96,7 @@ func recoverIssue3065StagedCorrection(r *journeyRun) error {
 	} else {
 		// Older binaries still collect the seven-argument authorized fixture.
 		const actor, reason = "bench-maintainer", "authorize staged correction scope expansion"
-		authorization := "gentle-ai.review-recovery-authorization/v1\npredecessor_lineage=" + issue3065SourceLineage +
+		authorization := "agent-smith.review-recovery-authorization/v1\npredecessor_lineage=" + issue3065SourceLineage +
 			"\npredecessor_revision=" + probe.Authority.Revision + "\ntarget_identity=" + probe.TargetIdentity +
 			"\nsuccessor_lineage=" + issue3065SuccessorLineage + "\nactor=" + actor + "\nreason=" + reason
 		authorized := append(selectors, "--recovery-successor-lineage", issue3065SuccessorLineage, "--recovery-reason", reason,
@@ -225,7 +225,7 @@ func captureIssue3065FailedValidationFor(r *journeyRun, lineage string, selector
 	if err != nil {
 		return err
 	}
-	start, err := json.Marshal(map[string]string{"schema": "gentle-ai.provider-transport/v1", "operation": "start", "prompt": input.ProviderTask.Prompt})
+	start, err := json.Marshal(map[string]string{"schema": "agent-smith.provider-transport/v1", "operation": "start", "prompt": input.ProviderTask.Prompt})
 	if err != nil {
 		return err
 	}
@@ -242,10 +242,10 @@ func captureIssue3065FailedValidationFor(r *journeyRun, lineage string, selector
 			Nonce  string `json:"nonce"`
 			Prompt string `json:"prompt"`
 		}
-		if err := json.Unmarshal([]byte(line), &prompt); err != nil || prompt.Schema != "gentle-ai.provider-transport/v1" || prompt.Nonce == "" || prompt.Prompt == "" {
+		if err := json.Unmarshal([]byte(line), &prompt); err != nil || prompt.Schema != "agent-smith.provider-transport/v1" || prompt.Nonce == "" || prompt.Prompt == "" {
 			return fmt.Errorf("relay prompt = %q", line)
 		}
-		completion, err := json.Marshal(map[string]string{"schema": "gentle-ai.provider-transport/v1", "operation": "complete", "nonce": prompt.Nonce, "output": string(payload)})
+		completion, err := json.Marshal(map[string]string{"schema": "agent-smith.provider-transport/v1", "operation": "complete", "nonce": prompt.Nonce, "output": string(payload)})
 		if err != nil {
 			return err
 		}
@@ -266,7 +266,7 @@ func captureIssue3065FailedValidationFor(r *journeyRun, lineage string, selector
 			State     string `json:"state"`
 		}
 		if json.Unmarshal([]byte(line), &frame) == nil && frame.Operation == "result" && json.Unmarshal([]byte(frame.Output), &closure) == nil &&
-			closure.Schema == "gentle-ai.review-last-event-closure/v1" && closure.Operation == "review/capture-validation" && closure.State == "escalated" {
+			closure.Schema == "agent-smith.review-last-event-closure/v1" && closure.Operation == "review/capture-validation" && closure.State == "escalated" {
 			return nil
 		}
 	}
@@ -330,3 +330,4 @@ func proveIssue3065RecoveryCollection(r *journeyRun) error {
 	}
 	return nil
 }
+

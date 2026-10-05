@@ -8,18 +8,18 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/reviewtransaction"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
+	"github.com/jonsanchezr/agent-smith/v4/internal/reviewtransaction"
 )
 
-// ReviewAssessmentSchema is the typed envelope gentle-ai review assess prints
+// ReviewAssessmentSchema is the typed envelope agent-smith review assess prints
 // with --json. It is a read-only projection of the same candidate risk
 // assessment START uses to choose lenses (reviewtransaction.AssessSnapshotRisk),
 // so a host can gate delegated verification on it before deciding whether to
 // start a review at all, with or without receipt-driven development enabled
 // (issue #4295).
-const ReviewAssessmentSchema = "gentle-ai.review-assessment/v1"
-const ReviewAssessmentSchemaID = "https://gentle-ai.dev/contracts/review-integration/v2/schemas/assess.schema.json"
+const ReviewAssessmentSchema = "agent-smith.review-assessment/v1"
+const ReviewAssessmentSchemaID = "https://agent-smith.dev/contracts/review-integration/v2/schemas/assess.schema.json"
 
 // ReviewAssessmentReason is the public projection of one
 // reviewtransaction.RiskReason: the same evidence code and path START already
@@ -46,10 +46,10 @@ type ReviewAssessmentCandidate struct {
 }
 
 // ReviewAssessmentNextTransition is the exact, literally runnable
-// `gentle-ai review status ... --next-transition` preflight continuation for
+// `agent-smith review status ... --next-transition` preflight continuation for
 // a review_due=true candidate, rendered with the same ReviewTransitionArgument
 // rows and builder conventions review_next_transition.go uses for every other
-// negotiated continuation this product emits. Command is "gentle-ai " plus
+// negotiated continuation this product emits. Command is "agent-smith " plus
 // every argument's token joined by single spaces, so a caller never
 // hand-assembles the invocation from prose (issue: orchestrators skipped the
 // RDD preflight after a slice closed because the ODD rule was prose only).
@@ -74,7 +74,7 @@ const (
 	reviewAssessDueReasonAlreadyReviewed    = "already_reviewed"
 )
 
-// ReviewAssessmentResult is the complete gentle-ai.review-assessment/v1
+// ReviewAssessmentResult is the complete agent-smith.review-assessment/v1
 // envelope. Risk is the public vocabulary: "passive" is exactly the tier
 // reviewtransaction.RiskLow names -- the same zero-lens, structural-readback
 // tier START selects for it -- and "medium"/"high" are unchanged so this
@@ -97,7 +97,7 @@ type ReviewAssessmentResult struct {
 }
 
 // reviewAssessPublicRisk maps the internal risk tier to the public
-// gentle-ai.review-assessment/v1 vocabulary. RiskLow is renamed to "passive"
+// agent-smith.review-assessment/v1 vocabulary. RiskLow is renamed to "passive"
 // because that is exactly the condition it names: every authored path proven
 // passive documentation by its own frozen bytes, the one tier START selects
 // zero reviewer lenses for. Medium and high keep their internal spelling
@@ -111,7 +111,7 @@ func reviewAssessPublicRisk(level reviewtransaction.RiskLevel) (string, error) {
 	case reviewtransaction.RiskHigh:
 		return "high", nil
 	default:
-		return "", fmt.Errorf("review assess computed an unsupported risk level %q; this is a defect in gentle-ai itself, not a request error -- file it and retry with gentle-ai review assess --help", level)
+		return "", fmt.Errorf("review assess computed an unsupported risk level %q; this is a defect in agent-smith itself, not a request error -- file it and retry with agent-smith review assess --help", level)
 	}
 }
 
@@ -224,14 +224,14 @@ func parseReviewAssessEscalation(args []string, item, reason string) (*reviewAss
 		return nil, nil
 	}
 	if !itemGiven || !reasonGiven {
-		return nil, errors.New("review assess --escalate-item and --escalate-reason must be passed together; rerun `gentle-ai review assess --escalate-item <1-6> --escalate-reason <text>`")
+		return nil, errors.New("review assess --escalate-item and --escalate-reason must be passed together; rerun `agent-smith review assess --escalate-item <1-6> --escalate-reason <text>`")
 	}
 	number, err := strconv.Atoi(strings.TrimSpace(item))
 	if _, known := reviewAssessHighRiskItems[number]; err != nil || !known {
-		return nil, fmt.Errorf("review assess --escalate-item %q must be an integer from 1 to 6 naming a high-risk item; rerun `gentle-ai review assess --escalate-item <1-6> --escalate-reason <text>`", item)
+		return nil, fmt.Errorf("review assess --escalate-item %q must be an integer from 1 to 6 naming a high-risk item; rerun `agent-smith review assess --escalate-item <1-6> --escalate-reason <text>`", item)
 	}
 	if strings.TrimSpace(reason) == "" || len(reason) > reviewAssessEscalationReasonMax {
-		return nil, fmt.Errorf("review assess --escalate-reason must be non-empty and at most %d characters; rerun `gentle-ai review assess --escalate-item <1-6> --escalate-reason <text>` with a one-line reason", reviewAssessEscalationReasonMax)
+		return nil, fmt.Errorf("review assess --escalate-reason must be non-empty and at most %d characters; rerun `agent-smith review assess --escalate-item <1-6> --escalate-reason <text>` with a one-line reason", reviewAssessEscalationReasonMax)
 	}
 	return &reviewAssessEscalation{item: number, reason: reason}, nil
 }
@@ -267,7 +267,7 @@ func reviewFlagProvided(args []string, flag string) bool {
 	return false
 }
 
-// RunReviewAssess is the read-only `gentle-ai review assess` command. It
+// RunReviewAssess is the read-only `agent-smith review assess` command. It
 // builds the exact same candidate review start would (current changes, or a
 // named --base-ref comparison), runs the shared risk assessment, and prints
 // it: no authority, no lineage, no store mutation, and no lock beyond an
@@ -276,7 +276,7 @@ func reviewFlagProvided(args []string, flag string) bool {
 // result before ever calling review start (issue #4295).
 //
 // When the candidate cannot be built or assessed, this command fails closed:
-// every returned error names a runnable `gentle-ai review assess ...`
+// every returned error names a runnable `agent-smith review assess ...`
 // continuation (or an unambiguous %w propagation of the underlying native
 // failure). Hosts that cannot resolve the named continuation should treat the
 // failure exactly as they would treat a "high" result.
@@ -310,7 +310,7 @@ func RunReviewAssess(args []string, stdout io.Writer) error {
 	baseRef := flags.String("base-ref", "", "optional base revision for an immutable base-to-HEAD assessment")
 	committedOnly := flags.Bool("committed-only", false, "acknowledge that --base-ref excludes dirty tracked changes")
 	agent := flags.String("agent", "", "optional generated active runtime identity to carry on the next_transition preflight")
-	jsonOutput := flags.Bool("json", false, "print the gentle-ai.review-assessment/v1 envelope as JSON instead of human-readable text")
+	jsonOutput := flags.Bool("json", false, "print the agent-smith.review-assessment/v1 envelope as JSON instead of human-readable text")
 	escalateItem := flags.String("escalate-item", "", "raise the risk to high by citing one high-risk item (1-6); never lowers a tier")
 	escalateReason := flags.String("escalate-reason", "", "one-line reason for --escalate-item")
 	untrackedScope := reviewSingleValueFlag{}
@@ -326,7 +326,7 @@ func RunReviewAssess(args []string, stdout io.Writer) error {
 		return nil
 	}
 	if flags.NArg() != 0 {
-		return failClosed(reviewPreflightError(fmt.Errorf("unexpected review assess argument %q; run `gentle-ai review assess --help` for the closed command form", flags.Arg(0))), failClosedCandidate)
+		return failClosed(reviewPreflightError(fmt.Errorf("unexpected review assess argument %q; run `agent-smith review assess --help` for the closed command form", flags.Arg(0))), failClosedCandidate)
 	}
 
 	escalation, err := parseReviewAssessEscalation(args, *escalateItem, *escalateReason)
@@ -373,33 +373,33 @@ func RunReviewAssess(args []string, stdout io.Writer) error {
 		}
 		if dirtyTracked && !*committedOnly {
 			return failClosed(reviewPreflightError(fmt.Errorf(
-				"review assess with --base-ref omits dirty tracked changes; rerun `gentle-ai review assess --base-ref %s --committed-only` to acknowledge committed-only scope",
+				"review assess with --base-ref omits dirty tracked changes; rerun `agent-smith review assess --base-ref %s --committed-only` to acknowledge committed-only scope",
 				trimmedBaseRef)), failClosedCandidate)
 		}
 	}
 
 	intendedScope, err := intendedUntrackedScopeForTarget(ctx, builder, untrackedScope, intendedUntracked, expectedUntrackedInventory,
-		reviewIntendedUntrackedInventoryCommand, "gentle-ai review assess")
+		reviewIntendedUntrackedInventoryCommand, "agent-smith review assess")
 	if err != nil {
 		return failClosed(reviewPreflightError(err), failClosedCandidate)
 	}
 	if intendedScope.NeedsSelection {
-		return failClosed(reviewPreflightError(intendedUntrackedSelectionRequired(intendedScope, reviewIntendedUntrackedInventoryCommand, "gentle-ai review assess")), failClosedCandidate)
+		return failClosed(reviewPreflightError(intendedUntrackedSelectionRequired(intendedScope, reviewIntendedUntrackedInventoryCommand, "agent-smith review assess")), failClosedCandidate)
 	}
 	target.IntendedUntracked = intendedScope.Intended
 
 	snapshot, err := builder.Build(ctx, target)
 	if err != nil {
-		return failClosed(fmt.Errorf("review assess could not build the candidate; correct --cwd or --base-ref and retry with `gentle-ai review assess --help`: %w", err), failClosedCandidate)
+		return failClosed(fmt.Errorf("review assess could not build the candidate; correct --cwd or --base-ref and retry with `agent-smith review assess --help`: %w", err), failClosedCandidate)
 	}
 	if reviewStartEmptyCandidateScope(snapshot) {
 		return failClosed(reviewPreflightError(errors.New(
-			"the review assess candidate has no pending changes; already-committed work can be assessed by rerunning `gentle-ai review assess --base-ref <commit>` naming the base to compare against")), failClosedCandidate)
+			"the review assess candidate has no pending changes; already-committed work can be assessed by rerunning `agent-smith review assess --base-ref <commit>` naming the base to compare against")), failClosedCandidate)
 	}
 
 	assessment, err := builder.AssessSnapshotRisk(ctx, snapshot)
 	if err != nil {
-		return failClosed(fmt.Errorf("review assess could not classify the candidate; retry with `gentle-ai review assess --help` or a narrower --base-ref: %w", err), failClosedCandidate)
+		return failClosed(fmt.Errorf("review assess could not classify the candidate; retry with `agent-smith review assess --help` or a narrower --base-ref: %w", err), failClosedCandidate)
 	}
 	publicRisk, err := reviewAssessPublicRisk(assessment.Level)
 	if err != nil {
@@ -413,7 +413,7 @@ func RunReviewAssess(args []string, stdout io.Writer) error {
 	// tombstone; it matches by identity re-derivation only).
 	consumed, err := reviewtransaction.CompactTargetConsumed(ctx, root, snapshot.Identity)
 	if err != nil {
-		return failClosed(fmt.Errorf("review assess could not read terminal consumption evidence; retry with `gentle-ai review assess --help`: %w", err), failClosedCandidate)
+		return failClosed(fmt.Errorf("review assess could not read terminal consumption evidence; retry with `agent-smith review assess --help`: %w", err), failClosedCandidate)
 	}
 	reviewDue, reviewDueReason := reviewAssessDue(consumed, publicRisk, assessment.ChangedLines)
 	var nextTransition *ReviewAssessmentNextTransition
@@ -478,3 +478,4 @@ func writeReviewAssessmentHuman(stdout io.Writer, result ReviewAssessmentResult)
 	}
 	return nil
 }
+

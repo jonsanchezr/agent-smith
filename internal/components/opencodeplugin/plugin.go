@@ -10,9 +10,9 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/components/filemerge"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/opencode"
+	"github.com/jonsanchezr/agent-smith/v4/internal/components/filemerge"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
+	"github.com/jonsanchezr/agent-smith/v4/internal/opencode"
 )
 
 type Definition struct {
@@ -94,7 +94,7 @@ const roseArt = [
   "               ⠐⠈",
 ]
 
-const compactArt = ["✦ Gentle AI ✦"]
+const compactArt = ["✦ Agent Smith ✦"]
 
 const Logo = () => {
   const dim = useTerminalDimensions()
@@ -342,3 +342,4 @@ func stringSlice(value any) []string {
 	}
 	return out
 }
+

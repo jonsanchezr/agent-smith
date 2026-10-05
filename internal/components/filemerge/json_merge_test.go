@@ -61,8 +61,8 @@ func TestJSONCMergesRefuseDuplicateKeysBeforeMapRewrite(t *testing.T) {
 func TestRemoveLegacyOpenCodeAgentMarkers(t *testing.T) {
 	for _, path := range []string{"opencode.json", "opencode.jsonc"} {
 		t.Run(path, func(t *testing.T) {
-			raw := []byte(`{"agent":{"gentle-orchestrator":{"__managed_by":"gentle-ai/sdd","prompt":"keep"},"custom":{"__managed_by":"gentle-ai/sdd"},"sdd-apply":{"__managed_by":"other"}},"theme":"keep"}`)
-			got, err := RemoveLegacyOpenCodeAgentMarkers(path, raw, []string{"gentle-orchestrator", "sdd-apply"})
+			raw := []byte(`{"agent":{"agent-smith-orchestrator":{"__managed_by":"agent-smith/sdd","prompt":"keep"},"custom":{"__managed_by":"agent-smith/sdd"},"sdd-apply":{"__managed_by":"other"}},"theme":"keep"}`)
+			got, err := RemoveLegacyOpenCodeAgentMarkers(path, raw, []string{"agent-smith-orchestrator", "sdd-apply"})
 			if err != nil {
 				t.Fatal(err)
 			}
@@ -71,13 +71,13 @@ func TestRemoveLegacyOpenCodeAgentMarkers(t *testing.T) {
 				t.Fatal(err)
 			}
 			agents := root["agent"].(map[string]any)
-			if _, ok := agents["gentle-orchestrator"].(map[string]any)["__managed_by"]; ok {
+			if _, ok := agents["agent-smith-orchestrator"].(map[string]any)["__managed_by"]; ok {
 				t.Fatalf("marker retained: %s", got)
 			}
-			if agents["gentle-orchestrator"].(map[string]any)["prompt"] != "keep" || agents["custom"].(map[string]any)["__managed_by"] != "gentle-ai/sdd" || agents["sdd-apply"].(map[string]any)["__managed_by"] != "other" {
+			if agents["agent-smith-orchestrator"].(map[string]any)["prompt"] != "keep" || agents["custom"].(map[string]any)["__managed_by"] != "agent-smith/sdd" || agents["sdd-apply"].(map[string]any)["__managed_by"] != "other" {
 				t.Fatalf("user data changed: %s", got)
 			}
-			again, err := RemoveLegacyOpenCodeAgentMarkers(path, got, []string{"gentle-orchestrator", "sdd-apply"})
+			again, err := RemoveLegacyOpenCodeAgentMarkers(path, got, []string{"agent-smith-orchestrator", "sdd-apply"})
 			if err != nil || string(again) != string(got) {
 				t.Fatalf("not idempotent: %s %v", again, err)
 			}
@@ -92,19 +92,19 @@ func TestRemoveLegacyOpenCodeAgentMarkersJSONCCommentsAndRefusals(t *testing.T) 
 	raw := []byte(`{
  // outside
  "agent": {
-   "gentle-orchestrator": {
+   "agent-smith-orchestrator": {
      // retain prompt note
      "prompt": "keep",
-     "__managed_by": "gentle-ai/sdd",
+     "__managed_by": "agent-smith/sdd",
    },
-   "custom": {"__managed_by": "gentle-ai/sdd"},
+   "custom": {"__managed_by": "agent-smith/sdd"},
  },
 }`)
-	got, err := RemoveLegacyOpenCodeAgentMarkers("opencode.jsonc", raw, []string{"gentle-orchestrator"})
+	got, err := RemoveLegacyOpenCodeAgentMarkers("opencode.jsonc", raw, []string{"agent-smith-orchestrator"})
 	if err != nil {
 		t.Fatal(err)
 	}
-	for _, part := range []string{"// outside", "// retain prompt note", `"custom": {"__managed_by": "gentle-ai/sdd"}`} {
+	for _, part := range []string{"// outside", "// retain prompt note", `"custom": {"__managed_by": "agent-smith/sdd"}`} {
 		if !strings.Contains(string(got), part) {
 			t.Fatalf("lost %q: %s", part, got)
 		}
@@ -112,8 +112,8 @@ func TestRemoveLegacyOpenCodeAgentMarkersJSONCCommentsAndRefusals(t *testing.T) 
 	if _, err := UnmarshalJSONObject(got); err != nil {
 		t.Fatalf("invalid output: %v", err)
 	}
-	for _, bad := range []string{`{"agent":`, `{"agent":{"gentle-orchestrator":{"__managed_by":"gentle-ai/sdd"}},"agent":{"gentle-orchestrator":{"__managed_by":"gentle-ai/sdd"}}}`} {
-		result, err := RemoveLegacyOpenCodeAgentMarkers("opencode.jsonc", []byte(bad), []string{"gentle-orchestrator"})
+	for _, bad := range []string{`{"agent":`, `{"agent":{"agent-smith-orchestrator":{"__managed_by":"agent-smith/sdd"}},"agent":{"agent-smith-orchestrator":{"__managed_by":"agent-smith/sdd"}}}`} {
+		result, err := RemoveLegacyOpenCodeAgentMarkers("opencode.jsonc", []byte(bad), []string{"agent-smith-orchestrator"})
 		if err == nil || string(result) != bad {
 			t.Fatalf("unsafe rewrite of %q: %s %v", bad, result, err)
 		}
@@ -122,15 +122,15 @@ func TestRemoveLegacyOpenCodeAgentMarkersJSONCCommentsAndRefusals(t *testing.T) 
 
 func TestRemoveLegacyOpenCodeAgentMarkersPreservesInlineCommentByRefusal(t *testing.T) {
 	for _, raw := range []string{
-		`{"agent":{"gentle-orchestrator":{"__managed_by" /* user note */ : "gentle-ai/sdd","prompt":"keep"}}}`,
-		`{"agent":{"gentle-orchestrator":{"__managed_by" // user note
- : "gentle-ai/sdd","prompt":"keep"}}}`,
-		`{"agent":{"gentle-orchestrator":{/* user note */ "__managed_by":"gentle-ai/sdd","prompt":"keep"}}}`,
-		`{"agent":{"gentle-orchestrator":{"__managed_by":"gentle-ai/sdd" /* user's note */,"prompt":"keep"}}}`,
-		`{"agent":{"gentle-orchestrator":{"__managed_by":"gentle-ai/sdd" // user's note
+		`{"agent":{"agent-smith-orchestrator":{"__managed_by" /* user note */ : "agent-smith/sdd","prompt":"keep"}}}`,
+		`{"agent":{"agent-smith-orchestrator":{"__managed_by" // user note
+ : "agent-smith/sdd","prompt":"keep"}}}`,
+		`{"agent":{"agent-smith-orchestrator":{/* user note */ "__managed_by":"agent-smith/sdd","prompt":"keep"}}}`,
+		`{"agent":{"agent-smith-orchestrator":{"__managed_by":"agent-smith/sdd" /* user's note */,"prompt":"keep"}}}`,
+		`{"agent":{"agent-smith-orchestrator":{"__managed_by":"agent-smith/sdd" // user's note
   ,"prompt":"keep"}}}`,
 	} {
-		got, err := RemoveLegacyOpenCodeAgentMarkers("opencode.jsonc", []byte(raw), []string{"gentle-orchestrator"})
+		got, err := RemoveLegacyOpenCodeAgentMarkers("opencode.jsonc", []byte(raw), []string{"agent-smith-orchestrator"})
 		if err == nil || string(got) != raw {
 			t.Fatalf("inline comment must be preserved by refusal: %s, %v", got, err)
 		}
@@ -148,7 +148,7 @@ func TestRemoveLegacyOpenCodeAgentMarkersAcceptsEmptySettings(t *testing.T) {
 		{name: "whitespace JSONC", path: "opencode.jsonc", raw: []byte(" \n ")},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
-			got, err := RemoveLegacyOpenCodeAgentMarkers(tc.path, tc.raw, []string{"gentle-orchestrator"})
+			got, err := RemoveLegacyOpenCodeAgentMarkers(tc.path, tc.raw, []string{"agent-smith-orchestrator"})
 			if err != nil || string(got) != string(tc.raw) {
 				t.Fatalf("empty settings must remain unchanged without error: got %q, err %v", got, err)
 			}
@@ -158,7 +158,7 @@ func TestRemoveLegacyOpenCodeAgentMarkersAcceptsEmptySettings(t *testing.T) {
 
 func TestRemoveLegacyOpenCodeAgentMarkersRejectsCommentOnlyJSONC(t *testing.T) {
 	raw := []byte("// user note\n")
-	got, err := RemoveLegacyOpenCodeAgentMarkers("opencode.jsonc", raw, []string{"gentle-orchestrator"})
+	got, err := RemoveLegacyOpenCodeAgentMarkers("opencode.jsonc", raw, []string{"agent-smith-orchestrator"})
 	if err == nil || string(got) != string(raw) {
 		t.Fatalf("comment-only settings must be refused unchanged: got %q, err %v", got, err)
 	}
@@ -166,15 +166,15 @@ func TestRemoveLegacyOpenCodeAgentMarkersRejectsCommentOnlyJSONC(t *testing.T) {
 
 func TestRemoveLegacyOpenCodeAgentMarkersRejectsDuplicateKeys(t *testing.T) {
 	cases := []string{
-		`{"agent":{"gentle-orchestrator":{"__managed_by":"gentle-ai/sdd"}},"agent":{"custom":true}}`,
-		`{"agent":{"gentle-orchestrator":{"__managed_by":"gentle-ai/sdd"},"gentle-orchestrator":{"prompt":"user"}}}`,
-		`{"agent":{"gentle-orchestrator":{"__managed_by":"gentle-ai/sdd","__managed_by":"other"}}}`,
-		`{"theme":1,"theme":2,"agent":{"gentle-orchestrator":{"__managed_by":"gentle-ai/sdd"}}}`,
+		`{"agent":{"agent-smith-orchestrator":{"__managed_by":"agent-smith/sdd"}},"agent":{"custom":true}}`,
+		`{"agent":{"agent-smith-orchestrator":{"__managed_by":"agent-smith/sdd"},"agent-smith-orchestrator":{"prompt":"user"}}}`,
+		`{"agent":{"agent-smith-orchestrator":{"__managed_by":"agent-smith/sdd","__managed_by":"other"}}}`,
+		`{"theme":1,"theme":2,"agent":{"agent-smith-orchestrator":{"__managed_by":"agent-smith/sdd"}}}`,
 	}
 	for _, path := range []string{"opencode.json", "opencode.jsonc"} {
 		for _, raw := range cases {
 			t.Run(path+raw, func(t *testing.T) {
-				got, err := RemoveLegacyOpenCodeAgentMarkers(path, []byte(raw), []string{"gentle-orchestrator"})
+				got, err := RemoveLegacyOpenCodeAgentMarkers(path, []byte(raw), []string{"agent-smith-orchestrator"})
 				if err == nil || string(got) != raw {
 					t.Fatalf("duplicate key must fail closed: %s %v", got, err)
 				}
@@ -233,7 +233,7 @@ func TestPermissionOrderSurvivesCrossWriterMerge(t *testing.T) {
 			if err != nil {
 				t.Fatal(err)
 			}
-			for _, overlay := range []string{`{"agent":{"gentle-orchestrator":{"prompt":"guidance"}}}`, `{"agent":{"sdd-apply":{"permission":{}}}}`} {
+			for _, overlay := range []string{`{"agent":{"agent-smith-orchestrator":{"prompt":"guidance"}}}`, `{"agent":{"sdd-apply":{"permission":{}}}}`} {
 				got, err := MergeJSONObjectsForPath(path, base, []byte(overlay))
 				if err != nil {
 					t.Fatal(err)
@@ -820,3 +820,4 @@ func TestJSONCTopLevelKeyIsEscaped(t *testing.T) {
 		})
 	}
 }
+

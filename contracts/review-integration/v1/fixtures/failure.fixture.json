@@ -1,6 +1,6 @@
-{
-  "schema": "gentle-ai.review-integration.failure/v1",
-  "contract": "gentle-ai.review-integration/v1",
+﻿{
+  "schema": "agent-smith.review-integration.failure/v1",
+  "contract": "agent-smith.review-integration/v1",
   "operation": "review.validate",
   "phase": "preflight",
   "code": "gate_scope_changed",
@@ -45,3 +45,4 @@
     }
   }
 }
+

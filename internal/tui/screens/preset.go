@@ -3,8 +3,8 @@ package screens
 import (
 	"strings"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/tui/styles"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
+	"github.com/jonsanchezr/agent-smith/v4/internal/tui/styles"
 )
 
 func PresetOptions() []model.PresetID {
@@ -50,3 +50,4 @@ func RenderPreset(selected model.PresetID, cursor int) string {
 
 	return b.String()
 }
+

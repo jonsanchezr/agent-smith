@@ -183,7 +183,7 @@ func openCodeAgentAttribution(agent string) (kind, class string) {
 	switch agent {
 	case "":
 		return "unknown", "unknown"
-	case "build", "plan", "gentle-orchestrator":
+	case "build", "plan", "agent-smith-orchestrator":
 		return "orchestrator", "orchestrator"
 	case "explore":
 		return "built_in", "explore"

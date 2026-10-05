@@ -1,6 +1,6 @@
 // Command crosslane is the local cross-lane integration battery.
 //
-// It drives one real gentle-ai binary (--binary) end to end across the
+// It drives one real agent-smith binary (--binary) end to end across the
 // integration boundaries where host runtimes meet the Go facade:
 //
 //   - opencode lane: the REAL OpenCode transport plugin bytes
@@ -38,7 +38,7 @@ func main() {
 // run holds the battery body so deferred cleanup (work-root removal or the
 // --keep-work banner) always executes before the process exits nonzero.
 func run() int {
-	binary := flag.String("binary", "", "path to the gentle-ai binary under test (required)")
+	binary := flag.String("binary", "", "path to the agent-smith binary under test (required)")
 	withModel := flag.Bool("with-model", false, "reserved; live Claude model proof remains intentionally disabled")
 	withHost := flag.Bool("with-host", false, "spawn REAL host applications (codex exec, pi print mode, an opencode session) end to end (uses the dev subscription)")
 	keepWork := flag.Bool("keep-work", false, "keep the scratch working directory for inspection")
@@ -64,7 +64,7 @@ func run() int {
 		fmt.Fprintf(os.Stderr, "crosslane: %v\n", err)
 		return 2
 	}
-	workRoot, err := os.MkdirTemp("", "gentle-ai-crosslane-")
+	workRoot, err := os.MkdirTemp("", "agent-smith-crosslane-")
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "crosslane: %v\n", err)
 		return 2
@@ -142,3 +142,4 @@ func (b *battery) printTable() int {
 	}
 	return failed
 }
+

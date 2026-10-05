@@ -8,13 +8,13 @@ import (
 	"path/filepath"
 	"time"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/components/filemerge"
+	"github.com/jonsanchezr/agent-smith/v4/internal/components/filemerge"
 )
 
 // stateDir matches internal/state's own stateDir: telemetry state lives next
-// to the rest of Gentle AI's uncommitted user state, under the same home
+// to the rest of Agent Smith's uncommitted user state, under the same home
 // directory resolution so tests can point both at one temp dir.
-const stateDir = ".gentle-ai"
+const stateDir = ".agent-smith"
 const stateFile = "telemetry.json"
 
 // Counters counts activity since the previous successful send. They are
@@ -221,3 +221,4 @@ func newInstallID() (string, error) {
 	b[8] = (b[8] & 0x3f) | 0x80 // variant 10
 	return fmt.Sprintf("%x-%x-%x-%x-%x", b[0:4], b[4:6], b[6:8], b[8:10], b[10:16]), nil
 }
+

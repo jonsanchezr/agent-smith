@@ -17,25 +17,25 @@ import (
 
 	"github.com/charmbracelet/bubbles/textarea"
 	tea "github.com/charmbracelet/bubbletea"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/agentbuilder"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/agents"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/backup"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/catalog"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/cli"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/components/communitytool"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/components/filemerge"
-	componentuninstall "github.com/gentleman-programming/gentle-ai/v4/internal/components/uninstall"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/opencode"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/pipeline"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/planner"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/reviewtransaction"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/state"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/statecoord"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/system"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/tui/screens"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/update"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/update/upgrade"
+	"github.com/jonsanchezr/agent-smith/v4/internal/agentbuilder"
+	"github.com/jonsanchezr/agent-smith/v4/internal/agents"
+	"github.com/jonsanchezr/agent-smith/v4/internal/backup"
+	"github.com/jonsanchezr/agent-smith/v4/internal/catalog"
+	"github.com/jonsanchezr/agent-smith/v4/internal/cli"
+	"github.com/jonsanchezr/agent-smith/v4/internal/components/communitytool"
+	"github.com/jonsanchezr/agent-smith/v4/internal/components/filemerge"
+	componentuninstall "github.com/jonsanchezr/agent-smith/v4/internal/components/uninstall"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
+	"github.com/jonsanchezr/agent-smith/v4/internal/opencode"
+	"github.com/jonsanchezr/agent-smith/v4/internal/pipeline"
+	"github.com/jonsanchezr/agent-smith/v4/internal/planner"
+	"github.com/jonsanchezr/agent-smith/v4/internal/reviewtransaction"
+	"github.com/jonsanchezr/agent-smith/v4/internal/state"
+	"github.com/jonsanchezr/agent-smith/v4/internal/statecoord"
+	"github.com/jonsanchezr/agent-smith/v4/internal/system"
+	"github.com/jonsanchezr/agent-smith/v4/internal/tui/screens"
+	"github.com/jonsanchezr/agent-smith/v4/internal/update"
+	"github.com/jonsanchezr/agent-smith/v4/internal/update/upgrade"
 )
 
 // tuiNowFn returns the current time for the update-check cooldown gate.
@@ -139,7 +139,7 @@ var readCurrentAssignmentsFn = func(settingsPath string) (map[string]model.Model
 			continue
 		}
 		if name == "sdd-orchestrator" {
-			name = "gentle-orchestrator" // Read legacy settings without modifying them.
+			name = "agent-smith-orchestrator" // Read legacy settings without modifying them.
 			if _, exists := agents[name]; exists {
 				continue
 			}
@@ -1094,7 +1094,7 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		if msg.Err != nil {
 			m.Progress.AppendLog("FAILED: save global RDD mode — %s", msg.Err)
 			m.Execution.ManualActions = append(m.Execution.ManualActions,
-				"RDD mode was not saved. Retry with `gentle-ai review mode enable --scope global` or `gentle-ai review mode disable --scope global`.")
+				"RDD mode was not saved. Retry with `agent-smith review mode enable --scope global` or `agent-smith review mode disable --scope global`.")
 		}
 		return m, nil
 	case ReviewStoreResetDoneMsg:
@@ -1809,7 +1809,7 @@ func (m Model) handleKeyPress(key tea.KeyMsg) (tea.Model, tea.Cmd) {
 		if (m.Screen == ScreenInstalling && (m.pipelineRunning || m.InstallReviewModePersisting)) || m.Screen == ScreenCommunityToolInstalling {
 			return m, nil
 		}
-		if _, ok := m.GentleAIUpgradeVersion(); ok {
+		if _, ok := m.AgentSmithUpgradeVersion(); ok {
 			return m, tea.Quit
 		}
 		var cmd tea.Cmd
@@ -2100,9 +2100,9 @@ func (m Model) confirmSelection() (tea.Model, tea.Cmd) {
 		if m.OperationRunning {
 			return m, nil
 		}
-		// If gentle-ai itself was upgraded, leave the TUI so the app layer can restart
+		// If agent-smith itself was upgraded, leave the TUI so the app layer can restart
 		// or ask for restart using the platform-specific restart helper.
-		if _, ok := m.GentleAIUpgradeVersion(); ok {
+		if _, ok := m.AgentSmithUpgradeVersion(); ok {
 			return m, tea.Quit
 		}
 		// If showing results (UpgradeReport != nil or UpgradeErr != nil), return to welcome.
@@ -2144,9 +2144,9 @@ func (m Model) confirmSelection() (tea.Model, tea.Cmd) {
 		if m.OperationRunning {
 			return m, nil
 		}
-		// If gentle-ai itself was upgraded, leave the TUI so the app layer can restart
+		// If agent-smith itself was upgraded, leave the TUI so the app layer can restart
 		// or ask for restart using the platform-specific restart helper.
-		if _, ok := m.GentleAIUpgradeVersion(); ok {
+		if _, ok := m.AgentSmithUpgradeVersion(); ok {
 			return m, tea.Quit
 		}
 		// If operations are done, return to welcome.
@@ -3217,7 +3217,7 @@ func (m Model) startUninstall() tea.Cmd {
 			}
 			if isHomebrewManagedBinary(execPath) {
 				result.ManualActions = append(result.ManualActions,
-					"Homebrew-managed install detected. Run 'brew uninstall gentle-ai' to remove the executable cleanly.")
+					"Homebrew-managed install detected. Run 'brew uninstall agent-smith' to remove the executable cleanly.")
 			} else if removeErr := osRemoveFn(execPath); removeErr != nil {
 				return UninstallDoneMsg{Result: result, Err: fmt.Errorf("uninstall succeeded but failed to remove binary at %q: %w", execPath, removeErr)}
 			}
@@ -3274,7 +3274,7 @@ func (m Model) detectProjectEngramData() bool {
 // startUpgradeSync runs upgrade then sync sequentially via tea.Sequence.
 // Design decision: sync normally runs regardless of tool-level upgrade outcome.
 // Tool-level upgrade failures are per-tool (in UpgradeReport.Results), not fatal.
-// Exception: if gentle-ai itself was upgraded, sync is skipped so the old
+// Exception: if agent-smith itself was upgraded, sync is skipped so the old
 // running binary cannot rewrite configs after installing a newer binary.
 //
 // The first command runs the upgrade and sends UpgradePhaseCompletedMsg
@@ -3293,13 +3293,13 @@ func (m Model) startUpgradeSync() tea.Cmd {
 		}
 		ctx := context.Background()
 		report := upgradeFn(ctx, updateResults)
-		gentleAIUpdated = reportUpgradedGentleAI(report)
+		gentleAIUpdated = reportUpgradedAgentSmith(report)
 		return UpgradePhaseCompletedMsg{Report: report}
 	}
 
 	syncCmd := func() tea.Msg {
 		if gentleAIUpdated {
-			// Deferred sync (task 4.8): gentle-ai was upgraded in this session.
+			// Deferred sync (task 4.8): agent-smith was upgraded in this session.
 			// Set PendingSync=true so the new binary runs sync on next launch
 			// instead of silently skipping it. Non-fatal if state write fails.
 			//
@@ -3347,23 +3347,23 @@ func markPendingSyncUnderLock(h string) {
 	})
 }
 
-func reportUpgradedGentleAI(report upgrade.UpgradeReport) bool {
+func reportUpgradedAgentSmith(report upgrade.UpgradeReport) bool {
 	for _, result := range report.Results {
-		if result.ToolName == "gentle-ai" && result.Status == upgrade.UpgradeSucceeded {
+		if result.ToolName == "agent-smith" && result.Status == upgrade.UpgradeSucceeded {
 			return true
 		}
 	}
 	return false
 }
 
-// GentleAIUpgradeVersion returns the upgraded gentle-ai version when the current
+// AgentSmithUpgradeVersion returns the upgraded agent-smith version when the current
 // TUI result requires restarting the app before continuing with config sync.
-func (m Model) GentleAIUpgradeVersion() (string, bool) {
+func (m Model) AgentSmithUpgradeVersion() (string, bool) {
 	if m.UpgradeReport == nil {
 		return "", false
 	}
 	for _, result := range m.UpgradeReport.Results {
-		if result.ToolName == "gentle-ai" && result.Status == upgrade.UpgradeSucceeded {
+		if result.ToolName == "agent-smith" && result.Status == upgrade.UpgradeSucceeded {
 			return strings.TrimPrefix(result.NewVersion, "v"), true
 		}
 	}
@@ -4124,7 +4124,7 @@ func (m *Model) buildDependencyPlan() {
 	m.DependencyPlan = resolved
 }
 
-// agentsToManage returns the canonical list of agents gentle-ai should manage.
+// agentsToManage returns the canonical list of agents agent-smith should manage.
 // A persisted selection is authoritative, including a deliberately configured
 // empty selection. Only state without an install selection falls back to detected
 // agents, then to the first-install catalog default.
@@ -4645,7 +4645,7 @@ func (m Model) startInstallation() (tea.Model, tea.Cmd) {
 		}
 
 		// Persist entry to registry.
-		registryPath := filepath.Join(homeDir(), ".config", "gentle-ai", "custom-agents.json")
+		registryPath := filepath.Join(homeDir(), ".config", "agent-smith", "custom-agents.json")
 		_ = os.MkdirAll(filepath.Dir(registryPath), 0755)
 		if reg, loadErr := agentbuilder.LoadRegistry(registryPath); loadErr == nil {
 			// Collect IDs of agents that were successfully installed.
@@ -4680,3 +4680,4 @@ func (m Model) startInstallation() (tea.Model, tea.Cmd) {
 		return AgentBuilderInstallDoneMsg{Results: results, Err: nil}
 	})
 }
+

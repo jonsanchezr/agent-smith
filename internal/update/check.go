@@ -9,13 +9,13 @@ import (
 	"sync"
 	"time"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/system"
+	"github.com/jonsanchezr/agent-smith/v4/internal/system"
 )
 
 var updateChannelEnv = os.Getenv
 
 // CheckAll runs update checks for all registered tools concurrently.
-// currentVersion is the build-time version of gentle-ai (from app.Version).
+// currentVersion is the build-time version of agent-smith (from app.Version).
 // profile determines platform-specific update instructions.
 func CheckAll(ctx context.Context, currentVersion string, profile system.PlatformProfile) []UpdateResult {
 	return CheckFiltered(ctx, currentVersion, profile, nil)
@@ -154,7 +154,7 @@ func checkSingleTool(ctx context.Context, tool ToolInfo, currentBuildVersion str
 			return result
 		}
 		if tool.DetectCmd == nil {
-			// gentle-ai with no build version (shouldn't happen, but handle gracefully).
+			// agent-smith with no build version (shouldn't happen, but handle gracefully).
 			result.Status = VersionUnknown
 		} else {
 			// Binary not found on PATH.
@@ -186,11 +186,11 @@ func checkSingleTool(ctx context.Context, tool ToolInfo, currentBuildVersion str
 }
 
 func usesBetaMainHeadCheck(tool ToolInfo, currentVersion string) bool {
-	return isGentleAIRepo(tool) && (isBetaUpdateChannel() || isGoPseudoVersionWithCommit(currentVersion))
+	return isAgentSmithRepo(tool) && (isBetaUpdateChannel() || isGoPseudoVersionWithCommit(currentVersion))
 }
 
-func isGentleAIRepo(tool ToolInfo) bool {
-	return tool.Name == "gentle-ai" && strings.EqualFold(tool.Owner, "Gentleman-Programming") && tool.Repo == "gentle-ai"
+func isAgentSmithRepo(tool ToolInfo) bool {
+	return tool.Name == "agent-smith" && strings.EqualFold(tool.Owner, "jonsanchezr") && tool.Repo == "agent-smith"
 }
 
 func isBetaUpdateChannel() bool {
@@ -389,3 +389,4 @@ func parseVersionParts(version string) [3]int {
 	}
 	return result
 }
+

@@ -7,9 +7,9 @@ import (
 
 	tea "github.com/charmbracelet/bubbletea"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/reviewtransaction"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/system"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/tui/screens"
+	"github.com/jonsanchezr/agent-smith/v4/internal/reviewtransaction"
+	"github.com/jonsanchezr/agent-smith/v4/internal/system"
+	"github.com/jonsanchezr/agent-smith/v4/internal/tui/screens"
 )
 
 func reviewStoreResetModel(t *testing.T) Model {
@@ -23,7 +23,7 @@ func reviewStoreResetModel(t *testing.T) Model {
 func settledStoreResetReport() reviewtransaction.StoreResetReport {
 	return reviewtransaction.StoreResetReport{
 		Schema: reviewtransaction.StoreResetReportSchema, Operation: reviewtransaction.StoreResetPreview,
-		Repository: "/repo", StoreRoot: "/repo/.git/gentle-ai",
+		Repository: "/repo", StoreRoot: "/repo/.git/agent-smith",
 		Removable: []reviewtransaction.StoreResetEntry{
 			{Name: "review-transactions/v2", Reason: "compact authority", Present: true, Files: 12, Bytes: 4096},
 		},
@@ -360,10 +360,10 @@ func TestReviewStoreResetResultNamesStrandedWorktreeRegistrations(t *testing.T) 
 		Name: "candidate-views", Present: true, Files: 4, Bytes: 2048,
 		Skipped: "simulated staging failure; and the worktree administrative directories moved aside for it could not be restored: simulated restore failure",
 	}}
-	report.Residue = "/repo/.git/gentle-ai/.store-reset-42"
+	report.Residue = "/repo/.git/agent-smith/.store-reset-42"
 	report.UnrestoredAdminDirs = []reviewtransaction.StoreResetUnrestoredAdminDir{{
 		Original: "/repo/.git/worktrees/view-a",
-		Staged:   "/repo/.git/gentle-ai/.store-reset-42/worktrees-view-a",
+		Staged:   "/repo/.git/agent-smith/.store-reset-42/worktrees-view-a",
 	}}
 
 	rendered := screens.RenderReviewStoreResetResult(report, errors.New("review store reset was incomplete"))
@@ -372,10 +372,11 @@ func TestReviewStoreResetResultNamesStrandedWorktreeRegistrations(t *testing.T) 
 	}
 	for _, want := range []string{
 		"/repo/.git/worktrees/view-a",
-		"/repo/.git/gentle-ai/.store-reset-42/worktrees-view-a",
+		"/repo/.git/agent-smith/.store-reset-42/worktrees-view-a",
 	} {
 		if !strings.Contains(rendered, want) {
 			t.Fatalf("the result screen does not name %q:\n%s", want, rendered)
 		}
 	}
 }
+

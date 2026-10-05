@@ -6,8 +6,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/components/agentguidance"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
+	"github.com/jonsanchezr/agent-smith/v4/internal/components/agentguidance"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
 )
 
 func TestStrictTDDLegacyCarrierRetiredByInstallAndSync(t *testing.T) {
@@ -36,7 +36,7 @@ func TestStrictTDDLegacyCarrierRetiredByInstallAndSync(t *testing.T) {
 				}
 			} else {
 				raw, err := os.ReadFile(path)
-				if err != nil || strings.Contains(string(raw), "gentle-ai:strict-tdd-mode") || !strings.Contains(string(raw), "user content") || !strings.Contains(string(raw), "relevant runnable deterministic test") {
+				if err != nil || strings.Contains(string(raw), "agent-smith:strict-tdd-mode") || !strings.Contains(string(raw), "user content") || !strings.Contains(string(raw), "relevant runnable deterministic test") {
 					t.Fatalf("legacy marker or missing routing/user content: %s %v", raw, err)
 				}
 			}
@@ -63,9 +63,10 @@ func TestStrictTDDLegacyOpenCodePromptRetired(t *testing.T) {
 				t.Fatal(err)
 			}
 			raw, err := os.ReadFile(path)
-			if err != nil || strings.Contains(string(raw), "gentle-ai:strict-tdd-mode") || !strings.Contains(string(raw), "gentle-ai:agent-routing") || !strings.Contains(string(raw), "relevant runnable deterministic test") {
+			if err != nil || strings.Contains(string(raw), "agent-smith:strict-tdd-mode") || !strings.Contains(string(raw), "agent-smith:agent-routing") || !strings.Contains(string(raw), "relevant runnable deterministic test") {
 				t.Fatalf("legacy marker or missing routing: %s %v", raw, err)
 			}
 		})
 	}
 }
+

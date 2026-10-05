@@ -10,17 +10,17 @@ import (
 	"testing"
 	"time"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/agents"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/agents/antigravity"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/agents/claude"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/agents/codex"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/agents/cursor"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/agents/gemini"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/agents/hermes"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/agents/kilocode"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/agents/opencode"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/agents/vscode"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
+	"github.com/jonsanchezr/agent-smith/v4/internal/agents"
+	"github.com/jonsanchezr/agent-smith/v4/internal/agents/antigravity"
+	"github.com/jonsanchezr/agent-smith/v4/internal/agents/claude"
+	"github.com/jonsanchezr/agent-smith/v4/internal/agents/codex"
+	"github.com/jonsanchezr/agent-smith/v4/internal/agents/cursor"
+	"github.com/jonsanchezr/agent-smith/v4/internal/agents/gemini"
+	"github.com/jonsanchezr/agent-smith/v4/internal/agents/hermes"
+	"github.com/jonsanchezr/agent-smith/v4/internal/agents/kilocode"
+	"github.com/jonsanchezr/agent-smith/v4/internal/agents/opencode"
+	"github.com/jonsanchezr/agent-smith/v4/internal/agents/vscode"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
 )
 
 func TestSelectedPermissionsRefuseNestedCommentsAndLockedMode(t *testing.T) {
@@ -590,7 +590,7 @@ func TestInjectAntigravitySkipsPermissions(t *testing.T) {
 	}
 }
 
-// TestInjectCodexNeverWritesConfig pins the decision that gentle-ai writes
+// TestInjectCodexNeverWritesConfig pins the decision that agent-smith writes
 // nothing to Codex's permissions configuration — neither a profile nor the
 // legacy migration that used to strip one. Codex refuses to load a config that
 // defines a [permissions.*] profile without default_permissions, so a cleanup
@@ -952,3 +952,4 @@ func TestKilocodePermissionsKeepBaseDuplicateKeyBehavior(t *testing.T) {
 		t.Fatalf("permission missing after merge: %s", raw)
 	}
 }
+

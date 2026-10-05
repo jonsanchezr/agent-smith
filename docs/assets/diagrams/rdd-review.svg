@@ -1,6 +1,6 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1240 740" width="1240" height="740" role="img" aria-labelledby="rddTitle rddDesc" font-family="ui-sans-serif, -apple-system, BlinkMacSystemFont, 'Segoe UI', Inter, Helvetica, Arial, sans-serif">
+﻿<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1240 740" width="1240" height="740" role="img" aria-labelledby="rddTitle rddDesc" font-family="ui-sans-serif, -apple-system, BlinkMacSystemFont, 'Segoe UI', Inter, Helvetica, Arial, sans-serif">
   <title id="rddTitle">How RDD checks a finished change</title>
-  <desc id="rddDesc">Receipt-Driven Development is opt-out and on by default. First the exact change is frozen to a lineage, revision and target. Then a read-only risk assessment decides the depth: passive gets a structural readback with zero reviewer lenses, medium gets one focused lens, high gets the canonical 4R — Risk, Resilience, Readability and Reliability — in parallel. At most one bounded correction is allowed. One exact acknowledgement closes the transaction and burns the authority. Delivery stays human-owned: a review never commits, pushes or opens a pull request.</desc>
+  <desc id="rddDesc">Receipt-Driven Development is opt-out and on by default. First the exact change is frozen to a lineage, revision and target. Then a read-only risk assessment decides the depth: passive gets a structural readback with zero reviewer lenses, medium gets one focused lens, high gets the canonical 4R â€” Risk, Resilience, Readability and Reliability â€” in parallel. At most one bounded correction is allowed. One exact acknowledgement closes the transaction and burns the authority. Delivery stays human-owned: a review never commits, pushes or opens a pull request.</desc>
 
   <defs>
     <radialGradient id="rddAmbient" cx="12%" cy="0%" r="70%">
@@ -91,5 +91,6 @@
   <text x="620" y="637" font-size="15" font-weight="700" text-anchor="middle" fill="#F095C8">Delivery stays yours</text>
   <text x="620" y="657" font-size="12" text-anchor="middle" fill="#A88E9B">A review is informational. It never commits, pushes, or opens a pull request.</text>
 
-  <text x="620" y="702" font-size="12" text-anchor="middle" fill="#8A6E7C" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace">gentle-ai review mode enable --scope global</text>
+  <text x="620" y="702" font-size="12" text-anchor="middle" fill="#8A6E7C" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace">agent-smith review mode enable --scope global</text>
 </svg>
+

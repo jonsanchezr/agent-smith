@@ -6,8 +6,8 @@ import (
 	"sort"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/catalog"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
+	"github.com/jonsanchezr/agent-smith/v4/internal/catalog"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
 )
 
 // TestRoutingPathsMatchesEveryPathInjectRoutingWrites is the anti-drift guard.
@@ -118,3 +118,4 @@ func samePathSet(got, want []string) bool {
 	}
 	return true
 }
+

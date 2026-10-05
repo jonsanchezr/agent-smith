@@ -3,9 +3,9 @@ package cli
 import (
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/reviewerprovider"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/state"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
+	"github.com/jonsanchezr/agent-smith/v4/internal/reviewerprovider"
+	"github.com/jonsanchezr/agent-smith/v4/internal/state"
 )
 
 func TestCodexReviewAdapterDispatchesSavedRoles(t *testing.T) {
@@ -62,3 +62,4 @@ func TestCodexReviewAdapterInvalidOrMissingUsesDefault(t *testing.T) {
 		}
 	}
 }
+

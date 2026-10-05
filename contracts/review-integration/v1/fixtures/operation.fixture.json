@@ -1,9 +1,9 @@
-{
-  "schema": "gentle-ai.review-integration.operation/v1",
-  "contract": "gentle-ai.review-integration/v1",
+﻿{
+  "schema": "agent-smith.review-integration.operation/v1",
+  "contract": "agent-smith.review-integration/v1",
   "operation": "review.validate",
   "result": {
-    "schema": "gentle-ai.review-gate-result/v1",
+    "schema": "agent-smith.review-gate-result/v1",
     "result": "allow",
     "allowed": true,
     "action": "repository-policy",
@@ -12,3 +12,4 @@
     "delivery": "unmanaged"
   }
 }
+

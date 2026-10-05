@@ -4,8 +4,8 @@ import (
 	"context"
 	"os"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/state"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
+	"github.com/jonsanchezr/agent-smith/v4/internal/state"
 )
 
 // InstalledAgent pairs an agent ID with its resolved config root directory.
@@ -162,3 +162,4 @@ func DiscoverSelected(reg *Registry, homeDir string) []InstalledAgent {
 	}
 	return out
 }
+

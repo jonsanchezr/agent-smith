@@ -9,7 +9,7 @@ import (
 
 	jsonschema "github.com/santhosh-tekuri/jsonschema/v6"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/reviewtransaction"
+	"github.com/jonsanchezr/agent-smith/v4/internal/reviewtransaction"
 )
 
 func compileWholePublishedReviewSchema(t *testing.T, version, name string) *jsonschema.Schema {
@@ -37,13 +37,13 @@ func compileWholePublishedReviewSchema(t *testing.T, version, name string) *json
 			if err := json.Unmarshal(payload, &document); err != nil {
 				t.Fatal(err)
 			}
-			location := "https://gentle-ai.dev/contracts/review-integration/" + resourceVersion + "/schemas/" + entry.Name()
+			location := "https://agent-smith.dev/contracts/review-integration/" + resourceVersion + "/schemas/" + entry.Name()
 			if err := compiler.AddResource(location, document); err != nil {
 				t.Fatal(err)
 			}
 		}
 	}
-	schema, err := compiler.Compile("https://gentle-ai.dev/contracts/review-integration/" + version + "/schemas/" + name)
+	schema, err := compiler.Compile("https://agent-smith.dev/contracts/review-integration/" + version + "/schemas/" + name)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -172,3 +172,4 @@ func TestPublishedLastEventClosureSchemaRejectsNonStatusCorrectionContinuation(t
 		t.Fatalf("published last-event closure schema accepted non-STATUS correction continuation: %#v", closure)
 	}
 }
+

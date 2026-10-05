@@ -5,7 +5,7 @@ import (
 	"errors"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
 )
 
 // ─── MockEngine tests ────────────────────────────────────────────────────────
@@ -167,3 +167,4 @@ func TestAllSupportedEngines(t *testing.T) {
 		})
 	}
 }
+

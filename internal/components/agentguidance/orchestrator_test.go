@@ -8,18 +8,18 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/agents"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/agents/capabilitymanifest"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/assets"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/catalog"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
+	"github.com/jonsanchezr/agent-smith/v4/internal/agents"
+	"github.com/jonsanchezr/agent-smith/v4/internal/agents/capabilitymanifest"
+	"github.com/jonsanchezr/agent-smith/v4/internal/assets"
+	"github.com/jonsanchezr/agent-smith/v4/internal/catalog"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
 )
 
 const (
-	orchestratorOpenMarker       = "<!-- gentle-ai:" + OrchestratorSectionID + " -->"
-	orchestratorCloseMarker      = "<!-- /gentle-ai:" + OrchestratorSectionID + " -->"
-	legacyOrchestratorOpenMarker = "<!-- gentle-ai:sdd-orchestrator -->"
-	routingOpenMarkerForTest     = "<!-- gentle-ai:" + RoutingSectionID + " -->"
+	orchestratorOpenMarker       = "<!-- agent-smith:" + OrchestratorSectionID + " -->"
+	orchestratorCloseMarker      = "<!-- /agent-smith:" + OrchestratorSectionID + " -->"
+	legacyOrchestratorOpenMarker = "<!-- agent-smith:sdd-orchestrator -->"
+	routingOpenMarkerForTest     = "<!-- agent-smith:" + RoutingSectionID + " -->"
 )
 
 // orchestratorRuntimes lists every agent whose installed prompt carries the
@@ -149,7 +149,7 @@ func TestInjectRoutingGenericModelVariantUpgrade(t *testing.T) {
 				if err := os.MkdirAll(filepath.Dir(path), 0o755); err != nil {
 					t.Fatal(err)
 				}
-				legacy := "User prefix\n" + legacyOrchestratorOpenMarker + "\n" + asset + "\n<!-- /gentle-ai:sdd-orchestrator -->\nUser suffix\n"
+				legacy := "User prefix\n" + legacyOrchestratorOpenMarker + "\n" + asset + "\n<!-- /agent-smith:sdd-orchestrator -->\nUser suffix\n"
 				if err := os.WriteFile(path, []byte(legacy), 0o640); err != nil {
 					t.Fatal(err)
 				}
@@ -268,7 +268,7 @@ func TestInjectRoutingInstallsOrchestratorForEveryRuntime(t *testing.T) {
 				wantReview = 1
 			}
 			for _, heading := range []string{
-				"Gentle AI Provider Defect Handoff",
+				"Agent Smith Provider Defect Handoff",
 				"Receipt-driven development is user-owned",
 				"Native Compact Review Orchestration",
 			} {
@@ -342,9 +342,9 @@ func TestInjectRoutingReplacesLegacySDDOrchestratorBlockInPlace(t *testing.T) {
 			}
 			promptPath := adapter.SystemPromptFile(targetDir)
 			legacy := "USER PREAMBLE\n\n" +
-				legacyOrchestratorOpenMarker + "\n# SDD Workflow\nArtifact Store Mode\n<!-- /gentle-ai:sdd-orchestrator -->\n\n" +
+				legacyOrchestratorOpenMarker + "\n# SDD Workflow\nArtifact Store Mode\n<!-- /agent-smith:sdd-orchestrator -->\n\n" +
 				"USER MIDDLE\n\n" +
-				routingOpenMarkerForTest + "\nstale routing\n<!-- /gentle-ai:" + RoutingSectionID + " -->\n\n" +
+				routingOpenMarkerForTest + "\nstale routing\n<!-- /agent-smith:" + RoutingSectionID + " -->\n\n" +
 				"USER EPILOGUE\n"
 			if err := os.MkdirAll(filepath.Dir(promptPath), 0o755); err != nil {
 				t.Fatal(err)
@@ -393,7 +393,7 @@ func TestInjectRoutingDropsLegacyOrchestratorBesideCurrentBlock(t *testing.T) {
 	}
 	promptPath := adapter.SystemPromptFile(targetDir)
 	existing := "USER\n\n" + orchestratorOpenMarker + "\nold current\n" + orchestratorCloseMarker + "\n\n" +
-		legacyOrchestratorOpenMarker + "\nlegacy\n<!-- /gentle-ai:sdd-orchestrator -->\n"
+		legacyOrchestratorOpenMarker + "\nlegacy\n<!-- /agent-smith:sdd-orchestrator -->\n"
 	if err := os.MkdirAll(filepath.Dir(promptPath), 0o755); err != nil {
 		t.Fatal(err)
 	}
@@ -446,14 +446,14 @@ func TestRenderOrchestratorOpenCodeCarriesConsentV3QuestionRoute(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if !strings.Contains(opencode, "For `gentle-ai.review-integration.consent/v3`: Display labels") {
+	if !strings.Contains(opencode, "For `agent-smith.review-integration.consent/v3`: Display labels") {
 		t.Fatal("OpenCode orchestrator lost the consent-v3 native question route")
 	}
 	kilo, err := RenderOrchestrator(model.AgentKilocode)
 	if err != nil {
 		t.Fatal(err)
 	}
-	if strings.Contains(kilo, "For `gentle-ai.review-integration.consent/v3`: Display labels") {
+	if strings.Contains(kilo, "For `agent-smith.review-integration.consent/v3`: Display labels") {
 		t.Fatal("Kilo must keep the shared OpenCode question route, as in v3.7.0")
 	}
 }
@@ -474,3 +474,4 @@ func TestRenderOrchestratorFailsClosedWithoutReviewContractSource(t *testing.T) 
 		t.Fatalf("RenderOrchestrator(gemini) error = %v; a runtime without review transport needs no contract", err)
 	}
 }
+

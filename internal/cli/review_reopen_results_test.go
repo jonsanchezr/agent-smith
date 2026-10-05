@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/reviewtransaction"
+	"github.com/jonsanchezr/agent-smith/v4/internal/reviewtransaction"
 )
 
 func TestReviewReopenResultsRemovesSelectedCanonicalEntryWithoutSidecar(t *testing.T) {
@@ -95,3 +95,4 @@ func TestReviewReopenResultsRemovesSelectedCanonicalEntryWithoutSidecar(t *testi
 		t.Fatalf("STATUS recapture inputs = %#v", status.NextTransition)
 	}
 }
+

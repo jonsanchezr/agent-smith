@@ -34,7 +34,7 @@ func byDesignResults() Results {
 			{Sequence: 2, Step: "an ordinary defect", ExitCode: 1, Block: BlockOutOfBand, Message: "Error: no."},
 		},
 	}
-	results := Results{Schema: ResultsSchema, Mode: ModeDriven, Binary: "/bin/gentle-ai", Journeys: []JourneyResult{journey}}
+	results := Results{Schema: ResultsSchema, Mode: ModeDriven, Binary: "/bin/agent-smith", Journeys: []JourneyResult{journey}}
 	results.Totals, results.JourneysCounted, results.JourneysUnsupported, results.JourneysFailed = aggregate(results.Journeys)
 	return results
 }
@@ -108,3 +108,4 @@ func TestReportOmitsTheByDesignSectionWhenNothingIsDeclared(t *testing.T) {
 		t.Fatalf("the section printed with nothing to report\n%s", buffer.String())
 	}
 }
+

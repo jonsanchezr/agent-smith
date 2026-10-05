@@ -1,7 +1,7 @@
-// Command gentle-ai-bench measures the FRICTION of driving gentle-ai's review
+// Command agent-smith-bench measures the FRICTION of driving agent-smith's review
 // lifecycle, so a "before" binary and an "after" binary can be compared.
 //
-// Its core corpus is a black box: it drives a gentle-ai binary as a subprocess
+// Its core corpus is a black box: it drives a agent-smith binary as a subprocess
 // and never instruments the product, so it works against any build including
 // old releases. It is deterministic and offline: no real model call is ever
 // made.
@@ -57,19 +57,19 @@ func main() {
 }
 
 func usage() {
-	fmt.Fprint(os.Stderr, `gentle-ai-bench — friction benchmark for the gentle-ai review lifecycle
+	fmt.Fprint(os.Stderr, `agent-smith-bench — friction benchmark for the agent-smith review lifecycle
 
-  run      gentle-ai-bench run --binary <path> --out results.json
+  run      agent-smith-bench run --binary <path> --out results.json
            Drive the built-in journey corpus against a binary (driven mode).
            --axis <name>[,<name>] adds an opt-in axis to the black-box core.
 
-  record   gentle-ai-bench record --binary <path> --out session.jsonl
+  record   agent-smith-bench record --binary <path> --out session.jsonl
            Print the PATH line that records a real agent session (observed mode).
 
-  analyze  gentle-ai-bench analyze --session session.jsonl --out results.json
+  analyze  agent-smith-bench analyze --session session.jsonl --out results.json
            Compute the same dimensions from a recorded session.
 
-  compare  gentle-ai-bench compare --before a.json --after b.json
+  compare  agent-smith-bench compare --before a.json --after b.json
            Per-dimension table. Refuses to compare driven against observed.
 
 It does not measure wall-clock time, real model tokens, or a composite score.
@@ -82,7 +82,7 @@ func commandRun(args []string) int {
 
 func commandRunWith(args []string, isExecutable func(string) bool, journeys func() []Journey) int {
 	flags := flag.NewFlagSet("run", flag.ExitOnError)
-	binary := flags.String("binary", "", "path to the gentle-ai binary to drive")
+	binary := flags.String("binary", "", "path to the agent-smith binary to drive")
 	out := flags.String("out", "results.json", "where to write the machine-readable results")
 	only := flags.String("only", "", "comma-separated journey ids to run (default: all)")
 	axisFlag := flags.String("axis", "",
@@ -188,7 +188,7 @@ func commandRunWith(args []string, isExecutable func(string) bool, journeys func
 	results.Totals, results.JourneysCounted, results.JourneysUnsupported, results.JourneysFailed = aggregate(results.Journeys)
 	results.Notes = []string{
 		"Driven mode: every journey ran in a fresh temp dir with its own HOME, XDG_*, throwaway git repo and local bare remote.",
-		"That HOME is a fresh install, so receipt-driven development defaults to ON without persisting a preference. Every journey declares its own precondition: one that reviews explicitly enables it first through `gentle-ai review mode enable --scope global`, uncounted; one whose subject is the switch leaves the mode untouched.",
+		"That HOME is a fresh install, so receipt-driven development defaults to ON without persisting a preference. Every journey declares its own precondition: one that reviews explicitly enables it first through `agent-smith review mode enable --scope global`, uncounted; one whose subject is the switch leaves the mode untouched.",
 		"Reviewer results were synthesized from the binary's own collect envelope. No model was called.",
 		"No wall-clock timing is measured or reported.",
 		"by_design is a carve-out from out_of_band, not a subtraction from it: those blocks are still blocks and still in the total. Every one is listed with its declared shape and the verified quote of the product's own next-action text.",
@@ -244,7 +244,7 @@ func runExitCode(results Results) int {
 
 func commandRecord(args []string) int {
 	flags := flag.NewFlagSet("record", flag.ExitOnError)
-	binary := flags.String("binary", "", "path to the real gentle-ai binary the shim delegates to")
+	binary := flags.String("binary", "", "path to the real agent-smith binary the shim delegates to")
 	out := flags.String("out", "session.jsonl", "where the shim appends recorded invocations")
 	_ = flags.Parse(args)
 
@@ -280,7 +280,7 @@ func commandShim(args []string) int {
 		}
 	}
 	if real == "" || logPath == "" {
-		fmt.Fprintln(os.Stderr, "gentle-ai-bench shim: missing --real or --log")
+		fmt.Fprintln(os.Stderr, "agent-smith-bench shim: missing --real or --log")
 		return 126
 	}
 	return runShim(real, logPath, forwarded)
@@ -415,3 +415,4 @@ func binaryVersion(path string) string {
 	}
 	return strings.TrimSpace(string(output))
 }
+

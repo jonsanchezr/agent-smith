@@ -5,7 +5,7 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
 )
 
 // makeAgent creates a minimal GeneratedAgent for testing.
@@ -145,3 +145,4 @@ func TestInstall_NilAgent_ReturnsError(t *testing.T) {
 		t.Fatal("expected error for nil agent")
 	}
 }
+

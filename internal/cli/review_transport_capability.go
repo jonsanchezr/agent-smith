@@ -7,10 +7,10 @@ import (
 	"os"
 	"strings"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/agents/capabilitymanifest"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/catalog"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/opencode"
+	"github.com/jonsanchezr/agent-smith/v4/internal/agents/capabilitymanifest"
+	"github.com/jonsanchezr/agent-smith/v4/internal/catalog"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
+	"github.com/jonsanchezr/agent-smith/v4/internal/opencode"
 )
 
 // openCodeRelayContractEnvironment carries the managed V2 plugin's relay
@@ -21,7 +21,7 @@ const openCodeRelayContractEnvironment = "GENTLE_AI_OPENCODE_RELAY_CONTRACT"
 // review plugin declares. Together with a detected V2 runtime it admits the
 // same Go-owned provider-injected transport V1 uses (T4c: proven on a real
 // OpenCode 2.0.19 host with the gate un-stubbed).
-const openCodeRelayContractV2 = "gentle-ai.opencode-relay/v2-staged"
+const openCodeRelayContractV2 = "agent-smith.opencode-relay/v2-staged"
 
 // openCodeRelayDeclaresV2 reports whether this process was started under the
 // exact managed V2 relay declaration.
@@ -156,7 +156,7 @@ func reviewTransportSupportedRuntimeIDs() []string {
 }
 
 func reviewTransportRefusalExitGuidance() string {
-	return "; exit receipt-driven review with `gentle-ai review mode disable --scope clone --cwd <repo>`; supported immutable review runtimes: " +
+	return "; exit receipt-driven review with `agent-smith review mode disable --scope clone --cwd <repo>`; supported immutable review runtimes: " +
 		strings.Join(reviewTransportSupportedRuntimeIDs(), ", ")
 }
 
@@ -241,7 +241,7 @@ func reviewRuntimeWithImmutableTransport(agent string) (model.AgentID, error) {
 // --expected-revision, and the provider-issued --repository-context, and
 // resolving that exact binding against the frozen authority immediately
 // afterward refuses a forged or mismatched one on its own (with its own
-// `gentle-ai …` continuation). So Pi eligibility here derives from that bound
+// `agent-smith …` continuation). So Pi eligibility here derives from that bound
 // transaction plus the compiled --agent capability alone: an unrelayed shell
 // that holds a genuine binding is eligible, and the relay handshake env var
 // becomes, at most, an optional extra witness some hosts still export --
@@ -308,3 +308,4 @@ func reviewRuntimeAgentCount(args []string) int {
 	}
 	return count
 }
+

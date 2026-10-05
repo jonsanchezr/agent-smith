@@ -11,10 +11,10 @@ import (
 	"unicode"
 
 	tea "github.com/charmbracelet/bubbletea"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/components/opencodedefault"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/opencode"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/tui/styles"
+	"github.com/jonsanchezr/agent-smith/v4/internal/components/opencodedefault"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
+	"github.com/jonsanchezr/agent-smith/v4/internal/opencode"
+	"github.com/jonsanchezr/agent-smith/v4/internal/tui/styles"
 )
 
 // ModelPickerMode represents the current sub-mode of the model picker screen.
@@ -212,7 +212,7 @@ func (state *ModelPickerState) refreshRuntimeModels() {
 
 // SDDOrchestratorPhase is the persisted key for the OpenCode coordinator.
 // The name is retained for compatibility with existing callers and assignments.
-const SDDOrchestratorPhase = "gentle-orchestrator"
+const SDDOrchestratorPhase = "agent-smith-orchestrator"
 
 // ModelPickerRows returns the active OpenCode model assignment rows.
 func ModelPickerRows() []string {
@@ -220,11 +220,11 @@ func ModelPickerRows() []string {
 }
 
 func modelPickerRowsWithCustomIdentity(includeReview bool, customAgents []string) []ModelPickerRow {
-	rows := make([]ModelPickerRow, 0, 1+1+len(opencode.GentleAIODDPhases())+1+len(opencode.JDPhases())+1+len(opencode.ReviewPhases())+3+len(customAgents)+2)
-	rows = append(rows, ModelPickerRow{Kind: ModelPickerRowKindAgent, Label: SDDOrchestratorPhase, AgentID: SDDOrchestratorPhase})
-	if len(opencode.GentleAIODDPhases()) > 0 {
-		rows = append(rows, ModelPickerRow{Kind: ModelPickerRowKindSeparator, Label: "--- Gentle AI agents ---"})
-		for _, phase := range opencode.GentleAIODDPhases() {
+	rows := make([]ModelPickerRow, 0, 1+1+len(opencode.AgentSmithODDPhases())+1+len(opencode.JDPhases())+1+len(opencode.ReviewPhases())+3+len(customAgents)+2)
+	rows = append(rows, ModelPickerRow{Kind: ModelPickerRowKindAgent, Label: "Agent-smith", AgentID: SDDOrchestratorPhase})
+	if len(opencode.AgentSmithODDPhases()) > 0 {
+		rows = append(rows, ModelPickerRow{Kind: ModelPickerRowKindSeparator, Label: "--- Agent Smith agents ---"})
+		for _, phase := range opencode.AgentSmithODDPhases() {
 			rows = append(rows, ModelPickerRow{Kind: ModelPickerRowKindAgent, Label: phase, AgentID: phase})
 		}
 	}
@@ -296,7 +296,7 @@ func SeparatorRowIdx() int {
 		return -1
 	}
 	idx := 1
-	if odd := opencode.GentleAIODDPhases(); len(odd) > 0 {
+	if odd := opencode.AgentSmithODDPhases(); len(odd) > 0 {
 		idx += 1 + len(odd)
 	}
 	return idx
@@ -810,7 +810,7 @@ func renderPhaseList(
 		var label string
 		switch {
 		case identity.Kind == ModelPickerRowKindAgent && identity.AgentID == SDDOrchestratorPhase:
-			// "gentle-orchestrator" row — coordinator, individual assignment only
+			// "agent-smith-orchestrator" row — coordinator, individual assignment only
 			assignment, ok := assignments[SDDOrchestratorPhase]
 			if ok && assignment.ProviderID != "" {
 				provName, modelName := resolveNames(assignment, state)
@@ -1015,3 +1015,4 @@ func modelPickerCatalogFailureExplanation(err error) (string, string) {
 	}
 	return "Could not discover models from OpenCode.", "Verify OpenCode is installed and can run in this project, then return to this picker."
 }
+

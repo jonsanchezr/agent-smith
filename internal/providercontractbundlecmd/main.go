@@ -6,7 +6,7 @@ import (
 	"io"
 	"os"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/providercontractbundle"
+	"github.com/jonsanchezr/agent-smith/v4/internal/providercontractbundle"
 )
 
 const contractSemverFile = "contracts/review-provider-contract/CONTRACT_SEMVER"
@@ -53,3 +53,4 @@ func run(args []string) error {
 		return fmt.Errorf("usage: providercontractbundlecmd <generate|verify>")
 	}
 }
+

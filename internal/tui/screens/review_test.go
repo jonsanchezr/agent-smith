@@ -4,8 +4,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/planner"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
+	"github.com/jonsanchezr/agent-smith/v4/internal/planner"
 )
 
 // ─── Issue #145: Review screen must show individual skills ───────────────────
@@ -131,7 +131,7 @@ func TestRenderReviewShowsConductorNote(t *testing.T) {
 	payload := planner.ReviewPayload{
 		Agents: []model.AgentID{model.AgentConductor},
 		AgentNotes: []planner.AgentNote{
-			{Agent: model.AgentConductor, Note: "Conductor workspaces inherit Claude Code configuration; Gentle AI writes no Conductor-specific files."},
+			{Agent: model.AgentConductor, Note: "Conductor workspaces inherit Claude Code configuration; Agent Smith writes no Conductor-specific files."},
 		},
 	}
 
@@ -160,3 +160,4 @@ func TestRenderReviewHidesNotesForWritableAgents(t *testing.T) {
 		t.Fatalf("RenderReview() showed a Conductor note without one selected; output:\n%s", out)
 	}
 }
+

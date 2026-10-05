@@ -7,7 +7,7 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/reviewtransaction"
+	"github.com/jonsanchezr/agent-smith/v4/internal/reviewtransaction"
 )
 
 // reviewAuditActorRepoWithoutIdentity creates a repository with no local Git
@@ -184,3 +184,4 @@ func reviewAuditActorHasNewline(value string) bool {
 	}
 	return false
 }
+

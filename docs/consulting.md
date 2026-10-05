@@ -1,9 +1,9 @@
-# Consulting — AI adoption for development teams
+﻿# Consulting â€” AI adoption for development teams
 
 > [!NOTE]
-> These docs track `main`, which may include unreleased changes. For the latest release, see the [v4.0.0 docs](https://github.com/Gentleman-Programming/gentle-ai/tree/v4.0.0/docs).
+> These docs track `main`, which may include unreleased changes. For the latest release, see the [v4.0.0 docs](https://github.com/jonsanchezr/agent-smith/tree/v4.0.0/docs).
 
-Gentle-AI is built by [Alan Buscaglia](https://github.com/Gentleman-Programming) (Gentleman Programming): 15 years of enterprise architecture, a community of thousands of developers testing these tools daily, and a simple rule for AI-assisted work: **verifying beats generating**.
+agent-smith is built by [Alan Buscaglia](https://github.com/jonsanchezr) (Gentleman Programming): 15 years of enterprise architecture, a community of thousands of developers testing these tools daily, and a simple rule for AI-assisted work: **verifying beats generating**.
 
 The goal is never speed at any cost. It is a team that learns to direct AI with process and quality, instead of depending on a consultant.
 
@@ -11,7 +11,7 @@ The goal is never speed at any cost. It is a team that learns to direct AI with 
 
 They want to adopt AI, and it is not working. Some developers resist it, everyone prompts their own way, and there is no shared process or quality bar.
 
-This is AI adoption for engineering teams, not a prompting course. Engagements run on the same open-source tools you see in this repository — Gentle-AI, Engram, the 4R review framework — applied to the team's own codebase and stack.
+This is AI adoption for engineering teams, not a prompting course. Engagements run on the same open-source tools you see in this repository â€” agent-smith, Engram, the 4R review framework â€” applied to the team's own codebase and stack.
 
 ## Adoption program
 
@@ -27,7 +27,7 @@ This is AI adoption for engineering teams, not a prompting course. Engagements r
 Three sessions:
 
 1. Collect the team's real problems and assign a task.
-2. Demonstrate Gentle-AI and the agentic ecosystem solving exactly those problems.
+2. Demonstrate agent-smith and the agentic ecosystem solving exactly those problems.
 3. Review how the developers are using it and calibrate recommendations.
 
 The team sees the full flow working on its own code.
@@ -41,4 +41,5 @@ Phased engagements for longer collaborations, and recorded training modules on q
 - **Email:** [gentleman@ohmybitz.com](mailto:gentleman@ohmybitz.com)
 - **Website:** [gentlemanprogramming.com](https://gentlemanprogramming.com/)
 - **YouTube:** [@GentlemanProgramming](https://www.youtube.com/@GentlemanProgramming)
-- **GitHub:** [Gentleman-Programming](https://github.com/Gentleman-Programming)
+- **GitHub:** [jonsanchezr](https://github.com/jonsanchezr)
+

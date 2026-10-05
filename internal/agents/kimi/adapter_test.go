@@ -9,7 +9,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
 )
 
 func TestNewAdapter(t *testing.T) {
@@ -555,7 +555,7 @@ func TestAdapter_BootstrapTemplate_CurrentExpandsJinjaModules(t *testing.T) {
 			t.Fatalf("current AGENTS.md retained legacy-only template content %q:\n%s", forbidden, text)
 		}
 	}
-	for _, want := range []string{"<!-- gentle-ai:kimi-agents-hub -->", "PERSONA MODULE", "ROUTING MODULE", "kimi-code module persona.md", "kimi-code module agent-routing.md"} {
+	for _, want := range []string{"<!-- agent-smith:kimi-agents-hub -->", "PERSONA MODULE", "ROUTING MODULE", "kimi-code module persona.md", "kimi-code module agent-routing.md"} {
 		if !strings.Contains(text, want) {
 			t.Fatalf("current AGENTS.md missing expanded module content %q:\n%s", want, text)
 		}
@@ -595,7 +595,7 @@ func TestAdapter_BootstrapTemplate_CurrentPreservesUserAuthoredAgentsContent(t *
 	if !strings.Contains(text, "SECOND ROUTING MODULE") || strings.Contains(text, "FIRST ROUTING MODULE") {
 		t.Fatalf("current AGENTS.md did not replace only the managed hub section:\n%s", text)
 	}
-	if count := strings.Count(text, "<!-- gentle-ai:kimi-agents-hub -->"); count != 1 {
+	if count := strings.Count(text, "<!-- agent-smith:kimi-agents-hub -->"); count != 1 {
 		t.Fatalf("current AGENTS.md has %d managed hub sections, want 1:\n%s", count, text)
 	}
 }
@@ -698,3 +698,4 @@ func TestAdapter_PostInstallMessage_LegacyLayoutKeepsAgentFileGuidance(t *testin
 		t.Errorf("PostInstallMessage() legacy layout missing ODD guidance:\n%s", msg)
 	}
 }
+

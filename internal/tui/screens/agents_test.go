@@ -3,7 +3,7 @@ package screens
 import (
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
 )
 
 func TestAgentOptionsShowsAntigravityOnly(t *testing.T) {
@@ -24,3 +24,4 @@ func TestAgentOptionsShowsAntigravityOnly(t *testing.T) {
 		t.Fatal("AgentOptions() missing Antigravity option")
 	}
 }
+

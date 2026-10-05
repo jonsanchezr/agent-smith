@@ -9,7 +9,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/reviewtransaction"
+	"github.com/jonsanchezr/agent-smith/v4/internal/reviewtransaction"
 )
 
 // TestZeroLensStartCommitsAndReportsUnwritableTraceOutcome is issue #1854,
@@ -127,3 +127,4 @@ func TestZeroLensStartRecordsTraceWhenTracePathIsWritable(t *testing.T) {
 		t.Fatalf("trace payload missing the committed operation: %s", payload)
 	}
 }
+

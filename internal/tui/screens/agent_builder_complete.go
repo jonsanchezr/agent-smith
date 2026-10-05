@@ -3,8 +3,8 @@ package screens
 import (
 	"strings"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/agentbuilder"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/tui/styles"
+	"github.com/jonsanchezr/agent-smith/v4/internal/agentbuilder"
+	"github.com/jonsanchezr/agent-smith/v4/internal/tui/styles"
 )
 
 // RenderABComplete renders the agent-builder completion screen.
@@ -57,3 +57,4 @@ func RenderABComplete(agent *agentbuilder.GeneratedAgent, results []agentbuilder
 
 	return b.String()
 }
+

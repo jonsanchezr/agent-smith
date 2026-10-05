@@ -7,9 +7,9 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/planner"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/system"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
+	"github.com/jonsanchezr/agent-smith/v4/internal/planner"
+	"github.com/jonsanchezr/agent-smith/v4/internal/system"
 )
 
 func TestComponentApplyStepOpenClawWorkspaceScopedInjections(t *testing.T) {
@@ -26,13 +26,13 @@ func TestComponentApplyStepOpenClawWorkspaceScopedInjections(t *testing.T) {
 			name:      "engram writes protocol to workspace AGENTS",
 			component: model.ComponentEngram,
 			fileName:  "AGENTS.md",
-			marker:    "<!-- gentle-ai:engram-protocol -->",
+			marker:    "<!-- agent-smith:engram-protocol -->",
 		},
 		{
 			name:      "persona writes soul to workspace",
 			component: model.ComponentPersona,
 			fileName:  "SOUL.md",
-			marker:    "<!-- gentle-ai:persona -->",
+			marker:    "<!-- agent-smith:persona -->",
 		},
 	}
 
@@ -93,15 +93,15 @@ func TestComponentApplyStepOpenClawWorkspaceScopedInjections(t *testing.T) {
 		runtime.workspaceDir = workspace
 		runInstallInjectionSteps(t, runtime)
 		body := readOpenClawTestFile(t, filepath.Join(workspace, "AGENTS.md"))
-		for _, want := range []string{"gentle-ai:agent-routing", "Organic Driven Development (ODD)", "relevant runnable deterministic test"} {
+		for _, want := range []string{"agent-smith:agent-routing", "Organic Driven Development (ODD)", "relevant runnable deterministic test"} {
 			if !strings.Contains(body, want) {
 				t.Errorf("workspace AGENTS.md missing %q", want)
 			}
 		}
-		if strings.Contains(body, "gentle-ai:strict-tdd-mode") {
+		if strings.Contains(body, "agent-smith:strict-tdd-mode") {
 			t.Error("workspace AGENTS.md retained retired strict TDD marker")
 		}
-		if strings.Contains(body, "gentle-ai:sdd-orchestrator") {
+		if strings.Contains(body, "agent-smith:sdd-orchestrator") {
 			t.Error("workspace AGENTS.md retained retired SDD guidance")
 		}
 		if _, err := os.Stat(filepath.Join(home, "AGENTS.md")); !os.IsNotExist(err) {
@@ -121,13 +121,13 @@ func TestComponentSyncStepOpenClawGlobalInjections(t *testing.T) {
 			name:      "engram sync writes protocol to home AGENTS",
 			component: model.ComponentEngram,
 			fileName:  "AGENTS.md",
-			marker:    "<!-- gentle-ai:engram-protocol -->",
+			marker:    "<!-- agent-smith:engram-protocol -->",
 		},
 		{
 			name:      "persona sync writes soul to home",
 			component: model.ComponentPersona,
 			fileName:  "SOUL.md",
-			marker:    "<!-- gentle-ai:persona -->",
+			marker:    "<!-- agent-smith:persona -->",
 		},
 	}
 
@@ -249,7 +249,7 @@ func testGlobalArtifactRoots(t *testing.T, sync bool) {
 				}
 			}
 			assertOpenClawRouting(t, home)
-			for _, path := range []string{"AGENTS.md", "SOUL.md", ".openclaw/skills/go-testing/SKILL.md", ".codeium/windsurf/memories/global_rules.md", ".codeium/windsurf/skills/go-testing/SKILL.md", ".pi/gentle-ai/persona.json"} {
+			for _, path := range []string{"AGENTS.md", "SOUL.md", ".openclaw/skills/go-testing/SKILL.md", ".codeium/windsurf/memories/global_rules.md", ".codeium/windsurf/skills/go-testing/SKILL.md", ".pi/agent-smith/persona.json"} {
 				if _, err := os.Stat(filepath.Join(home, path)); err != nil {
 					t.Errorf("missing global artifact %s: %v", path, err)
 				}
@@ -275,7 +275,7 @@ func TestExplicitWorkspaceInstallOverridesOpenClawConfig(t *testing.T) {
 	}
 	runInstallInjectionSteps(t, rt)
 	assertOpenClawRouting(t, workspace)
-	for _, path := range []string{"AGENTS.md", "SOUL.md", ".openclaw/skills/go-testing/SKILL.md", ".codeium/windsurf/memories/global_rules.md", ".pi/gentle-ai/persona.json"} {
+	for _, path := range []string{"AGENTS.md", "SOUL.md", ".openclaw/skills/go-testing/SKILL.md", ".codeium/windsurf/memories/global_rules.md", ".pi/agent-smith/persona.json"} {
 		if _, err := os.Stat(filepath.Join(workspace, path)); err != nil {
 			t.Errorf("missing workspace artifact %s: %v", path, err)
 		}
@@ -388,13 +388,13 @@ func assertOpenClawInstructionsInWorkspace(t *testing.T, workspace string) {
 	t.Helper()
 	assertOpenClawRouting(t, workspace)
 	agentsText := readOpenClawTestFile(t, filepath.Join(workspace, "AGENTS.md"))
-	if !strings.Contains(agentsText, "gentle-ai:engram-protocol") {
+	if !strings.Contains(agentsText, "agent-smith:engram-protocol") {
 		t.Fatalf("active workspace AGENTS.md missing Engram protocol")
 	}
 
 	soulText := readOpenClawTestFile(t, filepath.Join(workspace, "SOUL.md"))
-	if !strings.Contains(soulText, "gentle-ai:persona") || !strings.Contains(soulText, "Senior Architect") {
-		t.Fatalf("active workspace SOUL.md missing Gentle AI persona; got:\n%s", soulText)
+	if !strings.Contains(soulText, "agent-smith:persona") || !strings.Contains(soulText, "Senior Architect") {
+		t.Fatalf("active workspace SOUL.md missing Agent Smith persona; got:\n%s", soulText)
 	}
 }
 
@@ -403,17 +403,17 @@ func assertOpenClawInstructionsInWorkspace(t *testing.T, workspace string) {
 func assertOpenClawRouting(t *testing.T, root string) {
 	t.Helper()
 	agentsText := readOpenClawTestFile(t, filepath.Join(root, "AGENTS.md"))
-	for _, want := range []string{"gentle-ai:agent-routing", "Organic Driven Development (ODD)", "### ODD protocol"} {
+	for _, want := range []string{"agent-smith:agent-routing", "Organic Driven Development (ODD)", "### ODD protocol"} {
 		if !strings.Contains(agentsText, want) {
 			t.Fatalf("AGENTS.md at %s missing %q", root, want)
 		}
 	}
-	for _, forbidden := range []string{"Receipt-driven development is user-owned", "gentle-ai review"} {
+	for _, forbidden := range []string{"Receipt-driven development is user-owned", "agent-smith review"} {
 		if strings.Contains(agentsText, forbidden) {
 			t.Fatalf("AGENTS.md at %s carries RDD content %q", root, forbidden)
 		}
 	}
-	if strings.Contains(agentsText, "<!-- gentle-ai:sdd-orchestrator -->") {
+	if strings.Contains(agentsText, "<!-- agent-smith:sdd-orchestrator -->") {
 		t.Fatalf("AGENTS.md at %s retained legacy SDD orchestrator section", root)
 	}
 }
@@ -493,3 +493,4 @@ func objectAtOpenClawTest(t *testing.T, root map[string]any, key string) map[str
 	}
 	return object
 }
+

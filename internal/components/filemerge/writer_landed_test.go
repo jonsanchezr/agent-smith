@@ -161,7 +161,7 @@ func TestWriteFileAtomicLeavesNoTempFileWhenReplacementDoesNotLand(t *testing.T)
 		t.Fatalf("read dir: %v", err)
 	}
 	for _, entry := range entries {
-		if strings.HasPrefix(entry.Name(), ".gentle-ai-") {
+		if strings.HasPrefix(entry.Name(), ".agent-smith-") {
 			t.Errorf("staged temp file %q was left behind after a failed replacement", entry.Name())
 		}
 	}
@@ -189,3 +189,4 @@ func TestWriteFileAtomicSucceedsOnlyAfterReadBack(t *testing.T) {
 		t.Errorf("destination content = %q, want %q", onDisk, "payload")
 	}
 }
+

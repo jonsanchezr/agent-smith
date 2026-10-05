@@ -7,10 +7,10 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/agents"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/assets"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/components/filemerge"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
+	"github.com/jonsanchezr/agent-smith/v4/internal/agents"
+	"github.com/jonsanchezr/agent-smith/v4/internal/assets"
+	"github.com/jonsanchezr/agent-smith/v4/internal/components/filemerge"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
 )
 
 // IsSDDSkill identifies retired SDD skill IDs retained for compatibility.
@@ -201,3 +201,4 @@ func SkillPathForAgent(homeDir string, adapter agents.Adapter, id model.SkillID)
 func extractModelSection(content, capability string) string {
 	return filemerge.ExtractHTMLCommentSection(content, "model-"+capability)
 }
+

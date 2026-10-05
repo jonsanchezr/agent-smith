@@ -70,7 +70,7 @@ func captureIssue3587LensesAndClose(r *journeyRun) error {
 		if err := json.Unmarshal([]byte(observation.Stdout), &output); err != nil {
 			return fmt.Errorf("decode reviewer capture round %d: %w", round, err)
 		}
-		if output.Schema != "gentle-ai.review-last-event-closure/v1" {
+		if output.Schema != "agent-smith.review-last-event-closure/v1" {
 			continue
 		}
 		if output.Operation != "review/capture-result" || output.LineageID != issue3587Lineage || output.State != "approved" {
@@ -80,3 +80,4 @@ func captureIssue3587LensesAndClose(r *journeyRun) error {
 	}
 	return fmt.Errorf("reviewer captures never produced terminal last-event closure")
 }
+

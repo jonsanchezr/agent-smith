@@ -10,8 +10,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/system"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/versions"
+	"github.com/jonsanchezr/agent-smith/v4/internal/system"
+	"github.com/jonsanchezr/agent-smith/v4/internal/versions"
 )
 
 // resolveGitBashForTest derives the Git Bash path the same way the installcmd
@@ -63,7 +63,7 @@ func TestInstallCommandByProfile(t *testing.T) {
 		{
 			name:    "darwin uses brew tap and reinstall",
 			profile: system.PlatformProfile{OS: "darwin", PackageManager: "brew"},
-			want:    [][]string{{"brew", "tap", "Gentleman-Programming/homebrew-tap"}, {"brew", "reinstall", "gga"}},
+			want:    [][]string{{"brew", "tap", "jonsanchezr/homebrew-tap"}, {"brew", "reinstall", "gga"}},
 		},
 		{
 			name:    "ubuntu uses git clone and install.sh",
@@ -72,7 +72,7 @@ func TestInstallCommandByProfile(t *testing.T) {
 				{"rm", "-rf", "/tmp/gentleman-guardian-angel"},
 				{"mkdir", "-p", "/tmp/gentleman-guardian-angel"},
 				{"git", "init", "/tmp/gentleman-guardian-angel"},
-				{"git", "-C", "/tmp/gentleman-guardian-angel", "fetch", "--depth=1", "https://github.com/Gentleman-Programming/gentleman-guardian-angel.git", "refs/tags/v" + versions.GGAVersion + ":refs/tags/v" + versions.GGAVersion},
+				{"git", "-C", "/tmp/gentleman-guardian-angel", "fetch", "--depth=1", "https://github.com/jonsanchezr/gentleman-guardian-angel.git", "refs/tags/v" + versions.GGAVersion + ":refs/tags/v" + versions.GGAVersion},
 				{"git", "-C", "/tmp/gentleman-guardian-angel", "checkout", "-f", "refs/tags/v" + versions.GGAVersion},
 				{"bash", "/tmp/gentleman-guardian-angel/install.sh"},
 			},
@@ -84,7 +84,7 @@ func TestInstallCommandByProfile(t *testing.T) {
 				{"rm", "-rf", "/tmp/gentleman-guardian-angel"},
 				{"mkdir", "-p", "/tmp/gentleman-guardian-angel"},
 				{"git", "init", "/tmp/gentleman-guardian-angel"},
-				{"git", "-C", "/tmp/gentleman-guardian-angel", "fetch", "--depth=1", "https://github.com/Gentleman-Programming/gentleman-guardian-angel.git", "refs/tags/v" + versions.GGAVersion + ":refs/tags/v" + versions.GGAVersion},
+				{"git", "-C", "/tmp/gentleman-guardian-angel", "fetch", "--depth=1", "https://github.com/jonsanchezr/gentleman-guardian-angel.git", "refs/tags/v" + versions.GGAVersion + ":refs/tags/v" + versions.GGAVersion},
 				{"git", "-C", "/tmp/gentleman-guardian-angel", "checkout", "-f", "refs/tags/v" + versions.GGAVersion},
 				{"bash", "/tmp/gentleman-guardian-angel/install.sh"},
 			},
@@ -93,7 +93,7 @@ func TestInstallCommandByProfile(t *testing.T) {
 			name:    "windows uses git bash after runtime cleanup",
 			profile: system.PlatformProfile{OS: "windows", PackageManager: "winget"},
 			want: [][]string{
-				{"git", "clone", "--depth=1", "--branch", "v" + versions.GGAVersion, "https://github.com/Gentleman-Programming/gentleman-guardian-angel.git", cloneDst},
+				{"git", "clone", "--depth=1", "--branch", "v" + versions.GGAVersion, "https://github.com/jonsanchezr/gentleman-guardian-angel.git", cloneDst},
 				{bash, scriptPath},
 			},
 		},
@@ -104,7 +104,7 @@ func TestInstallCommandByProfile(t *testing.T) {
 				{"rm", "-rf", "/tmp/gentleman-guardian-angel"},
 				{"mkdir", "-p", "/tmp/gentleman-guardian-angel"},
 				{"git", "init", "/tmp/gentleman-guardian-angel"},
-				{"git", "-C", "/tmp/gentleman-guardian-angel", "fetch", "--depth=1", "https://github.com/Gentleman-Programming/gentleman-guardian-angel.git", "refs/tags/v" + versions.GGAVersion + ":refs/tags/v" + versions.GGAVersion},
+				{"git", "-C", "/tmp/gentleman-guardian-angel", "fetch", "--depth=1", "https://github.com/jonsanchezr/gentleman-guardian-angel.git", "refs/tags/v" + versions.GGAVersion + ":refs/tags/v" + versions.GGAVersion},
 				{"git", "-C", "/tmp/gentleman-guardian-angel", "checkout", "-f", "refs/tags/v" + versions.GGAVersion},
 				{"bash", "/tmp/gentleman-guardian-angel/install.sh"},
 			},
@@ -175,3 +175,4 @@ func TestShouldInstall(t *testing.T) {
 		t.Fatalf("ShouldInstall(false) = true")
 	}
 }
+

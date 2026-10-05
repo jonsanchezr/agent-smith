@@ -11,9 +11,9 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/assets"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/components/mutationjournal"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/opencode"
+	"github.com/jonsanchezr/agent-smith/v4/internal/assets"
+	"github.com/jonsanchezr/agent-smith/v4/internal/components/mutationjournal"
+	"github.com/jonsanchezr/agent-smith/v4/internal/opencode"
 )
 
 func TestOpenCodeTelemetryApprovedPriorAssetUpgrade(t *testing.T) {
@@ -476,7 +476,7 @@ func TestOpenCodeTelemetryManagedRefusesSymlinkedPluginsDirectory(t *testing.T) 
 	if !strings.Contains(err.Error(), "telemetry runtime symlink conflict:") {
 		t.Fatalf("unexpected error missing conflict prefix: %v", err)
 	}
-	if !strings.Contains(err.Error(), "rerun 'gentle-ai sync'") {
+	if !strings.Contains(err.Error(), "rerun 'agent-smith sync'") {
 		t.Fatalf("error does not name an executable exit: %v", err)
 	}
 	if err := CheckManaged(dir); err == nil {
@@ -527,7 +527,7 @@ func TestOpenCodeTelemetryManagedRefusesDanglingConfigRootSymlink(t *testing.T) 
 	if !strings.Contains(err.Error(), "does not resolve to an existing directory") {
 		t.Fatalf("error does not explain the dangling root: %v", err)
 	}
-	if !strings.Contains(err.Error(), "rerun 'gentle-ai sync'") {
+	if !strings.Contains(err.Error(), "rerun 'agent-smith sync'") {
 		t.Fatalf("error does not name an executable exit: %v", err)
 	}
 	if err := CheckManaged(link); err == nil {
@@ -575,3 +575,4 @@ func TestOpenCodeTelemetryManagedPreservesConflicts(t *testing.T) {
 		})
 	}
 }
+

@@ -1,9 +1,9 @@
 # v4 release preparation
 
 ## Objective and authority
-Publish Gentle AI v4.0.0, then pin that published runtime in Gentle Shell and publish Gentle Shell v4.0.0 (npm package gentle-pi). The user approved both versions, Windows corrections, Go /v4 migration, isolated worktrees, and two sequential preparation PRs: Windows first, then an atomic migration with size:exception only for the migration. Create approved preparation issues through repository policy; protected-label actions still require exact target-bound authorization. Use the authorized gh session over HTTPS for GitHub, release environments, notes/advisory, and release verification; publish npm only through Actions. No ambient SSH, local npm publish, live-runtime installation, history rewriting, or moved tags.
+Publish Agent Smith v4.0.0, then pin that published runtime in Gentle Shell and publish Gentle Shell v4.0.0 (npm package gentle-pi). The user approved both versions, Windows corrections, Go /v4 migration, isolated worktrees, and two sequential preparation PRs: Windows first, then an atomic migration with size:exception only for the migration. Create approved preparation issues through repository policy; protected-label actions still require exact target-bound authorization. Use the authorized gh session over HTTPS for GitHub, release environments, notes/advisory, and release verification; publish npm only through Actions. No ambient SSH, local npm publish, live-runtime installation, history rewriting, or moved tags.
 
-Worktree: /Users/alanbuscaglia/work/gentle-ai-v4-release
+Worktree: /Users/alanbuscaglia/work/agent-smith-v4-release
 Current branch: chore/v4-module-migration
 W2 base: 61692e5ff953b0aa6dd0124fdad52214adc16e85
 Initial W1 base: d623137c32bfa928cd062b226fd06ae24b7ba4ca
@@ -18,13 +18,13 @@ Preserve unrelated files in other worktrees. The parent owns this tracker.
 - Shell PR #1527 leaves specific native Windows symlink and live Pi E2E coverage gaps; do not claim those resolved by unrelated CI.
 
 ## Delivery and forecast
-Strategy: sequential PRs to main (stacked-to-main). W1 delivered independently. W2 keeps module/imports, release linkage, current installers, guidance and tests compile-coherent; no package-by-package uncompilable split. Forecast: 635 Go files, 1,537 import occurrences, roughly 3,200–3,800+ authored migration lines plus 100–250 installation/guidance lines. User accepted size:exception for this atomic migration only. All tagged releases require exact-main CI and Windows Full Suite success, not an earlier PR result.
+Strategy: sequential PRs to main (stacked-to-main). W1 delivered independently. W2 keeps module/imports, release linkage, current installers, guidance and tests compile-coherent; no package-by-package uncompilable split. Forecast: 635 Go files, 1,537 import occurrences, roughly 3,200â€“3,800+ authored migration lines plus 100â€“250 installation/guidance lines. User accepted size:exception for this atomic migration only. All tagged releases require exact-main CI and Windows Full Suite success, not an earlier PR result.
 
 ## Tasks
 - [x] W1: Correct nine Windows test surfaces and merge the verified PR. Delegated writer and independent verifier; high-risk test-integrity checks. Source commit 26d46159039c2af4e88cc761b36d896d16c311c4; PR #5076 merged as 61692e5ff953b0aa6dd0124fdad52214adc16e85; approved issue #5074 closed by the human-selected Closes reference.
 - [ ] W2 (in progress: implementation): Migrate Go module/imports, GoReleaser/release-policy bindings, current installers and guidance to /v4 with tests in one PR. Delegated writer required: multi-file public installation contract, high risk. Use mapped leaf-package globs only for existing files containing current-module /v3 references, plus exact semantic targets; preserve dependency versions, protocol schemas and historical fixtures. Approved issue #5078; future PR uses the human-selected Closes #5078.
 - [ ] W3: Audit deduplicated release accounting and prepare canonical notes with generic Bridge-plugin wording and honest Numbers/provenance qualifications. Delegated research and bounded documentation writing.
-- [ ] W4: Publish Gentle AI from verified main; confirm release jobs, signed assets, actual post-publication Go module resolution, notes, advisory and Homebrew. Parent remote mutations; delegated verification.
+- [ ] W4: Publish Agent Smith from verified main; confirm release jobs, signed assets, actual post-publication Go module resolution, notes, advisory and Homebrew. Parent remote mutations; delegated verification.
 - [ ] W5: Update Shell pin from actual published checksums/assets through an approved issue and verified PR. Derive capability changes from evidence, never invent them. One bounded writer; independent/native verification.
 - [ ] W6: Publish Shell through publish.yml on main; verify packed-runtime behavior, notes, exact npm version and latest dist-tag. No local npm publish.
 
@@ -44,3 +44,4 @@ Fetched merged main over authorized HTTPS and switched this isolated worktree to
 W2 implementation (delegated writer mulol9l8-12-pbch, route: delegated direct, 600+ files): observed RED for installer module-major tests and `go list -m`, then GREEN. Independent verifier mulpdmdo-13-jkra: PASS_WITH_ENVIRONMENTAL_EXCEPTION. Focused update/releasepolicy/providercontractbundle tests, install-module-path 5/5, gofmtcheck, vet and diff check passed; full `go test ./...` failed only two internal/app tests. Those tests fail identically on base 61692e5 offline because internal/app TestMain replaces HOME and the child `go build` loses the module cache under GOPROXY=off; both pass on base and candidate when GOMODCACHE is set. Parent corrections: executor.go boundary comment, two synthetic guard fixtures, restored the no-`v`-prefix source-install case (as 4.0.0), TRADEMARKS.md module example.
 
 Native review of the whole candidate stopped with lens_context_budget_exceeded (no authority created). Human selected a two-commit PR: commit a9f1390da (go.mod + 628 files, import-only /v3->/v4, builds and vets offline; installer-major tests stay red until commit 2), then the ~21-file semantic commit with native review. The PR merges as one unit. Scope change: the user asked not to publish releases or tags. W4 and W6 are deferred; W5 depends on published assets and is deferred too. Target state: migration merged, main CI and Windows green, release notes prepared as an unpublished draft.
+

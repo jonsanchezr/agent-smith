@@ -8,8 +8,8 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/components/mutationjournal"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
+	"github.com/jonsanchezr/agent-smith/v4/internal/components/mutationjournal"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
 )
 
 // UninstallResult summarizes what the 4-layer engine touched.
@@ -232,7 +232,7 @@ func stageDirectoryRemoval(journal *mutationjournal.Journal, path string) (*stag
 	if info.Mode()&os.ModeSymlink != 0 || !info.IsDir() {
 		return nil, fmt.Errorf("refuse non-directory removal target %q", path)
 	}
-	temp, err := os.CreateTemp(filepath.Dir(path), ".gentle-ai-uninstall-*")
+	temp, err := os.CreateTemp(filepath.Dir(path), ".agent-smith-uninstall-*")
 	if err != nil {
 		return nil, fmt.Errorf("reserve staging path for %q: %w", path, err)
 	}
@@ -291,3 +291,4 @@ func removalRecord() mutationjournal.OwnedFile {
 		AfterHash: emptySHA256Hex,
 	}
 }
+

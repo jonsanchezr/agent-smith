@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://gentle-ai.dev/contracts/review-integration/v2/schemas/last-event-closure.schema.json",
-  "title": "Gentle AI review terminal last-event capture response v1",
+  "$id": "https://agent-smith.dev/contracts/review-integration/v2/schemas/last-event-closure.schema.json",
+  "title": "Agent Smith review terminal last-event capture response v1",
   "type": "object",
   "additionalProperties": false,
   "required": ["schema", "operation", "lineage_id", "state", "store_revision"],
@@ -40,7 +40,7 @@
     {"if": {"properties": {"state": {"const": "escalated"}}, "required": ["state"]}, "then": {"required": ["escalation"]}, "else": {"not": {"required": ["escalation"]}}}
   ],
   "properties": {
-    "schema": {"const": "gentle-ai.review-last-event-closure/v1"},
+    "schema": {"const": "agent-smith.review-last-event-closure/v1"},
     "operation": {"enum": ["review/capture-result", "review.capture-correction-plan", "review.capture-refuter", "review/capture-validation"]},
     "lineage_id": {"type": "string", "minLength": 1},
     "target_identity": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
@@ -143,3 +143,4 @@
     }
   }
 }
+

@@ -1,4 +1,4 @@
-// gentle-ai:managed telemetry-runtime/v1
+﻿// agent-smith:managed telemetry-runtime/v1
 // Published plugin 1.18.30 imports SDK V1, not /v2:
 // https://unpkg.com/@opencode-ai/plugin@1.18.30/dist/index.d.ts
 import type { Plugin } from "@opencode-ai/plugin"
@@ -29,7 +29,7 @@ const telemetryRuntime: Plugin = async () => {
         const error = info.error
         const knownErrors = ["ProviderAuthError", "UnknownError", "MessageOutputLengthError", "MessageAbortedError", "APIError"]
         const body = JSON.stringify({
-          schema: "gentle-ai.telemetry-opencode/v1",
+          schema: "agent-smith.telemetry-opencode/v1",
           info: {
             role: "assistant",
             time: { created: info.time.created, completed: info.time.completed },
@@ -46,7 +46,7 @@ const telemetryRuntime: Plugin = async () => {
           },
         })
         if (Buffer.byteLength(body) > MAX_BYTES || veto()) return
-        const child = execFile("gentle-ai", ["telemetry", "runtime", "opencode", "--json"],
+        const child = execFile("agent-smith", ["telemetry", "runtime", "opencode", "--json"],
           { timeout: 4000, killSignal: "SIGKILL", maxBuffer: 1024, windowsHide: true },
           () => { children.delete(child) })
         children.add(child)
@@ -65,3 +65,4 @@ const telemetryRuntime: Plugin = async () => {
 }
 
 export default telemetryRuntime
+

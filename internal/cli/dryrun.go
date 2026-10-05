@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/planner"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/system"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
+	"github.com/jonsanchezr/agent-smith/v4/internal/planner"
+	"github.com/jonsanchezr/agent-smith/v4/internal/system"
 )
 
 func RenderDryRun(result InstallResult) string {
@@ -94,3 +94,4 @@ func formatPlatformDecision(decision planner.PlatformDecision) string {
 
 	return fmt.Sprintf("os=%s distro=%s package-manager=%s status=%s", osName, distro, manager, status)
 }
+

@@ -3,8 +3,8 @@ package screens
 import (
 	"strings"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/reviewtransaction"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/tui/styles"
+	"github.com/jonsanchezr/agent-smith/v4/internal/reviewtransaction"
+	"github.com/jonsanchezr/agent-smith/v4/internal/tui/styles"
 )
 
 func ReviewModeOptions(status reviewtransaction.RDDModeStatus, err error) []string {
@@ -43,3 +43,4 @@ func RenderReviewMode(status reviewtransaction.RDDModeStatus, err error, cursor 
 	b.WriteString(styles.HelpStyle.Render("j/k: navigate • enter: select • esc: back"))
 	return b.String()
 }
+

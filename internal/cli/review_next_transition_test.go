@@ -15,7 +15,7 @@ import (
 
 	jsonschema "github.com/santhosh-tekuri/jsonschema/v6"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/reviewtransaction"
+	"github.com/jonsanchezr/agent-smith/v4/internal/reviewtransaction"
 )
 
 func TestCorrectionPlanStatusIsStableAcrossRestart(t *testing.T) {
@@ -175,7 +175,7 @@ func TestReviewNextTransitionStateTable(t *testing.T) {
 			}
 			if tt.status.Action == reviewtransaction.TargetStatusActionRecover {
 				input = reviewNextTransitionInput{Successor: "review-next-successor", Reason: "authorized recovery", Actor: "maintainer"}
-				input.Authorization = "gentle-ai.review-recovery-authorization/v1\npredecessor_lineage=" + tt.status.Authority.LineageID + "\npredecessor_revision=" + tt.status.Authority.Revision + "\ntarget_identity=" + tt.status.TargetIdentity + "\nactor=" + input.Actor + "\nreason=" + input.Reason
+				input.Authorization = "agent-smith.review-recovery-authorization/v1\npredecessor_lineage=" + tt.status.Authority.LineageID + "\npredecessor_revision=" + tt.status.Authority.Revision + "\ntarget_identity=" + tt.status.TargetIdentity + "\nactor=" + input.Actor + "\nreason=" + input.Reason
 			}
 			tt.status.repositoryRoot = "/review-next-transition-repo"
 			got := newReviewNextTransition(tt.status, tt.lenses, tt.artifacts, nil, input)
@@ -264,7 +264,7 @@ func TestReviewTransitionArgumentToken(t *testing.T) {
 			},
 			input: reviewNextTransitionInput{
 				Successor: "review-token-successor", Reason: "authorized recovery", Actor: "maintainer",
-				Authorization: "gentle-ai.review-recovery-authorization/v1\npredecessor_lineage=review-token\npredecessor_revision=sha256:" + strings.Repeat("a", 64) + "\ntarget_identity=sha256:" + strings.Repeat("b", 64) + "\nactor=maintainer\nreason=authorized recovery",
+				Authorization: "agent-smith.review-recovery-authorization/v1\npredecessor_lineage=review-token\npredecessor_revision=sha256:" + strings.Repeat("a", 64) + "\ntarget_identity=sha256:" + strings.Repeat("b", 64) + "\nactor=maintainer\nreason=authorized recovery",
 			},
 			wantTokens: map[string]string{"predecessor-lineage": "--predecessor-lineage=review-token", "successor-lineage": "--successor-lineage=review-token-successor"},
 		},
@@ -366,7 +366,7 @@ func TestNewReviewNextTransitionEscalatedRouting(t *testing.T) {
 		status := baseStatus(changedTarget, unchangedTarget)
 		input := reviewNextTransitionInput{
 			Successor: "review-escalated-successor", Reason: "authorized recovery", Actor: "maintainer",
-			Authorization: "gentle-ai.review-recovery-authorization/v1\npredecessor_lineage=review-escalated\npredecessor_revision=sha256:" + strings.Repeat("a", 64) + "\ntarget_identity=" + changedTarget + "\nactor=maintainer\nreason=authorized recovery",
+			Authorization: "agent-smith.review-recovery-authorization/v1\npredecessor_lineage=review-escalated\npredecessor_revision=sha256:" + strings.Repeat("a", 64) + "\ntarget_identity=" + changedTarget + "\nactor=maintainer\nreason=authorized recovery",
 		}
 		status.repositoryRoot = "/review-next-transition-repo"
 		got := newReviewNextTransition(status, nil, nil, nil, input)
@@ -389,7 +389,7 @@ func TestNewReviewNextTransitionEscalatedRouting(t *testing.T) {
 		status := baseStatus(unchangedTarget, unchangedTarget)
 		input := reviewNextTransitionInput{
 			Successor: "review-escalated-successor", Reason: "authorized recovery", Actor: "maintainer",
-			Authorization: "gentle-ai.review-recovery-authorization/v1\npredecessor_lineage=review-escalated\npredecessor_revision=sha256:" + strings.Repeat("a", 64) + "\ntarget_identity=" + unchangedTarget + "\nactor=maintainer\nreason=authorized recovery",
+			Authorization: "agent-smith.review-recovery-authorization/v1\npredecessor_lineage=review-escalated\npredecessor_revision=sha256:" + strings.Repeat("a", 64) + "\ntarget_identity=" + unchangedTarget + "\nactor=maintainer\nreason=authorized recovery",
 		}
 		status.repositoryRoot = "/review-next-transition-repo"
 		got := newReviewNextTransition(status, nil, nil, nil, input)
@@ -684,7 +684,7 @@ func validateAgainstPublishedStatusNextTransitionSchema(t *testing.T, version, s
 		t.Fatalf("%s $defs.next_transition is missing or not an object: %#v", schemaFile, defs["next_transition"])
 	}
 
-	location := "https://gentle-ai.dev/contracts/review-integration/" + version + "/schemas/_test-next-transition.schema.json"
+	location := "https://agent-smith.dev/contracts/review-integration/" + version + "/schemas/_test-next-transition.schema.json"
 	synthetic := map[string]any{"$schema": statusSchema["$schema"], "$id": location, "$defs": defs}
 	for key, value := range nextTransition {
 		synthetic[key] = value
@@ -720,7 +720,7 @@ func validateAgainstPublishedStatusNextTransitionSchema(t *testing.T, version, s
 			document := refSchema.(map[string]any)
 			refSchema = map[string]any{"$schema": document["$schema"], "$id": document["$id"], "$defs": document["$defs"]}
 		}
-		if err := compiler.AddResource("https://gentle-ai.dev/contracts/review-integration/"+resource.version+"/schemas/"+resource.name, refSchema); err != nil {
+		if err := compiler.AddResource("https://agent-smith.dev/contracts/review-integration/"+resource.version+"/schemas/"+resource.name, refSchema); err != nil {
 			t.Fatal(err)
 		}
 	}
@@ -981,7 +981,7 @@ func TestNativeStatusSchemasValidateWholeForecastEnvelope(t *testing.T) {
 			if err := json.Unmarshal(fixture, &document); err != nil {
 				t.Fatal(err)
 			}
-			document["schema"] = "gentle-ai.review-integration.status/v" + strings.TrimSuffix(strings.TrimPrefix(name, "status-v"), ".schema.json")
+			document["schema"] = "agent-smith.review-integration.status/v" + strings.TrimSuffix(strings.TrimPrefix(name, "status-v"), ".schema.json")
 			if name == "status-v4.schema.json" {
 				document["receipt"] = map[string]any{"status": "expected_missing"}
 			}
@@ -1024,7 +1024,7 @@ func compileWholeNativeStatusSchema(t *testing.T, name string) *jsonschema.Schem
 			}
 		}
 	}
-	id := "https://gentle-ai.dev/contracts/review-integration/v2/schemas/" + name
+	id := "https://agent-smith.dev/contracts/review-integration/v2/schemas/" + name
 	schema, err := compiler.Compile(id)
 	if err != nil {
 		t.Fatal(err)
@@ -1056,3 +1056,4 @@ func reviewSchemaRegexpEngine(pattern string) (jsonschema.Regexp, error) {
 	}
 	return reviewSchemaRegexp{pattern: pattern, re: re}, nil
 }
+

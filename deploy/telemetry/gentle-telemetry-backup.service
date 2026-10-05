@@ -1,6 +1,6 @@
-[Unit]
+﻿[Unit]
 Description=Nightly backup of the gentle-telemetry SQLite database
-Documentation=https://github.com/Gentleman-Programming/gentle-ai/blob/main/docs/telemetry-collector.md
+Documentation=https://github.com/jonsanchezr/agent-smith/blob/main/docs/telemetry-collector.md
 # Only makes sense once the collector has created its database.
 Requisite=gentle-telemetry.service
 
@@ -29,3 +29,4 @@ ProtectSystem=strict
 ReadWritePaths=/var/lib/gentle-telemetry
 ProtectHome=read-only
 NoNewPrivileges=yes
+

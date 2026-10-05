@@ -8,8 +8,8 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/components/filemerge"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
+	"github.com/jonsanchezr/agent-smith/v4/internal/components/filemerge"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
 )
 
 // ConfigSnapshot is the file-backed OpenCode configuration view shared by UI,
@@ -350,7 +350,7 @@ func legacyConfiguredAssignments(root map[string]any) map[string]AssignmentPrese
 	for name, raw := range agentRaw {
 		key := name
 		if name == "sdd-orchestrator" {
-			key = "gentle-orchestrator"
+			key = "agent-smith-orchestrator"
 		}
 		def, ok := raw.(map[string]any)
 		if !ok {
@@ -405,7 +405,7 @@ func managedConfigPriority(path string) int {
 	agents, _ := root["agent"].(map[string]any)
 	for _, raw := range agents {
 		def, _ := raw.(map[string]any)
-		if def["__managed_by"] == "gentle-ai/sdd" {
+		if def["__managed_by"] == "agent-smith/sdd" {
 			return 2
 		}
 	}
@@ -420,8 +420,8 @@ func managedConfigPriority(path string) int {
 
 func managedOpenCodeAgentKeys() []string {
 	keys := []string{
-		"gentle-orchestrator", "sdd-orchestrator", ReviewRefuterAgent, ReviewValidatorAgent,
-		"gentle-ai-explore", "gentle-ai-verify", "gentle-ai-worker",
+		"agent-smith-orchestrator", "sdd-orchestrator", ReviewRefuterAgent, ReviewValidatorAgent,
+		"agent-smith-explore", "agent-smith-verify", "agent-smith-worker",
 		"review-risk", "review-readability", "review-reliability", "review-resilience",
 	}
 	keys = append(keys, SDDPhases()...)
@@ -494,3 +494,4 @@ func intValue(value any) int {
 		return 0
 	}
 }
+

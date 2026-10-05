@@ -7,7 +7,7 @@ import (
 	"strings"
 	"testing"
 
-	componentuninstall "github.com/gentleman-programming/gentle-ai/v4/internal/components/uninstall"
+	componentuninstall "github.com/jonsanchezr/agent-smith/v4/internal/components/uninstall"
 )
 
 func TestExecuteCommandQuietModeIncludesCapturedOutputOnFailure(t *testing.T) {
@@ -98,3 +98,4 @@ func TestRenderUninstallReportIncludesManualCleanup(t *testing.T) {
 		t.Fatalf("RenderUninstallReport() should include manual cleanup item; got:\n%s", report)
 	}
 }
+

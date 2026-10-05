@@ -13,9 +13,9 @@ import (
 	"time"
 )
 
-const CompactStateSchema = "gentle-ai.review-state/v2"
-const NativeLowRiskVerificationDomain = "gentle-ai.native-low-risk-verification/v1"
-const CompactRecoveredEvidenceSchema = "gentle-ai.review-recovered-evidence/v1"
+const CompactStateSchema = "agent-smith.review-state/v2"
+const NativeLowRiskVerificationDomain = "agent-smith.native-low-risk-verification/v1"
+const CompactRecoveredEvidenceSchema = "agent-smith.review-recovered-evidence/v1"
 
 const (
 	StateCorrectionRequired             State = "correction_required"
@@ -527,7 +527,7 @@ func deriveCompactCapturePhaseRevision(state CompactState) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	sum := sha256.Sum256(append([]byte("gentle-ai.review-capture-phase/v1\x00"), payload...))
+	sum := sha256.Sum256(append([]byte("agent-smith.review-capture-phase/v1\x00"), payload...))
 	return "sha256:" + hex.EncodeToString(sum[:]), nil
 }
 
@@ -1813,7 +1813,7 @@ func (state *CompactState) CloseCleanReviewOnLastEvent() error {
 
 // ErrInvalidFindingLocation identifies reviewer locations that cannot be used
 // as repository line evidence.
-var ErrInvalidFindingLocation = errors.New("invalid reviewer finding location; correct it to repository/path:<positive-line> or repository/path:<positive-start>-<positive-end> before running gentle-ai review capture-result again")
+var ErrInvalidFindingLocation = errors.New("invalid reviewer finding location; correct it to repository/path:<positive-line> or repository/path:<positive-start>-<positive-end> before running agent-smith review capture-result again")
 
 // FindingLocationErrorReason is a stable machine-readable validation reason.
 type FindingLocationErrorReason string
@@ -2251,3 +2251,4 @@ func normalizeCompactState(state *CompactState) {
 		state.ResultReopens = []CompactResultReopen{}
 	}
 }
+

@@ -70,7 +70,7 @@ type ClaudeObservation struct {
 
 // claudeStopDeliverySalt domain-separates the Stop delivery-id hash from any
 // other use of the message id, so the hash cannot be reused across contracts.
-const claudeStopDeliverySalt = "gentle-ai.telemetry-runtime-claude-stop/v1\x00"
+const claudeStopDeliverySalt = "agent-smith.telemetry-runtime-claude-stop/v1\x00"
 
 // claudeStopDeliveryID derives a stable, collector-shaped (32 lowercase hex
 // chars) delivery id from a transcript's API message id. The message id
@@ -348,3 +348,4 @@ func claudeFrontmatter(data []byte) (string, string) {
 	}
 	return strings.TrimSpace(front.Model), strings.TrimSpace(front.Effort)
 }
+

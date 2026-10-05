@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/tui/styles"
+	"github.com/jonsanchezr/agent-smith/v4/internal/tui/styles"
 )
 
 type ProgressItem struct {
@@ -123,3 +123,4 @@ func renderBar(percent int) string {
 	return styles.ProgressFilled.Render(strings.Repeat("█", filled)) +
 		styles.ProgressEmpty.Render(strings.Repeat("░", empty))
 }
+

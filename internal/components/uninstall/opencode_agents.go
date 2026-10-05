@@ -4,9 +4,9 @@ import (
 	"os"
 	"strings"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/components/filemerge"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/components/opencodeagents"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
+	"github.com/jonsanchezr/agent-smith/v4/internal/components/filemerge"
+	"github.com/jonsanchezr/agent-smith/v4/internal/components/opencodeagents"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
 )
 
 // removeOpenCodeGentleman is scoped to the persona component, independently
@@ -69,7 +69,7 @@ func removeOpenCodeFamilyAgents(path string, agentID model.AgentID) operation {
 			if !ok {
 				continue
 			}
-			if entry["__managed_by"] == "gentle-ai/sdd" {
+			if entry["__managed_by"] == "agent-smith/sdd" {
 				// Mirror the migration ownership rules without requiring a sync.
 				if opencodeagents.LegacyOwned(agentID, name) {
 					delete(agents, name)
@@ -97,7 +97,7 @@ func removeOpenCodeFamilyAgents(path string, agentID model.AgentID) operation {
 				changed = true
 			}
 		}
-		orchestrator, _ := agents["gentle-orchestrator"].(map[string]any)
+		orchestrator, _ := agents["agent-smith-orchestrator"].(map[string]any)
 		if orchestrator != nil {
 			permission, _ := orchestrator["permission"].(map[string]any)
 			task, _ := permission["task"].(map[string]any)
@@ -120,7 +120,7 @@ func removeOpenCodeFamilyAgents(path string, agentID model.AgentID) operation {
 					changed = true
 				}
 				if stripped && strings.TrimSpace(clean) == "" && managedOrchestratorSkeleton(orchestrator) {
-					delete(agents, "gentle-orchestrator")
+					delete(agents, "agent-smith-orchestrator")
 				}
 			}
 		}
@@ -146,3 +146,4 @@ func managedOrchestratorSkeleton(entry map[string]any) bool {
 	}
 	return true
 }
+

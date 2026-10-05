@@ -15,8 +15,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/components/reviewassets"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
+	"github.com/jonsanchezr/agent-smith/v4/internal/components/reviewassets"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
 )
 
 // currentShapeContractSemver labels fixtures built by generatedFiles/Generate
@@ -564,7 +564,7 @@ func TestGeneratedOrchestrationEntryCarriesTheBoundPiContract(t *testing.T) {
 			t.Errorf("orchestration/pi.md missing Pi facade route %q", want)
 		}
 	}
-	if strings.Contains(text, "gentle-ai review status") {
+	if strings.Contains(text, "agent-smith review status") {
 		t.Fatal("orchestration/pi.md exposes raw STATUS")
 	}
 	if !strings.Contains(text, "## Entry rule") {
@@ -594,11 +594,11 @@ func TestPiFacadeLifecycleValidation(t *testing.T) {
 		{name: "missing public facade acknowledgement operation", content: strings.Replace(valid, "`acknowledge-approved` continuation", "`replacement` continuation", 1), valid: false},
 		{name: "missing answer-consent route", content: strings.Replace(valid, "`gentle_review` with operation `answer-consent` and the exact `consentBinding`", "", 1), valid: false},
 		{name: "missing forecast acknowledgement", content: strings.Replace(valid, "resubmit the same exact binding with `reviewerRunAcknowledged: true`", "", 1), valid: false},
-		{name: "user-owned mode switch is allowed", content: valid + "\ngentle-ai review mode enable --scope global\n", valid: true},
-		{name: "raw status", content: valid + "\ngentle-ai review status\n"},
-		{name: "raw capture", content: valid + "\ngentle-ai review capture-result\n"},
-		{name: "raw acknowledgement", content: valid + "\ngentle-ai review acknowledge-approved\n"},
-		{name: "raw recover", content: valid + "\ngentle-ai review recover --lineage x\n"},
+		{name: "user-owned mode switch is allowed", content: valid + "\nagent-smith review mode enable --scope global\n", valid: true},
+		{name: "raw status", content: valid + "\nagent-smith review status\n"},
+		{name: "raw capture", content: valid + "\nagent-smith review capture-result\n"},
+		{name: "raw acknowledgement", content: valid + "\nagent-smith review acknowledge-approved\n"},
+		{name: "raw recover", content: valid + "\nagent-smith review recover --lineage x\n"},
 	} {
 		t.Run(test.name, func(t *testing.T) {
 			if got := validPiFacadeLifecycle(test.content); got != test.valid {
@@ -759,3 +759,4 @@ func TestVerifyArchiveAcceptsAGenuinePre110PublishedBundleWithoutRuntimesOrOrche
 		t.Fatalf("VerifyArchive rejected a genuine pre-1.1.0 published bundle: %v", err)
 	}
 }
+

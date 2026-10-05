@@ -12,7 +12,7 @@ func TestApplyOpenCodeBackgroundPolicy(t *testing.T) {
 	if result, err := ApplyOpenCodeBackgroundPolicy(path, true); err != nil || result.Changed {
 		t.Fatalf("absent settings must stay absent: %+v %v", result, err)
 	}
-	original := `{"permission":{"bash":"ask"},"agent":{"gentle-orchestrator":{"prompt":"user prompt","permission":{"task":"deny"}},"other":{"prompt":"custom"}}}`
+	original := `{"permission":{"bash":"ask"},"agent":{"agent-smith-orchestrator":{"prompt":"user prompt","permission":{"task":"deny"}},"other":{"prompt":"custom"}}}`
 	if err := os.WriteFile(path, []byte(original), 0o644); err != nil {
 		t.Fatal(err)
 	}
@@ -24,7 +24,7 @@ func TestApplyOpenCodeBackgroundPolicy(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if !strings.Contains(string(content), "gentle-ai:opencode-background-subagents") || !strings.Contains(string(content), `"bash": "ask"`) || !strings.Contains(string(content), `"task": "deny"`) || !strings.Contains(string(content), `"other"`) {
+	if !strings.Contains(string(content), "agent-smith:opencode-background-subagents") || !strings.Contains(string(content), `"bash": "ask"`) || !strings.Contains(string(content), `"task": "deny"`) || !strings.Contains(string(content), `"other"`) {
 		t.Fatalf("policy or user settings lost: %s", content)
 	}
 	again, err := ApplyOpenCodeBackgroundPolicy(path, true)
@@ -39,7 +39,7 @@ func TestApplyOpenCodeBackgroundPolicy(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if strings.Contains(string(content), "gentle-ai:opencode-background-subagents") || !strings.Contains(string(content), "user prompt") || !strings.Contains(string(content), `"bash": "ask"`) {
+	if strings.Contains(string(content), "agent-smith:opencode-background-subagents") || !strings.Contains(string(content), "user prompt") || !strings.Contains(string(content), `"bash": "ask"`) {
 		t.Fatalf("off damaged settings: %s", content)
 	}
 	again, err = ApplyOpenCodeBackgroundPolicy(path, false)
@@ -47,3 +47,4 @@ func TestApplyOpenCodeBackgroundPolicy(t *testing.T) {
 		t.Fatalf("repeat off must converge: %+v %v", again, err)
 	}
 }
+

@@ -9,12 +9,12 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/agents"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/assets"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/components/agentguidance"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/components/filemerge"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/components/mutationjournal"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
+	"github.com/jonsanchezr/agent-smith/v4/internal/agents"
+	"github.com/jonsanchezr/agent-smith/v4/internal/assets"
+	"github.com/jonsanchezr/agent-smith/v4/internal/components/agentguidance"
+	"github.com/jonsanchezr/agent-smith/v4/internal/components/filemerge"
+	"github.com/jonsanchezr/agent-smith/v4/internal/components/mutationjournal"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
 )
 
 // NativeAgentManifest is an explicit allowlist: never enumerate the embedded agents directory.
@@ -30,7 +30,7 @@ var NativeAgentManifest = map[model.AgentID][]string{
 
 // RetiredNativeAgentManifest lists the review agents earlier releases installed
 // on runtimes without receipt-driven development. The installer removes a
-// retired file only when Gentle AI owns it: the ownership ledger records its
+// retired file only when Agent Smith owns it: the ownership ledger records its
 // exact bytes, or the bytes equal the managed render. Anything else, including
 // a user's own agent under the same name, is preserved.
 var RetiredNativeAgentManifest = map[model.AgentID][]string{
@@ -77,7 +77,7 @@ type claudeModelResolver interface {
 
 // InstallNativeAgents installs only retained review, Judgment Day, and Kimi native agents.
 // It never removes legacy SDD files or user-owned agents; it removes only the
-// retired review agents Gentle AI owns (see RetiredNativeAgentManifest).
+// retired review agents Agent Smith owns (see RetiredNativeAgentManifest).
 func InstallNativeAgents(home string, adapter agents.Adapter, opts InstallOptions) (InstallResult, error) {
 	if !NativeAgentsSupported(adapter.Agent()) {
 		return InstallResult{}, fmt.Errorf("unsupported native agent runtime: %s", adapter.Agent())
@@ -271,7 +271,7 @@ func renderNativeAgent(adapter agents.Adapter, name string, opts InstallOptions)
 	return content, nil
 }
 
-// removeRetiredNativeAgent removes one retired agent file when Gentle AI owns
+// removeRetiredNativeAgent removes one retired agent file when Agent Smith owns
 // it and drops its ledger entry either way, since the runtime no longer
 // manages that name. It returns the removed path and whether the ledger
 // changed. A symlink or other non-regular file is never ours to delete.
@@ -338,3 +338,4 @@ func replaceJudgmentSection(content, body string) string {
 	}
 	return strings.TrimRight(content[:start], "\n") + "\n\n" + heading + "\n\n" + body + "\n\n"
 }
+

@@ -171,7 +171,7 @@ type Results struct {
 const (
 	ModeDriven    = "driven"
 	ModeObserved  = "observed"
-	ResultsSchema = "gentle-ai-bench.results/v1"
+	ResultsSchema = "agent-smith-bench.results/v1"
 )
 
 // accumulator builds a MetricSet from a stream of observations. It is the one
@@ -476,3 +476,4 @@ func sortJourneys(journeys []JourneyResult) {
 		return journeys[i].ID < journeys[j].ID
 	})
 }
+

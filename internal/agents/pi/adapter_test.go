@@ -13,8 +13,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/system"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
+	"github.com/jonsanchezr/agent-smith/v4/internal/system"
 )
 
 // setRealHome makes homeDir look like the current user's real home
@@ -401,7 +401,7 @@ func TestCodeGraphPathsResolveConfiguredAgentDirectory(t *testing.T) {
 		t.Fatalf("MCPConfig = %q", paths.MCPConfig)
 	}
 	sum := sha256.Sum256([]byte(filepath.Clean(configured)))
-	wantManifest := filepath.Join(home, ".gentle-ai", fmt.Sprintf("pi-codegraph-%x.json", sum[:8]))
+	wantManifest := filepath.Join(home, ".agent-smith", fmt.Sprintf("pi-codegraph-%x.json", sum[:8]))
 	if paths.Manifest != wantManifest {
 		t.Fatalf("Manifest = %q, want %q", paths.Manifest, wantManifest)
 	}
@@ -415,7 +415,7 @@ func TestCodeGraphPathsDefaultAgentDirectory(t *testing.T) {
 	if paths.AgentDir != wantAgentDir {
 		t.Fatalf("AgentDir = %q, want %q", paths.AgentDir, wantAgentDir)
 	}
-	wantManifest := filepath.Join(home, ".gentle-ai", "pi-codegraph.json")
+	wantManifest := filepath.Join(home, ".agent-smith", "pi-codegraph.json")
 	if paths.Manifest != wantManifest {
 		t.Fatalf("Manifest = %q, want %q", paths.Manifest, wantManifest)
 	}
@@ -756,3 +756,4 @@ func TestPrunePiSettingsFileRemovesLegacySubagentPackages(t *testing.T) {
 		t.Fatalf("packages = %#v", settings.Packages)
 	}
 }
+

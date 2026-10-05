@@ -13,13 +13,13 @@ import (
 	"testing"
 	"time"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/telemetry"
+	"github.com/jonsanchezr/agent-smith/v4/internal/telemetry"
 )
 
 // expectedClaudeStopDeliveryID mirrors the documented Stop delivery-id
 // derivation independently of the implementation under test.
 func expectedClaudeStopDeliveryID(messageID string) string {
-	sum := sha256.Sum256([]byte("gentle-ai.telemetry-runtime-claude-stop/v1\x00" + messageID))
+	sum := sha256.Sum256([]byte("agent-smith.telemetry-runtime-claude-stop/v1\x00" + messageID))
 	return hex.EncodeToString(sum[:16])
 }
 
@@ -54,7 +54,7 @@ func TestTelemetryRuntimeClaudeDirectSend(t *testing.T) {
 			if err != nil || event.Host != "claude-code" || event.Rows[0].AgentClass != "sdd-apply" || event.Rows[0].Model.ID != "claude-opus-5-1" || event.Rows[0].ModelEvidence != "response" || event.Rows[0].SelectedEffort != "high" || string(event.Rows[0].Responses) != "1" || bytes.Contains(body, []byte("PRIVATE")) {
 				t.Error("incorrect or unsafe event", err, string(body))
 			}
-			return &http.Response{StatusCode: http.StatusOK, Header: make(http.Header), Body: io.NopCloser(strings.NewReader(`{"schema":"gentle-ai.telemetry-runtime-delivery/v1","decision":"stored"}`))}, nil
+			return &http.Response{StatusCode: http.StatusOK, Header: make(http.Header), Body: io.NopCloser(strings.NewReader(`{"schema":"agent-smith.telemetry-runtime-delivery/v1","decision":"stored"}`))}, nil
 		})}
 	}
 	t.Cleanup(func() { runtimeHTTPClient = oldClient })
@@ -91,7 +91,7 @@ func TestTelemetryRuntimeClaudeStopDirectSend(t *testing.T) {
 				t.Error("incorrect or unsafe event", err, string(body))
 			}
 			deliveryIDs = append(deliveryIDs, event.DeliveryID)
-			return &http.Response{StatusCode: http.StatusOK, Header: make(http.Header), Body: io.NopCloser(strings.NewReader(`{"schema":"gentle-ai.telemetry-runtime-delivery/v1","decision":"stored"}`))}, nil
+			return &http.Response{StatusCode: http.StatusOK, Header: make(http.Header), Body: io.NopCloser(strings.NewReader(`{"schema":"agent-smith.telemetry-runtime-delivery/v1","decision":"stored"}`))}, nil
 		})}
 	}
 	t.Cleanup(func() { runtimeHTTPClient = oldClient })
@@ -158,3 +158,4 @@ func TestTelemetryRuntimeClaudeIgnoredAndPolicyBeforeRead(t *testing.T) {
 }
 
 func strconvQuote(s string) string { return `"` + strings.ReplaceAll(s, `\`, `\\`) + `"` }
+

@@ -7,13 +7,13 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/reviewtransaction"
+	"github.com/jonsanchezr/agent-smith/v4/internal/reviewtransaction"
 )
 
 func incompleteCompactResidueDir(t *testing.T, repo, lineage string) string {
 	t.Helper()
 	commonDir := filepath.Clean(strings.TrimSpace(runReviewCLIGit(t, repo, "rev-parse", "--path-format=absolute", "--git-common-dir")))
-	residue := filepath.Join(commonDir, "gentle-ai", "review-transactions", "v2", lineage)
+	residue := filepath.Join(commonDir, "agent-smith", "review-transactions", "v2", lineage)
 	if err := os.MkdirAll(residue, 0o755); err != nil {
 		t.Fatal(err)
 	}
@@ -135,3 +135,4 @@ func TestReviewReclaimClearsEnumeratedResidueThatNeverBlockedStart(t *testing.T)
 		t.Fatalf("review start after reclaim: %v\n%s", err, output.String())
 	}
 }
+

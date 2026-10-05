@@ -4,16 +4,16 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/components/communitytool"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/tui/styles"
+	"github.com/jonsanchezr/agent-smith/v4/internal/components/communitytool"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
+	"github.com/jonsanchezr/agent-smith/v4/internal/tui/styles"
 )
 
 func RenderCommunityTools(selected []model.CommunityToolID, cursor int, statuses []communitytool.Status, loading bool, statusErr error) string {
 	var b strings.Builder
 	b.WriteString(styles.TitleStyle.Render("Community Tools/Plugins"))
 	b.WriteString("\n\n")
-	b.WriteString(styles.SubtextStyle.Render("Optional cross-agent tools Gentle AI can install and wire for you."))
+	b.WriteString(styles.SubtextStyle.Render("Optional cross-agent tools Agent Smith can install and wire for you."))
 	b.WriteString("\n\n")
 
 	if loading {
@@ -154,3 +154,4 @@ func selectedCommunityToolNames(selected []model.CommunityToolID) []string {
 	}
 	return names
 }
+

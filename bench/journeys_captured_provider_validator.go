@@ -181,7 +181,7 @@ func captureProviderValidatorSlotWithResult(r *journeyRun, lineage string, passe
 		return err
 	}
 	start, err := json.Marshal(map[string]string{
-		"schema": "gentle-ai.provider-transport/v1", "operation": "start", "prompt": input.ProviderTask.Prompt,
+		"schema": "agent-smith.provider-transport/v1", "operation": "start", "prompt": input.ProviderTask.Prompt,
 	})
 	if err != nil {
 		return err
@@ -200,12 +200,12 @@ func captureProviderValidatorSlotWithResult(r *journeyRun, lineage string, passe
 			Nonce     string `json:"nonce"`
 			Prompt    string `json:"prompt"`
 		}
-		if err := json.Unmarshal([]byte(line), &prompt); err != nil || prompt.Schema != "gentle-ai.provider-transport/v1" ||
+		if err := json.Unmarshal([]byte(line), &prompt); err != nil || prompt.Schema != "agent-smith.provider-transport/v1" ||
 			prompt.Operation != "prompt" || prompt.Nonce == "" || prompt.Prompt == "" {
 			return fmt.Errorf("relay prompt = %q: %w", line, err)
 		}
 		completion, err := json.Marshal(map[string]string{
-			"schema": "gentle-ai.provider-transport/v1", "operation": "complete", "nonce": prompt.Nonce, "output": string(payload),
+			"schema": "agent-smith.provider-transport/v1", "operation": "complete", "nonce": prompt.Nonce, "output": string(payload),
 		})
 		if err != nil {
 			return err
@@ -314,7 +314,7 @@ func capturedProviderSlotReported(stdout string, passed bool) bool {
 			} `json:"acknowledgement"`
 		}
 		if json.Unmarshal([]byte(frame.Output), &closure) == nil &&
-			closure.Schema == "gentle-ai.review-last-event-closure/v1" && closure.Operation == "review/capture-validation" &&
+			closure.Schema == "agent-smith.review-last-event-closure/v1" && closure.Operation == "review/capture-validation" &&
 			(closure.State == "escalated" && !passed || closure.State == "approved" && passed &&
 				closure.Acknowledgement.Operation == "review.acknowledge-approved") {
 			return true
@@ -322,3 +322,4 @@ func capturedProviderSlotReported(stdout string, passed bool) bool {
 	}
 	return false
 }
+

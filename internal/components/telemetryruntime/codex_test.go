@@ -12,8 +12,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/state"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/telemetry"
+	"github.com/jonsanchezr/agent-smith/v4/internal/state"
+	"github.com/jonsanchezr/agent-smith/v4/internal/telemetry"
 )
 
 const codexRealBridgeTranscriptFixture = `{"timestamp":"PRIVATE_TIME","type":"session_meta","payload":{"id":"PRIVATE_SESSION","source":{"subagent":{"thread_spawn":{"parent_thread_id":"PRIVATE_PARENT","depth":1,"agent_nickname":"PRIVATE_NICKNAME","agent_path":"/root/sdd_explore"}}}}}
@@ -95,7 +95,7 @@ func TestSendCodexPolicyNormalizeAndSendOnce(t *testing.T) {
 				t.Fatalf("private data leaked: %s", body)
 			}
 		}
-		return &http.Response{StatusCode: http.StatusOK, Body: io.NopCloser(strings.NewReader(`{"schema":"gentle-ai.telemetry-runtime-delivery/v1","decision":"stored"}`))}, nil
+		return &http.Response{StatusCode: http.StatusOK, Body: io.NopCloser(strings.NewReader(`{"schema":"agent-smith.telemetry-runtime-delivery/v1","decision":"stored"}`))}, nil
 	})}
 	t.Setenv(telemetry.EndpointEnvVar, "https://telemetry.example.invalid")
 	before := codexBridgeDisk(t, home)
@@ -143,7 +143,7 @@ func TestSendCodexDerivesTaskNameAndAssignmentFromTranscriptHead(t *testing.T) {
 				t.Fatalf("private transcript metadata leaked: %s", body)
 			}
 		}
-		return &http.Response{StatusCode: http.StatusOK, Body: io.NopCloser(strings.NewReader(`{"schema":"gentle-ai.telemetry-runtime-delivery/v1","decision":"stored"}`))}, nil
+		return &http.Response{StatusCode: http.StatusOK, Body: io.NopCloser(strings.NewReader(`{"schema":"agent-smith.telemetry-runtime-delivery/v1","decision":"stored"}`))}, nil
 	})}
 	t.Setenv(telemetry.EndpointEnvVar, "https://telemetry.example.invalid")
 	if got := SendCodex(context.Background(), home, os.Getenv, strings.NewReader(codexBridgeHookForAgent(transcript, "default")), client); got != "stored" {
@@ -183,7 +183,7 @@ func TestSendCodexSelectedModelFallbackAndUnknownAgent(t *testing.T) {
 		if row.Model.ID != "gpt-5.4" || row.ModelEvidence != "selected" || row.SelectedEffort != "xhigh" {
 			t.Fatalf("row=%+v", row)
 		}
-		return &http.Response{StatusCode: http.StatusOK, Body: io.NopCloser(strings.NewReader(`{"schema":"gentle-ai.telemetry-runtime-delivery/v1","decision":"stored"}`))}, nil
+		return &http.Response{StatusCode: http.StatusOK, Body: io.NopCloser(strings.NewReader(`{"schema":"agent-smith.telemetry-runtime-delivery/v1","decision":"stored"}`))}, nil
 	})}
 	t.Setenv(telemetry.EndpointEnvVar, "https://telemetry.example.invalid")
 	if got := SendCodex(context.Background(), home, os.Getenv, strings.NewReader(codexBridgeHook(filepath.Join(t.TempDir(), "missing.jsonl"))), client); got != "stored" {
@@ -210,7 +210,7 @@ func TestSendCodexStopReadsTranscriptAsOrchestratorUsage(t *testing.T) {
 		if row.AgentKind != "orchestrator" || row.AgentClass != "orchestrator" || row.Model.ID != "gpt-5.6-sol" || string(row.Input) != tokenReportedBridge("7") || string(row.TotalTokens) != tokenReportedBridge("9") {
 			t.Fatalf("row=%+v", row)
 		}
-		return &http.Response{StatusCode: http.StatusOK, Body: io.NopCloser(strings.NewReader(`{"schema":"gentle-ai.telemetry-runtime-delivery/v1","decision":"stored"}`))}, nil
+		return &http.Response{StatusCode: http.StatusOK, Body: io.NopCloser(strings.NewReader(`{"schema":"agent-smith.telemetry-runtime-delivery/v1","decision":"stored"}`))}, nil
 	})}
 	t.Setenv(telemetry.EndpointEnvVar, "https://telemetry.example.invalid")
 	if got := SendCodex(context.Background(), home, os.Getenv, strings.NewReader(codexStopBridgeHook(transcript)), client); got != "stored" {
@@ -287,3 +287,4 @@ func codexBridgeDisk(t *testing.T, root string) map[string]string {
 	}
 	return result
 }
+

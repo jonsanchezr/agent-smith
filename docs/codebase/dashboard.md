@@ -1,11 +1,11 @@
-# Dashboard
+﻿# Dashboard
 
 > [!NOTE]
-> These docs track `main`, which may include unreleased changes. For the latest release, see the [v4.0.0 docs](https://github.com/Gentleman-Programming/gentle-ai/tree/v4.0.0/docs).
+> These docs track `main`, which may include unreleased changes. For the latest release, see the [v4.0.0 docs](https://github.com/jonsanchezr/agent-smith/tree/v4.0.0/docs).
 
 [Back to Codebase Guide](../CODEBASE-GUIDE.md)
 
-Gentle-AI does not currently contain dashboard source code. This page exists to prevent accidental invention of dashboard, HTMX, auth, or admin behavior while documenting the codebase.
+agent-smith does not currently contain dashboard source code. This page exists to prevent accidental invention of dashboard, HTMX, auth, or admin behavior while documenting the codebase.
 
 ## Source validation result
 
@@ -40,7 +40,7 @@ No HTMX or server-rendered dashboard flow is present. If a future dashboard is a
 
 - **No unauthenticated admin actions**: dashboard writes must have an explicit auth/session boundary.
 - **No full API duplication**: link to the endpoint/schema source of truth when one exists.
-- **No direct local DB assumptions**: do not read `.engram/engram.db` from Gentle-AI dashboard code unless the architecture explicitly chooses that boundary.
+- **No direct local DB assumptions**: do not read `.engram/engram.db` from agent-smith dashboard code unless the architecture explicitly chooses that boundary.
 - **No silent cloud coupling**: remote state must be isolated behind a transport/client interface.
 
 ## Contributor checklist
@@ -52,3 +52,4 @@ No HTMX or server-rendered dashboard flow is present. If a future dashboard is a
 ## Navigation
 
 Previous: [Sync and cloud](sync-and-cloud.md) | Next: [Integrations](integrations.md)
+

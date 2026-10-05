@@ -3,8 +3,8 @@ package tui
 import (
 	"fmt"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/pipeline"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/tui/screens"
+	"github.com/jonsanchezr/agent-smith/v4/internal/pipeline"
+	"github.com/jonsanchezr/agent-smith/v4/internal/tui/screens"
 )
 
 type ProgressItem struct {
@@ -131,3 +131,4 @@ func (p ProgressState) ViewModel() screens.InstallProgress {
 		Failed:      p.HasFailures(),
 	}
 }
+

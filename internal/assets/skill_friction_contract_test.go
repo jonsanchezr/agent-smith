@@ -11,7 +11,7 @@ func TestBranchPRAndCollaborationDecisionBoundaries(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	collab, err := os.ReadFile("../../skills/gentle-ai-collab-perfect/SKILL.md")
+	collab, err := os.ReadFile("../../skills/agent-smith-collab-perfect/SKILL.md")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -45,7 +45,7 @@ func TestBranchPRAndCollaborationDecisionBoundaries(t *testing.T) {
 }
 
 func TestBranchPRDraftCountsAreProvisionalUntilAuthorizedReadback(t *testing.T) {
-	content, err := os.ReadFile("../../skills/gentle-ai-collab-perfect/SKILL.md")
+	content, err := os.ReadFile("../../skills/agent-smith-collab-perfect/SKILL.md")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -75,7 +75,7 @@ func TestBranchPRDraftCountsAreProvisionalUntilAuthorizedReadback(t *testing.T) 
 }
 
 func TestBranchPRChecklistUsesEvidenceAppropriateToClaim(t *testing.T) {
-	content, err := os.ReadFile("../../skills/gentle-ai-collab-perfect/SKILL.md")
+	content, err := os.ReadFile("../../skills/agent-smith-collab-perfect/SKILL.md")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -105,7 +105,7 @@ func TestBranchPRGuidanceDoesNotOverrideHumanOrEvidence(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	collab, err := os.ReadFile("../../skills/gentle-ai-collab-perfect/SKILL.md")
+	collab, err := os.ReadFile("../../skills/agent-smith-collab-perfect/SKILL.md")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -142,3 +142,4 @@ func TestBranchPRGuidanceDoesNotOverrideHumanOrEvidence(t *testing.T) {
 		t.Error("collaboration checklist must preserve non-closing intent")
 	}
 }
+

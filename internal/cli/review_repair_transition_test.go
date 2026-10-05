@@ -8,7 +8,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/reviewtransaction"
+	"github.com/jonsanchezr/agent-smith/v4/internal/reviewtransaction"
 )
 
 // corruptedDispositionStatus builds a TargetApplicabilityCorrupted status
@@ -245,3 +245,4 @@ func writeNonPristineDispositionRepairFixture(t *testing.T, repo, prefix string)
 		t.Fatal(err)
 	}
 }
+

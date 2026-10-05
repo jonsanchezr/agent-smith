@@ -12,8 +12,8 @@ import (
 )
 
 const (
-	LedgerSchema         = "gentle-ai.review-ledger/v1"
-	CanonicalEmptyLedger = `{"schema":"gentle-ai.review-ledger/v1","findings":[]}`
+	LedgerSchema         = "agent-smith.review-ledger/v1"
+	CanonicalEmptyLedger = `{"schema":"agent-smith.review-ledger/v1","findings":[]}`
 )
 
 type ledgerEnvelope struct {
@@ -72,7 +72,7 @@ func validateCanonicalLedger(payload []byte, expectedFindings []Finding, supplie
 		return "", "", errors.New("canonical ledger must contain exactly one JSON value")
 	}
 	if envelope.Schema != LedgerSchema || envelope.Findings == nil {
-		return "", "", errors.New("ledger requires gentle-ai.review-ledger/v1 and an explicit findings array")
+		return "", "", errors.New("ledger requires agent-smith.review-ledger/v1 and an explicit findings array")
 	}
 	canonical, err := json.Marshal(envelope)
 	if err != nil {
@@ -98,3 +98,4 @@ func validateCanonicalLedger(payload []byte, expectedFindings []Finding, supplie
 	}
 	return ledgerHash, findingsHash(findings), nil
 }
+

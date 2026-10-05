@@ -10,7 +10,7 @@ import (
 func installEvent(t *testing.T, installID string) Event {
 	t.Helper()
 	body := `{
-		"schema": "gentle-ai.telemetry-event/v1",
+		"schema": "agent-smith.telemetry-event/v1",
 		"event": "install",
 		"install_id": "` + installID + `",
 		"sent_at": "2026-01-01T00:00:00Z",
@@ -35,7 +35,7 @@ func heartbeatEvent(t *testing.T, installID, version string, agents []string, rd
 	}
 	agentsJSON += `]`
 	body := `{
-		"schema": "gentle-ai.telemetry-event/v1",
+		"schema": "agent-smith.telemetry-event/v1",
 		"event": "heartbeat",
 		"install_id": "` + installID + `",
 		"sent_at": "2026-01-01T00:00:00Z",
@@ -280,3 +280,4 @@ func weeklyCountByLabel(counts []WeeklyCount) map[string]int {
 func isoLabel(year, week int) string {
 	return fmt.Sprintf("%04d-W%02d", year, week)
 }
+

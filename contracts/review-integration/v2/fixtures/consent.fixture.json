@@ -1,6 +1,6 @@
 {
-  "schema": "gentle-ai.review-integration.consent/v2",
-  "contract": "gentle-ai.review-integration/v2",
+  "schema": "agent-smith.review-integration.consent/v2",
+  "contract": "agent-smith.review-integration/v2",
   "operation": "review.start",
   "action": "consent_required",
   "blocking": true,
@@ -9,7 +9,7 @@
   "risk_level": "high",
   "changed_files": 1,
   "changed_lines": 1,
-  "headline": "Gentle AI can review this change before you call it done.",
+  "headline": "Agent Smith can review this change before you call it done.",
   "reason": "Review can help detect execution issues in these changes.",
   "value": "Reviewing takes a little longer and makes the result safer.",
   "risk_evidence": [
@@ -20,17 +20,18 @@
       "answer": "granted",
       "label": "Review this change",
       "effect": "Reviews only this change; later medium- or high-risk changes ask again, and delivery needs separate approval.",
-      "invocation": "gentle-ai review start --contract gentle-ai.review-integration/v2 --cwd /repo --target sha256:136dc6556e3bac8c2e7f7af7cc5ec361f449e383a997638128729059fefa06a5 --projection workspace --lineage review-consent-fixture --consent granted"
+      "invocation": "agent-smith review start --contract agent-smith.review-integration/v2 --cwd /repo --target sha256:136dc6556e3bac8c2e7f7af7cc5ec361f449e383a997638128729059fefa06a5 --projection workspace --lineage review-consent-fixture --consent granted"
     },
     {
       "answer": "declined",
       "label": "Skip this time",
       "effect": "Skips only this change; no review record is created, and future reviews stay enabled.",
-      "invocation": "gentle-ai review start --contract gentle-ai.review-integration/v2 --cwd /repo --target sha256:136dc6556e3bac8c2e7f7af7cc5ec361f449e383a997638128729059fefa06a5 --projection workspace --lineage review-consent-fixture --consent declined"
+      "invocation": "agent-smith review start --contract agent-smith.review-integration/v2 --cwd /repo --target sha256:136dc6556e3bac8c2e7f7af7cc5ec361f449e383a997638128729059fefa06a5 --projection workspace --lineage review-consent-fixture --consent declined"
     }
   ],
   "off_path": {
-    "note": "To turn reviews off for good, run 'gentle-ai review mode disable'.",
-    "command": "gentle-ai review mode disable"
+    "note": "To turn reviews off for good, run 'agent-smith review mode disable'.",
+    "command": "agent-smith review mode disable"
   }
 }
+

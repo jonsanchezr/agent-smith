@@ -11,7 +11,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/reviewtransaction"
+	"github.com/jonsanchezr/agent-smith/v4/internal/reviewtransaction"
 )
 
 // START is deliberately absent: compact atomic START coexists with retained
@@ -218,3 +218,4 @@ func readLegacyAuthorityTree(t *testing.T, root string) map[string][]byte {
 	}
 	return files
 }
+

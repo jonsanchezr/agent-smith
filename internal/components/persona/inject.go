@@ -8,10 +8,10 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/agents"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/assets"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/components/filemerge"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
+	"github.com/jonsanchezr/agent-smith/v4/internal/agents"
+	"github.com/jonsanchezr/agent-smith/v4/internal/assets"
+	"github.com/jonsanchezr/agent-smith/v4/internal/components/filemerge"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
 )
 
 type InjectionResult struct {
@@ -23,7 +23,7 @@ type InjectionResult struct {
 // Pi resolves this file relative to the active agent configuration root, which
 // is the user's home for global install and the workspace for workspace install.
 func PiPersonaConfigPath(rootDir string) string {
-	return filepath.Join(rootDir, ".pi", "gentle-ai", "persona.json")
+	return filepath.Join(rootDir, ".pi", "agent-smith", "persona.json")
 }
 
 // InjectPiPersona writes the small runtime config consumed by gentle-pi.
@@ -70,14 +70,14 @@ func outputStyleOverlayJSON(name string) []byte {
 }
 
 // openCodeAgentOverlayJSON defines the Tab-switchable persona agent for OpenCode.
-// SDD is installed separately by the SDD component as "gentle-orchestrator";
+// SDD is installed separately by the SDD component as "agent-smith-orchestrator";
 // persona injection must not create legacy SDD conductor keys.
 var openCodeAgentOverlayJSON = []byte("{\n  \"agent\": {\n    \"gentleman\": {\n      \"mode\": \"primary\",\n      \"description\": \"Senior Architect mentor - helpful first, challenging when it matters\",\n      \"prompt\": \"{file:./AGENTS.md}\"\n    }\n  }\n}\n")
 var kilocodeAgentOverlayJSON = []byte("{\n  \"agent\": {\n    \"gentleman\": {\n      \"mode\": \"primary\",\n      \"description\": \"Senior Architect mentor - helpful first, challenging when it matters\",\n      \"prompt\": \"{file:./AGENTS.md}\",\n      \"tools\": {\n        \"write\": true,\n        \"edit\": true\n      }\n    }\n  }\n}\n")
 
 // Inject performs a full persona injection: the marker-bound markdown block,
 // the OpenCode/Kilocode `gentleman` agent definition in settings JSON, AND
-// the Claude Code output-style overlay. Used by `gentle-ai install`.
+// the Claude Code output-style overlay. Used by `agent-smith install`.
 func Inject(homeDir string, adapter agents.Adapter, persona model.PersonaID) (InjectionResult, error) {
 	return injectInternal(homeDir, adapter, persona, false, "")
 }
@@ -88,7 +88,7 @@ func InjectAtSettingsPath(homeDir string, adapter agents.Adapter, persona model.
 	return injectInternal(homeDir, adapter, persona, false, settingsPath)
 }
 
-// InjectForSync regenerates the persona assets that `gentle-ai sync` is
+// InjectForSync regenerates the persona assets that `agent-smith sync` is
 // allowed to touch. It writes:
 //   - The marker-bound persona block in the agent's prompt file (markdown).
 //   - The Gentleman output-style file + outputStyle settings overlay (Claude
@@ -96,7 +96,7 @@ func InjectAtSettingsPath(homeDir string, adapter agents.Adapter, persona model.
 //
 // It deliberately skips the OpenCode/Kilocode `gentleman` agent definition in
 // opencode.json/kilocode.json: that JSON merge shares the "agent" key with
-// SDD's gentle-orchestrator overlay, so running both in the same sync clobbers
+// SDD's agent-smith-orchestrator overlay, so running both in the same sync clobbers
 // each other's entries and breaks idempotency. That overlay remains an
 // install-only concern.
 func InjectForSync(homeDir string, adapter agents.Adapter, persona model.PersonaID) (InjectionResult, error) {
@@ -225,7 +225,7 @@ func injectInternal(homeDir string, adapter agents.Adapter, persona model.Person
 
 		// Codex shares ~/.codex/AGENTS.md with user-authored content and with
 		// other managed sections (engram, SDD) that are appended after persona.
-		// The persona must therefore live inside a <!-- gentle-ai:persona -->
+		// The persona must therefore live inside a <!-- agent-smith:persona -->
 		// marker section instead of owning the whole file, so install, sync and
 		// uninstall can replace or remove exactly the managed persona content
 		// (issue #981). This mirrors the OpenCode handling above.
@@ -411,7 +411,7 @@ func injectInternal(homeDir string, adapter agents.Adapter, persona model.Person
 
 	// 2. OpenCode/Kilocode agent definitions — Tab-switchable agents in settings.
 	// Gentleman overlay creation remains install-only because this overlay shares
-	// the "agent" key in opencode.json with SDD's gentle-orchestrator overlay.
+	// the "agent" key in opencode.json with SDD's agent-smith-orchestrator overlay.
 	// Sync only performs narrow cleanup: OpenCode removes stale gentleman tools,
 	// while non-gentleman personas remove agent.gentleman entirely.
 	if (adapter.Agent() == model.AgentOpenCode || adapter.Agent() == model.AgentKilocode) && persona != model.PersonaCustom {
@@ -545,7 +545,7 @@ func injectOpenClawSoulPersona(workspaceDir, content string) (InjectionResult, e
 }
 
 // shouldStripManagedLegacyPersona returns true ONLY when the existing file
-// already contains a <!-- gentle-ai:persona --> section. That is the strongest
+// already contains a <!-- agent-smith:persona --> section. That is the strongest
 // evidence that the pre-marker persona content is stale legacy text written by
 // an older installer, not user-authored content that happens to share headings.
 //
@@ -580,7 +580,7 @@ func isExactLegacyPersonaAsset(existing string) bool {
 //
 //  1. The whole file is the legacy asset (no markers at all) — the old
 //     installer owned the entire file, so it can be replaced wholesale.
-//  2. The pre-marker zone (content before the first <!-- gentle-ai: -->
+//  2. The pre-marker zone (content before the first <!-- agent-smith: -->
 //     marker) is exactly the legacy asset, followed by managed sections that
 //     later install steps appended (engram, SDD). Only the installer-owned
 //     zone is removed; every marker section is preserved. This migrates the
@@ -593,7 +593,7 @@ func stripExactLegacyPersonaAsset(existing string) string {
 	if strings.TrimSpace(existing) == "" {
 		return existing
 	}
-	firstMarkerIdx := strings.Index(existing, "<!-- gentle-ai:")
+	firstMarkerIdx := strings.Index(existing, "<!-- agent-smith:")
 	if firstMarkerIdx < 0 {
 		if isExactLegacyPersonaAsset(existing) {
 			return ""
@@ -607,11 +607,11 @@ func stripExactLegacyPersonaAsset(existing string) string {
 }
 
 func injectPersonaBeforeManagedSections(existing, content string) string {
-	if strings.Contains(existing, "<!-- gentle-ai:persona -->") {
+	if strings.Contains(existing, "<!-- agent-smith:persona -->") {
 		return filemerge.InjectMarkdownSection(existing, "persona", content)
 	}
 
-	firstMarkerIdx := strings.Index(existing, "<!-- gentle-ai:")
+	firstMarkerIdx := strings.Index(existing, "<!-- agent-smith:")
 	if firstMarkerIdx < 0 {
 		return filemerge.InjectMarkdownSection(existing, "persona", content)
 	}
@@ -626,7 +626,7 @@ func injectPersonaBeforeManagedSections(existing, content string) string {
 }
 
 func shouldStripManagedLegacyPersona(existing string) bool {
-	return strings.Contains(existing, "<!-- gentle-ai:persona -->")
+	return strings.Contains(existing, "<!-- agent-smith:persona -->")
 }
 
 // isGentlemanConversationPersona reports whether the persona keeps the voseo
@@ -875,7 +875,7 @@ var osReadFile = func(path string) ([]byte, error) {
 }
 
 // preserveManagedSections checks whether the existing file content has
-// gentle-ai managed sections (SDD orchestrator, engram protocol, etc.) and
+// agent-smith managed sections (SDD orchestrator, engram protocol, etc.) and
 // returns new content that preserves those sections while replacing only the
 // persona text before them. Returns ("", false) when no preservation is needed
 // (empty file, Gentleman persona, or no managed markers found).
@@ -884,7 +884,7 @@ func preserveManagedSections(existing, newPersona string, persona model.PersonaI
 		return "", false
 	}
 
-	idx := strings.Index(existing, "<!-- gentle-ai:")
+	idx := strings.Index(existing, "<!-- agent-smith:")
 	if idx < 0 {
 		return "", false
 	}
@@ -916,7 +916,7 @@ func readFileOrEmpty(path string) (string, error) {
 
 func wrapInstructionsFile(content string) string {
 	frontmatter := "---\n" +
-		"name: Gentle AI Persona\n" +
+		"name: Agent Smith Persona\n" +
 		"description: Teaching-oriented persona with SDD orchestration and Engram protocol\n" +
 		"applyTo: \"**\"\n" +
 		"---\n\n"
@@ -1125,3 +1125,4 @@ func cleanLegacyVSCodePersona(homeDir string) (bool, error) {
 	}
 	return cleaned, nil
 }
+

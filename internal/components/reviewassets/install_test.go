@@ -8,9 +8,9 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/agents"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/components/reviewassets"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
+	"github.com/jonsanchezr/agent-smith/v4/internal/agents"
+	"github.com/jonsanchezr/agent-smith/v4/internal/components/reviewassets"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
 )
 
 // Captured by actual sdd.Inject in the disposable af4ce122 worktree, TestParityCapture.
@@ -116,3 +116,4 @@ func TestInstalledNativeAgentParity(t *testing.T) {
 		t.Fatalf("fixture has %d paths, want 12", count)
 	}
 }
+

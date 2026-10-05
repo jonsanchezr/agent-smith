@@ -9,9 +9,9 @@ import (
 	"testing"
 	"unicode"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/agents/capabilitymanifest"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/catalog"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
+	"github.com/jonsanchezr/agent-smith/v4/internal/agents/capabilitymanifest"
+	"github.com/jonsanchezr/agent-smith/v4/internal/catalog"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
 )
 
 func TestRoutingIncludesApplicableTestFirstPolicy(t *testing.T) {
@@ -193,7 +193,7 @@ func TestRenderRoutingOrganicTaskContinuity(t *testing.T) {
 			"Before implementation or resume, the parent reads both the actual file and full observation",
 			"passes the locator, task IDs, and linked `S#`; workers read the document until `## Log` before edits",
 		}},
-		// Gentleman-Programming/gentle-shell#1713: handoffs paraphrased the user's
+		// jonsanchezr/gentle-shell#1713: handoffs paraphrased the user's
 		// request and the feature document summarized it. The document is now the
 		// specification subagents read by reference, in a fixed order.
 		{"feature document is the verbatim specification read by reference", []string{
@@ -298,7 +298,7 @@ func TestRenderRoutingOrganicTaskContinuity(t *testing.T) {
 		}},
 		{"native risk before candidate consent", []string{
 			"When RDD is enabled, first use the existing native candidate risk assessment",
-			"gentle-ai review assess --cwd <repo> --json",
+			"agent-smith review assess --cwd <repo> --json",
 			"Passive/low uses silent structural checks with no reviewer or consent ceremony",
 			"Medium/high relays the existing candidate consent",
 			"native review runs only on grant",
@@ -386,7 +386,7 @@ func TestRenderRoutingClosesEachTaskWithAWorkUnitCommitAndReviewsIt(t *testing.T
 		}},
 		{"assess each commit against the last reviewed boundary", []string{
 			"Run applicable functional checks per task, not a review cycle per TODO checkbox",
-			"run `gentle-ai review assess --cwd <repo> --agent <runtime> --base-ref <last reviewed boundary> --committed-only --json` on that commit and read `review_due` and `review_due_reason`",
+			"run `agent-smith review assess --cwd <repo> --agent <runtime> --base-ref <last reviewed boundary> --committed-only --json` on that commit and read `review_due` and `review_due_reason`",
 		}},
 		{"a due assessment hands over the exact preflight transition", []string{
 			"When `review_due` is true (`high_risk`, or `slice_budget_reached` for a medium range that reached the delivery budget of about 400 authored changed lines), execute the returned `next_transition.command` verbatim",
@@ -503,14 +503,14 @@ func TestRenderRoutingMakesTheReviewKillSwitchDiscoverable(t *testing.T) {
 				t.Fatalf("RenderRouting(%q) error = %v", agent.ID, err)
 			}
 			if !model.SupportsReceiptDrivenDevelopment(agent.ID) {
-				if strings.Contains(rendered, "gentle-ai review mode") {
+				if strings.Contains(rendered, "agent-smith review mode") {
 					t.Fatalf("RenderRouting(%q) names the RDD switch on a runtime without RDD:\n%s", agent.ID, rendered)
 				}
 				return
 			}
 
 			for _, want := range []string{
-				"gentle-ai review mode enable|disable|status",
+				"agent-smith review mode enable|disable|status",
 				"`status` is read-only",
 				"deciding source and the effective mode",
 			} {
@@ -867,3 +867,4 @@ func TestRenderRoutingSizesTasksByUnderstandingRiskAndResumability(t *testing.T)
 		})
 	}
 }
+

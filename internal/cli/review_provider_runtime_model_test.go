@@ -4,9 +4,9 @@ import (
 	"os"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/reviewerprovider"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/state"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
+	"github.com/jonsanchezr/agent-smith/v4/internal/reviewerprovider"
+	"github.com/jonsanchezr/agent-smith/v4/internal/state"
 )
 
 func TestClaudeReviewAdapterUsesSavedModelForEachNativeRole(t *testing.T) {
@@ -113,3 +113,4 @@ func TestClaudeReviewAdapterMissingAndInvalidAssignmentsUseNativeDefault(t *test
 		t.Fatalf("invalid persisted state selected %q", got)
 	}
 }
+

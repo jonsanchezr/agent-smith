@@ -3,8 +3,8 @@ package providercontractbundle
 import (
 	"fmt"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/components/reviewassets"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
+	"github.com/jonsanchezr/agent-smith/v4/internal/components/reviewassets"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
 )
 
 // reviewExecutionContractFor uses the non-SDD owner for the bundled runtime.
@@ -14,3 +14,4 @@ func reviewExecutionContractFor(agent model.AgentID) (string, error) {
 	}
 	return reviewassets.ReviewExecutionContractFor(agent)
 }
+

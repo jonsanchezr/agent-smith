@@ -10,9 +10,9 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/system"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/versions"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
+	"github.com/jonsanchezr/agent-smith/v4/internal/system"
+	"github.com/jonsanchezr/agent-smith/v4/internal/versions"
 )
 
 func TestValidateGoForModuleInstall(t *testing.T) {
@@ -639,7 +639,7 @@ func TestResolveComponentInstall(t *testing.T) {
 			name:      "engram on darwin uses brew tap and install",
 			profile:   system.PlatformProfile{OS: "darwin", PackageManager: "brew"},
 			component: model.ComponentEngram,
-			want:      CommandSequence{{"brew", "tap", "Gentleman-Programming/homebrew-tap"}, {"brew", "install", "engram"}},
+			want:      CommandSequence{{"brew", "tap", "jonsanchezr/homebrew-tap"}, {"brew", "install", "engram"}},
 		},
 		// Linux and Windows engram now use DownloadLatestBinary() — resolver returns error.
 		// These cases are handled by run.go's componentApplyStep directly.
@@ -665,7 +665,7 @@ func TestResolveComponentInstall(t *testing.T) {
 			name:      "gga on darwin uses brew tap and reinstall",
 			profile:   system.PlatformProfile{OS: "darwin", PackageManager: "brew"},
 			component: model.ComponentGGA,
-			want:      CommandSequence{{"brew", "tap", "Gentleman-Programming/homebrew-tap"}, {"brew", "reinstall", "gga"}},
+			want:      CommandSequence{{"brew", "tap", "jonsanchezr/homebrew-tap"}, {"brew", "reinstall", "gga"}},
 		},
 		{
 			name:      "gga on ubuntu uses git clone and install.sh",
@@ -675,7 +675,7 @@ func TestResolveComponentInstall(t *testing.T) {
 				{"rm", "-rf", "/tmp/gentleman-guardian-angel"},
 				{"mkdir", "-p", "/tmp/gentleman-guardian-angel"},
 				{"git", "init", "/tmp/gentleman-guardian-angel"},
-				{"git", "-C", "/tmp/gentleman-guardian-angel", "fetch", "--depth=1", "https://github.com/Gentleman-Programming/gentleman-guardian-angel.git", "refs/tags/v" + versions.GGAVersion + ":refs/tags/v" + versions.GGAVersion},
+				{"git", "-C", "/tmp/gentleman-guardian-angel", "fetch", "--depth=1", "https://github.com/jonsanchezr/gentleman-guardian-angel.git", "refs/tags/v" + versions.GGAVersion + ":refs/tags/v" + versions.GGAVersion},
 				{"git", "-C", "/tmp/gentleman-guardian-angel", "checkout", "-f", "refs/tags/v" + versions.GGAVersion},
 				{"bash", "/tmp/gentleman-guardian-angel/install.sh"},
 			},
@@ -688,7 +688,7 @@ func TestResolveComponentInstall(t *testing.T) {
 				{"rm", "-rf", "/tmp/gentleman-guardian-angel"},
 				{"mkdir", "-p", "/tmp/gentleman-guardian-angel"},
 				{"git", "init", "/tmp/gentleman-guardian-angel"},
-				{"git", "-C", "/tmp/gentleman-guardian-angel", "fetch", "--depth=1", "https://github.com/Gentleman-Programming/gentleman-guardian-angel.git", "refs/tags/v" + versions.GGAVersion + ":refs/tags/v" + versions.GGAVersion},
+				{"git", "-C", "/tmp/gentleman-guardian-angel", "fetch", "--depth=1", "https://github.com/jonsanchezr/gentleman-guardian-angel.git", "refs/tags/v" + versions.GGAVersion + ":refs/tags/v" + versions.GGAVersion},
 				{"git", "-C", "/tmp/gentleman-guardian-angel", "checkout", "-f", "refs/tags/v" + versions.GGAVersion},
 				{"bash", "/tmp/gentleman-guardian-angel/install.sh"},
 			},
@@ -701,7 +701,7 @@ func TestResolveComponentInstall(t *testing.T) {
 				{"rm", "-rf", "/tmp/gentleman-guardian-angel"},
 				{"mkdir", "-p", "/tmp/gentleman-guardian-angel"},
 				{"git", "init", "/tmp/gentleman-guardian-angel"},
-				{"git", "-C", "/tmp/gentleman-guardian-angel", "fetch", "--depth=1", "https://github.com/Gentleman-Programming/gentleman-guardian-angel.git", "refs/tags/v" + versions.GGAVersion + ":refs/tags/v" + versions.GGAVersion},
+				{"git", "-C", "/tmp/gentleman-guardian-angel", "fetch", "--depth=1", "https://github.com/jonsanchezr/gentleman-guardian-angel.git", "refs/tags/v" + versions.GGAVersion + ":refs/tags/v" + versions.GGAVersion},
 				{"git", "-C", "/tmp/gentleman-guardian-angel", "checkout", "-f", "refs/tags/v" + versions.GGAVersion},
 				{"bash", "/tmp/gentleman-guardian-angel/install.sh"},
 			},
@@ -716,7 +716,7 @@ func TestResolveComponentInstall(t *testing.T) {
 				{"rm", "-rf", "/tmp/gentleman-guardian-angel"},
 				{"mkdir", "-p", "/tmp/gentleman-guardian-angel"},
 				{"git", "init", "/tmp/gentleman-guardian-angel"},
-				{"git", "-C", "/tmp/gentleman-guardian-angel", "fetch", "--depth=1", "https://github.com/Gentleman-Programming/gentleman-guardian-angel.git", "refs/tags/v" + versions.GGAVersion + ":refs/tags/v" + versions.GGAVersion},
+				{"git", "-C", "/tmp/gentleman-guardian-angel", "fetch", "--depth=1", "https://github.com/jonsanchezr/gentleman-guardian-angel.git", "refs/tags/v" + versions.GGAVersion + ":refs/tags/v" + versions.GGAVersion},
 				{"git", "-C", "/tmp/gentleman-guardian-angel", "checkout", "-f", "refs/tags/v" + versions.GGAVersion},
 				{"bash", "/tmp/gentleman-guardian-angel/install.sh"},
 			},
@@ -729,7 +729,7 @@ func TestResolveComponentInstall(t *testing.T) {
 				{"rm", "-rf", "/tmp/gentleman-guardian-angel"},
 				{"mkdir", "-p", "/tmp/gentleman-guardian-angel"},
 				{"git", "init", "/tmp/gentleman-guardian-angel"},
-				{"git", "-C", "/tmp/gentleman-guardian-angel", "fetch", "--depth=1", "https://github.com/Gentleman-Programming/gentleman-guardian-angel.git", "refs/tags/v" + versions.GGAVersion + ":refs/tags/v" + versions.GGAVersion},
+				{"git", "-C", "/tmp/gentleman-guardian-angel", "fetch", "--depth=1", "https://github.com/jonsanchezr/gentleman-guardian-angel.git", "refs/tags/v" + versions.GGAVersion + ":refs/tags/v" + versions.GGAVersion},
 				{"git", "-C", "/tmp/gentleman-guardian-angel", "checkout", "-f", "refs/tags/v" + versions.GGAVersion},
 				{"bash", "/tmp/gentleman-guardian-angel/install.sh"},
 			},
@@ -751,7 +751,7 @@ func TestResolveComponentInstall(t *testing.T) {
 			profile:   system.PlatformProfile{OS: "windows", PackageManager: "winget"},
 			component: model.ComponentGGA,
 			want: CommandSequence{
-				{"git", "clone", "--depth=1", "--branch", "v" + versions.GGAVersion, "https://github.com/Gentleman-Programming/gentleman-guardian-angel.git", filepath.Join(os.TempDir(), "gentleman-guardian-angel")},
+				{"git", "clone", "--depth=1", "--branch", "v" + versions.GGAVersion, "https://github.com/jonsanchezr/gentleman-guardian-angel.git", filepath.Join(os.TempDir(), "gentleman-guardian-angel")},
 				{gitBashPath(), bashScriptPath(system.PlatformProfile{OS: "windows"}, filepath.Join(os.TempDir(), "gentleman-guardian-angel", "install.sh"))},
 			},
 		},
@@ -801,7 +801,7 @@ func TestResolveGGAInstall_UsesPinnedReleaseTag(t *testing.T) {
 		"/tmp/gentleman-guardian-angel",
 		"fetch",
 		"--depth=1",
-		"https://github.com/Gentleman-Programming/gentleman-guardian-angel.git",
+		"https://github.com/jonsanchezr/gentleman-guardian-angel.git",
 		tagRef + ":" + tagRef,
 	}
 	if !reflect.DeepEqual(cmds[3], wantFetch) {
@@ -919,3 +919,4 @@ func TestUVInstallHint(t *testing.T) {
 		})
 	}
 }
+

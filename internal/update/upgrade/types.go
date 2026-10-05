@@ -3,7 +3,7 @@ package upgrade
 import (
 	"errors"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/update"
+	"github.com/jonsanchezr/agent-smith/v4/internal/update"
 )
 
 // ToolUpgradeStatus describes the outcome of a single tool upgrade attempt.
@@ -75,3 +75,4 @@ type UpgradeReport struct {
 	// caller is responsible for exiting.
 	ExitRequested bool
 }
+

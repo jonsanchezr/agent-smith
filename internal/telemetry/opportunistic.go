@@ -26,7 +26,7 @@ type Deps struct {
 }
 
 // Decision names, exhaustively, what a single Opportunistic call did. It is
-// the vocabulary `gentle-ai telemetry trigger --json` reports.
+// the vocabulary `agent-smith telemetry trigger --json` reports.
 type TriggerDecision string
 
 const (
@@ -197,3 +197,4 @@ func IsDevBuild(version string) bool {
 	v := strings.TrimSpace(version)
 	return v == "" || v == "dev" || strings.HasPrefix(v, "0.0.0-dev")
 }
+

@@ -5,9 +5,9 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/catalog"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/system"
+	"github.com/jonsanchezr/agent-smith/v4/internal/catalog"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
+	"github.com/jonsanchezr/agent-smith/v4/internal/system"
 )
 
 func TestInstallFlagsRetiredModeRejectedAndHelpOmitted(t *testing.T) {
@@ -131,13 +131,13 @@ func TestDefaultInstallPresetsAndPickerExcludeLegacySDD(t *testing.T) {
 func TestNormalizeInstallFlagsAcceptsBundledSkills(t *testing.T) {
 	input, err := NormalizeInstallFlags(InstallFlags{Skills: []string{
 		string(model.SkillSystemicIssueTriage),
-		string(model.SkillGentleAIBench),
+		string(model.SkillAgentSmithBench),
 	}}, system.DetectionResult{})
 	if err != nil {
 		t.Fatalf("NormalizeInstallFlags() error = %v", err)
 	}
 
-	want := []model.SkillID{model.SkillSystemicIssueTriage, model.SkillGentleAIBench}
+	want := []model.SkillID{model.SkillSystemicIssueTriage, model.SkillAgentSmithBench}
 	if !reflect.DeepEqual(input.Selection.Skills, want) {
 		t.Fatalf("skills = %v, want %v", input.Selection.Skills, want)
 	}
@@ -460,3 +460,4 @@ func TestDefaultAgentsFromDetection_AllAgentsMappedCorrectly(t *testing.T) {
 		})
 	}
 }
+

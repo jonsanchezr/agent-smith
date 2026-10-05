@@ -10,7 +10,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/telemetry"
+	"github.com/jonsanchezr/agent-smith/v4/internal/telemetry"
 )
 
 func TestOpenCodeV2Envelope(t *testing.T) {
@@ -43,9 +43,9 @@ func TestOpenCodeV2Envelope(t *testing.T) {
 				if err != nil {
 					t.Fatal(err)
 				}
-				return &http.Response{StatusCode: 200, Header: make(http.Header), Body: io.NopCloser(strings.NewReader(`{"schema":"gentle-ai.telemetry-runtime-delivery/v1","decision":"stored"}`))}, nil
+				return &http.Response{StatusCode: 200, Header: make(http.Header), Body: io.NopCloser(strings.NewReader(`{"schema":"agent-smith.telemetry-runtime-delivery/v1","decision":"stored"}`))}, nil
 			})}
-			input := fmt.Sprintf(`{"schema":"gentle-ai.telemetry-opencode/%s","info":{"role":"assistant","time":{"created":1,"completed":3},"providerID":%q,"modelID":%q,"agent":"sdd-apply"%s}}`, tt.schema, tt.provider, tt.model, tt.extra)
+			input := fmt.Sprintf(`{"schema":"agent-smith.telemetry-opencode/%s","info":{"role":"assistant","time":{"created":1,"completed":3},"providerID":%q,"modelID":%q,"agent":"sdd-apply"%s}}`, tt.schema, tt.provider, tt.model, tt.extra)
 			if decision := SendOpenCode(context.Background(), home, os.Getenv, strings.NewReader(input), client); decision != tt.decision {
 				t.Fatalf("decision %s", decision)
 			}
@@ -55,3 +55,4 @@ func TestOpenCodeV2Envelope(t *testing.T) {
 		})
 	}
 }
+

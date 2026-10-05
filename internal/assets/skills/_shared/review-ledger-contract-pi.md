@@ -1,10 +1,10 @@
-# Native Compact Review Orchestration
+﻿# Native Compact Review Orchestration
 
 Pi uses the compact gentle-pi facade for this lifecycle: `gentle_review` for inspect, START, consent, bound STATUS, and acknowledgement; `gentle_review_capture` and `gentle_review_capture_group` for collection. Provider-issued authority and every opaque binding are authoritative; prompt prose never creates authority or decides delivery.
 
 ## Entry rule
 
-After authorized source-mutating implementation is complete and normalized, and before reporting it complete, call `gentle_review` with {"operation":"inspect"}. Do this once per candidate whenever the user-owned review switch is enabled (`gentle-ai review mode status` reads it without changing it). The facade returns the only offered START route; do not infer, reconstruct, or replace it. Never skip the preflight because the user did not ask for a review: the START consent envelope lets the human decide this candidate. Skip it only for a trivial passive documentation-only edit, when the user explicitly left this candidate unreviewed, or while a transaction is already bound to it.
+After authorized source-mutating implementation is complete and normalized, and before reporting it complete, call `gentle_review` with {"operation":"inspect"}. Do this once per candidate whenever the user-owned review switch is enabled (`agent-smith review mode status` reads it without changing it). The facade returns the only offered START route; do not infer, reconstruct, or replace it. Never skip the preflight because the user did not ask for a review: the START consent envelope lets the human decide this candidate. Skip it only for a trivial passive documentation-only edit, when the user explicitly left this candidate unreviewed, or while a transaction is already bound to it.
 
 ## Atomic lifecycle
 
@@ -18,7 +18,7 @@ Pi never reconstructs lineage, target, revision, repository context, lens, order
 
 ## Consent and forecast
 
-If START returns the typed `gentle-ai.review-integration.consent/v3` envelope, relay it as a Lossless Blocking Prompt. Global RDD enabled permits review; it never grants consent for this candidate. For medium/high candidates, faithfully translate the headline, reason, `value`, risk evidence, choice labels, every choice `effect`, and the off-path note while preserving original groups/order, selection mode, allowed-answer domain, answer tokens, and the `consentBinding`. Project `value` as benefits and every `effect` as consequences. Do not translate machine answer tokens (`granted`, `declined`). Submit exactly the human's choice through `gentle_review` with operation `answer-consent` and the exact `consentBinding`; a decline is candidate-scoped and is not the kill switch.
+If START returns the typed `agent-smith.review-integration.consent/v3` envelope, relay it as a Lossless Blocking Prompt. Global RDD enabled permits review; it never grants consent for this candidate. For medium/high candidates, faithfully translate the headline, reason, `value`, risk evidence, choice labels, every choice `effect`, and the off-path note while preserving original groups/order, selection mode, allowed-answer domain, answer tokens, and the `consentBinding`. Project `value` as benefits and every `effect` as consequences. Do not translate machine answer tokens (`granted`, `declined`). Submit exactly the human's choice through `gentle_review` with operation `answer-consent` and the exact `consentBinding`; a decline is candidate-scoped and is not the kill switch.
 
 A four-lens review is long work. The first capture of a materialize slot or group returns a `forecast` and runs nothing: relay it losslessly in the user's language, preserving every step's order and fields (`step`, `kind`, `reason_code`, `description`) and the horizon, then resubmit the same exact binding with `reviewerRunAcknowledged: true`. Forecast is informational; route only from the returned transition.
 
@@ -36,7 +36,7 @@ A session in repository A may review an explicitly selected nested target in unr
 
 ### Continue after a stop reason code
 
-A `stop` ends its transition, never approves delivery. `D` means the human disables the review switch for this clone with `gentle-ai review mode disable --scope clone`; ordinary policy then decides delivery. `S` means re-query bound facade STATUS with the retained `lineageId` and `workspaceRoot`.
+A `stop` ends its transition, never approves delivery. `D` means the human disables the review switch for this clone with `agent-smith review mode disable --scope clone`; ordinary policy then decides delivery. `S` means re-query bound facade STATUS with the retained `lineageId` and `workspaceRoot`.
 
 | Reason codes | Continuation |
 | --- | --- |
@@ -44,7 +44,7 @@ A `stop` ends its transition, never approves delivery. `D` means the human disab
 | `empty_base_diff_bootstrap_required` | Terminal: authorized empty-root bootstrap for a new target, or `D`. |
 | `lens_context_budget_exceeded` | Terminal: reduce the candidate scope and start a new transaction, or `D`. |
 | `correction_context_budget_exceeded` | Terminal: this authority has to be released rather than left in place, and invalidation refuses here. The maintainer runs the release command the stop's `continuation` names, exactly as printed; it is the preparatory step its `detail` describes, and its refusal prints the binding the full release needs. A stop with no `continuation` means the authority is not releasable in its current state: the maintainer inspects it, or `D`. Then review as smaller candidates, or `D`. |
-| `managed_assets_outdated` | Run the `gentle-ai sync` command from the stop's `continuation`, then `S`. |
+| `managed_assets_outdated` | Run the `agent-smith sync` command from the stop's `continuation`, then `S`. |
 | `staged_workspace_overlay_recovery_unavailable` | Call facade `recover` with the retained `lineageId`, or start a fresh transaction; otherwise `D`. |
 | `corrected_candidate_unavailable` | Change the correction candidate, then `S`; do not reuse the pre-correction target. |
 | `correction_repository_verification_failed` | Change the correction candidate within the same open budget, then `S`. |
@@ -52,8 +52,9 @@ A `stop` ends its transition, never approves delivery. `D` means the human disab
 | `staged_delivery_candidate_required` | Stage every reviewed path exactly as reviewed, then `S`. |
 | `recovery_scope_unchanged` | Change the target identity, then retry the facade `recover` route the stop returned. |
 | `unchanged_or_unverified_authority` | Change the candidate content, then start a new transaction, or `D`. |
-| `rdd_disabled` | Run the exact source-scoped `gentle-ai review mode enable` command rendered by bound facade STATUS, then `S`. |
+| `rdd_disabled` | Run the exact source-scoped `agent-smith review mode enable` command rendered by bound facade STATUS, then `S`. |
 
 ## Delivery follows ordinary repository policy
 
 After exact acknowledgement burns terminal `approved` authority, the review lifecycle stops. Commit, push, PR, and release remain separate human decisions under ordinary repository policy. A review outcome is informational and never authorizes delivery.
+

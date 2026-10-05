@@ -6,7 +6,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
 )
 
 func TestProviderForAgents(t *testing.T) {
@@ -312,3 +312,4 @@ func TestPostInstallMessages(t *testing.T) {
 		t.Error("second message should mention AGENTS.md")
 	}
 }
+

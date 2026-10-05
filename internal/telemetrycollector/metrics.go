@@ -11,7 +11,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/telemetry"
+	"github.com/jonsanchezr/agent-smith/v4/internal/telemetry"
 )
 
 // runtimeMetricNames lists every metric family this registry can hold, in
@@ -307,3 +307,4 @@ func (m *RuntimeMetrics) WriteTo(w io.Writer) (int64, error) {
 	}
 	return n, nil
 }
+

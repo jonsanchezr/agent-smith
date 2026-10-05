@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+﻿#!/usr/bin/env bash
 # Fail when a NEW unreachable function appears.
 #
 # Why a ratchet and not a clean gate: the repository already carries 230
@@ -30,7 +30,7 @@ export LC_ALL=C
 
 repo_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 baseline="${repo_root}/.deadcode-baseline.txt"
-target="${DEADCODE_TARGET:-./cmd/gentle-ai}"
+target="${DEADCODE_TARGET:-./cmd/agent-smith}"
 tool="golang.org/x/tools/cmd/deadcode@v0.30.0"
 
 cd "${repo_root}"
@@ -49,7 +49,7 @@ if [[ "${1:-}" == "--update" ]]; then
 fi
 
 if [[ ! -f "${baseline}" ]]; then
-  printf 'missing %s — run: scripts/deadcode-ratchet.sh --update\n' "${baseline}" >&2
+  printf 'missing %s â€” run: scripts/deadcode-ratchet.sh --update\n' "${baseline}" >&2
   exit 1
 fi
 
@@ -70,3 +70,4 @@ if [[ -n "${added}" ]]; then
 fi
 
 printf 'no new unreachable functions\n'
+

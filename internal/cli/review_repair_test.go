@@ -14,7 +14,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/reviewtransaction"
+	"github.com/jonsanchezr/agent-smith/v4/internal/reviewtransaction"
 	jsonschema "github.com/santhosh-tekuri/jsonschema/v6"
 )
 
@@ -374,13 +374,13 @@ func TestReviewRepairHelpRecommendsGenericClassifiedFlow(t *testing.T) {
 }
 
 // authorityDispositionAuthorization manually renders the exact
-// gentle-ai.review-disposition-authorization/v1 binding
+// agent-smith.review-disposition-authorization/v1 binding
 // authorityDispositionAuthorizationBinding (authority_disposition_plan.go)
 // computes internally — mirroring how classifiedRepairAuthorization above
 // replicates the legacy binding rather than exporting a production helper
 // whose only caller would be test code.
 func authorityDispositionAuthorization(plan reviewtransaction.AuthorityDispositionPlan) string {
-	return "gentle-ai.review-disposition-authorization/v1" +
+	return "agent-smith.review-disposition-authorization/v1" +
 		"\nschema=" + plan.Schema +
 		"\nrepository=" + plan.RepositoryBinding +
 		"\nclass=" + plan.AnomalyClass +
@@ -391,12 +391,12 @@ func authorityDispositionAuthorization(plan reviewtransaction.AuthorityDispositi
 }
 
 // dispositionForgedAuthorization is schema-prefixed
-// (gentle-ai.review-recovery-authorization/v1) but bound to content that can
+// (agent-smith.review-recovery-authorization/v1) but bound to content that can
 // never match a real exact binding, so classifyCompactRecoveryEdgeAnomalies
 // (compact_reconcile.go) always classifies it into the closed
 // content_mismatched_recovery_authorization class rather than the
 // pre-contract malformed_recovery_authorization AnomalyClasses class.
-const dispositionForgedAuthorization = "gentle-ai.review-recovery-authorization/v1\npredecessor_lineage=impossible-mismatch\npredecessor_revision=impossible\ntarget_identity=impossible\nactor=maintainer@example.com\nreason=impossible"
+const dispositionForgedAuthorization = "agent-smith.review-recovery-authorization/v1\npredecessor_lineage=impossible-mismatch\npredecessor_revision=impossible\ntarget_identity=impossible\nactor=maintainer@example.com\nreason=impossible"
 
 func TestReviewRepairPreflightBlocksHistoricalPlanForAdditionalAuthorityDiagnostic(t *testing.T) {
 	for _, test := range []struct {
@@ -502,7 +502,7 @@ func retireCompactAuthorityForReviewRepairTest(t *testing.T, store reviewtransac
 	if err != nil {
 		t.Fatal(err)
 	}
-	sum := sha256.Sum256(append([]byte("gentle-ai.review-state/v2\x00"), statePayload...))
+	sum := sha256.Sum256(append([]byte("agent-smith.review-state/v2\x00"), statePayload...))
 	record.State = state
 	record.Revision = "sha256:" + hex.EncodeToString(sum[:])
 	payload, err := json.MarshalIndent(record, "", "  ")
@@ -519,11 +519,11 @@ func retireCompactAuthorityForReviewRepairTest(t *testing.T, store reviewtransac
 func retiredReviewSnapshotIdentityForRepairTest(snapshot reviewtransaction.Snapshot) string {
 	hash := sha256.New()
 	if snapshot.Kind == reviewtransaction.TargetBaseWorkspaceOverlay {
-		hash.Write([]byte("gentle-ai.review-snapshot/base-workspace-overlay/v1\x00"))
+		hash.Write([]byte("agent-smith.review-snapshot/base-workspace-overlay/v1\x00"))
 	} else if snapshot.Projection == reviewtransaction.ProjectionStaged {
-		hash.Write([]byte("gentle-ai.review-snapshot/v2\x00"))
+		hash.Write([]byte("agent-smith.review-snapshot/v2\x00"))
 	} else {
-		hash.Write([]byte("gentle-ai.review-snapshot/v1\x00"))
+		hash.Write([]byte("agent-smith.review-snapshot/v1\x00"))
 	}
 	values := []string{string(snapshot.Kind), snapshot.BaseTree, snapshot.CandidateTree, snapshot.PathsDigest, snapshot.IntendedUntrackedProof}
 	if snapshot.Projection == reviewtransaction.ProjectionStaged {
@@ -936,12 +936,12 @@ func TestReviewRepairSchemasRejectShortContractArrays(t *testing.T) {
 			if decodeErr := json.Unmarshal(payload, &resource); decodeErr != nil {
 				t.Fatalf("decode %s: %v", resourceName, decodeErr)
 			}
-			location := "https://gentle-ai.dev/contracts/review-integration/v1/schemas/" + resourceName
+			location := "https://agent-smith.dev/contracts/review-integration/v1/schemas/" + resourceName
 			if addErr := compiler.AddResource(location, resource); addErr != nil {
 				t.Fatalf("add %s: %v", resourceName, addErr)
 			}
 		}
-		location := "https://gentle-ai.dev/contracts/review-integration/v1/schemas/" + name
+		location := "https://agent-smith.dev/contracts/review-integration/v1/schemas/" + name
 		schema, compileErr := compiler.Compile(location)
 		if compileErr != nil {
 			t.Fatalf("compile %s: %v", name, compileErr)
@@ -1046,7 +1046,7 @@ func TestWindowsRuntimeIncludesRepairAndMaintenanceLockRegressions(t *testing.T)
 }
 
 // TestReviewRepairPreflightNamesAWayForwardWhenTheStoreExceedsTheBound is
-// issue #3409. `gentle-ai review repair --preflight` exists so a maintainer
+// issue #3409. `agent-smith review repair --preflight` exists so a maintainer
 // can classify a damaged authority store and act on it. Its assessment is
 // bounded, and the bound is honest: exceeding it yields a typed `truncated`
 // status rather than a partial classification presented as complete, which is
@@ -1065,7 +1065,7 @@ func TestWindowsRuntimeIncludesRepairAndMaintenanceLockRegressions(t *testing.T)
 // bound and the assessment is driven through the CLI, never constructed.
 func TestReviewRepairPreflightNamesAWayForwardWhenTheStoreExceedsTheBound(t *testing.T) {
 	repo := initReviewCLIRepo(t)
-	compactRoot := filepath.Join(repo, ".git", "gentle-ai", "review-transactions", "v2")
+	compactRoot := filepath.Join(repo, ".git", "agent-smith", "review-transactions", "v2")
 	// Comfortably past the bounded assessment's ceiling, and past the
 	// 271-lineage store the report measured, without this test naming an
 	// internal constant it does not own.
@@ -1106,7 +1106,7 @@ func TestReviewRepairPreflightNamesAWayForwardWhenTheStoreExceedsTheBound(t *tes
 	if !preflight.Assessment.Truncated || preflight.Assessment.TruncationCap != 256 || preflight.Assessment.TruncationScanned != 257 {
 		t.Fatalf("oversized-store preflight truncation bound = %#v", preflight.Assessment)
 	}
-	if !strings.Contains(output.String(), "gentle-ai review inspect-authority") {
+	if !strings.Contains(output.String(), "agent-smith review inspect-authority") {
 		t.Fatalf("truncated preflight named no runnable continuation:\n%s", output.String())
 	}
 
@@ -1145,3 +1145,4 @@ func TestReviewRepairResultRejectsAMisplacedContinuation(t *testing.T) {
 		t.Fatal("a completed classification validated while claiming it was truncated")
 	}
 }
+

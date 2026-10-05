@@ -13,18 +13,18 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/agents"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/agents/antigravity"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/agents/claude"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/agents/codex"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/agents/hermes"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/agents/kilocode"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/agents/kimi"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/agents/openclaw"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/agents/opencode"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/agents/vscode"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/versions"
+	"github.com/jonsanchezr/agent-smith/v4/internal/agents"
+	"github.com/jonsanchezr/agent-smith/v4/internal/agents/antigravity"
+	"github.com/jonsanchezr/agent-smith/v4/internal/agents/claude"
+	"github.com/jonsanchezr/agent-smith/v4/internal/agents/codex"
+	"github.com/jonsanchezr/agent-smith/v4/internal/agents/hermes"
+	"github.com/jonsanchezr/agent-smith/v4/internal/agents/kilocode"
+	"github.com/jonsanchezr/agent-smith/v4/internal/agents/kimi"
+	"github.com/jonsanchezr/agent-smith/v4/internal/agents/openclaw"
+	"github.com/jonsanchezr/agent-smith/v4/internal/agents/opencode"
+	"github.com/jonsanchezr/agent-smith/v4/internal/agents/vscode"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
+	"github.com/jonsanchezr/agent-smith/v4/internal/versions"
 )
 
 func TestContext7SelectedSettingsRefuseNestedCommentsAndLockedMode(t *testing.T) {
@@ -660,7 +660,7 @@ func TestInjectClaudeWritesUserConfigAndIsIdempotent(t *testing.T) {
 
 // TestInjectClaudeSettingsInertBlockCleanup: the inert settings.json block is
 // removed when it only holds the managed context7 entry, and left untouched
-// when it carries servers gentle-ai does not manage.
+// when it carries servers agent-smith does not manage.
 func TestInjectClaudeSettingsInertBlockCleanup(t *testing.T) {
 	cases := []struct {
 		name           string
@@ -1633,7 +1633,7 @@ func TestInjectHermesPreservesExistingTopLevelKeys(t *testing.T) {
 }
 
 // TestMergeJSONFilePreservesExistingModeOnRewrite is the representative
-// end-to-end regression test for gentle-ai#5006(F5): mergeJSONFile is the
+// end-to-end regression test for agent-smith#5006(F5): mergeJSONFile is the
 // settings-merge codepath shared by every non-OpenCode/OpenClaw MCP
 // injection, and rewriting a pre-seeded private settings file must never
 // widen it.
@@ -1689,3 +1689,4 @@ func TestKilocodeSymlinkedContext7SettingsKeepBaseWriterBehavior(t *testing.T) {
 		t.Fatalf("settings target changed: %q, %v", got, err)
 	}
 }
+

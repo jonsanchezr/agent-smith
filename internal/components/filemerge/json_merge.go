@@ -314,7 +314,7 @@ func RemoveLegacyOpenCodeAgentMarkers(path string, raw []byte, names []string) (
 	eligible := make([]string, 0, len(names))
 	for _, name := range names {
 		def, _ := agents[name].(map[string]any)
-		if def["__managed_by"] == "gentle-ai/sdd" {
+		if def["__managed_by"] == "agent-smith/sdd" {
 			eligible = append(eligible, name)
 		}
 	}
@@ -1110,3 +1110,4 @@ func mergeObjectScope(base map[string]any, overlay map[string]any, permission, p
 
 	return result
 }
+

@@ -10,7 +10,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/reviewtransaction"
+	"github.com/jonsanchezr/agent-smith/v4/internal/reviewtransaction"
 )
 
 // escalatedSelectionReplayFixture is the #1972 predecessor: an escalated
@@ -88,7 +88,7 @@ func TestRecoveryTransitionReplaysAuthorizedUntrackedSelection(t *testing.T) {
 		t.Fatalf("selection-bearing recovery probe = %#v", probe)
 	}
 	const successor, actor, reason = "successor-1972", "maintainer", "recover the complete authorized candidate"
-	authorization := "gentle-ai.review-recovery-authorization/v1\npredecessor_lineage=" + predecessor.State.LineageID +
+	authorization := "agent-smith.review-recovery-authorization/v1\npredecessor_lineage=" + predecessor.State.LineageID +
 		"\npredecessor_revision=" + probe.Authority.Revision + "\ntarget_identity=" + probe.TargetIdentity +
 		"\nsuccessor_lineage=" + successor + "\nactor=" + actor + "\nreason=" + reason
 	status := selectorTransitionStatus(t, repo, append(append([]string{"--lineage", predecessor.State.LineageID}, selection...),
@@ -333,3 +333,4 @@ func TestReviewRecoverDivergentSelectionStillRefused(t *testing.T) {
 		}
 	}
 }
+

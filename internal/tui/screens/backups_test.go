@@ -6,7 +6,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/backup"
+	"github.com/jonsanchezr/agent-smith/v4/internal/backup"
 )
 
 // TestRenderBackupsShowsDisplayLabel verifies that RenderBackups uses the
@@ -365,3 +365,4 @@ func TestRenderRenameBackup(t *testing.T) {
 		}
 	})
 }
+

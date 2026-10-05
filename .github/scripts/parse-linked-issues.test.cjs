@@ -1,4 +1,4 @@
-'use strict';
+﻿'use strict';
 
 const { readFileSync } = require('node:fs');
 const { resolve } = require('node:path');
@@ -62,7 +62,7 @@ test('malformed and cross-repository keyword references fail closed with raw and
     ['Refs #12foo', /malformed/i],
     ['Refs #12_bar', /malformed/i],
     ['Fixes #7x', /malformed/i],
-    ['Closes gentleman-programming/gentle-ai#42', /cross-repositor/i],
+    ['Closes jonsanchezr/agent-smith#42', /cross-repositor/i],
     ['Refs other/owner#7', /cross-repositor/i],
     ['Resolves upstream/repo#99', /cross-repositor/i],
     ['Closes owner/repo#abc', /cross-repositor/i],
@@ -160,3 +160,4 @@ test('an oversized issue number fails closed; a normal reference beside it still
   assert.equal(result.errors[0].raw, 'Closes #99999999999999999999');
   assert.match(result.errors[0].reason, /malformed/i);
 });
+

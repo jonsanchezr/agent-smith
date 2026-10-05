@@ -8,7 +8,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/reviewtransaction"
+	"github.com/jonsanchezr/agent-smith/v4/internal/reviewtransaction"
 )
 
 // TestReviewFacadeStartDirectRouteRefusesUncompletableReview reproduces the
@@ -37,7 +37,7 @@ func TestReviewFacadeStartDirectRouteRefusesUncompletableReview(t *testing.T) {
 	if err == nil {
 		t.Fatalf("direct route start with lenses required succeeded = %s, want an up-front refusal", output.String())
 	}
-	if !strings.Contains(err.Error(), "gentle-ai review start --contract") {
+	if !strings.Contains(err.Error(), "agent-smith review start --contract") {
 		t.Fatalf("refusal error = %v, want it to name the exact negotiated review start continuation", err)
 	}
 	if !strings.Contains(err.Error(), "--base-ref") || !strings.Contains(err.Error(), "--committed-only") {
@@ -60,3 +60,4 @@ func TestReviewFacadeStartDirectRouteRefusesUncompletableReview(t *testing.T) {
 		t.Fatalf("refused direct start persisted authority = %v, want none created", stores)
 	}
 }
+

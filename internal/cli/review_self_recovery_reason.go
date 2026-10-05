@@ -1,6 +1,6 @@
 package cli
 
-import "github.com/gentleman-programming/gentle-ai/v4/internal/reviewtransaction"
+import "github.com/jonsanchezr/agent-smith/v4/internal/reviewtransaction"
 
 // reviewSelfRecoveryShape is a closed enumeration of the deterministic
 // triggering states a self-derived recovery reason may name. It is
@@ -88,3 +88,4 @@ func reviewSelfRecoveryShapeForRecover(predecessor reviewtransaction.State, targ
 		return "", false
 	}
 }
+

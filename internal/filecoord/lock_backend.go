@@ -4,7 +4,7 @@ import (
 	"errors"
 	"os"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/reviewtransaction"
+	"github.com/jonsanchezr/agent-smith/v4/internal/reviewtransaction"
 )
 
 // acquireCooperativeLock backs the cooperative contract with the hardened
@@ -26,3 +26,4 @@ func acquireCooperativeLock(path string) (*Lease, error) {
 	}
 	return &Lease{unlock: func(*os.File) error { return authority.Release() }}, nil
 }
+

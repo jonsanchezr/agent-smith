@@ -3,8 +3,8 @@ package agents
 import (
 	"context"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/system"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
+	"github.com/jonsanchezr/agent-smith/v4/internal/system"
 )
 
 // Capability tags for adapter feature checks.
@@ -60,3 +60,4 @@ type Adapter interface {
 type EffectiveCodeGraphWiringDetector interface {
 	EffectiveCodeGraphWiring(homeDir string) (path string, configured bool)
 }
+

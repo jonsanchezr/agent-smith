@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/reviewtransaction"
+	"github.com/jonsanchezr/agent-smith/v4/internal/reviewtransaction"
 )
 
 // TestLastRecapturedLensDrivesTheCurrentCorrectionPlan ensures the final lens
@@ -48,3 +48,4 @@ func TestLastRecapturedLensDrivesTheCurrentCorrectionPlan(t *testing.T) {
 		t.Fatalf("captured correction plan = %#v, %v", after, err)
 	}
 }
+

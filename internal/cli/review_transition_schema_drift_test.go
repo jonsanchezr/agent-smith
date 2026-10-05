@@ -11,7 +11,7 @@ import (
 
 	jsonschema "github.com/santhosh-tekuri/jsonschema/v6"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/reviewtransaction"
+	"github.com/jonsanchezr/agent-smith/v4/internal/reviewtransaction"
 )
 
 const (
@@ -40,8 +40,8 @@ func TestV2TransitionSchemasStayLocalSharedAndPackaged(t *testing.T) {
 	}
 
 	for name, wantID := range map[string]string{
-		reviewV2TransitionBindingSchema:   "https://gentle-ai.dev/contracts/review-integration/v2/schemas/transition-binding.schema.json",
-		reviewV2TransitionExecutionSchema: "https://gentle-ai.dev/contracts/review-integration/v2/schemas/transition-execution.schema.json",
+		reviewV2TransitionBindingSchema:   "https://agent-smith.dev/contracts/review-integration/v2/schemas/transition-binding.schema.json",
+		reviewV2TransitionExecutionSchema: "https://agent-smith.dev/contracts/review-integration/v2/schemas/transition-execution.schema.json",
 	} {
 		if got := documents[name]["$id"]; got != wantID {
 			t.Fatalf("%s id = %#v, want %q", name, got, wantID)
@@ -379,3 +379,4 @@ func reviewTransitionExecutionDocument(t *testing.T, execution *ReviewTransition
 	}
 	return document
 }
+

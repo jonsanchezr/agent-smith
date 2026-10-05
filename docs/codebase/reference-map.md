@@ -1,7 +1,7 @@
-# Reference Map
+﻿# Reference Map
 
 > [!NOTE]
-> These docs track `main`, which may include unreleased changes. For the latest release, see the [v4.0.0 docs](https://github.com/Gentleman-Programming/gentle-ai/tree/v4.0.0/docs).
+> These docs track `main`, which may include unreleased changes. For the latest release, see the [v4.0.0 docs](https://github.com/jonsanchezr/agent-smith/tree/v4.0.0/docs).
 
 [Back to Codebase Guide](../CODEBASE-GUIDE.md)
 
@@ -28,7 +28,7 @@ This appendix maps main docs and source files to responsibilities. Use it to mak
 
 | Source path | Responsibility |
 |---|---|
-| `cmd/gentle-ai/main.go` | Binary entrypoint and version handoff. |
+| `cmd/agent-smith/main.go` | Binary entrypoint and version handoff. |
 | `internal/app/` | Command dispatch, help, app-level version/update routing. |
 | `internal/cli/run.go` | Install flow orchestration. |
 | `internal/cli/sync.go` | Managed config sync flow and agent selection. |
@@ -48,7 +48,7 @@ This appendix maps main docs and source files to responsibilities. Use it to mak
 | `internal/components/uninstall/` | Managed component cleanup services for uninstall flows. |
 | `internal/skillregistry/` | Skill registry scanning, cache behavior, and markdown generation. |
 | `internal/agents/` | Per-agent adapter strategies and paths. |
-| `internal/state/state.go` | Persisted install state in `~/.gentle-ai/state.json`. |
+| `internal/state/state.go` | Persisted install state in `~/.agent-smith/state.json`. |
 | `internal/update/` | Update checks and upgrade routing. |
 | `internal/update/upgrade/` | Upgrade execution and report rendering. |
 | `internal/verify/` | Post-apply readiness reporting. |
@@ -61,7 +61,7 @@ This appendix maps main docs and source files to responsibilities. Use it to mak
 |---|---|
 | Dashboard | No dashboard, HTMX, or HTTP server package was found in this repository. |
 | Cloud sync | No cloud server/cloud store implementation was found in this repository. |
-| Engram store schema | Sessions, observations, prompts, relations, and sync mutations are external Engram runtime concepts, not Gentle-AI source files. |
+| Engram store schema | Sessions, observations, prompts, relations, and sync mutations are external Engram runtime concepts, not agent-smith source files. |
 | Full API reference | No `DOCS.md` exists in this repository; use existing focused docs and external Engram docs when needed. |
 
 ## Review checklist
@@ -73,3 +73,4 @@ This appendix maps main docs and source files to responsibilities. Use it to mak
 ## Navigation
 
 Previous: [Maintainer playbook](maintainer-playbook.md) | Back: [Codebase Guide](../CODEBASE-GUIDE.md)
+

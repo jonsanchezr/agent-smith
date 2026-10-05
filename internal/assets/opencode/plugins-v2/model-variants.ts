@@ -1,4 +1,4 @@
-// gentle-ai:managed model-variants/v2
+﻿// agent-smith:managed model-variants/v2
 import { Plugin } from "@opencode/plugin"
 import { mkdir, writeFile, rename, rm } from "node:fs/promises"
 import { createHash, randomBytes } from "node:crypto"
@@ -6,12 +6,12 @@ import { homedir } from "node:os"
 import path from "node:path"
 
 export default Plugin.define({
-  id: "gentle-ai.model-variants",
+  id: "agent-smith.model-variants",
   setup(ctx) {
     const abort = new AbortController()
     // V2 locations cannot overwrite the V1 global catalog or each other.
     const key = createHash("sha256").update(JSON.stringify([ctx.location.directory, ctx.location.workspaceID ?? ""])).digest("hex")
-    const directory = path.join(homedir(), ".gentle-ai", "cache", "opencode-v2")
+    const directory = path.join(homedir(), ".agent-smith", "cache", "opencode-v2")
     const destination = path.join(directory, `${key}.json`)
     const refresh = async () => {
       let temporary: string | undefined
@@ -56,3 +56,4 @@ export default Plugin.define({
     return async () => { abort.abort(); await running }
   },
 })
+

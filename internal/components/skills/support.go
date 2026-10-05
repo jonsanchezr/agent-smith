@@ -7,10 +7,10 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/agents"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/assets"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/components/filemerge"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
+	"github.com/jonsanchezr/agent-smith/v4/internal/agents"
+	"github.com/jonsanchezr/agent-smith/v4/internal/assets"
+	"github.com/jonsanchezr/agent-smith/v4/internal/components/filemerge"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
 )
 
 // Support assets are the non-skill files that installed skills depend on:
@@ -112,7 +112,7 @@ func SupportFilePaths(homeDir string, adapter agents.Adapter, skillIDs []model.S
 	return append(paths, commands...), nil
 }
 
-// AllSkillCommandPaths returns every skill command gentle-ai may own for the
+// AllSkillCommandPaths returns every skill command agent-smith may own for the
 // adapter, independent of the current selection. Uninstall and upgrade
 // snapshots use it so a deselected skill's command is still accounted for.
 func AllSkillCommandPaths(homeDir string, adapter agents.Adapter) ([]string, error) {
@@ -234,3 +234,4 @@ func removeLegacySharedMarker(markerPath string) (bool, error) {
 	}
 	return true, nil
 }
+

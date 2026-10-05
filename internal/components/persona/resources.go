@@ -3,7 +3,7 @@ package persona
 import (
 	"path/filepath"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
 )
 
 // OutputStylePaths describes the output-style resources owned for one persona.
@@ -80,3 +80,4 @@ func (p ResourcePlan) OutputStylePaths(dir string) OutputStylePaths {
 	}
 	return paths
 }
+

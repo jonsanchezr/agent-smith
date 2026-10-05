@@ -188,7 +188,7 @@ func runReviewStartFollowingConsent(t *testing.T, tokens []string) string {
 		t.Fatalf("the exact START that STATUS offered failed: %v\n%s", err, output.String())
 	}
 	text := output.String()
-	if !strings.Contains(text, "gentle-ai.review-integration.consent/v3") {
+	if !strings.Contains(text, "agent-smith.review-integration.consent/v3") {
 		return text
 	}
 	payload := regexp.MustCompile(`(?s)\{.*\}`).FindString(text)
@@ -217,3 +217,4 @@ func runReviewStartFollowingConsent(t *testing.T, tokens []string) string {
 	t.Fatalf("consent envelope carries no granted choice:\n%s", text)
 	return ""
 }
+

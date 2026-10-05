@@ -302,7 +302,7 @@ func (b *battery) runPiRelaySlot(lane, repo string, input map[string]any) (map[s
 	caseConfig := map[string]any{
 		"capture_argument_tokens": argumentTokens(input),
 		"submission":              input["submission"],
-		"gentle_ai_executable":    b.binary,
+		"agent_smith_executable":    b.binary,
 		"pi_executable":           "pi",
 		"target_cwd":              repo,
 	}

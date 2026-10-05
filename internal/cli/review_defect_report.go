@@ -15,15 +15,15 @@ import (
 	"strings"
 	"time"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/reviewtransaction"
+	"github.com/jonsanchezr/agent-smith/v4/internal/reviewtransaction"
 )
 
 // reviewDefectReportIssuesURL is the single destination every tool-fault
 // Tier C statement points at, per organic-dx tasks.md 5.6.
-const reviewDefectReportIssuesURL = "https://github.com/Gentleman-Programming/gentle-ai/issues/new/choose"
+const reviewDefectReportIssuesURL = "https://github.com/jonsanchezr/agent-smith/issues/new/choose"
 
 // reviewDefectReportDirName is the subdirectory under the repository's
-// Git-common-dir "gentle-ai" root (the same convention repository_locator.go
+// Git-common-dir "agent-smith" root (the same convention repository_locator.go
 // and store.go already use) that holds generated reports. It is never
 // inside the working tree and is never committed — see the maintainer
 // decision recorded in organic-dx tasks.md against 3b.8/3b.9.
@@ -64,7 +64,7 @@ type reviewDefectReport struct {
 // same way internal/app.ResolveVersion does, without importing internal/app
 // (this package must not depend on the top-level command dispatcher).
 // AppVersion is the build's stamped version, handed to this package by
-// internal/app at startup. It is the same string `gentle-ai --version` prints.
+// internal/app at startup. It is the same string `agent-smith --version` prints.
 //
 // Reading build info alone was wrong and a tester caught it: for any stamped
 // build the module pseudo-version disagrees with what --version reports, so
@@ -122,7 +122,7 @@ var (
 	reviewDefectReportEnvAssignmentRegexp = regexp.MustCompile(`\b[A-Z][A-Z0-9_]{2,}=\S+`)
 	// reviewDefectReportPublicIdentifierRegexp matches the product's own
 	// public identifiers: contract and schema ids such as
-	// gentle-ai.review-integration/v2, gentle-ai.review-integration.status/v7,
+	// agent-smith.review-integration/v2, agent-smith.review-integration.status/v7,
 	// or gentle-pi.review-relay/v1, plus the one exact relay handshake
 	// assignment. None of them describe a filesystem or a secret, and a
 	// report that hides them tells the reader to run a command that does not
@@ -202,13 +202,13 @@ func reviewScrubDefectReportIdentifierValue(value string) string {
 func (report reviewDefectReport) render() string {
 	var body strings.Builder
 	fmt.Fprintf(&body, "# Bug Description\n\n")
-	fmt.Fprintf(&body, "Gentle AI reached a tool-internal fault state (`%s`) that should never happen. %s\n\n",
+	fmt.Fprintf(&body, "Agent Smith reached a tool-internal fault state (`%s`) that should never happen. %s\n\n",
 		report.Input.ReasonCode, report.Input.TerminalPrecondition)
 	fmt.Fprintf(&body, "## Steps to Reproduce\n\n")
 	fmt.Fprintf(&body, "Not automatically captured. Re-run the operation that surfaced this:\n\n```\n%s\n```\n\n", report.Input.Operation)
 	fmt.Fprintf(&body, "## Expected Behavior\n\nThe operation completes, or reports a caller-actionable stop.\n\n")
 	fmt.Fprintf(&body, "## Actual Behavior\n\n%s\n\n", report.Input.ErrorMessage)
-	fmt.Fprintf(&body, "## Gentle AI Version\n\n%s (%s)\n\n", report.Version, report.Commit)
+	fmt.Fprintf(&body, "## Agent Smith Version\n\n%s (%s)\n\n", report.Version, report.Commit)
 	fmt.Fprintf(&body, "## Operating System\n\n%s/%s\n\n", report.OS, report.Arch)
 	fmt.Fprintf(&body, "## AI Agent / Client\n\nUnspecified (filled automatically; edit if known)\n\n")
 	fmt.Fprintf(&body, "## Affected Area\n\nCLI (commands, flags)\n\n")
@@ -250,7 +250,7 @@ func reviewDefectReportFileName(reasonCode, content string) string {
 }
 
 // writeReviewDefectReport writes the rendered report under
-// <GitCommonDir>/gentle-ai/defect-reports/ and returns the absolute path.
+// <GitCommonDir>/agent-smith/defect-reports/ and returns the absolute path.
 // GitCommonDir keeps this outside the working tree (repository_locator.go's
 // existing convention), so it never pollutes `git status` and is never
 // committed.
@@ -259,7 +259,7 @@ func writeReviewDefectReport(ctx context.Context, root string, report reviewDefe
 	if err != nil {
 		return "", fmt.Errorf("resolve repository identity for defect report: %w", err)
 	}
-	dir := filepath.Join(lease.Identity().GitCommonDir, "gentle-ai", reviewDefectReportDirName)
+	dir := filepath.Join(lease.Identity().GitCommonDir, "agent-smith", reviewDefectReportDirName)
 	if err := os.MkdirAll(dir, 0o700); err != nil {
 		return "", fmt.Errorf("create defect report directory: %w", err)
 	}
@@ -378,3 +378,4 @@ func reviewAppendUnexpectedFaultDefectClause(ctx context.Context, operation stri
 	}
 	return fmt.Errorf("%w%s", err, clause)
 }
+

@@ -8,14 +8,14 @@ import (
 	"os"
 	"strings"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/backup"
+	"github.com/jonsanchezr/agent-smith/v4/internal/backup"
 )
 
 // RestoreFunc is the function signature for restoring a backup from its manifest.
 // It matches app.tuiRestore and backup.RestoreService.Restore signatures.
 type RestoreFunc func(manifest backup.Manifest) error
 
-// RunRestore is the top-level entry point for `gentle-ai restore [args]`.
+// RunRestore is the top-level entry point for `agent-smith restore [args]`.
 // It reads backups from the real home directory and uses the default restore function.
 func RunRestore(args []string, stdout io.Writer) error {
 	restorer := defaultRestorer()
@@ -49,7 +49,7 @@ func newRestoreFlagSet() *flag.FlagSet {
 		// before it, so the flag package's duplicated error line is not
 		// reported twice alongside the custom block.
 		fmt.Fprintf(fs.Output(), "Usage of %s:\n", fs.Name())
-		fmt.Fprintln(fs.Output(), "  gentle-ai restore [--list | latest | <id>] [--yes]")
+		fmt.Fprintln(fs.Output(), "  agent-smith restore [--list | latest | <id>] [--yes]")
 		fs.PrintDefaults()
 	}
 	return fs
@@ -111,7 +111,7 @@ func runRestoreWithHomeDir(args []string, restorer RestoreFunc, stdout io.Writer
 
 	// If no subcommand argument, show usage.
 	if len(positional) == 0 {
-		return fmt.Errorf("usage: gentle-ai restore [--list | latest | <id>] [--yes]")
+		return fmt.Errorf("usage: agent-smith restore [--list | latest | <id>] [--yes]")
 	}
 
 	target := positional[0]
@@ -146,7 +146,7 @@ func runRestoreWithHomeDir(args []string, restorer RestoreFunc, stdout io.Writer
 // renderRestoreList writes the backup listing to stdout.
 // Backups are already sorted newest-first by listBackupsFromDir.
 // Each entry shows: index, ID, DisplayLabel (source + timestamp + file count),
-// and the gentle-ai version that created the backup when known.
+// and the agent-smith version that created the backup when known.
 func renderRestoreList(backups []backup.Manifest, stdout io.Writer) error {
 	if len(backups) == 0 {
 		fmt.Fprintln(stdout, "no backups found")
@@ -183,7 +183,7 @@ func resolveRestoreTarget(target string, backups []backup.Manifest) (backup.Mani
 		}
 	}
 
-	return backup.Manifest{}, fmt.Errorf("backup %q not found — use `gentle-ai restore --list` to see available backups", target)
+	return backup.Manifest{}, fmt.Errorf("backup %q not found — use `agent-smith restore --list` to see available backups", target)
 }
 
 // promptRestoreConfirm asks the user to confirm a restore operation.
@@ -243,7 +243,7 @@ func listBackupsFromDir(homeDir string) []backup.Manifest {
 
 // backupRootDir returns the path to the backup directory under homeDir.
 func backupRootDir(homeDir string) string {
-	return homeDir + "/.gentle-ai/backups"
+	return homeDir + "/.agent-smith/backups"
 }
 
 // defaultRestorer returns the standard backup.RestoreService.Restore function.
@@ -252,3 +252,4 @@ func defaultRestorer() RestoreFunc {
 		return backup.RestoreService{}.Restore(m)
 	}
 }
+

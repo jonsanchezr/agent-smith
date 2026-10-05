@@ -4,7 +4,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/reviewtransaction"
+	"github.com/jonsanchezr/agent-smith/v4/internal/reviewtransaction"
 )
 
 // TestReviewGateDeniedBaseMismatchNamesTheExpectedBase is the human half of the
@@ -60,3 +60,4 @@ func TestReviewGateDeniedBaseMismatchWithoutDiagnosticsStaysHonest(t *testing.T)
 		t.Fatalf("base-mismatch fallback Error() = %q", got)
 	}
 }
+

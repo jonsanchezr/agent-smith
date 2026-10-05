@@ -4,8 +4,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/assets"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
+	"github.com/jonsanchezr/agent-smith/v4/internal/assets"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
 )
 
 func TestRuntimeContracts(t *testing.T) {
@@ -13,8 +13,8 @@ func TestRuntimeContracts(t *testing.T) {
 		agent              model.AgentID
 		required, excluded string
 	}{
-		{model.AgentPi, "`gentle_review_capture_group`", "gentle-ai review status"},
-		{model.AgentClaudeCode, "gentle-ai review status --cwd <repo> --contract gentle-ai.review-integration/v2 --agent claude-code --next-transition", "gentle_review_capture_group"},
+		{model.AgentPi, "`gentle_review_capture_group`", "agent-smith review status"},
+		{model.AgentClaudeCode, "agent-smith review status --cwd <repo> --contract agent-smith.review-integration/v2 --agent claude-code --next-transition", "gentle_review_capture_group"},
 		{model.AgentOpenCode, "### OpenCode Concurrent Reviewer Group", "gentle_review_capture_group"},
 	} {
 		t.Run(string(tc.agent), func(t *testing.T) {
@@ -66,3 +66,4 @@ func TestInspectionCommandsIndependent(t *testing.T) {
 		t.Fatal("inspection command slices share storage")
 	}
 }
+

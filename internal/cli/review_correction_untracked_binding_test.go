@@ -8,7 +8,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/reviewtransaction"
+	"github.com/jonsanchezr/agent-smith/v4/internal/reviewtransaction"
 )
 
 // TestNegotiatedStatusPreservesUntrackedBindingThroughCorrectionLineage pins
@@ -209,3 +209,4 @@ func TestSelectorlessStatusPreservesIntendedUntrackedBindingBeforeCorrectionPlan
 		t.Fatalf("missing selected path transition = %#v, want intended_untracked_selection_required", missingSelected.NextTransition)
 	}
 }
+

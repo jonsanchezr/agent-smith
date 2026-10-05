@@ -10,33 +10,33 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/reviewerprovider"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/reviewtransaction"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
+	"github.com/jonsanchezr/agent-smith/v4/internal/reviewerprovider"
+	"github.com/jonsanchezr/agent-smith/v4/internal/reviewtransaction"
 )
 
-const ReviewIntegrationStatusSchemaV1 = "gentle-ai.review-integration.status/v1"
-const ReviewIntegrationStatusSchemaIDV1 = "https://gentle-ai.dev/contracts/review-integration/v1/schemas/status.schema.json"
-const ReviewIntegrationStatusSchemaV2 = "gentle-ai.review-integration.status/v2"
-const ReviewIntegrationStatusSchemaIDV2 = "https://gentle-ai.dev/contracts/review-integration/v1/schemas/status-v2.schema.json"
-const ReviewIntegrationStatusSchemaV3 = "gentle-ai.review-integration.status/v3"
-const ReviewIntegrationStatusSchemaIDV3 = "https://gentle-ai.dev/contracts/review-integration/v2/schemas/status.schema.json"
-const ReviewIntegrationStatusSchemaV4 = "gentle-ai.review-integration.status/v4"
-const ReviewIntegrationStatusSchemaIDV4 = "https://gentle-ai.dev/contracts/review-integration/v2/schemas/status-v4.schema.json"
-const ReviewIntegrationStatusSchemaV5 = "gentle-ai.review-integration.status/v5"
-const ReviewIntegrationStatusSchemaIDV5 = "https://gentle-ai.dev/contracts/review-integration/v2/schemas/status-v5.schema.json"
-const ReviewIntegrationStatusSchemaV6 = "gentle-ai.review-integration.status/v6"
-const ReviewIntegrationStatusSchemaIDV6 = "https://gentle-ai.dev/contracts/review-integration/v2/schemas/status-v6.schema.json"
-const ReviewIntegrationStatusSchemaV7 = "gentle-ai.review-integration.status/v7"
-const ReviewIntegrationStatusSchemaIDV7 = "https://gentle-ai.dev/contracts/review-integration/v2/schemas/status-v7.schema.json"
-const ReviewIntegrationStatusSchemaV8 = "gentle-ai.review-integration.status/v8"
-const ReviewIntegrationStatusSchemaIDV8 = "https://gentle-ai.dev/contracts/review-integration/v2/schemas/status-v8.schema.json"
-const ReviewIntegrationStatusSchemaV9 = "gentle-ai.review-integration.status/v9"
-const ReviewIntegrationStatusSchemaIDV9 = "https://gentle-ai.dev/contracts/review-integration/v2/schemas/status-v9.schema.json"
+const ReviewIntegrationStatusSchemaV1 = "agent-smith.review-integration.status/v1"
+const ReviewIntegrationStatusSchemaIDV1 = "https://agent-smith.dev/contracts/review-integration/v1/schemas/status.schema.json"
+const ReviewIntegrationStatusSchemaV2 = "agent-smith.review-integration.status/v2"
+const ReviewIntegrationStatusSchemaIDV2 = "https://agent-smith.dev/contracts/review-integration/v1/schemas/status-v2.schema.json"
+const ReviewIntegrationStatusSchemaV3 = "agent-smith.review-integration.status/v3"
+const ReviewIntegrationStatusSchemaIDV3 = "https://agent-smith.dev/contracts/review-integration/v2/schemas/status.schema.json"
+const ReviewIntegrationStatusSchemaV4 = "agent-smith.review-integration.status/v4"
+const ReviewIntegrationStatusSchemaIDV4 = "https://agent-smith.dev/contracts/review-integration/v2/schemas/status-v4.schema.json"
+const ReviewIntegrationStatusSchemaV5 = "agent-smith.review-integration.status/v5"
+const ReviewIntegrationStatusSchemaIDV5 = "https://agent-smith.dev/contracts/review-integration/v2/schemas/status-v5.schema.json"
+const ReviewIntegrationStatusSchemaV6 = "agent-smith.review-integration.status/v6"
+const ReviewIntegrationStatusSchemaIDV6 = "https://agent-smith.dev/contracts/review-integration/v2/schemas/status-v6.schema.json"
+const ReviewIntegrationStatusSchemaV7 = "agent-smith.review-integration.status/v7"
+const ReviewIntegrationStatusSchemaIDV7 = "https://agent-smith.dev/contracts/review-integration/v2/schemas/status-v7.schema.json"
+const ReviewIntegrationStatusSchemaV8 = "agent-smith.review-integration.status/v8"
+const ReviewIntegrationStatusSchemaIDV8 = "https://agent-smith.dev/contracts/review-integration/v2/schemas/status-v8.schema.json"
+const ReviewIntegrationStatusSchemaV9 = "agent-smith.review-integration.status/v9"
+const ReviewIntegrationStatusSchemaIDV9 = "https://agent-smith.dev/contracts/review-integration/v2/schemas/status-v9.schema.json"
 const ReviewIntegrationStatusSchema = ReviewIntegrationStatusSchemaV9
 const ReviewIntegrationStatusSchemaID = ReviewIntegrationStatusSchemaIDV9
-const ReviewIntegrationProjectionSchema = "gentle-ai.review-integration.projection/v1"
-const ReviewIntegrationProjectionSchemaID = "https://gentle-ai.dev/contracts/review-integration/v1/schemas/projection.schema.json"
+const ReviewIntegrationProjectionSchema = "agent-smith.review-integration.projection/v1"
+const ReviewIntegrationProjectionSchemaID = "https://agent-smith.dev/contracts/review-integration/v1/schemas/projection.schema.json"
 
 type ReviewForecastHorizon string
 
@@ -865,7 +865,7 @@ func (result ReviewTargetStatusResult) validateNextTransitionTargets() error {
 				return errors.New("fresh empty workspace target lacks a base-ref collection transition") // refusal:by-design world-action: only a provider code fix can emit the base-ref collection this classification requires
 			}
 			input := result.NextTransition.Collect.Inputs[0]
-			if input.Name != "base_ref" || input.Schema != "gentle-ai.review-base-ref-selection/v1" ||
+			if input.Name != "base_ref" || input.Schema != "agent-smith.review-base-ref-selection/v1" ||
 				input.CaptureOperation != "external.select_base_ref" || input.Submission != nil ||
 				!reflect.DeepEqual(input.Arguments, reviewTargetArguments(result)) {
 				return errors.New("fresh empty workspace target lacks a base-ref collection transition") // refusal:by-design world-action: only a provider code fix can emit the base-ref collection this classification requires
@@ -950,7 +950,7 @@ func (result ReviewTargetStatusResult) validateFrozenManifestBinding() error {
 
 func (result ReviewTargetStatusResult) validateIntendedUntrackedSelectionTransition() error {
 	if result.NextTransition.Collect == nil || len(result.NextTransition.Collect.Inputs) != 1 {
-		return errors.New("fresh target lacks an intended-untracked selection transition; rerun `gentle-ai review status --next-transition`")
+		return errors.New("fresh target lacks an intended-untracked selection transition; rerun `agent-smith review status --next-transition`")
 	}
 	input := result.NextTransition.Collect.Inputs[0]
 	// The submission rule is stated on submission validity, not on an
@@ -965,11 +965,11 @@ func (result ReviewTargetStatusResult) validateIntendedUntrackedSelectionTransit
 	if input.Name != "intended_untracked_selection" || input.Schema != reviewIntendedUntrackedSelectionSchema ||
 		input.CaptureOperation != "external.select_intended_untracked" || len(input.Arguments) != 6 ||
 		submissionInvalidWhenPresent || v5ForbidsSubmission || v6RequiresSubmission {
-		return errors.New("fresh target lacks an intended-untracked selection transition; rerun `gentle-ai review status --next-transition`")
+		return errors.New("fresh target lacks an intended-untracked selection transition; rerun `agent-smith review status --next-transition`")
 	}
 	if !reflect.DeepEqual(input.Arguments[:4], reviewTargetArguments(result)) || input.Arguments[4].Name != "eligible_paths_json" ||
 		input.Arguments[5].Name != "expected_untracked_inventory" || input.Arguments[5].Value == "" {
-		return errors.New("fresh target lacks an intended-untracked selection transition; rerun `gentle-ai review status --next-transition`")
+		return errors.New("fresh target lacks an intended-untracked selection transition; rerun `agent-smith review status --next-transition`")
 	}
 	return nil
 }
@@ -1402,7 +1402,7 @@ func (transition ReviewNextTransition) Validate() error {
 				}
 			}
 			if input.CaptureOperation == reviewCaptureCorrectionPlanOperation &&
-				(input.Schema != "gentle-ai.review-correction-plan/v1" || len(arguments) != 5 ||
+				(input.Schema != "agent-smith.review-correction-plan/v1" || len(arguments) != 5 ||
 					strings.TrimSpace(arguments["lineage"]) == "" || !validReviewCapabilitySHA256(arguments["expected-revision"]) ||
 					!validReviewCapabilitySHA256(arguments["target"]) || !validReviewCapabilitySHA256(arguments["request-hash"]) ||
 					reviewtransaction.ValidateReviewRepositoryContextHandle(arguments["repository-context"]) != nil) {
@@ -1921,3 +1921,4 @@ func validReviewGitTree(value string) bool {
 	}
 	return true
 }
+

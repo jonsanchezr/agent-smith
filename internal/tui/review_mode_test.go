@@ -7,9 +7,9 @@ import (
 	"testing"
 
 	tea "github.com/charmbracelet/bubbletea"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/reviewtransaction"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/system"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/tui/screens"
+	"github.com/jonsanchezr/agent-smith/v4/internal/reviewtransaction"
+	"github.com/jonsanchezr/agent-smith/v4/internal/system"
+	"github.com/jonsanchezr/agent-smith/v4/internal/tui/screens"
 )
 
 func settleReviewMode(t *testing.T, model Model, cmd tea.Cmd) Model {
@@ -93,3 +93,4 @@ func TestReviewModeTUI(t *testing.T) {
 		t.Fatalf("mutation error was hidden or not retryable:\n%s", view)
 	}
 }
+

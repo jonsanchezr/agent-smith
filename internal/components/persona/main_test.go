@@ -4,7 +4,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/testenv"
+	"github.com/jonsanchezr/agent-smith/v4/internal/testenv"
 )
 
 // TestMain neutralizes ambient agent runtime-dir overrides (PI_CODING_AGENT_DIR,
@@ -16,3 +16,4 @@ func TestMain(m *testing.M) {
 	testenv.Isolate()
 	os.Exit(m.Run())
 }
+

@@ -7,8 +7,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/state"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
+	"github.com/jonsanchezr/agent-smith/v4/internal/state"
 )
 
 // Regression coverage: the CodeGraph injectors discovered
@@ -16,14 +16,14 @@ import (
 // machine was enough to have their prompt files rewritten on every sync.
 
 // selectOnlyOpenCodeWithCodexAndCursorPresent builds the reported environment:
-// three agents installed on disk, only OpenCode selected in Gentle AI.
+// three agents installed on disk, only OpenCode selected in Agent Smith.
 func selectOnlyOpenCodeWithCodexAndCursorPresent(t *testing.T) (home, opencodeDir, codexPrompt, cursorPrompt string) {
 	t.Helper()
 	home = t.TempDir()
 
 	opencodeDir = filepath.Join(home, ".config", "opencode")
 	codexPrompt = filepath.Join(home, ".codex", "AGENTS.md")
-	cursorPrompt = filepath.Join(home, ".cursor", "rules", "gentle-ai.mdc")
+	cursorPrompt = filepath.Join(home, ".cursor", "rules", "agent-smith.mdc")
 
 	mustWrite(t, filepath.Join(opencodeDir, "opencode.json"), "{}\n")
 	mustWrite(t, codexPrompt, "user codex instructions\n")
@@ -80,3 +80,4 @@ func TestCodeGraphPathSetsSplitWriteScopeFromBackupScope(t *testing.T) {
 		}
 	}
 }
+

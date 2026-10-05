@@ -3,7 +3,7 @@ package screens
 import (
 	"strings"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/tui/styles"
+	"github.com/jonsanchezr/agent-smith/v4/internal/tui/styles"
 )
 
 // ModelConfigOptions returns the ordered list of options shown on the model config screen.
@@ -36,3 +36,4 @@ func RenderModelConfig(cursor int) string {
 
 	return styles.FrameStyle.Render(b.String())
 }
+

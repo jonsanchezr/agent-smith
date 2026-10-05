@@ -11,9 +11,9 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/reviewerprovider"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/reviewtransaction"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
+	"github.com/jonsanchezr/agent-smith/v4/internal/reviewerprovider"
+	"github.com/jonsanchezr/agent-smith/v4/internal/reviewtransaction"
 )
 
 func TestCommittedBaseDiffLastReviewerCapturePublishesExactStatusContinuation(t *testing.T) {
@@ -644,3 +644,4 @@ func committedCorrectionStatus(t *testing.T, repo, lineage, baseTree string) Rev
 	decodeStrictReviewJSON(t, output.Bytes(), &status)
 	return status
 }
+

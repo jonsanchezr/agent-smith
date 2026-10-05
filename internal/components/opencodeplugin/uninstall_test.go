@@ -9,8 +9,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/components/mutationjournal"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
+	"github.com/jonsanchezr/agent-smith/v4/internal/components/mutationjournal"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
 )
 
 // ─── Shared fixtures ────────────────────────────────────────────────────────
@@ -795,3 +795,4 @@ func TestUninstallJournalRejectsOutsideRoot(t *testing.T) {
 		t.Fatalf("error %q does not mention outside-roots", err)
 	}
 }
+

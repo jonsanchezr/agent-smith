@@ -1,4 +1,4 @@
-# ODD Task — #1635 Antigravity Concurrency Correction (PR5118 A+B)
+﻿# ODD Task â€” #1635 Antigravity Concurrency Correction (PR5118 A+B)
 
 Status: implemented; independent focused/race/build checks passed.
 Scope: A1+A2 guards + B lock. Full suite/native Windows/macOS tests pending.
@@ -8,9 +8,9 @@ Scope: A1+A2 guards + B lock. Full suite/native Windows/macOS tests pending.
 - **A1 (classify/restore guard)**: `classifyAntigravityOwnershipTransferFailure`
   Present branch ignored `verifyErrs` and restored stale before-images over
   newer bytes; a concurrent global retirement then deleting the plugin could
-  leave zero Engram registrations. Now: Present + verifyErrs → uncertainty, no
-  restore; verified → reread the global immediately before restoring
-  (classification seam), any drift/error → uncertainty, no destructive restore,
+  leave zero Engram registrations. Now: Present + verifyErrs â†’ uncertainty, no
+  restore; verified â†’ reread the global immediately before restoring
+  (classification seam), any drift/error â†’ uncertainty, no destructive restore,
   no availability claim.
 - **A2 (rollback drift guard)**: `installAntigravityEngramPlugin` rollback
   restored before-images unconditionally. Now each asset records the exact
@@ -18,16 +18,16 @@ Scope: A1+A2 guards + B lock. Full suite/native Windows/macOS tests pending.
   `{before, left}` plan and restores only assets whose current bytes still
   match `left` (existence + bytes; mode excluded by design). Drift, read, and
   restore failures are joined; restoration is refused when the match cannot be
-  proven (read failure → nothing restored, uncertainty reported).
+  proven (read failure â†’ nothing restored, uncertainty reported).
 - **B (coordination lock)**: reuse `internal/filecoord` (acyclic; nonblocking
   flock/LockFileEx, `ErrBusy`) around ALL managed Antigravity mutations:
   settings ensure, plugin install/rollback, global removal and
-  classify/restore. Flow: side-effect-free prevalidate → acquire → revalidate
-  → mutate. Malformed global creates zero paths (not even the lock root).
+  classify/restore. Flow: side-effect-free prevalidate â†’ acquire â†’ revalidate
+  â†’ mutate. Malformed global creates zero paths (not even the lock root).
   Shared protocol prompt stays outside the lock. Lock target: CLI plugin dir
-  `<configHome>/.gemini/antigravity-cli/plugins/gentle-ai-engram` (always CLI,
+  `<configHome>/.gemini/antigravity-cli/plugins/agent-smith-engram` (always CLI,
   so desktop/CLI variants share one key); root: canonical
-  `<configHome>/.gentle-ai/locks`. Canonicalization: EvalSymlinks, else
+  `<configHome>/.agent-smith/locks`. Canonicalization: EvalSymlinks, else
   deepest-existing ancestor + suffix (statecoord pattern); aliases share a
   key, distinct physical paths (workspace/global) stay distinct. Single
   nonblocking attempt on `context.Background`; `ErrBusy` wrapped with retry
@@ -37,18 +37,18 @@ Scope: A1+A2 guards + B lock. Full suite/native Windows/macOS tests pending.
 
 RED A (existing seams; observed failures before implementation):
 - `go test ./internal/components/engram/ -run 'TestInjectAntigravityClassifyDriftBlocksDestructiveRestore|TestInjectAntigravityStaleGlobalRetirementPreventsPluginRestore|TestInjectAntigravityRollbackPreservesDriftedPluginAsset' -count=1`
-  → all 3 FAIL on the defective behavior (restore over drift / no reread /
+  â†’ all 3 FAIL on the defective behavior (restore over drift / no reread /
   unconditional rollback restore).
-RED B (new lock tests): `go vet ./internal/components/engram/` → compile
+RED B (new lock tests): `go vet ./internal/components/engram/` â†’ compile
 failure `undefined: acquireAntigravityCoordinationLock` (implementation absent).
 
 GREEN:
-- Same focused command → `ok` after implementation.
-- `go test ./internal/components/engram/ ./internal/filecoord/ ./internal/components/filemerge/ -count=1` → all ok.
-- Race-proportionate: focused antigravity/coordination suites with `-race` → ok.
-- `GOOS=windows go build ./internal/components/engram/` and `GOOS=darwin ...` → ok.
-- `go test ./internal/components/... ./internal/cli/ -run 'Antigravity|antigravity' -count=1` → ok.
-- `gofmt -l` (authorized) → clean; `git diff --check` (diffcheck) → clean.
+- Same focused command â†’ `ok` after implementation.
+- `go test ./internal/components/engram/ ./internal/filecoord/ ./internal/components/filemerge/ -count=1` â†’ all ok.
+- Race-proportionate: focused antigravity/coordination suites with `-race` â†’ ok.
+- `GOOS=windows go build ./internal/components/engram/` and `GOOS=darwin ...` â†’ ok.
+- `go test ./internal/components/... ./internal/cli/ -run 'Antigravity|antigravity' -count=1` â†’ ok.
+- `gofmt -l` (authorized) â†’ clean; `git diff --check` (diffcheck) â†’ clean.
 
 Contract updates to pre-existing tests (justified by A2):
 - `TestInjectAntigravityRecoveryFailureIsExplicit/recovery read failure`: a
@@ -79,22 +79,23 @@ Contract updates to pre-existing tests (justified by A2):
   `UnsupportedError.Error` / `.Unwrap`). These methods are pre-existing and
   unreachable from main; importing `internal/filecoord` for the B lock makes
   them newly *analyzer-visible* (deadcode now scans that package), not newly
-  runtime-reachable — pristine HEAD passes only because the package was never
+  runtime-reachable â€” pristine HEAD passes only because the package was never
   scanned. Public error API is intentionally preserved rather than deleted,
   so they are baselined: no new dead implementation was added by this task.
 
 ## Size / budget
 
-- Direct base `a5c209d1` (latest main) → resolved worktree, measured after the
-  merge resolution: 6 files, +1222/−176 changed lines (source + tests +
+- Direct base `a5c209d1` (latest main) â†’ resolved worktree, measured after the
+  merge resolution: 6 files, +1222/âˆ’176 changed lines (source + tests +
   baseline deltas + this document) = 1398 changed lines.
-- 1398 ≤ 1400 budget (at ceiling, 2 lines of headroom).
+- 1398 â‰¤ 1400 budget (at ceiling, 2 lines of headroom).
 
 ## Limitations
 
 - Guards are read-then-act: residual TOCTOU between guard reads and restores
-  remains; cooperative locks serialize gentle-ai writers only, never arbitrary
+  remains; cooperative locks serialize agent-smith writers only, never arbitrary
   external editors; no multi-file atomicity.
 - A dangling-symlink intermediate component under a not-yet-existing config
   home is canonicalized only through the deepest existing ancestor.
 - `filepath.EvalSymlinks` alias tests skip on Windows (symlink privileges).
+

@@ -7,13 +7,13 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/agents"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/agents/claude"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/agents/opencode"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/agents/vscode"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/skillregistry"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/system"
+	"github.com/jonsanchezr/agent-smith/v4/internal/agents"
+	"github.com/jonsanchezr/agent-smith/v4/internal/agents/claude"
+	"github.com/jonsanchezr/agent-smith/v4/internal/agents/opencode"
+	"github.com/jonsanchezr/agent-smith/v4/internal/agents/vscode"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
+	"github.com/jonsanchezr/agent-smith/v4/internal/skillregistry"
+	"github.com/jonsanchezr/agent-smith/v4/internal/system"
 )
 
 func claudeAdapter() agents.Adapter   { return claude.NewAdapter() }
@@ -348,7 +348,7 @@ func TestInjectBundledSkillsAreRegistryDiscoverable(t *testing.T) {
 	for _, skill := range []model.SkillID{
 		model.SkillRDDDefectWorkflow,
 		model.SkillSystemicIssueTriage,
-		model.SkillGentleAIBench,
+		model.SkillAgentSmithBench,
 	} {
 		t.Run(string(skill), func(t *testing.T) {
 			home := t.TempDir()
@@ -509,6 +509,59 @@ func requiredBundledSkillIDs() []model.SkillID {
 		model.SkillImprover,
 		model.SkillRDDDefectWorkflow,
 		model.SkillSystemicIssueTriage,
-		model.SkillGentleAIBench,
+		model.SkillAgentSmithBench,
 	}
 }
+
+// TestIsSDDSkillReturnsFalseForSpeckit verifies speckit-* skills are not flagged as SDD skills.
+func TestIsSDDSkillReturnsFalseForSpeckit(t *testing.T) {
+	speckitSkills := []model.SkillID{
+		model.SkillSpecKitConstitution,
+		model.SkillSpecKitSpecify,
+		model.SkillSpecKitClarify,
+		model.SkillSpecKitPlan,
+		model.SkillSpecKitChecklist,
+		model.SkillSpecKitTasks,
+		model.SkillSpecKitAnalyze,
+		model.SkillSpecKitImplement,
+		model.SkillSpecKitConverge,
+	}
+	for _, id := range speckitSkills {
+		if IsSDDSkill(id) {
+			t.Errorf("IsSDDSkill(%q) = true, want false", id)
+		}
+	}
+}
+
+// TestInjectSpeckitSkillsWritesSkillFiles verifies speckit skills can be injected.
+func TestInjectSpeckitSkillsWritesSkillFiles(t *testing.T) {
+	home := t.TempDir()
+
+	speckitSkills := []model.SkillID{
+		model.SkillSpecKitSpecify,
+		model.SkillSpecKitPlan,
+	}
+
+	result, err := Inject(home, opencodeAdapter(), speckitSkills)
+	if err != nil {
+		t.Fatalf("Inject() error = %v", err)
+	}
+	if !result.Changed {
+		t.Fatalf("Inject() first changed = false")
+	}
+
+	for _, id := range speckitSkills {
+		path := SkillPathForAgent(home, opencodeAdapter(), id)
+		if _, statErr := os.Stat(path); statErr != nil {
+			t.Fatalf("expected skill file %q: %v", path, statErr)
+		}
+		content, readErr := os.ReadFile(path)
+		if readErr != nil {
+			t.Fatalf("ReadFile(%q) error = %v", path, readErr)
+		}
+		if len(content) < 50 {
+			t.Fatalf("skill file %q content too short (len=%d)", path, len(content))
+		}
+	}
+}
+

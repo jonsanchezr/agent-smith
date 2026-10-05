@@ -12,7 +12,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/reviewtransaction"
+	"github.com/jonsanchezr/agent-smith/v4/internal/reviewtransaction"
 )
 
 type shippedReviewStoreEntry struct {
@@ -343,3 +343,4 @@ func TestShippedReviewValidateDisabledRouteIsByteStableAndUnmanaged(t *testing.T
 		})
 	}
 }
+

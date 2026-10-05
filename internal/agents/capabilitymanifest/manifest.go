@@ -1,5 +1,5 @@
 // Package capabilitymanifest owns the canonical, provider-neutral capability
-// facts advertised by Gentle AI agent adapters.
+// facts advertised by Agent Smith agent adapters.
 package capabilitymanifest
 
 import (
@@ -9,16 +9,16 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
 )
 
 type SchemaVersion string
 
-const SchemaV1 SchemaVersion = "gentle-ai.agent-capability-manifest/v1"
+const SchemaV1 SchemaVersion = "agent-smith.agent-capability-manifest/v1"
 
 type ContractID string
 
-const ContractWorkRoutingV1 ContractID = "gentle-ai.work-routing/v1"
+const ContractWorkRoutingV1 ContractID = "agent-smith.work-routing/v1"
 
 // ContractReviewTransportV1 is Wave 4 S4's transport capability claim
 // (design.md decision 5): the adapter self-declares whether it can carry
@@ -26,12 +26,12 @@ const ContractWorkRoutingV1 ContractID = "gentle-ai.work-routing/v1"
 // review authority, tier, lens, budget, or collection slot exists. The
 // provider never probes a live runtime for this — an absent or unrecognised
 // claim fails closed.
-const ContractReviewTransportV1 ContractID = "gentle-ai.review-transport/v1"
+const ContractReviewTransportV1 ContractID = "agent-smith.review-transport/v1"
 
 // ContractImmutableReviewExecutorV1 is independent of host/orchestrator
 // support. It is advertised only when a provider can launch a fresh,
 // constrained reviewer and prove that boundary before review START.
-const ContractImmutableReviewExecutorV1 ContractID = "gentle-ai.immutable-review-executor/v1"
+const ContractImmutableReviewExecutorV1 ContractID = "agent-smith.immutable-review-executor/v1"
 
 type ContractExposure string
 
@@ -58,7 +58,7 @@ type AgentCapabilityManifest struct {
 }
 
 // AgentFeatureClaims describes adapter integration mechanisms. FileSubAgents
-// means the adapter consumes Gentle AI's file-based subagent projection; it
+// means the adapter consumes Agent Smith's file-based subagent projection; it
 // does not infer whether the runtime can perform some other form of delegation.
 type AgentFeatureClaims struct {
 	OutputStyles  bool `json:"outputStyles"`
@@ -184,7 +184,7 @@ var reviewTransportExposureByAgent = func() map[model.AgentID]ContractExposure {
 // relay: the launcher reads the negotiated collection input, spawns a
 // brand-new print-mode pi subprocess in an empty scratch directory with
 // every discovery surface disabled, forwards the Go-issued opaque prompt
-// untouched, and returns raw final bytes (gentle-pi#311, gentle-ai#3249).
+// untouched, and returns raw final bytes (gentle-pi#311, agent-smith#3249).
 // Kilo and every other runtime remain explicitly dormant until they own an
 // equivalent native boundary.
 var immutableReviewExecutorExposureByAgent = func() map[model.AgentID]ContractExposure {
@@ -285,7 +285,7 @@ func (m AgentCapabilityManifest) Digest() (string, error) {
 	if err != nil {
 		return "", err
 	}
-	return digest("gentle-ai.agent-capability-manifest/v1", payload), nil
+	return digest("agent-smith.agent-capability-manifest/v1", payload), nil
 }
 
 func (m AgentCapabilityManifest) RoutingDigest() (string, error) {
@@ -296,7 +296,7 @@ func (m AgentCapabilityManifest) RoutingDigest() (string, error) {
 	if err != nil {
 		return "", fmt.Errorf("marshal implementation routing facts: %w", err)
 	}
-	return digest("gentle-ai.implementation-routing/v1", payload), nil
+	return digest("agent-smith.implementation-routing/v1", payload), nil
 }
 
 func digest(domain string, payload []byte) string {
@@ -312,7 +312,7 @@ var featureClaimsByAgent = map[model.AgentID]AgentFeatureClaims{
 		Skills: true, SystemPrompt: true, MCP: true,
 	},
 	// Conductor inherits Claude Code configuration and is managed through Claude
-	// Code's own adapter surface, so Gentle AI claims no write capabilities for
+	// Code's own adapter surface, so Agent Smith claims no write capabilities for
 	// it: no skills, MCP, system prompt, or other managed file writes.
 	model.AgentConductor: {},
 	model.AgentClaudeCode: {
@@ -362,3 +362,4 @@ var featureClaimsByAgent = map[model.AgentID]AgentFeatureClaims{
 		Skills: true, SystemPrompt: true, MCP: true, Workflows: true,
 	},
 }
+

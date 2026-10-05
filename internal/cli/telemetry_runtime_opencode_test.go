@@ -10,11 +10,11 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/telemetry"
+	"github.com/jonsanchezr/agent-smith/v4/internal/telemetry"
 )
 
 // Published V1 AssistantMessage subset: no batch/session/message identities.
-const completedOpenCodeEnvelope = `{"schema":"gentle-ai.telemetry-opencode/v1","info":{"role":"assistant","time":{"created":1,"completed":3},"providerID":"PRIVATE_PROVIDER","modelID":"PRIVATE_MODEL"}}`
+const completedOpenCodeEnvelope = `{"schema":"agent-smith.telemetry-opencode/v1","info":{"role":"assistant","time":{"created":1,"completed":3},"providerID":"PRIVATE_PROVIDER","modelID":"PRIVATE_MODEL"}}`
 
 type noOpenCodeRead struct{ t *testing.T }
 
@@ -48,7 +48,7 @@ func TestTelemetryRuntimeOpenCodeDirectSend(t *testing.T) {
 				t.Error("private wire field", private)
 			}
 		}
-		_, _ = io.WriteString(w, `{"schema":"gentle-ai.telemetry-runtime-delivery/v1","decision":"stored"}`)
+		_, _ = io.WriteString(w, `{"schema":"agent-smith.telemetry-runtime-delivery/v1","decision":"stored"}`)
 	})
 	for i, provider := range []string{"PRIVATE_PROVIDER", "opencode", "OpenCode", "openai"} {
 		wantProvider = "custom"
@@ -85,8 +85,8 @@ func TestTelemetryRuntimeOpenCodeUsesAgentAssignment(t *testing.T) {
 			wantModel: telemetry.RuntimeModel{Provider: "openai", ID: "gpt-5.4"}, wantEvidence: "response", wantKind: "built_in", wantClass: "sdd-apply", wantEffort: "high",
 		},
 		{
-			name: "selected model fills absent response model", agent: "gentle-orchestrator",
-			config:    `{"agent":{"gentle-orchestrator":{"model":"anthropic/claude-opus-5","variant":"xhigh"}}}`,
+			name: "selected model fills absent response model", agent: "agent-smith-orchestrator",
+			config:    `{"agent":{"agent-smith-orchestrator":{"model":"anthropic/claude-opus-5","variant":"xhigh"}}}`,
 			wantModel: telemetry.RuntimeModel{Provider: "anthropic", ID: "claude-opus-5"}, wantEvidence: "selected", wantKind: "orchestrator", wantClass: "orchestrator", wantEffort: "xhigh",
 		},
 		{
@@ -125,10 +125,10 @@ func TestTelemetryRuntimeOpenCodeUsesAgentAssignment(t *testing.T) {
 					if bytes.Contains(body, []byte(tt.agent)) && tt.wantClass == "unknown" {
 						t.Fatal("custom agent name leaked")
 					}
-					return &http.Response{StatusCode: http.StatusOK, Body: io.NopCloser(strings.NewReader(`{"schema":"gentle-ai.telemetry-runtime-delivery/v1","decision":"stored"}`)), Header: make(http.Header)}, nil
+					return &http.Response{StatusCode: http.StatusOK, Body: io.NopCloser(strings.NewReader(`{"schema":"agent-smith.telemetry-runtime-delivery/v1","decision":"stored"}`)), Header: make(http.Header)}, nil
 				})}
 			}
-			input := `{"schema":"gentle-ai.telemetry-opencode/v1","info":{"role":"assistant","time":{"created":1,"completed":3},"providerID":"` + tt.provider + `","modelID":"` + tt.model + `","agent":"` + tt.agent + `"}}`
+			input := `{"schema":"agent-smith.telemetry-opencode/v1","info":{"role":"assistant","time":{"created":1,"completed":3},"providerID":"` + tt.provider + `","modelID":"` + tt.model + `","agent":"` + tt.agent + `"}}`
 			var out bytes.Buffer
 			if err := runTelemetryRuntimeInput([]string{"opencode", "--json"}, &out, strings.NewReader(input)); err != nil || !strings.Contains(out.String(), `"stored"`) {
 				t.Fatalf("send = %q, %v", out.String(), err)
@@ -210,3 +210,4 @@ func TestTelemetryRuntimeOpenCodeRejectsUnsafeEnvelope(t *testing.T) {
 		t.Fatal("policy replaced")
 	}
 }
+

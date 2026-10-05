@@ -11,12 +11,12 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/reviewtransaction"
+	"github.com/jonsanchezr/agent-smith/v4/internal/reviewtransaction"
 )
 
 // These tests prove each surviving collect-satisfying capture operation
 // (`capture-result`, `capture-refuter`, `capture-validation`) emits one
-// `gentle-ai.review-integration.failure/v2` envelope on stdout when it
+// `agent-smith.review-integration.failure/v2` envelope on stdout when it
 // refuses. Machine callers can therefore classify the refusal as not started
 // instead of mistaking empty stdout for an unknown mutation outcome.
 
@@ -439,3 +439,4 @@ func TestReviewValidationRequestCopiesAgree(t *testing.T) {
 		})
 	}
 }
+

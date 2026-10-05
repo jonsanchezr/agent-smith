@@ -8,9 +8,9 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/state"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/telemetry"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
+	"github.com/jonsanchezr/agent-smith/v4/internal/state"
+	"github.com/jonsanchezr/agent-smith/v4/internal/telemetry"
 )
 
 const codexStateMaxBytes = 65536
@@ -186,3 +186,4 @@ func readCodexAssignment(home string, source telemetry.CodexHook) telemetry.Code
 	}
 	return assignment
 }
+

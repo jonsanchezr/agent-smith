@@ -11,21 +11,21 @@ import (
 	"strings"
 
 	tea "github.com/charmbracelet/bubbletea"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/backup"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/cli"
-	componentuninstall "github.com/gentleman-programming/gentle-ai/v4/internal/components/uninstall"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/pipeline"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/planner"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/reviewtransaction"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/skillregistry"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/state"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/statecoord"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/system"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/tui"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/update"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/update/upgrade"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/verify"
+	"github.com/jonsanchezr/agent-smith/v4/internal/backup"
+	"github.com/jonsanchezr/agent-smith/v4/internal/cli"
+	componentuninstall "github.com/jonsanchezr/agent-smith/v4/internal/components/uninstall"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
+	"github.com/jonsanchezr/agent-smith/v4/internal/pipeline"
+	"github.com/jonsanchezr/agent-smith/v4/internal/planner"
+	"github.com/jonsanchezr/agent-smith/v4/internal/reviewtransaction"
+	"github.com/jonsanchezr/agent-smith/v4/internal/skillregistry"
+	"github.com/jonsanchezr/agent-smith/v4/internal/state"
+	"github.com/jonsanchezr/agent-smith/v4/internal/statecoord"
+	"github.com/jonsanchezr/agent-smith/v4/internal/system"
+	"github.com/jonsanchezr/agent-smith/v4/internal/tui"
+	"github.com/jonsanchezr/agent-smith/v4/internal/update"
+	"github.com/jonsanchezr/agent-smith/v4/internal/update/upgrade"
+	"github.com/jonsanchezr/agent-smith/v4/internal/verify"
 )
 
 // Version is set from main via ldflags at build time.
@@ -61,7 +61,7 @@ func Run() error {
 	return RunArgs(os.Args[1:], os.Stdout)
 }
 
-const nonInteractiveTUIError = "gentle-ai requires both stdin and stdout to be terminals (TTYs); use --version, gentle-ai update, or --help for non-interactive use"
+const nonInteractiveTUIError = "agent-smith requires both stdin and stdout to be terminals (TTYs); use --version, agent-smith update, or --help for non-interactive use"
 
 // clearPendingSyncAfterDeferredSync clears PendingSync under the canonical
 // install-state lock. It re-reads the latest state inside the lock so changes
@@ -89,7 +89,7 @@ func RunArgs(args []string, stdout io.Writer) error {
 	}
 
 	// Propagate the build-time version to the CLI and upgrade layers so backup
-	// manifests record which version of gentle-ai created them.
+	// manifests record which version of agent-smith created them.
 	cli.AppVersion = Version
 	upgrade.AppVersion = Version
 
@@ -101,7 +101,7 @@ func RunArgs(args []string, stdout io.Writer) error {
 	if len(args) > 0 {
 		switch args[0] {
 		case "version", "--version", "-v":
-			_, _ = fmt.Fprintf(stdout, "gentle-ai %s\n", Version)
+			_, _ = fmt.Fprintf(stdout, "agent-smith %s\n", Version)
 			return nil
 		case "help", "--help", "-h":
 			printHelp(stdout, Version)
@@ -202,7 +202,7 @@ func RunArgs(args []string, stdout io.Writer) error {
 		return profile
 	}
 
-	// Self-update: check for a newer gentle-ai release and apply it before
+	// Self-update: check for a newer agent-smith release and apply it before
 	// CLI/TUI dispatch. Errors are non-fatal — logged and swallowed.
 	// Skip auto-upgrade on TUI entry (len(args) == 0) to avoid silently
 	// replacing the binary while the user expects a clean TUI launch (#696).
@@ -228,7 +228,7 @@ func RunArgs(args []string, stdout io.Writer) error {
 			return fmt.Errorf("read install state: %w", err)
 		}
 
-		// Deferred sync: if a previous gentle-ai self-upgrade set PendingSync=true,
+		// Deferred sync: if a previous agent-smith self-upgrade set PendingSync=true,
 		// run sync now with the new binary before entering the TUI. On success,
 		// clear the flag. On failure, log and leave the flag set for idempotent
 		// retry on the next launch (per spec scenario "deferred sync fails → retry").
@@ -246,7 +246,7 @@ func RunArgs(args []string, stdout io.Writer) error {
 					_, _ = fmt.Fprintf(stdout, "Warning: failed to clear PendingSync flag: %v\n", writeErr)
 				}
 			}
-			// TUI self-update path: the previous launch completed a gentle-ai
+			// TUI self-update path: the previous launch completed a agent-smith
 			// self-upgrade under the old binary and set PendingSync=true. We are
 			// now running under the new binary; print the doctor advisory so the
 			// user can verify ecosystem health against the post-upgrade state.
@@ -326,7 +326,7 @@ func RunArgs(args []string, stdout io.Writer) error {
 	case "doctor":
 		return cli.RunDoctor(context.Background(), stdout)
 	default:
-		return fmt.Errorf("unknown command %q — run 'gentle-ai help' for available commands", args[0])
+		return fmt.Errorf("unknown command %q — run 'agent-smith help' for available commands", args[0])
 	}
 }
 
@@ -354,12 +354,12 @@ func hasHelpFlag(args []string) bool {
 func gentleAIUpgradeVersionFromTUI(finalModel tea.Model) (string, bool) {
 	switch m := finalModel.(type) {
 	case tui.Model:
-		return m.GentleAIUpgradeVersion()
+		return m.AgentSmithUpgradeVersion()
 	case *tui.Model:
 		if m == nil {
 			return "", false
 		}
-		return m.GentleAIUpgradeVersion()
+		return m.AgentSmithUpgradeVersion()
 	default:
 		return "", false
 	}
@@ -367,7 +367,7 @@ func gentleAIUpgradeVersionFromTUI(finalModel tea.Model) (string, bool) {
 
 func runSkillRegistry(args []string, stdout io.Writer) error {
 	if len(args) == 0 {
-		return fmt.Errorf("usage: gentle-ai skill-registry <refresh|list> [flags]")
+		return fmt.Errorf("usage: agent-smith skill-registry <refresh|list> [flags]")
 	}
 	switch args[0] {
 	case "refresh":
@@ -521,13 +521,13 @@ func runUpdate(ctx context.Context, currentVersion string, profile system.Platfo
 	return nil
 }
 
-// runUpgrade handles the `gentle-ai upgrade [--dry-run] [tool...]` command.
+// runUpgrade handles the `agent-smith upgrade [--dry-run] [tool...]` command.
 //
 // This command:
-//   - Checks for available updates for managed tools (gentle-ai, engram, gga)
+//   - Checks for available updates for managed tools (agent-smith, engram, gga)
 //   - Snapshots agent config paths before execution (config preservation by design)
 //   - Executes binary-only upgrades; does NOT invoke install or sync pipelines
-//   - Skips gentle-ai itself when running as a dev build (version="dev")
+//   - Skips agent-smith itself when running as a dev build (version="dev")
 //   - Falls back to source-install guidance where official binaries are unavailable
 //
 // Issue #535: runUpgrade consumes a structured upgradeArgs value parsed once
@@ -1081,7 +1081,7 @@ func claudeAliasesToStrings(m map[string]model.ClaudeModelAlias) map[string]stri
 	out := make(map[string]string, len(m))
 	for k, v := range m {
 		// Claude Code owns the main session/orchestrator model; do not persist it
-		// as a Gentle AI model assignment.
+		// as a Agent Smith model assignment.
 		if k == "orchestrator" {
 			continue
 		}
@@ -1158,7 +1158,7 @@ func ListBackups() []backup.Manifest {
 		return nil
 	}
 
-	backupRoot := filepath.Join(homeDir, ".gentle-ai", "backups")
+	backupRoot := filepath.Join(homeDir, ".agent-smith", "backups")
 	entries, err := os.ReadDir(backupRoot)
 	if err != nil {
 		return nil
@@ -1238,3 +1238,4 @@ func tuiReviewStoreReset() (reviewtransaction.StoreResetReport, error) {
 	}
 	return reviewtransaction.ResetReviewStore(context.Background(), cwd, reviewtransaction.StoreResetRequest{})
 }
+

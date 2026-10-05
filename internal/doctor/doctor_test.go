@@ -12,7 +12,7 @@ func TestToolCheckID(t *testing.T) {
 		tool string
 		want CheckID
 	}{
-		{tool: "gentle-ai", want: "tool:gentle-ai"},
+		{tool: "agent-smith", want: "tool:agent-smith"},
 		{tool: "engram", want: "tool:engram"},
 	}
 	for _, tt := range tests {
@@ -71,3 +71,4 @@ func TestNewRemedyClassifiesCurrentRemedies(t *testing.T) {
 func recordingCheck(order *[]CheckID, id CheckID, result Result) func(context.Context) Result {
 	return func(context.Context) Result { *order = append(*order, id); return result }
 }
+

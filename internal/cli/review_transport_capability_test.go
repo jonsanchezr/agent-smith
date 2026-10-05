@@ -8,10 +8,10 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/catalog"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/reviewerprovider"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/reviewtransaction"
+	"github.com/jonsanchezr/agent-smith/v4/internal/catalog"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
+	"github.com/jonsanchezr/agent-smith/v4/internal/reviewerprovider"
+	"github.com/jonsanchezr/agent-smith/v4/internal/reviewtransaction"
 )
 
 // TestImmutableReviewRuntimeMatrix keeps runtime advertisement fail-closed for
@@ -98,7 +98,7 @@ func TestUnsupportedImmutableReviewTransportStopsBeforeRepositoryOrAuthority(t *
 	}{
 		{name: "Kilo", runtime: string(model.AgentKilocode), startCode: reviewTransportCapabilityUnsupportedCode},
 		{name: "unknown", runtime: "unknown-runtime", startCode: reviewTransportCapabilityUnsupportedCode},
-		{name: "logical orchestrator role", runtime: "gentle-orchestrator", startCode: reviewTransportCapabilityUnsupportedCode},
+		{name: "logical orchestrator role", runtime: "agent-smith-orchestrator", startCode: reviewTransportCapabilityUnsupportedCode},
 		//
 		// An undeclared runtime identity is deliberately absent from this
 		// matrix: it makes no transport claim to refuse, so it stays on the
@@ -154,7 +154,7 @@ func TestUnsupportedImmutableReviewTransportStopsBeforeRepositoryOrAuthority(t *
 	for _, args := range [][]string{
 		{"status", "--contract", ReviewIntegrationContractV2, "--agent", string(model.AgentKilocode), "--next-transition", "--cwd", repo},
 		{"start", "--contract", ReviewIntegrationContractV2, "--agent", "unknown-runtime", "--target", target, "--projection", "workspace", "--cwd", repo},
-		{"start", "--contract", ReviewIntegrationContractV2, "--agent", "gentle-orchestrator", "--target", target, "--projection", "workspace", "--cwd", repo},
+		{"start", "--contract", ReviewIntegrationContractV2, "--agent", "agent-smith-orchestrator", "--target", target, "--projection", "workspace", "--cwd", repo},
 		{"start", "--contract", ReviewIntegrationContractV2, "--agent", string(model.AgentClaudeCode), "--agent", string(model.AgentClaudeCode), "--target", target, "--projection", "workspace", "--cwd", repo},
 	} {
 		if err := RunReview(args, &bytes.Buffer{}); err == nil {
@@ -210,7 +210,7 @@ func TestImmutableReviewTransportRefusalNamesWorkingExits(t *testing.T) {
 			if err == nil {
 				t.Fatal("want a refusal")
 			}
-			const exit = "gentle-ai review mode disable --scope clone --cwd <repo>"
+			const exit = "agent-smith review mode disable --scope clone --cwd <repo>"
 			if !strings.Contains(err.Error(), exit) {
 				t.Fatalf("refusal does not name the clone-scoped kill switch: %v", err)
 			}
@@ -274,3 +274,4 @@ func TestPiHostRelayContractHandshakeGatesAdmission(t *testing.T) {
 		t.Fatalf("declared handshake refused: %#v", capability)
 	}
 }
+

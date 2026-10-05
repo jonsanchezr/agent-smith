@@ -3,7 +3,7 @@ package cli
 import (
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/reviewtransaction"
+	"github.com/jonsanchezr/agent-smith/v4/internal/reviewtransaction"
 )
 
 // allReviewSelfRecoveryShapes is the closed enumeration this test walks. A
@@ -69,3 +69,4 @@ func TestReviewSelfRecoveryShapeForRecover(t *testing.T) {
 		})
 	}
 }
+

@@ -6,7 +6,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/catalog"
+	"github.com/jonsanchezr/agent-smith/v4/internal/catalog"
 )
 
 // runtimeIdentityBindingRegexp captures the runtime identity an embedded asset
@@ -95,3 +95,4 @@ func TestSharedReviewLedgerContractBindsTheRuntimePlaceholder(t *testing.T) {
 		t.Error("shared review ledger contract never binds the runtime placeholder on the negotiated STATUS route")
 	}
 }
+

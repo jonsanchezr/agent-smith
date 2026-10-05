@@ -1,19 +1,19 @@
-# Interfaces
+﻿# Interfaces
 
 > [!NOTE]
-> These docs track `main`, which may include unreleased changes. For the latest release, see the [v4.0.0 docs](https://github.com/Gentleman-Programming/gentle-ai/tree/v4.0.0/docs).
+> These docs track `main`, which may include unreleased changes. For the latest release, see the [v4.0.0 docs](https://github.com/jonsanchezr/agent-smith/tree/v4.0.0/docs).
 
 [Back to Codebase Guide](../CODEBASE-GUIDE.md)
 
-Gentle-AI exposes a CLI and TUI. It configures MCP for agents. It does not expose a local HTTP API in this repository.
+agent-smith exposes a CLI and TUI. It configures MCP for agents. It does not expose a local HTTP API in this repository.
 
 ## Interface map
 
 | Interface | Status in this repo | Primary files | Read for details |
 |---|---|---|---|
-| CLI | Implemented | `cmd/gentle-ai/main.go`, `internal/app/`, `internal/cli/` | [Usage](../usage.md) |
+| CLI | Implemented | `cmd/agent-smith/main.go`, `internal/app/`, `internal/cli/` | [Usage](../usage.md) |
 | TUI | Implemented | `internal/tui/model.go`, `internal/tui/router.go`, `internal/tui/screens/` | [Usage](../usage.md) |
-| MCP | Configured, not hosted by Gentle-AI | `internal/components/engram/`, `internal/components/mcp/` | [Engram Commands](../engram.md) |
+| MCP | Configured, not hosted by agent-smith | `internal/components/engram/`, `internal/components/mcp/` | [Engram Commands](../engram.md) |
 | Local HTTP API | Not present in this source tree | No dashboard/server package found | Use external Engram docs if needed |
 
 ## CLI flow
@@ -32,7 +32,7 @@ Use CLI packages for non-interactive behavior such as `install`, `sync`, `uninst
 
 ## MCP flow
 
-Gentle-AI writes agent-specific MCP configuration so agents can call external servers. Engram configuration usually invokes:
+agent-smith writes agent-specific MCP configuration so agents can call external servers. Engram configuration usually invokes:
 
 ```text
 engram mcp --tools=agent
@@ -64,3 +64,4 @@ No local HTTP server, route table, HTMX package, or dashboard package is present
 ## Navigation
 
 Previous: [Memory core](memory-core.md) | Next: [Sync and cloud](sync-and-cloud.md)
+

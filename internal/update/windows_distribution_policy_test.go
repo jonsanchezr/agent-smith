@@ -70,7 +70,7 @@ func TestWindowsInstallAndUpgradeContainNoRemoteBinaryOrScriptPath(t *testing.T)
 	}
 	for _, required := range []string{
 		"Windows binary distribution and Scoop are temporarily unavailable",
-		"go install github.com/gentleman-programming/gentle-ai/v4/cmd/gentle-ai@latest",
+		"go install github.com/jonsanchezr/agent-smith/v4/cmd/agent-smith@latest",
 	} {
 		if !strings.Contains(installer, required) {
 			t.Errorf("Windows installer is missing safe source guidance %q", required)
@@ -109,19 +109,19 @@ func TestReleaseDistributionPolicyAssertionFailsClosed(t *testing.T) {
 		{
 			name: "missing release provenance archive",
 			mutate: func(t *testing.T, root string) {
-				replaceReleasePolicyFile(t, root, filepath.Join("dist", "artifacts.json"), "  {\"name\":\"gentle-ai-release-provenance-v1.tar.gz\",\"path\":\"dist/gentle-ai-release-provenance-v1.tar.gz\",\"type\":\"Archive\",\"extra\":{\"Binaries\":[],\"Format\":\"tar.gz\",\"ID\":\"release-provenance\"}},\n", "")
+				replaceReleasePolicyFile(t, root, filepath.Join("dist", "artifacts.json"), "  {\"name\":\"agent-smith-release-provenance-v1.tar.gz\",\"path\":\"dist/agent-smith-release-provenance-v1.tar.gz\",\"type\":\"Archive\",\"extra\":{\"Binaries\":[],\"Format\":\"tar.gz\",\"ID\":\"release-provenance\"}},\n", "")
 			},
 		},
 		{
 			name: "extra release provenance archive",
 			mutate: func(t *testing.T, root string) {
-				replaceReleasePolicyFile(t, root, filepath.Join("dist", "artifacts.json"), "\n]", ",\n  {\"name\":\"gentle-ai-release-provenance-v1-copy.tar.gz\",\"path\":\"dist/gentle-ai-release-provenance-v1-copy.tar.gz\",\"type\":\"Archive\",\"extra\":{\"Binaries\":[],\"Format\":\"tar.gz\",\"ID\":\"release-provenance\"}}\n]")
+				replaceReleasePolicyFile(t, root, filepath.Join("dist", "artifacts.json"), "\n]", ",\n  {\"name\":\"agent-smith-release-provenance-v1-copy.tar.gz\",\"path\":\"dist/agent-smith-release-provenance-v1-copy.tar.gz\",\"type\":\"Archive\",\"extra\":{\"Binaries\":[],\"Format\":\"tar.gz\",\"ID\":\"release-provenance\"}}\n]")
 			},
 		},
 		{
 			name: "provider contract archive version differs from committed semver",
 			mutate: func(t *testing.T, root string) {
-				replaceReleasePolicyFile(t, root, filepath.Join("dist", "artifacts.json"), "gentle-ai-review-provider-contract-1.2.0.tar.gz", "gentle-ai-review-provider-contract-2.0.0.tar.gz")
+				replaceReleasePolicyFile(t, root, filepath.Join("dist", "artifacts.json"), "agent-smith-review-provider-contract-1.2.0.tar.gz", "agent-smith-review-provider-contract-2.0.0.tar.gz")
 			},
 		},
 		{
@@ -147,7 +147,7 @@ func TestReleaseDistributionPolicyAssertionFailsClosed(t *testing.T) {
 		{
 			name: "unexpected resolved Windows artifact",
 			mutate: func(t *testing.T, root string) {
-				replaceReleasePolicyFile(t, root, filepath.Join("dist", "artifacts.json"), "\n]", ",\n  {"+`"name":"gentle-ai","path":"dist/gentle-ai_windows_amd64_v1/gentle-ai.exe","goos":"windows","goarch":"amd64","target":"windows_amd64_v1","type":"Binary","extra":{"Binary":"gentle-ai","ID":"gentle-ai"}`+"}\n]")
+				replaceReleasePolicyFile(t, root, filepath.Join("dist", "artifacts.json"), "\n]", ",\n  {"+`"name":"agent-smith","path":"dist/agent-smith_windows_amd64_v1/agent-smith.exe","goos":"windows","goarch":"amd64","target":"windows_amd64_v1","type":"Binary","extra":{"Binary":"agent-smith","ID":"agent-smith"}`+"}\n]")
 			},
 		},
 		{
@@ -191,9 +191,9 @@ func TestReleaseDistributionPolicyAssertionFailsClosed(t *testing.T) {
 			name: "artifact path escapes snapshot directory",
 			mutate: func(t *testing.T, root string) {
 				replaceReleasePolicyFile(t, root, filepath.Join("dist", "artifacts.json"),
-					`"path":"dist/gentle-ai_linux_amd64_v1/gentle-ai"`,
-					`"path":"dist/../outside/gentle-ai"`)
-				outside := filepath.Join(root, "outside", "gentle-ai")
+					`"path":"dist/agent-smith_linux_amd64_v1/agent-smith"`,
+					`"path":"dist/../outside/agent-smith"`)
+				outside := filepath.Join(root, "outside", "agent-smith")
 				if err := os.MkdirAll(filepath.Dir(outside), 0o755); err != nil {
 					t.Fatal(err)
 				}
@@ -205,7 +205,7 @@ func TestReleaseDistributionPolicyAssertionFailsClosed(t *testing.T) {
 		{
 			name: "artifact path resolves through symlink",
 			mutate: func(t *testing.T, root string) {
-				output := filepath.Join(root, "dist", "gentle-ai_linux_amd64_v1", "gentle-ai")
+				output := filepath.Join(root, "dist", "agent-smith_linux_amd64_v1", "agent-smith")
 				if err := os.Remove(output); err != nil {
 					t.Fatal(err)
 				}
@@ -298,7 +298,7 @@ func TestReleaseDistributionPolicyAssertionFailsClosed(t *testing.T) {
 			mutate: func(t *testing.T, root string) {
 				replaceReleasePolicyFile(t, root, filepath.Join(".github", "workflows", "release.yml"),
 					"      - name: Verify published assets from GitHub\n",
-					"      - name: Create release through GitHub API\n        run: gh api --method POST repos/Gentleman-Programming/gentle-ai/releases\n\n      - name: Verify published assets from GitHub\n")
+					"      - name: Create release through GitHub API\n        run: gh api --method POST repos/jonsanchezr/agent-smith/releases\n\n      - name: Verify published assets from GitHub\n")
 			},
 		},
 	} {
@@ -315,8 +315,8 @@ func TestReleaseDistributionPolicyAssertionFailsClosed(t *testing.T) {
 func TestReleaseDistributionPolicyAcceptsSemanticYAMLFormatting(t *testing.T) {
 	root := newReleasePolicyFixture(t)
 	replaceReleasePolicyFile(t, root, ".goreleaser.yaml",
-		"version: 2\n\nproject_name: gentle-ai\n",
-		"# Top-level key order and formatting are not release semantics.\nproject_name: gentle-ai\n\nversion: 2\n")
+		"version: 2\n\nproject_name: agent-smith\n",
+		"# Top-level key order and formatting are not release semantics.\nproject_name: agent-smith\n\nversion: 2\n")
 	replaceReleasePolicyFile(t, root, filepath.Join(".github", "workflows", "release.yml"),
 		"permissions:\n  contents: read\n\nconcurrency:\n  group: release-${{ github.ref }}\n  cancel-in-progress: false\n",
 		"concurrency:\n  group: release-${{ github.ref }}\n  cancel-in-progress: false\n\n# Mapping order is intentionally non-semantic.\npermissions:\n  contents: read\n")
@@ -332,7 +332,7 @@ func TestModifiedReleaseVerifierCannotGainWriteAuthority(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if _, err := file.WriteString("\ngh api --method POST repos/Gentleman-Programming/gentle-ai/releases\n"); err != nil {
+	if _, err := file.WriteString("\ngh api --method POST repos/jonsanchezr/agent-smith/releases\n"); err != nil {
 		_ = file.Close()
 		t.Fatal(err)
 	}
@@ -510,18 +510,18 @@ func replaceReleasePolicyFile(t *testing.T, root, path, old, replacement string)
 
 const releasePolicyArtifactsFixture = `[
   {"name":"metadata.json","path":"dist/metadata.json","type":"Metadata"},
-  {"name":"gentle-ai","path":"dist/gentle-ai_linux_amd64_v1/gentle-ai","goos":"linux","goarch":"amd64","target":"linux_amd64_v1","type":"Binary","extra":{"Binary":"gentle-ai","ID":"gentle-ai"}},
-  {"name":"gentle-ai","path":"dist/gentle-ai_linux_arm64_v8.0/gentle-ai","goos":"linux","goarch":"arm64","target":"linux_arm64_v8.0","type":"Binary","extra":{"Binary":"gentle-ai","ID":"gentle-ai"}},
-  {"name":"gentle-ai","path":"dist/gentle-ai_darwin_amd64_v1/gentle-ai","goos":"darwin","goarch":"amd64","target":"darwin_amd64_v1","type":"Binary","extra":{"Binary":"gentle-ai","ID":"gentle-ai"}},
-  {"name":"gentle-ai","path":"dist/gentle-ai_darwin_arm64_v8.0/gentle-ai","goos":"darwin","goarch":"arm64","target":"darwin_arm64_v8.0","type":"Binary","extra":{"Binary":"gentle-ai","ID":"gentle-ai"}},
-  {"name":"gentle-ai_0.0.0-SNAPSHOT_linux_amd64.tar.gz","path":"dist/gentle-ai_0.0.0-SNAPSHOT_linux_amd64.tar.gz","goos":"linux","goarch":"amd64","target":"linux_amd64_v1","type":"Archive","extra":{"Binaries":["gentle-ai"],"Format":"tar.gz","ID":"default"}},
-  {"name":"gentle-ai_0.0.0-SNAPSHOT_linux_arm64.tar.gz","path":"dist/gentle-ai_0.0.0-SNAPSHOT_linux_arm64.tar.gz","goos":"linux","goarch":"arm64","target":"linux_arm64_v8.0","type":"Archive","extra":{"Binaries":["gentle-ai"],"Format":"tar.gz","ID":"default"}},
-  {"name":"gentle-ai_0.0.0-SNAPSHOT_darwin_amd64.tar.gz","path":"dist/gentle-ai_0.0.0-SNAPSHOT_darwin_amd64.tar.gz","goos":"darwin","goarch":"amd64","target":"darwin_amd64_v1","type":"Archive","extra":{"Binaries":["gentle-ai"],"Format":"tar.gz","ID":"default"}},
-  {"name":"gentle-ai_0.0.0-SNAPSHOT_darwin_arm64.tar.gz","path":"dist/gentle-ai_0.0.0-SNAPSHOT_darwin_arm64.tar.gz","goos":"darwin","goarch":"arm64","target":"darwin_arm64_v8.0","type":"Archive","extra":{"Binaries":["gentle-ai"],"Format":"tar.gz","ID":"default"}},
-  {"name":"gentle-ai-review-provider-contract-1.2.0.tar.gz","path":"dist/gentle-ai-review-provider-contract-1.2.0.tar.gz","type":"Archive","extra":{"Binaries":[],"Format":"tar.gz","ID":"review-provider-contract"}},
-  {"name":"gentle-ai-release-provenance-v1.tar.gz","path":"dist/gentle-ai-release-provenance-v1.tar.gz","type":"Archive","extra":{"Binaries":[],"Format":"tar.gz","ID":"release-provenance"}},
+  {"name":"agent-smith","path":"dist/agent-smith_linux_amd64_v1/agent-smith","goos":"linux","goarch":"amd64","target":"linux_amd64_v1","type":"Binary","extra":{"Binary":"agent-smith","ID":"agent-smith"}},
+  {"name":"agent-smith","path":"dist/agent-smith_linux_arm64_v8.0/agent-smith","goos":"linux","goarch":"arm64","target":"linux_arm64_v8.0","type":"Binary","extra":{"Binary":"agent-smith","ID":"agent-smith"}},
+  {"name":"agent-smith","path":"dist/agent-smith_darwin_amd64_v1/agent-smith","goos":"darwin","goarch":"amd64","target":"darwin_amd64_v1","type":"Binary","extra":{"Binary":"agent-smith","ID":"agent-smith"}},
+  {"name":"agent-smith","path":"dist/agent-smith_darwin_arm64_v8.0/agent-smith","goos":"darwin","goarch":"arm64","target":"darwin_arm64_v8.0","type":"Binary","extra":{"Binary":"agent-smith","ID":"agent-smith"}},
+  {"name":"agent-smith_0.0.0-SNAPSHOT_linux_amd64.tar.gz","path":"dist/agent-smith_0.0.0-SNAPSHOT_linux_amd64.tar.gz","goos":"linux","goarch":"amd64","target":"linux_amd64_v1","type":"Archive","extra":{"Binaries":["agent-smith"],"Format":"tar.gz","ID":"default"}},
+  {"name":"agent-smith_0.0.0-SNAPSHOT_linux_arm64.tar.gz","path":"dist/agent-smith_0.0.0-SNAPSHOT_linux_arm64.tar.gz","goos":"linux","goarch":"arm64","target":"linux_arm64_v8.0","type":"Archive","extra":{"Binaries":["agent-smith"],"Format":"tar.gz","ID":"default"}},
+  {"name":"agent-smith_0.0.0-SNAPSHOT_darwin_amd64.tar.gz","path":"dist/agent-smith_0.0.0-SNAPSHOT_darwin_amd64.tar.gz","goos":"darwin","goarch":"amd64","target":"darwin_amd64_v1","type":"Archive","extra":{"Binaries":["agent-smith"],"Format":"tar.gz","ID":"default"}},
+  {"name":"agent-smith_0.0.0-SNAPSHOT_darwin_arm64.tar.gz","path":"dist/agent-smith_0.0.0-SNAPSHOT_darwin_arm64.tar.gz","goos":"darwin","goarch":"arm64","target":"darwin_arm64_v8.0","type":"Archive","extra":{"Binaries":["agent-smith"],"Format":"tar.gz","ID":"default"}},
+  {"name":"agent-smith-review-provider-contract-1.2.0.tar.gz","path":"dist/agent-smith-review-provider-contract-1.2.0.tar.gz","type":"Archive","extra":{"Binaries":[],"Format":"tar.gz","ID":"review-provider-contract"}},
+  {"name":"agent-smith-release-provenance-v1.tar.gz","path":"dist/agent-smith-release-provenance-v1.tar.gz","type":"Archive","extra":{"Binaries":[],"Format":"tar.gz","ID":"release-provenance"}},
   {"name":"checksums.txt","path":"dist/checksums.txt","type":"Checksum","extra":{}},
-  {"name":"gentle-ai.rb","path":"dist/homebrew/Formula/gentle-ai.rb","type":"Homebrew Formula","extra":{"BrewConfig":{"name":"gentle-ai","repository":{"owner":"Gentleman-Programming","name":"homebrew-tap","token":"{{ .Env.HOMEBREW_TAP_TOKEN }}"},"directory":"Formula"}}}
+  {"name":"agent-smith.rb","path":"dist/homebrew/Formula/agent-smith.rb","type":"Homebrew Formula","extra":{"BrewConfig":{"name":"agent-smith","repository":{"owner":"jonsanchezr","name":"homebrew-tap","token":"{{ .Env.HOMEBREW_TAP_TOKEN }}"},"directory":"Formula"}}}
 ]`
 
 const releasePolicyRunID = "release-policy-test-run"
@@ -540,3 +540,4 @@ func TestWindowsDistributionRestorationGateIsDocumented(t *testing.T) {
 		}
 	}
 }
+

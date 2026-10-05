@@ -8,8 +8,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/system"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
+	"github.com/jonsanchezr/agent-smith/v4/internal/system"
 )
 
 func TestDetect(t *testing.T) {
@@ -213,3 +213,4 @@ func TestCapabilities(t *testing.T) {
 		t.Fatalf("MCPStrategy() = %v, want StrategyMergeIntoYAML", got)
 	}
 }
+

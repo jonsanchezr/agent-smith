@@ -1,4 +1,4 @@
-# Windows Full Suite green
+﻿# Windows Full Suite green
 
 ## Objective
 Make the `Windows Full Suite` workflow (`.github/workflows/windows-full-suite.yml`) pass on `main`.
@@ -36,18 +36,19 @@ without weakening the behavior the tests protect. Single PR (user decision).
 - [ ] T4 Open single PR, run Windows Full Suite on the branch, confirm green
 
 ## Routing
-- T1–T3: delegated direct (gentle-ai-worker) — reading prepares writes across several packages.
+- T1â€“T3: delegated direct (agent-smith-worker) â€” reading prepares writes across several packages.
 - T4: inline (git/gh state).
 
 ## Delivery
-Strategy: `single-pr` (user). Forecast ~150–300 authored lines.
+Strategy: `single-pr` (user). Forecast ~150â€“300 authored lines.
 
 ## Checks
 - Focused `go test` of touched packages on Linux; `GOOS=windows go vet` of touched packages.
 - Final: Windows Full Suite CI run on the PR branch.
 
 ## Progress
-- T1 done (delegated gentle-ai-worker; risk tier medium, test-only). Root causes: %q-quoted paths in errors, Windows Perm() 0o666, native separators in verify IDs. Checks: Linux go test of 3 pkgs + TestRunSync ok, GOOS=windows go vet ok, gofmt clean; Windows GREEN pending CI (T4).
+- T1 done (delegated agent-smith-worker; risk tier medium, test-only). Root causes: %q-quoted paths in errors, Windows Perm() 0o666, native separators in verify IDs. Checks: Linux go test of 3 pkgs + TestRunSync ok, GOOS=windows go vet ok, gofmt clean; Windows GREEN pending CI (T4).
 - T1 native review approved+acknowledged (review-f9e8a510851a2696); commit 51db56cb.
-- T2/T3 done (delegated gentle-ai-worker; risk medium, one product line). T2: test compared PowerShell long path vs TempDir 8.3 short path -> os.SameFile. T3: extensionless sh npm stubs invisible to LookPath (PATHEXT) so real npm.cmd ran to 2m timeout -> skip stub-executing V2SDK tests on Windows; product bug: reviewRecoverCommand --cwd unquoted -> reviewTransitionShellWord (Linux RED->GREEN TestReviewRecoverCommandQuotesCwd). Checks: internal/cli full pkg ok (203.7s), GOOS=windows vet ok, gofmt clean; parent spot check ok.
+- T2/T3 done (delegated agent-smith-worker; risk medium, one product line). T2: test compared PowerShell long path vs TempDir 8.3 short path -> os.SameFile. T3: extensionless sh npm stubs invisible to LookPath (PATHEXT) so real npm.cmd ran to 2m timeout -> skip stub-executing V2SDK tests on Windows; product bug: reviewRecoverCommand --cwd unquoted -> reviewTransitionShellWord (Linux RED->GREEN TestReviewRecoverCommandQuotesCwd). Checks: internal/cli full pkg ok (203.7s), GOOS=windows vet ok, gofmt clean; parent spot check ok.
 - Branch `fix/windows-full-suite-green` from `origin/main` `0d2a0719`.
+

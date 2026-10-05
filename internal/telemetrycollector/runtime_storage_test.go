@@ -12,7 +12,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/telemetry"
+	"github.com/jonsanchezr/agent-smith/v4/internal/telemetry"
 )
 
 func TestRuntimeStorageMigration(t *testing.T) {
@@ -446,3 +446,4 @@ func TestRuntimeInsertDeliveryIDDedup(t *testing.T) {
 		t.Fatalf("ids/deliveries/rows = %d/%d/%d, want 2/0/0", ids, deliveries, rows)
 	}
 }
+

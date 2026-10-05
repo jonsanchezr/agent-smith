@@ -1,14 +1,14 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://gentle-ai.dev/contracts/review-integration/v2/schemas/status-v7.schema.json",
-  "title": "Gentle AI Review Integration native Git target status v7",
+  "$id": "https://agent-smith.dev/contracts/review-integration/v2/schemas/status-v7.schema.json",
+  "title": "Agent Smith Review Integration native Git target status v7",
   "type": "object", "additionalProperties": false,
   "required": [
     "schema", "contract", "operation", "applicability", "action", "replayability",
     "target_identity", "projection", "repair", "candidates"
   ],
   "properties": {
-    "schema": {"const": "gentle-ai.review-integration.status/v7"},
+    "schema": {"const": "agent-smith.review-integration.status/v7"},
     "contract": {"$ref": "status-v5.schema.json#/properties/contract"}, "operation": {"$ref": "status-v5.schema.json#/properties/operation"},
     "applicability": {"$ref": "status-v5.schema.json#/properties/applicability"}, "authority": {"$ref": "status-v5.schema.json#/properties/authority"},
     "action": {"enum": ["start", "validate", "recover", "maintainer_action", "select_lineage", "repair_authority", "stop", "collect", "execute"]}, "action_disposition": {"$ref": "status-v5.schema.json#/properties/action_disposition"},
@@ -51,7 +51,7 @@
                 "required": ["name", "schema", "capture_operation", "arguments"],
                 "properties": {
                   "name": {"const": "intended_untracked_selection"},
-                  "schema": {"const": "gentle-ai.review-intended-untracked-selection/v1"},
+                  "schema": {"const": "agent-smith.review-intended-untracked-selection/v1"},
                   "capture_operation": {"const": "external.select_intended_untracked"},
                   "arguments": {"type": "array", "minItems": 6, "maxItems": 6, "prefixItems": [
                     {"$ref": "status-v6.schema.json#/$defs/contract_argument"}, {"$ref": "status-v6.schema.json#/$defs/next_transition_argument"},
@@ -80,7 +80,7 @@
                 "type": "object", "additionalProperties": false, "required": ["operation", "command", "arguments", "binding"],
                 "properties": {
                   "operation": {"const": "review.capture-unachievable"},
-                  "command": {"type": "string", "minLength": 1, "pattern": "^gentle-ai review capture-unachievable "},
+                  "command": {"type": "string", "minLength": 1, "pattern": "^agent-smith review capture-unachievable "},
                   "arguments": {"type": "array", "items": {"$ref": "transition-execution.schema.json#/$defs/executable_transition_argument"}},
                   "binding": {"$ref": "transition-binding.schema.json"}
                 }
@@ -98,3 +98,4 @@
     {"if": {"properties": {"authority": {"properties": {"version": {"const": "compact-v2"}, "state": {"const": "escalated"}}, "required": ["version", "state"]}}, "required": ["authority"]}, "then": {"required": ["escalation"]}, "else": {"not": {"required": ["escalation"]}}}
   ]
 }
+

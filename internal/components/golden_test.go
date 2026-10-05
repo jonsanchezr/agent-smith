@@ -7,21 +7,21 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/agents"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/agents/antigravity"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/agents/claude"
-	codexagent "github.com/gentleman-programming/gentle-ai/v4/internal/agents/codex"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/agents/cursor"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/agents/gemini"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/agents/kiro"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/agents/opencode"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/agents/vscode"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/agents/windsurf"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/components/engram"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/components/mcp"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/components/persona"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/components/skills"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
+	"github.com/jonsanchezr/agent-smith/v4/internal/agents"
+	"github.com/jonsanchezr/agent-smith/v4/internal/agents/antigravity"
+	"github.com/jonsanchezr/agent-smith/v4/internal/agents/claude"
+	codexagent "github.com/jonsanchezr/agent-smith/v4/internal/agents/codex"
+	"github.com/jonsanchezr/agent-smith/v4/internal/agents/cursor"
+	"github.com/jonsanchezr/agent-smith/v4/internal/agents/gemini"
+	"github.com/jonsanchezr/agent-smith/v4/internal/agents/kiro"
+	"github.com/jonsanchezr/agent-smith/v4/internal/agents/opencode"
+	"github.com/jonsanchezr/agent-smith/v4/internal/agents/vscode"
+	"github.com/jonsanchezr/agent-smith/v4/internal/agents/windsurf"
+	"github.com/jonsanchezr/agent-smith/v4/internal/components/engram"
+	"github.com/jonsanchezr/agent-smith/v4/internal/components/mcp"
+	"github.com/jonsanchezr/agent-smith/v4/internal/components/persona"
+	"github.com/jonsanchezr/agent-smith/v4/internal/components/skills"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
 )
 
 var update = flag.Bool("update", false, "update golden files")
@@ -494,7 +494,7 @@ func TestGoldenEngram_Antigravity(t *testing.T) {
 	// #797: Engram registration for Antigravity is plugin-owned only; the
 	// plugin MCP config uses the canonical agent tool profile
 	// (args ["mcp", "--tools=agent"]).
-	pluginMCPJSON := readTestFile(t, filepath.Join(home, ".gemini", "antigravity-cli", "plugins", "gentle-ai-engram", "mcp_config.json"))
+	pluginMCPJSON := readTestFile(t, filepath.Join(home, ".gemini", "antigravity-cli", "plugins", "agent-smith-engram", "mcp_config.json"))
 	assertGolden(t, "engram-antigravity-mcp.golden", pluginMCPJSON)
 
 	// The global ~/.gemini/antigravity-cli/mcp_config.json is shared with
@@ -588,3 +588,4 @@ func firstDiffIndex(a, b string) int {
 	}
 	return -1
 }
+

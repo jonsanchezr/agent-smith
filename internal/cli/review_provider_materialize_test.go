@@ -10,8 +10,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/reviewtransaction"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
+	"github.com/jonsanchezr/agent-smith/v4/internal/reviewtransaction"
 )
 
 // piHostRelayCaptureBinding renders the exact binding argument vector the
@@ -89,7 +89,7 @@ func TestReviewCaptureResultMaterializePrintsPiProviderTaskWithoutCapturing(t *t
 // genuinely bound transaction is eligible and materializes exactly like a
 // relayed one, while the same unrelayed shell presenting a mismatched
 // (stale) binding is refused with the existing subject-hash mismatch
-// continuation -- a literal `gentle-ai …` invocation -- proving the binding
+// continuation -- a literal `agent-smith …` invocation -- proving the binding
 // is still enforced even though the handshake no longer is.
 func TestReviewCaptureResultMaterializeIsEligibleWithoutRelayHandshake(t *testing.T) {
 	reviewEnabledHome(t)
@@ -113,8 +113,8 @@ func TestReviewCaptureResultMaterializeIsEligibleWithoutRelayHandshake(t *testin
 	if !strings.Contains(err.Error(), "materialize subject hash does not match") {
 		t.Fatalf("mismatched binding refusal = %v, want the subject hash mismatch cause", err)
 	}
-	if !strings.Contains(err.Error(), "gentle-ai review status") {
-		t.Fatalf("mismatched binding refusal does not carry a gentle-ai continuation: %v", err)
+	if !strings.Contains(err.Error(), "agent-smith review status") {
+		t.Fatalf("mismatched binding refusal does not carry a agent-smith continuation: %v", err)
 	}
 }
 
@@ -291,3 +291,4 @@ func TestNegotiatedStatusRendersPiHostRelayMaterializeCaptureInput(t *testing.T)
 		t.Fatalf("compiled runtime capture rendering changed: %#v", compiledStatus.NextTransition.Collect.Inputs[0])
 	}
 }
+

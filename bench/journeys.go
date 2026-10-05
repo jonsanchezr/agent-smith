@@ -11,7 +11,7 @@ import (
 
 // reviewContract is the negotiated integration contract the status envelope
 // needs before it will emit next_transition.
-const reviewContract = "gentle-ai.review-integration/v1"
+const reviewContract = "agent-smith.review-integration/v1"
 
 const rejectedRecaptureLineage = "rejected-capture-recapture"
 
@@ -76,7 +76,7 @@ type statusEnvelope struct {
 		// Continuation is set only on the one stop reason_code
 		// (managed_assets_outdated) whose stop is itself the
 		// candidate-preserving continuation (#3299, #4170): the exact
-		// `gentle-ai sync` invocation that reconciles the recorded digest.
+		// `agent-smith sync` invocation that reconciles the recorded digest.
 		Continuation *struct {
 			Operation   string   `json:"operation"`
 			Command     string   `json:"command"`
@@ -497,7 +497,7 @@ func printedTransitionArguments(envelope statusEnvelope) ([]string, error) {
 
 // anchoredContinuationArguments validates a printed managed-assets
 // continuation whose executable token is anchored to the driven binary
-// (#4434): the command must name THAT binary -- an unqualified `gentle-ai`
+// (#4434): the command must name THAT binary -- an unqualified `agent-smith`
 // could resolve through PATH to a different binary whose sync never
 // reconciles the refusal -- followed by the sync verb and its arguments. It
 // returns the verb and arguments for execution through the same driven
@@ -542,7 +542,7 @@ func drivenExecutableIdentities(binary string) []string {
 
 // printedCommandArguments turns one printed command line into the argv a POSIX
 // shell would hand the product, and refuses anything that is not a complete,
-// immediately runnable `gentle-ai ...` invocation.
+// immediately runnable `agent-smith ...` invocation.
 func printedCommandArguments(command string) ([]string, error) {
 	words, err := splitPrintedCommandWords(command)
 	if err != nil {
@@ -824,12 +824,12 @@ func assertReviewParseRefusalsPreflight(run *journeyRun, operation, booleanFlag 
 				if got := strings.TrimSpace(observation.Stderr); got != "Error: "+test.cause {
 					return fmt.Errorf("%s %s plain diagnostic = %q, want %q", operation, test.name, got, "Error: "+test.cause)
 				}
-				usage := "Usage: gentle-ai review " + operation + " [flags]"
+				usage := "Usage: agent-smith review " + operation + " [flags]"
 				if got := strings.Contains(observation.Stdout, usage); got != test.usage {
 					return fmt.Errorf("%s %s plain usage %t, want %t", operation, test.name, got, test.usage)
 				}
 			}
-			if _, err := os.Stat(filepath.Join(run.sandbox.Repo, ".git", "gentle-ai", "defect-reports")); !errors.Is(err, os.ErrNotExist) {
+			if _, err := os.Stat(filepath.Join(run.sandbox.Repo, ".git", "agent-smith", "defect-reports")); !errors.Is(err, os.ErrNotExist) {
 				if err == nil {
 					return fmt.Errorf("%s %s %s refusal wrote a defect report", operation, test.name, mode)
 				}
@@ -1203,3 +1203,4 @@ func abandonNonTerminalLineage(r *journeyRun) error {
 	}, false)
 	return nil
 }
+

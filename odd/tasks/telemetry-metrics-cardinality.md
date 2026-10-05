@@ -1,6 +1,6 @@
-# Telemetry collector /metrics cardinality
+﻿# Telemetry collector /metrics cardinality
 
-Locator: `odd/tasks/telemetry-metrics-cardinality.md` (worktree `gentle-ai-worktrees/telemetry-metrics-cardinality`, branch `fix/telemetry-metrics-cardinality` from `origin/main` 465452ebe). Engram mirror: `odd/telemetry-metrics-cardinality/tasks`.
+Locator: `odd/tasks/telemetry-metrics-cardinality.md` (worktree `agent-smith-worktrees/telemetry-metrics-cardinality`, branch `fix/telemetry-metrics-cardinality` from `origin/main` 465452ebe). Engram mirror: `odd/telemetry-metrics-cardinality/tasks`.
 
 ## Objective
 Keep the collector's `GET /metrics` exposition (and the collector's memory) bounded so it never crosses VictoriaMetrics' `-promscrape.maxScrapeSize` (64 MiB).
@@ -27,10 +27,10 @@ Raising the cap only moves the limit to VPS RAM (collector + VictoriaMetrics bot
 - Delivery strategy: `ask-on-risk`; forecast ~200 authored lines, single PR.
 
 ## Tasks
-- [x] T1 — Skip creating a series for a zero delta (existing series unchanged). Route: delegated direct (writer covers T1+T2: 2+ non-trivial files).
-- [x] T2 — Idle-series TTL: `lastUpdate` per series, evict idle series during `WriteTo`, injectable clock, `--runtime-metrics-ttl` flag (default 24h, `0` disables), doc update. Route: delegated direct (same writer).
-- [x] T4 — Record delivery: T1+T2 pushed directly to `main` (user decision, no PR; the collector is not shipped by goreleaser) and deployed to the VPS. Route: direct inline (this document only).
-- [x] T3 — Render before evicting: `WriteTo` renders every live series, including ones past the TTL, then deletes the expired ones, so each series is scraped at least once after its last increment even after a scrape outage longer than the TTL. Route: delegated direct (writer trigger: metrics.go + tests + docs).
+- [x] T1 â€” Skip creating a series for a zero delta (existing series unchanged). Route: delegated direct (writer covers T1+T2: 2+ non-trivial files).
+- [x] T2 â€” Idle-series TTL: `lastUpdate` per series, evict idle series during `WriteTo`, injectable clock, `--runtime-metrics-ttl` flag (default 24h, `0` disables), doc update. Route: delegated direct (same writer).
+- [x] T4 â€” Record delivery: T1+T2 pushed directly to `main` (user decision, no PR; the collector is not shipped by goreleaser) and deployed to the VPS. Route: direct inline (this document only).
+- [x] T3 â€” Render before evicting: `WriteTo` renders every live series, including ones past the TTL, then deletes the expired ones, so each series is scraped at least once after its last increment even after a scrape outage longer than the TTL. Route: delegated direct (writer trigger: metrics.go + tests + docs).
 
 ## Acceptance criteria
 - A delta of 0 on an absent series renders nothing; a delta of 0 on an existing series leaves it rendered unchanged.
@@ -60,3 +60,4 @@ Raising the cap only moves the limit to VPS RAM (collector + VictoriaMetrics bot
 
 ## Next step
 Push, deploy, and a baseline measurement. Re-measure `/metrics` on 2026-09-25/26 to confirm it plateaus.
+

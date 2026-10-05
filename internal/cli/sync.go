@@ -17,32 +17,32 @@ import (
 	"strings"
 	"time"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/agents"
-	opencodeagent "github.com/gentleman-programming/gentle-ai/v4/internal/agents/opencode"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/backup"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/components/agentguidance"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/components/communitytool"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/components/engram"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/components/filemerge"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/components/gga"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/components/mcp"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/components/opencodedefault"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/components/opencodeplugin"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/components/opencoderuntimeplugins"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/components/permissions"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/components/persona"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/components/reviewassets"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/components/skills"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/components/telemetryruntime"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/components/theme"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
-	opencodeactivation "github.com/gentleman-programming/gentle-ai/v4/internal/opencode"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/pipeline"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/planner"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/state"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/system"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/telemetry"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/verify"
+	"github.com/jonsanchezr/agent-smith/v4/internal/agents"
+	opencodeagent "github.com/jonsanchezr/agent-smith/v4/internal/agents/opencode"
+	"github.com/jonsanchezr/agent-smith/v4/internal/backup"
+	"github.com/jonsanchezr/agent-smith/v4/internal/components/agentguidance"
+	"github.com/jonsanchezr/agent-smith/v4/internal/components/communitytool"
+	"github.com/jonsanchezr/agent-smith/v4/internal/components/engram"
+	"github.com/jonsanchezr/agent-smith/v4/internal/components/filemerge"
+	"github.com/jonsanchezr/agent-smith/v4/internal/components/gga"
+	"github.com/jonsanchezr/agent-smith/v4/internal/components/mcp"
+	"github.com/jonsanchezr/agent-smith/v4/internal/components/opencodedefault"
+	"github.com/jonsanchezr/agent-smith/v4/internal/components/opencodeplugin"
+	"github.com/jonsanchezr/agent-smith/v4/internal/components/opencoderuntimeplugins"
+	"github.com/jonsanchezr/agent-smith/v4/internal/components/permissions"
+	"github.com/jonsanchezr/agent-smith/v4/internal/components/persona"
+	"github.com/jonsanchezr/agent-smith/v4/internal/components/reviewassets"
+	"github.com/jonsanchezr/agent-smith/v4/internal/components/skills"
+	"github.com/jonsanchezr/agent-smith/v4/internal/components/telemetryruntime"
+	"github.com/jonsanchezr/agent-smith/v4/internal/components/theme"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
+	opencodeactivation "github.com/jonsanchezr/agent-smith/v4/internal/opencode"
+	"github.com/jonsanchezr/agent-smith/v4/internal/pipeline"
+	"github.com/jonsanchezr/agent-smith/v4/internal/planner"
+	"github.com/jonsanchezr/agent-smith/v4/internal/state"
+	"github.com/jonsanchezr/agent-smith/v4/internal/system"
+	"github.com/jonsanchezr/agent-smith/v4/internal/telemetry"
+	"github.com/jonsanchezr/agent-smith/v4/internal/verify"
 )
 
 // SyncFlags holds parsed CLI flags for the sync command.
@@ -127,7 +127,7 @@ func (e *PartialSyncError) Error() string {
 // Action is the operator-facing line for a skipped agent, reused by the CLI
 // error and the TUI manual actions.
 func (s SyncSkippedAgent) Action() string {
-	return fmt.Sprintf("%s was skipped: %s; then re-run `gentle-ai sync`", s.Agent, s.Reason)
+	return fmt.Sprintf("%s was skipped: %s; then re-run `agent-smith sync`", s.Agent, s.Reason)
 }
 
 // skipUndetectableOpenCode probes the OpenCode runtime once per sync, before
@@ -202,9 +202,9 @@ func ParseSyncFlags(args []string) (SyncFlags, error) {
 		}
 		usageText = strings.TrimRight(usageText, "\n")
 		if usageText != "" {
-			return SyncFlags{}, fmt.Errorf("%w — run `gentle-ai sync --help` for the supported flags:\n%s", err, usageText)
+			return SyncFlags{}, fmt.Errorf("%w — run `agent-smith sync --help` for the supported flags:\n%s", err, usageText)
 		}
-		return SyncFlags{}, fmt.Errorf("%w — run `gentle-ai sync --help` for the supported flags", err)
+		return SyncFlags{}, fmt.Errorf("%w — run `agent-smith sync --help` for the supported flags", err)
 	}
 	fs.Visit(func(f *flag.Flag) {
 		switch f.Name {
@@ -224,7 +224,7 @@ func ParseSyncFlags(args []string) (SyncFlags, error) {
 	})
 
 	if opts.strictTDDSet {
-		return SyncFlags{}, fmt.Errorf("--strict-tdd is retired: ODD uses applicable test-first development by default; rerun `gentle-ai sync` without --strict-tdd (retain any other flags)")
+		return SyncFlags{}, fmt.Errorf("--strict-tdd is retired: ODD uses applicable test-first development by default; rerun `agent-smith sync` without --strict-tdd (retain any other flags)")
 	}
 
 	if fs.NArg() > 0 {
@@ -236,7 +236,7 @@ func ParseSyncFlags(args []string) (SyncFlags, error) {
 
 func PrintSyncHelp(w io.Writer) {
 	fmt.Fprint(w, `USAGE
-  gentle-ai sync [flags]
+  agent-smith sync [flags]
 
 FLAGS
   --agent, --agents <list>           Agents to sync
@@ -265,7 +265,7 @@ FLAGS
 // Permissions and Theme can be opted-in via flags.
 //
 // Persona is included because its content lives between
-// <!-- gentle-ai:persona --> markers — that block is harness-managed and
+// <!-- agent-smith:persona --> markers — that block is harness-managed and
 // must propagate embedded-asset changes across versions. Content outside
 // the markers (user-authored sections) is preserved by InjectMarkdownSection.
 //
@@ -472,10 +472,10 @@ type syncRuntime struct {
 // created because the shared compatibility tree is global-only.
 func newSyncRuntimeWithScope(homeDir string, selection model.Selection, scope InstallScope) (*syncRuntime, error) {
 	workspaceDir, _ := os.Getwd()
-	backupRoot := filepath.Join(homeDir, ".gentle-ai", "backups")
+	backupRoot := filepath.Join(homeDir, ".agent-smith", "backups")
 	state := &runtimeState{}
 	if scope == ScopeWorkspace {
-		snapshotDir, err := os.MkdirTemp("", "gentle-ai-rollback-*")
+		snapshotDir, err := os.MkdirTemp("", "agent-smith-rollback-*")
 		if err != nil {
 			return nil, fmt.Errorf("create workspace sync snapshot directory: %w", err)
 		}
@@ -1058,13 +1058,13 @@ func (s *openCodeMarkerMigrationSyncStep) Run() error {
 		return fmt.Errorf("stat OpenCode settings: %w", err)
 	}
 	if !info.Mode().IsRegular() {
-		return fmt.Errorf("refuse non-regular OpenCode settings %q: inspect the path and use a regular settings file (not a symlink), then rerun gentle-ai sync", s.path)
+		return fmt.Errorf("refuse non-regular OpenCode settings %q: inspect the path and use a regular settings file (not a symlink), then rerun agent-smith sync", s.path)
 	}
 	raw, err := os.ReadFile(s.path)
 	if err != nil {
 		return fmt.Errorf("read OpenCode settings: %w", err)
 	}
-	names := append([]string{"gentle-orchestrator"}, opencodeactivation.GentleAIODDPhases()...)
+	names := append([]string{"agent-smith-orchestrator"}, opencodeactivation.AgentSmithODDPhases()...)
 	names = append(names, opencodeactivation.JDPhases()...)
 	names = append(names, opencodeactivation.ReviewPhases()...)
 	// Older installations used sdd-* names; these are eligible only when
@@ -1114,7 +1114,7 @@ func (s openCodeModelAssignmentSyncStep) Run() error {
 	// independently refuses leaf links at publication time.
 	info, err := os.Lstat(s.path)
 	if err == nil && !info.Mode().IsRegular() {
-		return fmt.Errorf("refuse non-regular OpenCode settings %q: move the symlink or directory aside, place a regular file at this path, then rerun `gentle-ai sync`", s.path)
+		return fmt.Errorf("refuse non-regular OpenCode settings %q: move the symlink or directory aside, place a regular file at this path, then rerun `agent-smith sync`", s.path)
 	}
 	if err != nil && !os.IsNotExist(err) {
 		return fmt.Errorf("stat OpenCode settings: %w", err)
@@ -1123,8 +1123,8 @@ func (s openCodeModelAssignmentSyncStep) Run() error {
 	if err != nil {
 		return fmt.Errorf("discover OpenCode custom agents: %w", err)
 	}
-	allowed := map[string]bool{"gentle-orchestrator": true, "general": true, "explore": true}
-	for _, name := range opencodeactivation.GentleAIODDPhases() {
+	allowed := map[string]bool{"agent-smith-orchestrator": true, "general": true, "explore": true}
+	for _, name := range opencodeactivation.AgentSmithODDPhases() {
 		allowed[name] = true
 	}
 	for _, name := range opencodeactivation.JDPhases() {
@@ -1541,7 +1541,7 @@ func (s componentSyncStep) Run() error {
 
 	case model.ComponentPersona:
 		// Sync regenerates the persona block between
-		// <!-- gentle-ai:persona --> markers and (when supported) refreshes
+		// <!-- agent-smith:persona --> markers and (when supported) refreshes
 		// the Gentleman output-style overlay. We deliberately skip the
 		// OpenCode/Kilocode agent definition in opencode.json — that JSON
 		// merge conflicts with SDD's writes to the same settings file and
@@ -2119,7 +2119,7 @@ func persistSyncManagedAssetStateWithBackground(homeDir string, selection model.
 			latest = state.InstallState{}
 		} else if err != nil {
 			return fmt.Errorf(
-				"read install state for managed asset provenance: %w; run `gentle-ai install` to rewrite %s",
+				"read install state for managed asset provenance: %w; run `agent-smith install` to rewrite %s",
 				err, state.Path(homeDir))
 		}
 
@@ -2259,7 +2259,7 @@ func RunSync(args []string) (SyncResult, error) {
 	}
 
 	// Restore Codex effort and carril model assignments from state so that
-	// `gentle-ai sync` preserves the user's per-phase effort and per-carril
+	// `agent-smith sync` preserves the user's per-phase effort and per-carril
 	// model choices instead of falling back to canonical defaults every time.
 	// This mirrors the TUI path (loadPersistedAssignments in app.go).
 	if len(selection.CodexModelAssignments) == 0 && len(persistedState.CodexModelAssignments) > 0 {
@@ -2495,7 +2495,7 @@ func RenderSyncReport(result SyncResult) string {
 	}
 
 	if result.NoOp {
-		fmt.Fprintln(&b, "gentle-ai sync — no managed sync actions needed")
+		fmt.Fprintln(&b, "agent-smith sync — no managed sync actions needed")
 		if len(result.Agents) == 0 {
 			fmt.Fprintln(&b, "No agents were discovered or specified. Nothing to sync.")
 		} else {
@@ -2513,7 +2513,7 @@ func RenderSyncReport(result SyncResult) string {
 	}
 
 	if result.DryRun {
-		fmt.Fprintln(&b, "gentle-ai sync — dry-run")
+		fmt.Fprintln(&b, "agent-smith sync — dry-run")
 		fmt.Fprintf(&b, "Agents: %s\n", joinAgentIDs(result.Agents))
 
 		compParts := make([]string, 0, len(result.Selection.Components))
@@ -2529,7 +2529,7 @@ func RenderSyncReport(result SyncResult) string {
 		return strings.TrimRight(b.String(), "\n")
 	}
 
-	fmt.Fprintln(&b, "gentle-ai sync — managed sync executed")
+	fmt.Fprintln(&b, "agent-smith sync — managed sync executed")
 	fmt.Fprintf(&b, "Agents synced: %s\n", joinAgentIDs(result.Agents))
 	renderSyncSkippedAgents(&b, result.SkippedAgents)
 
@@ -2589,8 +2589,8 @@ func renderSyncManualActions(b *strings.Builder, actions []string) {
 
 // withFailedSyncVerificationNote replaces the generic
 // verify.VerificationIssuesMessage with one naming the concrete command that
-// retries a failed sync: `gentle-ai sync`. Unlike the install path, sync has
-// no per-agent retry command -- rerunning `gentle-ai sync` re-applies every
+// retries a failed sync: `agent-smith sync`. Unlike the install path, sync has
+// no per-agent retry command -- rerunning `agent-smith sync` re-applies every
 // discovered/persisted agent, so no agent list is needed.
 //
 // It is scoped to exactly the generic failure text so it never clobbers a
@@ -2600,7 +2600,7 @@ func withFailedSyncVerificationNote(report verify.Report) verify.Report {
 	if report.Ready || report.FinalNote != verify.VerificationIssuesMessage {
 		return report
 	}
-	report.FinalNote = verify.VerificationIssuesMessageForCommand("gentle-ai sync")
+	report.FinalNote = verify.VerificationIssuesMessageForCommand("agent-smith sync")
 	return report
 }
 
@@ -2646,7 +2646,7 @@ func runPostSyncVerificationScoped(homeDir, workspaceDir string, scope InstallSc
 							}
 							return err
 						}
-						return fmt.Errorf("retired managed file still exists; rerun `gentle-ai sync` to finish retiring it")
+						return fmt.Errorf("retired managed file still exists; rerun `agent-smith sync` to finish retiring it")
 					},
 				})
 				continue
@@ -2724,7 +2724,7 @@ func runPostSyncVerificationScoped(homeDir, workspaceDir string, scope InstallSc
 				Description: "legacy OpenCode review plugin removed",
 				Run: func(context.Context) error {
 					if _, err := os.Lstat(legacyPath); err == nil {
-						return fmt.Errorf("legacy OpenCode review plugin still exists; rerun `gentle-ai sync` to complete the managed plugin migration")
+						return fmt.Errorf("legacy OpenCode review plugin still exists; rerun `agent-smith sync` to complete the managed plugin migration")
 					} else if !os.IsNotExist(err) {
 						return err
 					}
@@ -2736,3 +2736,4 @@ func runPostSyncVerificationScoped(homeDir, workspaceDir string, scope InstallSc
 
 	return verify.BuildReport(verify.RunChecks(context.Background(), checks))
 }
+

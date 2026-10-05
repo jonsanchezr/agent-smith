@@ -11,8 +11,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/components/filemerge"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
+	"github.com/jonsanchezr/agent-smith/v4/internal/components/filemerge"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
 )
 
 func TestExternalPluginsRefusedWithoutWrites(t *testing.T) {
@@ -514,3 +514,4 @@ func TestInstallGentleLogoWritesLocalTUIPluginAndRegistersAbsolutePath(t *testin
 		t.Fatalf("plugin registration = %#v, want absolute %q", root.Plugin, pluginPath)
 	}
 }
+

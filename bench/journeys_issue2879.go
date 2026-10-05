@@ -17,7 +17,7 @@ const issue2879Lineage = "review-f8708016a901b4ff"
 const issue2879Digest = "sha256:7adf81305d031f928d9898c03be98d5e942132bfc98d209ee99f6fe3dd008259"
 const issue2879Class = "retired_compact_snapshot_identity"
 
-// The released v2.2.4 asset gentle-ai_2.2.4_linux_amd64.tar.gz (SHA-256 a6de9f21999fad2b22fed87e267bbb222782505b7316457bcb9af5e5a2217809) created these exact issue2879Digest bytes.
+// The released v2.2.4 asset agent-smith_2.2.4_linux_amd64.tar.gz (SHA-256 a6de9f21999fad2b22fed87e267bbb222782505b7316457bcb9af5e5a2217809) created these exact issue2879Digest bytes.
 //
 //go:embed testdata/issue2879/released-v2.2.4-review-state.json
 var issue2879ReleasedRecord []byte
@@ -194,3 +194,4 @@ func issue2879Decoy(r *journeyRun) error {
 	}
 	return nil
 }
+

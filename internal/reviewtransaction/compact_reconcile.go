@@ -19,7 +19,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/pathquote"
+	"github.com/jonsanchezr/agent-smith/v4/internal/pathquote"
 )
 
 const compactRecoveryEdgeUnchangedTarget = "unchanged_target"
@@ -142,7 +142,7 @@ func classifyCompactRecoveryEdgeAnomalies(predecessor, successor CompactRecord) 
 // read-only prediction (InspectCompactPristineAbandonment) accepted the
 // lineage may render this, so the command printed is the command that runs.
 func compactAbandonCommandText(repo, lineage string, eligibility CompactAbandonEligibility) string {
-	return fmt.Sprintf("`gentle-ai review abandon --cwd %s --lineage %q --expected-revision %q --reason %q --actor \"<actor>\" --maintainer-authorization \"<maintainer-authorization>\"`;"+
+	return fmt.Sprintf("`agent-smith review abandon --cwd %s --lineage %q --expected-revision %q --reason %q --actor \"<actor>\" --maintainer-authorization \"<maintainer-authorization>\"`;"+
 		" the abandonment moves the entry into the audited quarantine and rewrites nothing, so the recorded authorization bytes survive exactly as persisted."+
 		" --maintainer-authorization is exactly these nine lines, joined by LF, with no trailing newline, using the same --actor:\n%s",
 		pathquote.Quote(repo), lineage, eligibility.Revision, CompactAbandonReasonOperatorDisposition,
@@ -158,3 +158,4 @@ func compactAbandonBlockerText(state CompactState) string {
 	}
 	return "the abandonment gate does not accept it: its discarded-work summary cannot be read, it has a same-lineage legacy-v1 entry, a successor of its own, or removal would break the remaining graph"
 }
+

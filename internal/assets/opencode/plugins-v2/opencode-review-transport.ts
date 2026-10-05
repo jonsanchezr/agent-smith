@@ -1,13 +1,13 @@
-// gentle-ai:managed opencode-review-transport/v2
+﻿// agent-smith:managed opencode-review-transport/v2
 // Thin wire adapter: Go owns binding, materialization, admission, and capture.
 import { Plugin } from "@opencode/plugin"
 import { spawn } from "node:child_process"
-const RELAY_CONTRACT = "gentle-ai.opencode-relay/v2-staged"
+const RELAY_CONTRACT = "agent-smith.opencode-relay/v2-staged"
 const RELAY_CONTRACT_ENV = "GENTLE_AI_OPENCODE_RELAY_CONTRACT"
 const REVIEW_AGENTS = new Set(["review-risk", "review-resilience", "review-readability", "review-reliability", "review-refuter", "review-validator"])
 const TRANSPORT = {
-  Command: "gentle-ai",
-  Schema: "gentle-ai.provider-transport/v1",
+  Command: "agent-smith",
+  Schema: "agent-smith.provider-transport/v1",
   Start: "start",
   Prompt: "prompt",
   Complete: "complete",
@@ -160,7 +160,7 @@ const refusalText = (reason: RefusalReason) => `${REFUSED} (reason: ${reason})`
 const refusal = (reason: RefusalReason) => Object.assign(new Error(refusalText(reason)), { code: REFUSED, reason })
 
 export default Plugin.define({
-  id: "gentle-ai.opencode-review-transport",
+  id: "agent-smith.opencode-review-transport",
   async setup(ctx) {
     const owner = Symbol("review-relay")
     const relays = registry()
@@ -266,3 +266,4 @@ export default Plugin.define({
     return cleanup
   },
 })
+

@@ -7,9 +7,9 @@ import (
 	"runtime"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/components/filemerge"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/components/opencodedefault"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
+	"github.com/jonsanchezr/agent-smith/v4/internal/components/filemerge"
+	"github.com/jonsanchezr/agent-smith/v4/internal/components/opencodedefault"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
 )
 
 // TestOpenCodeFamilySettingsWritersPreservePrivateMode proves that the
@@ -29,7 +29,7 @@ func TestOpenCodeFamilySettingsWritersPreservePrivateMode(t *testing.T) {
 				"provider": map[string]any{"example": map[string]any{"options": map[string]any{"apiKey": "secret"}}},
 				"agent": map[string]any{
 					opencodedefault.ManagedAgent: map[string]any{"prompt": prompt},
-					"sdd-apply":                  map[string]any{"__managed_by": "gentle-ai/sdd"},
+					"sdd-apply":                  map[string]any{"__managed_by": "agent-smith/sdd"},
 				},
 			})
 			if err != nil {
@@ -78,3 +78,4 @@ func TestOpenCodeFamilySettingsWritersPreservePrivateMode(t *testing.T) {
 		})
 	}
 }
+

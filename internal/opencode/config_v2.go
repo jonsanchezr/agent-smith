@@ -3,7 +3,7 @@ package opencode
 import (
 	"strings"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
 )
 
 // Normalize only the fields represented by ConfigSnapshot. Native entries are
@@ -120,7 +120,7 @@ func overlayConfiguredAssignments(assignments map[string]AssignmentPresence, roo
 	for name, raw := range legacy {
 		key := name
 		if name == "sdd-orchestrator" {
-			key = "gentle-orchestrator"
+			key = "agent-smith-orchestrator"
 		}
 		def, _ := raw.(map[string]any)
 		_, hasModel := def["model"]
@@ -143,7 +143,7 @@ func overlayConfiguredAssignments(assignments map[string]AssignmentPresence, roo
 	for name, raw := range native {
 		key := name
 		if name == "sdd-orchestrator" {
-			key = "gentle-orchestrator"
+			key = "agent-smith-orchestrator"
 		}
 		def, ok := raw.(map[string]any)
 		if !ok {
@@ -165,3 +165,4 @@ func overlayConfiguredAssignments(assignments map[string]AssignmentPresence, roo
 		}
 	}
 }
+

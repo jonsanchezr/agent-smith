@@ -8,7 +8,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/reviewtransaction"
+	"github.com/jonsanchezr/agent-smith/v4/internal/reviewtransaction"
 )
 
 func TestRetiredBindSDDRejectsBothPublishedContractsWithoutAnEnvelope(t *testing.T) {
@@ -28,7 +28,7 @@ func TestRetiredBindSDDRejectsBothPublishedContractsWithoutAnEnvelope(t *testing
 
 func TestNegotiatedReviewOperationsRejectInvalidContractsBeforeMutation(t *testing.T) {
 	reviewEnabledHome(t)
-	for _, contract := range []string{"", "gentle-ai.review-integration/v3"} {
+	for _, contract := range []string{"", "agent-smith.review-integration/v3"} {
 		t.Run("validate_"+contract, func(t *testing.T) {
 			repo := initReviewCLIRepo(t)
 			writeNegotiatedOperationChange(t, repo, "thin")
@@ -168,5 +168,6 @@ func readReviewOperationFile(t *testing.T, path string) []byte {
 
 func reviewOperationBindingPath(store reviewtransaction.CompactStore, change string) string {
 	common := filepath.Dir(filepath.Dir(filepath.Dir(filepath.Dir(store.Dir))))
-	return filepath.Join(common, "gentle-ai", "sdd-runtime", "v1", change, "HEAD")
+	return filepath.Join(common, "agent-smith", "sdd-runtime", "v1", change, "HEAD")
 }
+

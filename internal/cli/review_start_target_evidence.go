@@ -12,7 +12,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/reviewtransaction"
+	"github.com/jonsanchezr/agent-smith/v4/internal/reviewtransaction"
 )
 
 // Issue #4494: the consent answer re-enters negotiated START, which rebuilds
@@ -123,7 +123,7 @@ func reviewTargetEvidenceDifferences(expected, actual reviewTargetEvidence) []st
 
 // reviewConsentStaleMarkerSchema identifies the small per-repository record
 // written when a relayed consent answer is spent on a moved candidate.
-const reviewConsentStaleMarkerSchema = "gentle-ai.review-consent-stale-marker/v1"
+const reviewConsentStaleMarkerSchema = "agent-smith.review-consent-stale-marker/v1"
 
 // reviewConsentStaleMarkerWindow bounds how long the stop hook stays quiet
 // after a consent answer was refused as stale because the candidate moved.
@@ -153,7 +153,7 @@ func reviewConsentStaleMarkerPath(home, repo string) string {
 		}
 	}
 	digest := sha256.Sum256([]byte(filepath.Clean(canonical)))
-	return filepath.Join(home, ".gentle-ai", "review-stop-hook", "v1", "consent-stale", hex.EncodeToString(digest[:])+".json")
+	return filepath.Join(home, ".agent-smith", "review-stop-hook", "v1", "consent-stale", hex.EncodeToString(digest[:])+".json")
 }
 
 // recordReviewConsentStaleRefusal records that a spent consent answer was
@@ -274,3 +274,4 @@ func validReviewTargetDriftComponents(components ReviewIntegrationNegotiatedComp
 	return reviewTargetEvidenceTreePattern.MatchString(components.CandidateTree) &&
 		reviewTargetEvidenceDigestPattern.MatchString(components.PathsDigest)
 }
+

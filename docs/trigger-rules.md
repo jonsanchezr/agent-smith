@@ -1,11 +1,11 @@
 # Organic Implementation Trigger Rules
 
 > [!NOTE]
-> These docs track `main`, which may include unreleased changes. For the latest release, see the [v4.0.0 docs](https://github.com/Gentleman-Programming/gentle-ai/tree/v4.0.0/docs).
+> These docs track `main`, which may include unreleased changes. For the latest release, see the [v4.0.0 docs](https://github.com/jonsanchezr/agent-smith/tree/v4.0.0/docs).
 
 <- [Back to README](../README.md)
 
-Ask for the outcome. Gentle AI™ keeps already-understood work inline, delegates only
+Ask for the outcome. Agent Smithâ„¢ keeps already-understood work inline, delegates only
 the actions that benefit from fresh context, and uses [Organic Driven Development
 (ODD)](usage.md#organic-driven-development-odd) for every implementation request.
 Native providers own verification, review mechanics, and lifecycle authority; ordinary repository policy owns delivery.
@@ -16,7 +16,7 @@ Native providers own verification, review mechanics, and lifecycle authority; or
 ## Quick path
 
 1. Describe the outcome in natural language.
-2. Gentle AI uses the smallest useful implementation route: direct inline or
+2. Agent Smith uses the smallest useful implementation route: direct inline or
    delegated direct.
 3. The normal interaction reports only **Working**, **Checking**, **Ready**, or
    **Needs your decision**.
@@ -51,9 +51,9 @@ artifact handoff.
 | Public state | Meaning |
 |---|---|
 | **Working** | The implementation can still change. |
-| **Checking** | Gentle AI is performing the applicable functional proof and bounded review. |
+| **Checking** | Agent Smith is performing the applicable functional proof and bounded review. |
 | **Ready** | The exact candidate has sufficient evidence for the selected delivery route. |
-| **Needs your decision** | Safe automatic convergence is impossible; Gentle AI presents the cause, impact, and concrete choices. |
+| **Needs your decision** | Safe automatic convergence is impossible; Agent Smith presents the cause, impact, and concrete choices. |
 
 The user still asks only for the outcome. Repository identity, route, policy,
 candidate, delivery mechanism, and authority references remain owner-derived.
@@ -68,11 +68,11 @@ reported as decided by `default`:
 
 | Command | Effect |
 |---|---|
-| `gentle-ai review mode status --cwd <repo>` | Report the global source, clone-local source, deciding source, and effective mode without mutation. |
-| `gentle-ai review mode enable --scope global --cwd <repo>` | Explicitly enable receipt-driven development globally for future candidates. |
-| `gentle-ai review mode disable --cwd <repo>` | Disable receipt-driven development globally. |
-| `gentle-ai review mode disable --scope clone --cwd <repo>` | Disable it only for this clone; no other clone inherits the override. |
-| `gentle-ai review mode enable --scope clone --cwd <repo>` | Clear this clone's off-only override. Inherit global mode or default ON; an explicit global OFF still wins. |
+| `agent-smith review mode status --cwd <repo>` | Report the global source, clone-local source, deciding source, and effective mode without mutation. |
+| `agent-smith review mode enable --scope global --cwd <repo>` | Explicitly enable receipt-driven development globally for future candidates. |
+| `agent-smith review mode disable --cwd <repo>` | Disable receipt-driven development globally. |
+| `agent-smith review mode disable --scope clone --cwd <repo>` | Disable it only for this clone; no other clone inherits the override. |
+| `agent-smith review mode enable --scope clone --cwd <repo>` | Clear this clone's off-only override. Inherit global mode or default ON; an explicit global OFF still wins. |
 
 Any disabled source wins. A clone may opt out but cannot require review for the
 user. Automation must never toggle the mode automatically or persist the default
@@ -98,11 +98,11 @@ holding authoritative artifacts, so until now a degraded store had no exit.
 
 | Command | Effect |
 |---|---|
-| `gentle-ai review store-reset --cwd <repo>` | Report, per category, what a reset would remove and what it would preserve. Removes nothing. |
-| `gentle-ai review store-reset --cwd <repo> --confirm` | Remove this clone's review lineage state. Irreversible. |
-| `gentle-ai review store-reset --cwd <repo> --confirm --include-in-flight` | Also remove reviews that have not reached a terminal state. |
-| `gentle-ai review store-reset --cwd <repo> --confirm --include-adapter-reviews` | Also remove the adapter-written `reviews/` graph store, which the lease and the in-flight refusal do not cover. |
-| `gentle-ai review store-reset --cwd <repo> --json` | The same report, machine-readable. |
+| `agent-smith review store-reset --cwd <repo>` | Report, per category, what a reset would remove and what it would preserve. Removes nothing. |
+| `agent-smith review store-reset --cwd <repo> --confirm` | Remove this clone's review lineage state. Irreversible. |
+| `agent-smith review store-reset --cwd <repo> --confirm --include-in-flight` | Also remove reviews that have not reached a terminal state. |
+| `agent-smith review store-reset --cwd <repo> --confirm --include-adapter-reviews` | Also remove the adapter-written `reviews/` graph store, which the lease and the in-flight refusal do not cover. |
+| `agent-smith review store-reset --cwd <repo> --json` | The same report, machine-readable. |
 
 Every sub-action is user-initiated only; no adapter and no automation reaches
 it, because the verb carries no negotiated contract row. Preview is the default
@@ -160,19 +160,19 @@ in-flight work is never one keystroke away.
 
 ## Installation and refresh
 
-`gentle-ai install` and `gentle-ai sync` project the same canonical rules into
+`agent-smith install` and `agent-smith sync` project the same canonical rules into
 every supported adapter:
 
 - Standard adapters receive the managed `agent-routing` marker in their
   adapter-owned system-prompt file.
 - OpenCode and Kilocode receive it inside
-  `agent.gentle-orchestrator.prompt` in their adapter-owned `opencode.json`.
+  `agent.agent-smith-orchestrator.prompt` in their adapter-owned `opencode.json`.
 - Jinja-backed adapters receive an `agent-routing.md` module included by their
   managed router template.
 
 ```bash
-gentle-ai install   # full install
-gentle-ai sync      # refresh managed content
+agent-smith install   # full install
+agent-smith sync      # refresh managed content
 ```
 
 Refresh is idempotent: the managed projection is replaced without duplication.
@@ -189,3 +189,4 @@ Review mode is implemented in
 [`internal/cli/review_mode.go`](../internal/cli/review_mode.go). The current
 authority and recovery behavior is documented in the
 [Organic RDD architecture](architecture/organic-rdd.md).
+

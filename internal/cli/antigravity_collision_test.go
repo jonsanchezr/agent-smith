@@ -5,7 +5,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
 )
 
 func TestAntigravityCollisionCheckIncludesGeminiCLI(t *testing.T) {
@@ -29,14 +29,14 @@ func TestAntigravityCollisionCheckIncludesGeminiCLI(t *testing.T) {
 	message := err.Error()
 	for _, want := range []string{
 		"Antigravity intentionally uses the Gemini-compatible global prompt surface",
-		"last synced agent routing guidance controls the shared gentle-ai:agent-routing section",
+		"last synced agent routing guidance controls the shared agent-smith:agent-routing section",
 		"Prefer Antigravity for new installs",
 	} {
 		if !strings.Contains(message, want) {
 			t.Fatalf("warning message missing %q; got:\n%s", want, message)
 		}
 	}
-	if strings.Contains(message, "gentle-ai:sdd-orchestrator") || strings.Contains(message, "SDD orchestrator") {
+	if strings.Contains(message, "agent-smith:sdd-orchestrator") || strings.Contains(message, "SDD orchestrator") {
 		t.Fatalf("warning message advertises retired SDD guidance: %s", message)
 	}
 }
@@ -47,3 +47,4 @@ func TestAntigravityCollisionCheckNoWarningWithoutGemini(t *testing.T) {
 		t.Fatalf("antigravityCollisionCheck() len = %d, want 0", len(checks))
 	}
 }
+

@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/agents/capabilitymanifest"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
+	"github.com/jonsanchezr/agent-smith/v4/internal/agents/capabilitymanifest"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
 )
 
 const reviewTransportCapabilityUnsupportedCode = "review_transport_capability_unsupported"
@@ -31,7 +31,7 @@ var reviewTransportCapabilityForAgent = capabilitymanifest.ForAgent
 //
 // An absent agent identity (the manual/non-agent compatibility path) is not
 // gated at all: there is no adapter here to admit or deny, and direct
-// `gentle-ai review start` remains compatibility-supported for explicit,
+// `agent-smith review start` remains compatibility-supported for explicit,
 // manual, non-negotiated callers. A supplied identity that is unrecognised
 // (capabilitymanifest.ForAgent returns ErrUnsupportedAgent), whose manifest
 // does not advertise ContractReviewTransportV1 (Pi today — it declares only
@@ -57,3 +57,4 @@ func authorizeReviewTransportCapability(agent string) error {
 	}
 	return nil
 }
+

@@ -3,8 +3,8 @@ package screens
 import (
 	"strings"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/tui/styles"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
+	"github.com/jonsanchezr/agent-smith/v4/internal/tui/styles"
 )
 
 // ABEngineOptions returns display names for the available generation engines.
@@ -41,3 +41,4 @@ func RenderABEngine(availableEngines []model.AgentID, cursor int) string {
 
 	return b.String()
 }
+

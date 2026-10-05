@@ -7,10 +7,10 @@ import (
 	"io"
 	"strings"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/reviewtransaction"
+	"github.com/jonsanchezr/agent-smith/v4/internal/reviewtransaction"
 )
 
-const ReviewResultReopenSchema = "gentle-ai.review-result-reopen-result/v1"
+const ReviewResultReopenSchema = "agent-smith.review-result-reopen-result/v1"
 
 type ReviewResultReopenResult struct {
 	Schema    string                                       `json:"schema"`
@@ -84,3 +84,4 @@ func RunReviewReopenResults(args []string, stdout io.Writer) error {
 		Record: &record,
 	})
 }
+

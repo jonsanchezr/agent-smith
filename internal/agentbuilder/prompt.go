@@ -5,7 +5,7 @@ import (
 	"html"
 	"strings"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
 )
 
 const systemPromptBase = `You are an expert AI agent skill designer for the Gentleman AI ecosystem.
@@ -65,3 +65,4 @@ func ComposePrompt(userInput string, installedAgents []model.AgentID) string {
 func promptEscape(value string) string {
 	return html.EscapeString(value)
 }
+

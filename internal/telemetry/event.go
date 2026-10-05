@@ -7,7 +7,7 @@ import (
 	"runtime"
 	"time"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
 )
 
 // versionPattern mirrors event.schema.json's `version` pattern: a numeric
@@ -67,7 +67,7 @@ func filterKnown(values []string, known map[string]bool) []string {
 }
 
 // Event is the exact JSON POST body sent to the collector
-// (gentle-ai.telemetry-event/v1). Every field is either a fixed enum, a
+// (agent-smith.telemetry-event/v1). Every field is either a fixed enum, a
 // random identifier, or a count — never a path, hostname, username, prompt,
 // or diff.
 type Event struct {
@@ -141,3 +141,4 @@ func nonNilStrings(values []string) []string {
 	}
 	return values
 }
+

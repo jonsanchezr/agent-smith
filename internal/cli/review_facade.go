@@ -15,9 +15,9 @@ import (
 	"strings"
 	"time"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/reviewerprovider"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/reviewtransaction"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
+	"github.com/jonsanchezr/agent-smith/v4/internal/reviewerprovider"
+	"github.com/jonsanchezr/agent-smith/v4/internal/reviewtransaction"
 )
 
 // reviewContractRequiredForActionEligibilityReason is the single wording
@@ -44,12 +44,12 @@ const reviewStartTargetRequiresContractReason = "review start --target requires 
 // strictly negotiated-form surface: the typed question exists for callers
 // that relay envelopes, and the unnegotiated form keeps today's console
 // behavior byte for byte. The refusal names the exact runnable rerun.
-const reviewStartConsentRequiresContractReason = "review start --consent requires the negotiated form; rerun as gentle-ai review start --contract " +
+const reviewStartConsentRequiresContractReason = "review start --consent requires the negotiated form; rerun as agent-smith review start --contract " +
 	ReviewIntegrationContractV1 + " with the bound --target and --projection"
 
 // reviewStartConsentValueReason names the exact allowed-answer domain for the
 // consent declaration, mirroring the choice tokens the typed question emits.
-const reviewStartConsentValueReason = "review start --consent accepts exactly relay, granted, or declined; rerun gentle-ai review start with one of those values"
+const reviewStartConsentValueReason = "review start --consent accepts exactly relay, granted, or declined; rerun agent-smith review start with one of those values"
 
 // reviewCompactFacadeLineageAbsentError distinguishes an ordinary compact
 // absence from malformed compact authority. Ordinary lifecycle commands never
@@ -61,16 +61,16 @@ type reviewCompactFacadeLineageAbsentError struct {
 
 func (err *reviewCompactFacadeLineageAbsentError) Error() string {
 	if strings.TrimSpace(err.LineageID) == "" {
-		return "no discoverable compact facade review lineage found; run gentle-ai review start to begin one, or use gentle-ai review-resume --cwd <repo> --lineage <lineage> for explicit read-only historical compatibility"
+		return "no discoverable compact facade review lineage found; run agent-smith review start to begin one, or use agent-smith review-resume --cwd <repo> --lineage <lineage> for explicit read-only historical compatibility"
 	}
-	return fmt.Sprintf("no compact facade review lineage %q was found; run gentle-ai review start --lineage %s to begin a fresh compact review, or use gentle-ai review-resume --cwd <repo> --lineage %s for explicit read-only historical compatibility", err.LineageID, err.LineageID, err.LineageID)
+	return fmt.Sprintf("no compact facade review lineage %q was found; run agent-smith review start --lineage %s to begin a fresh compact review, or use agent-smith review-resume --cwd <repo> --lineage %s for explicit read-only historical compatibility", err.LineageID, err.LineageID, err.LineageID)
 }
 
 func reviewCompactFacadeLineageAbsent(lineageID string) error {
 	return &reviewCompactFacadeLineageAbsentError{LineageID: strings.TrimSpace(lineageID)}
 }
 
-const facadeReviewPolicy = `Gentle AI native bounded review policy.
+const facadeReviewPolicy = `Agent Smith native bounded review policy.
 
 Only candidate-caused BLOCKER or CRITICAL findings may require correction. Pre-existing and base-only findings are follow-ups. One correction is bounded by the frozen original scope. Gates are informational and unmanaged; ordinary repository policy decides delivery.
 `
@@ -201,7 +201,7 @@ const reviewUndeclaredRuntimeIdentitySlot = "<your-runtime-identity>"
 // medium/high-risk review lineage with no consent envelope.
 func reviewNegotiatedStartCommand(snapshot reviewtransaction.Snapshot, runtimeAgent string) string {
 	identity := strings.TrimSpace(runtimeAgent)
-	command := fmt.Sprintf("gentle-ai review start --contract %s", ReviewIntegrationContractV2)
+	command := fmt.Sprintf("agent-smith review start --contract %s", ReviewIntegrationContractV2)
 	if identity != "" {
 		command += " --agent " + identity
 	}
@@ -337,7 +337,7 @@ func (err *ReviewReceiptDiscoveryError) Error() string {
 		// opposite: every terminal receipt on file was assessed against this
 		// candidate and none of them governs it. That is the candidate's own
 		// situation, and it has one route, so the denial states both.
-		message = "no approved review receipt covers this candidate; review it with gentle-ai review start"
+		message = "no approved review receipt covers this candidate; review it with agent-smith review start"
 	case ReviewReceiptScopeChanged:
 		message = "terminal review receipts do not exactly match the live gate target"
 	case ReviewReceiptAmbiguous:
@@ -352,7 +352,7 @@ func (err *ReviewReceiptDiscoveryError) Error() string {
 			// required.
 			message = "no terminal review receipt governs this candidate"
 			if len(err.Candidates) > 0 {
-				message += "; review it directly with gentle-ai review start, or optionally recover a prior lineage instead: " + strings.Join(err.Candidates, ", ")
+				message += "; review it directly with agent-smith review start, or optionally recover a prior lineage instead: " + strings.Join(err.Candidates, ", ")
 			}
 		} else {
 			// More than one receipt genuinely governs, so the gate must not
@@ -364,7 +364,7 @@ func (err *ReviewReceiptDiscoveryError) Error() string {
 			// error already carries.
 			message = "multiple terminal review receipts require explicit target selection"
 			if len(err.Candidates) > 0 {
-				message += "; select one with gentle-ai review validate --lineage <id>, from: " + strings.Join(err.Candidates, ", ")
+				message += "; select one with agent-smith review validate --lineage <id>, from: " + strings.Join(err.Candidates, ", ")
 			}
 		}
 	case ReviewAuthorityCorrupted:
@@ -595,7 +595,7 @@ func (err *reviewStartContextError) Unwrap() error { return err.Cause }
 
 func RunReview(args []string, stdout io.Writer) error {
 	if len(args) == 0 || args[0] == "help" || args[0] == "-h" || args[0] == "--help" {
-		_, _ = fmt.Fprintln(stdout, "Usage: gentle-ai review <acknowledge-approved|capture-result|capture-correction-plan|capture-refuter|capture-unachievable|capture-validation|lens-context|capabilities|assess|start|validate|status|repair|invalidate|abandon|recover|reclaim|store-reset|inspect-authority|inspect-candidate|reopen-results|schema|opencode-transport> [flags]\n\nOrdinary review facade; repository scope, authority, canonical artifacts, and lifecycle transitions are derived by Go. Provider transports relay opaque bytes only; Go materializes, admits, captures, and closes review on its final causal event. Generic review recover remains unchanged. Use review repair --preflight for provider-owned classified authority repair.")
+		_, _ = fmt.Fprintln(stdout, "Usage: agent-smith review <acknowledge-approved|capture-result|capture-correction-plan|capture-refuter|capture-unachievable|capture-validation|lens-context|capabilities|assess|start|validate|status|repair|invalidate|abandon|recover|reclaim|store-reset|inspect-authority|inspect-candidate|reopen-results|schema|opencode-transport> [flags]\n\nOrdinary review facade; repository scope, authority, canonical artifacts, and lifecycle transitions are derived by Go. Provider transports relay opaque bytes only; Go materializes, admits, captures, and closes review on its final causal event. Generic review recover remains unchanged. Use review repair --preflight for provider-owned classified authority repair.")
 		return nil
 	}
 	operation, negotiated, preflightFailure := reviewIntegrationFailureRoute(args)
@@ -858,24 +858,24 @@ func runReviewStatus(ctx context.Context, args []string, stdout io.Writer) error
 		// with its cause; a bare error collapsed into the read-only catch-all
 		// whose "retry" could never succeed.
 		if *committedOnly && (selectedBaseRef == "" || *workspaceOverlay) {
-			return reviewPreflightError(errors.New("review status --committed-only requires --base-ref without --workspace-overlay; rerun `gentle-ai review status --base-ref <ref> --committed-only`"))
+			return reviewPreflightError(errors.New("review status --committed-only requires --base-ref without --workspace-overlay; rerun `agent-smith review status --base-ref <ref> --committed-only`"))
 		}
 		if selectedBaseRef != "" && committedOnlyProvided && !*committedOnly && !*workspaceOverlay {
-			return reviewPreflightError(errors.New("review status --base-ref requires --committed-only; rerun `gentle-ai review status --base-ref <ref> --committed-only`"))
+			return reviewPreflightError(errors.New("review status --base-ref requires --committed-only; rerun `agent-smith review status --base-ref <ref> --committed-only`"))
 		}
 		stagedRecoveryOverlay := *workspaceOverlay && selectedProjection == reviewtransaction.ProjectionStaged
 		if *workspaceOverlay && stagedRecoveryOverlay && (selectedBaseRef == "" || selectedBaseTree != "") {
-			return reviewPreflightError(errors.New("review status --workspace-overlay --projection staged requires exactly --base-ref and no --base-tree; rerun `gentle-ai review status --base-ref <ref> --workspace-overlay --projection staged`"))
+			return reviewPreflightError(errors.New("review status --workspace-overlay --projection staged requires exactly --base-ref and no --base-tree; rerun `agent-smith review status --base-ref <ref> --workspace-overlay --projection staged`"))
 		}
 		if *workspaceOverlay && !stagedRecoveryOverlay &&
 			((selectedBaseRef == "") == (selectedBaseTree == "") || selectedProjection != reviewtransaction.ProjectionWorkspace) {
-			return reviewPreflightError(errors.New("review status --workspace-overlay requires exactly one of --base-ref or --base-tree with --projection workspace; rerun `gentle-ai review status --base-ref <ref> --workspace-overlay`"))
+			return reviewPreflightError(errors.New("review status --workspace-overlay requires exactly one of --base-ref or --base-tree with --projection workspace; rerun `agent-smith review status --base-ref <ref> --workspace-overlay`"))
 		}
 		if !*workspaceOverlay && selectedBaseTree != "" {
-			return reviewPreflightError(errors.New("review status --base-tree requires --workspace-overlay; rerun `gentle-ai review status --base-tree <tree> --workspace-overlay`"))
+			return reviewPreflightError(errors.New("review status --base-tree requires --workspace-overlay; rerun `agent-smith review status --base-tree <tree> --workspace-overlay`"))
 		}
 		if selectedBaseTree != "" && !validReviewGitTree(selectedBaseTree) {
-			return reviewPreflightError(errors.New("review status --base-tree requires an exact Git tree object ID; rerun `gentle-ai review status --base-tree <tree> --workspace-overlay` with the frozen tree ID"))
+			return reviewPreflightError(errors.New("review status --base-tree requires an exact Git tree object ID; rerun `agent-smith review status --base-tree <tree> --workspace-overlay` with the frozen tree ID"))
 		}
 		root, err := reviewtransaction.PrepareReviewRepositoryRoot(ctx, *cwd)
 		if err != nil {
@@ -927,7 +927,7 @@ func runReviewStatus(ctx context.Context, args []string, stdout io.Writer) error
 		var pendingApprovedTerminalTarget *reviewtransaction.Snapshot
 		if selectedProjection == reviewtransaction.ProjectionStaged {
 			if reviewIntendedUntrackedDeclared(untrackedScope, intendedUntracked, expectedUntrackedInventory) {
-				return reviewPreflightError(errors.New("staged projection does not accept intended-untracked selection; remove those flags and rerun `gentle-ai review status --projection staged`"))
+				return reviewPreflightError(errors.New("staged projection does not accept intended-untracked selection; remove those flags and rerun `agent-smith review status --projection staged`"))
 			}
 		} else {
 			if !reviewIntendedUntrackedDeclared(untrackedScope, intendedUntracked, expectedUntrackedInventory) && requestedLineageOccupied {
@@ -1036,10 +1036,10 @@ func runReviewStatus(ctx context.Context, args []string, stdout io.Writer) error
 		// lineage fails closed instead of preflighting a fresh target there.
 		if requestedContext := strings.TrimSpace(*repositoryContextHandle); requestedContext != "" {
 			if requestedLineage == "" || !*nextTransition || reviewtransaction.ValidateReviewRepositoryContextHandle(requestedContext) != nil {
-				return reviewPreflightError(errors.New("review status --repository-context is only valid with --next-transition and the --lineage START issued it for; rerun the exact continuation `gentle-ai review status --contract gentle-ai.review-integration/v2 --next-transition --lineage <lineage> --repository-context <handle>` START returned"))
+				return reviewPreflightError(errors.New("review status --repository-context is only valid with --next-transition and the --lineage START issued it for; rerun the exact continuation `agent-smith review status --contract agent-smith.review-integration/v2 --next-transition --lineage <lineage> --repository-context <handle>` START returned"))
 			}
 			if !requestedLineageOccupied {
-				return reviewPreflightError(fmt.Errorf("review lineage %q is not held by repository %s; rerun the same command from the repository that owns the lineage, or name it: `gentle-ai review status --cwd <repository> --contract %s --next-transition --lineage %s --repository-context %s`", requestedLineage, root, *contract, requestedLineage, requestedContext))
+				return reviewPreflightError(fmt.Errorf("review lineage %q is not held by repository %s; rerun the same command from the repository that owns the lineage, or name it: `agent-smith review status --cwd <repository> --contract %s --next-transition --lineage %s --repository-context %s`", requestedLineage, root, *contract, requestedLineage, requestedContext))
 			}
 			// Issue #4023: the authority store above is scoped to the Git
 			// common dir, so a linked worktree of the same repository also
@@ -1053,7 +1053,7 @@ func runReviewStatus(ctx context.Context, args []string, stdout io.Writer) error
 				return fmt.Errorf("inspect negotiated START lineage worktree binding: %w", err)
 			}
 			if foreignWorktree {
-				return reviewPreflightError(fmt.Errorf("review lineage %q is held by a different worktree of repository %s (expected worktree %s); rerun the same command from the worktree that started the lineage, or name it: `gentle-ai review status --cwd <repository> --contract %s --next-transition --lineage %s --repository-context %s`", requestedLineage, root, reviewDefectReportRedactionMarker, *contract, requestedLineage, requestedContext))
+				return reviewPreflightError(fmt.Errorf("review lineage %q is held by a different worktree of repository %s (expected worktree %s); rerun the same command from the worktree that started the lineage, or name it: `agent-smith review status --cwd <repository> --contract %s --next-transition --lineage %s --repository-context %s`", requestedLineage, root, reviewDefectReportRedactionMarker, *contract, requestedLineage, requestedContext))
 			}
 		}
 		if *nextTransition && (requestedLineage == "" || !requestedLineageOccupied) {
@@ -1639,7 +1639,7 @@ func reviewStatusRecoverySuccessor(ctx context.Context, root string, binding Rev
 }
 
 func reviewRecoveryStatusRefusal(detail string) error {
-	return reviewPreflightError(fmt.Errorf("%s; inspect the existing authority with the requested repository as the working directory; re-run: gentle-ai review inspect-authority", detail))
+	return reviewPreflightError(fmt.Errorf("%s; inspect the existing authority with the requested repository as the working directory; re-run: agent-smith review inspect-authority", detail))
 }
 
 func RunReviewRecover(args []string, stdout io.Writer) error {
@@ -1655,7 +1655,7 @@ func RunReviewRecover(args []string, stdout io.Writer) error {
 	reason := flags.String("reason", "", "recovery reason")
 	actor := flags.String("actor", "", "recovery actor")
 	projectionFlag := flags.String("projection", "", "successor projection: workspace or staged (default: predecessor projection)")
-	authorization := flags.String("maintainer-authorization", "", "exact LF-only gentle-ai.review-recovery-authorization/v1 binding: predecessor_lineage, predecessor_revision, target_identity, optional native successor_lineage, actor, reason")
+	authorization := flags.String("maintainer-authorization", "", "exact LF-only agent-smith.review-recovery-authorization/v1 binding: predecessor_lineage, predecessor_revision, target_identity, optional native successor_lineage, actor, reason")
 	policySource := flags.String("policy", "", "optional review policy file")
 	focus := flags.String("focus", "reliability", "dominant standard-risk focus; large pure documentation always uses readability")
 	baseRef := flags.String("base-ref", "", "optional base revision for immutable base-to-HEAD review")
@@ -1744,10 +1744,10 @@ func RunReviewRecover(args []string, stdout io.Writer) error {
 	declaredSelection := reviewIntendedUntrackedDeclared(untrackedScope, intendedUntracked, expectedUntrackedInventory)
 	currentChangesSuccessor := !*releaseScope && !*committedOnly && !stagedScopeOverlay && !overlay
 	if declaredSelection && !currentChangesSuccessor {
-		return errors.New("intended-untracked selection requires a current-changes recovery; rerun `gentle-ai review recover` without --untracked-scope, --intended-untracked, and --expected-untracked-inventory")
+		return errors.New("intended-untracked selection requires a current-changes recovery; rerun `agent-smith review recover` without --untracked-scope, --intended-untracked, and --expected-untracked-inventory")
 	}
 	if declaredSelection && projection == reviewtransaction.ProjectionStaged {
-		return errors.New("staged projection does not accept intended-untracked selection; remove those flags and rerun `gentle-ai review recover --projection staged`")
+		return errors.New("staged projection does not accept intended-untracked selection; remove those flags and rerun `agent-smith review recover --projection staged`")
 	}
 	intended := []string{}
 	switch {
@@ -1916,7 +1916,7 @@ func reviewFrozenShapeConflictRefusal(flags *flag.FlagSet, conflict, cwd, predec
 	for _, selector := range reviewRecoverSelectorTokens(flags) {
 		command = append(command, reviewTransitionShellWord(selector))
 	}
-	return fmt.Errorf("%s conflicts with the frozen recovery review shape; omit --focus and --policy and use the bound gentle-ai review recover command in the same repository context; re-run: %s", conflict, strings.Join(command, " "))
+	return fmt.Errorf("%s conflicts with the frozen recovery review shape; omit --focus and --policy and use the bound agent-smith review recover command in the same repository context; re-run: %s", conflict, strings.Join(command, " "))
 }
 
 // reviewUnchangedRecoveryRefusal explains the unchanged-target escalated
@@ -1948,7 +1948,7 @@ func reviewUnchangedRecoveryRefusal(cause error, cwd, predecessor, expected, suc
 // relayed verbatim into machine envelopes, so it stays path-free and the
 // continuation runs with the repository as the working directory.
 func reviewInexactRecoveryAuthorizationRefusal(cause error, predecessor, expected, successor, disposition string, selectors []string) error {
-	return fmt.Errorf("%w: an accepted binding is the LF-joined text `gentle-ai.review-recovery-authorization/v1` followed by one key=value line each for predecessor_lineage, predecessor_revision, target_identity (the successor target this command derived, echoed above), actor, and reason; a target derived by a status query with different selectors never binds here. This recovery shape derives its own binding, so omit --maintainer-authorization, --actor, and --reason and, with the repository as the working directory, re-run: %s",
+	return fmt.Errorf("%w: an accepted binding is the LF-joined text `agent-smith.review-recovery-authorization/v1` followed by one key=value line each for predecessor_lineage, predecessor_revision, target_identity (the successor target this command derived, echoed above), actor, and reason; a target derived by a status query with different selectors never binds here. This recovery shape derives its own binding, so omit --maintainer-authorization, --actor, and --reason and, with the repository as the working directory, re-run: %s",
 		cause, strings.Join(append([]string{reviewRecoverCommand("", predecessor, expected, successor, disposition)}, selectors...), " "))
 }
 
@@ -1969,7 +1969,7 @@ func reviewRecoverSelectorTokens(flags *flag.FlagSet) []string {
 	return tokens
 }
 
-// reviewRecoverCommand renders one literal `gentle-ai review recover`
+// reviewRecoverCommand renders one literal `agent-smith review recover`
 // invocation. Every value is one the caller already holds, so nothing here is
 // ever a guess printed at the operator.
 func reviewRecoverCommand(cwd, predecessor, expected, successor, disposition string) string {
@@ -2083,7 +2083,7 @@ func RunReviewInvalidate(args []string, stdout io.Writer) error {
 			if gateName == "" {
 				gateName = "<gate>"
 			}
-			return fmt.Errorf("review invalidate no longer performs gate-derived invalidation for lineage %q; invalidated is now a derived verdict, never a write; see it instead: gentle-ai review validate --cwd %s --lineage %s --gate %s", *lineage, strings.TrimSpace(*cwd), *lineage, gateName)
+			return fmt.Errorf("review invalidate no longer performs gate-derived invalidation for lineage %q; invalidated is now a derived verdict, never a write; see it instead: agent-smith review validate --cwd %s --lineage %s --gate %s", *lineage, strings.TrimSpace(*cwd), *lineage, gateName)
 		}
 		if strings.TrimSpace(*reason) == "" {
 			return errors.New("pristine review invalidation requires --reason")
@@ -2215,7 +2215,7 @@ func runReviewFacadeStart(ctx context.Context, args []string, stdout io.Writer) 
 	intendedScope := reviewIntendedUntrackedScope{Intended: []string{}}
 	if selectedProjection == reviewtransaction.ProjectionStaged {
 		if reviewIntendedUntrackedDeclared(untrackedScope, intendedUntracked, expectedUntrackedInventory) {
-			return reviewPreflightError(errors.New("staged projection does not accept intended-untracked selection; remove those flags and rerun `gentle-ai review start --projection staged`"))
+			return reviewPreflightError(errors.New("staged projection does not accept intended-untracked selection; remove those flags and rerun `agent-smith review start --projection staged`"))
 		}
 	} else {
 		intendedScope, err = reviewIntendedUntrackedScopeForTarget(ctx, reviewtransaction.SnapshotBuilder{Repo: root}, untrackedScope, intendedUntracked, expectedUntrackedInventory)
@@ -2294,8 +2294,8 @@ func runReviewFacadeStart(ctx context.Context, args []string, stdout io.Writer) 
 	// annotation.
 	if !negotiated && target.Kind != reviewtransaction.TargetCurrentChanges && len(lenses) > 0 {
 		return reviewPreflightRefusal(reviewPreflightDirectRouteUncompletableReason,
-			fmt.Errorf("review start without --contract cannot produce a completable review because its %d selected lens(es) require repository_context, which only the negotiated contract form publishes; rerun with `gentle-ai review start %s` instead",
-				len(lenses), strings.TrimPrefix(reviewNegotiatedStartCommand(snapshot, *runtimeAgent), "gentle-ai review start ")))
+			fmt.Errorf("review start without --contract cannot produce a completable review because its %d selected lens(es) require repository_context, which only the negotiated contract form publishes; rerun with `agent-smith review start %s` instead",
+				len(lenses), strings.TrimPrefix(reviewNegotiatedStartCommand(snapshot, *runtimeAgent), "agent-smith review start ")))
 	}
 	// The candidate is frozen and the tier is classified, so this is the one
 	// point where the kill switch can stop a start and consent can name the real
@@ -2367,7 +2367,7 @@ func runReviewFacadeStart(ctx context.Context, args []string, stdout io.Writer) 
 		}
 		if err := (reviewtransaction.SnapshotBuilder{Repo: root}).ValidateLiveSnapshot(ctx, snapshot); err != nil {
 			return reviewPreflightRefusal(reviewPreflightStaleTargetReason,
-				fmt.Errorf("frozen review target changed before authority creation; refresh it with `gentle-ai review status --cwd <repo> --contract %s --next-transition`: %w", ReviewIntegrationContractV2, err))
+				fmt.Errorf("frozen review target changed before authority creation; refresh it with `agent-smith review status --cwd <repo> --contract %s --next-transition`: %w", ReviewIntegrationContractV2, err))
 		}
 
 		started, err := runReviewFacadeCompactAtomicStart(ctx, root, request)
@@ -2633,7 +2633,7 @@ func reviewConsentFollowUpBase(
 	locale string, intendedScope reviewIntendedUntrackedScope,
 ) string {
 	parts := []string{
-		"gentle-ai review start",
+		"agent-smith review start",
 		"--contract " + contract,
 		"--cwd " + reviewTransitionShellWord(cwd),
 		"--target " + target,
@@ -3121,7 +3121,7 @@ var errFacadeArtifactManifestInputNotRegular = errors.New("artifact manifest inp
 
 func facadeValueHash(domain string, value any) string {
 	payload, _ := json.Marshal(value)
-	sum := sha256.Sum256(append([]byte("gentle-ai.facade-"+domain+"/v1\x00"), payload...))
+	sum := sha256.Sum256(append([]byte("agent-smith.facade-"+domain+"/v1\x00"), payload...))
 	return "sha256:" + hex.EncodeToString(sum[:])
 }
 
@@ -3138,3 +3138,4 @@ func facadeSevere(severity string) bool {
 		return false
 	}
 }
+

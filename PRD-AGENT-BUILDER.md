@@ -1,6 +1,6 @@
-# PRD: Agent Builder — Create Your Own Sub-Agent
+# PRD: Agent Builder â€” Create Your Own Sub-Agent
 
-> **Your ecosystem, your rules. Build custom AI sub-agents from the TUI — no code required.**
+> **Your ecosystem, your rules. Build custom AI sub-agents from the TUI â€” no code required.**
 
 **Version**: 0.1.0-draft
 **Author**: Gentleman Programming
@@ -22,13 +22,13 @@ The Gentleman AI ecosystem ships with a powerful set of pre-built skills and SDD
 4. Duplicating the skill across every AI agent you use
 5. If it's SDD-related, understanding the orchestrator config and how to register a new phase
 
-**This is a barrier that shouldn't exist.** If you can describe what you want your agent to do in natural language, the ecosystem should generate it, validate it, and install it across all your configured AI agents — from a single TUI flow.
+**This is a barrier that shouldn't exist.** If you can describe what you want your agent to do in natural language, the ecosystem should generate it, validate it, and install it across all your configured AI agents â€” from a single TUI flow.
 
 ---
 
 ## 2. Vision
 
-**A guided TUI experience where you describe what you want, and the ecosystem uses one of your installed AI agents to generate a production-ready sub-agent skill — installed across all your tools instantly.**
+**A guided TUI experience where you describe what you want, and the ecosystem uses one of your installed AI agents to generate a production-ready sub-agent skill â€” installed across all your tools instantly.**
 
 Think of it as the "Create Agent" flow from Claude's `/agents` command, but:
 - **Cross-agent**: generates once, installs everywhere (Claude Code, OpenCode, Gemini CLI, Cursor, etc.)
@@ -38,7 +38,7 @@ Think of it as the "Create Agent" flow from Claude's `/agents` command, but:
 
 **Before**: "I want an agent that reviews my CSS for accessibility... I guess I need to write a SKILL.md manually, figure out triggers, and copy it to 4 different directories."
 
-**After**: Select "Create your own Agent" → pick your AI engine → describe what you want → preview the generated skill → it's installed everywhere. Done.
+**After**: Select "Create your own Agent" â†’ pick your AI engine â†’ describe what you want â†’ preview the generated skill â†’ it's installed everywhere. Done.
 
 ---
 
@@ -57,203 +57,203 @@ Think of it as the "Create Agent" flow from Claude's `/agents` command, but:
 
 ## 4. User Experience
 
-### 4.1 Entry Point — Welcome Screen
+### 4.1 Entry Point â€” Welcome Screen
 
 The Agent Builder is a **top-level menu option** on the Welcome screen, alongside the existing options:
 
 ```
-┌──────────────────────────────────────────────────────────────────┐
-│                                                                  │
-│   ╔═══════════════════════════════════════╗                      │
-│   ║   GENTLE AI                          ║                      │
-│   ╚═══════════════════════════════════════╝                      │
-│                                                                  │
-│   Supercharge your AI agents. v0.x.x                             │
-│                                                                  │
-│   Menu                                                           │
-│                                                                  │
-│     Start installation                                           │
-│     Upgrade tools                                                │
-│     Sync configs                                                 │
-│     Upgrade + Sync                                               │
-│     Configure models                                             │
-│   ★ Create your own Agent                                        │
-│     Manage backups                                               │
-│     Quit                                                         │
-│                                                                  │
-│   j/k: navigate • enter: select • q: quit                       │
-└──────────────────────────────────────────────────────────────────┘
+â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
+â”‚                                                                  â”‚
+â”‚   â•”â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•—                      â”‚
+â”‚   â•‘   GENTLE AI                          â•‘                      â”‚
+â”‚   â•šâ•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•                      â”‚
+â”‚                                                                  â”‚
+â”‚   Supercharge your AI agents. v0.x.x                             â”‚
+â”‚                                                                  â”‚
+â”‚   Menu                                                           â”‚
+â”‚                                                                  â”‚
+â”‚     Start installation                                           â”‚
+â”‚     Upgrade tools                                                â”‚
+â”‚     Sync configs                                                 â”‚
+â”‚     Upgrade + Sync                                               â”‚
+â”‚     Configure models                                             â”‚
+â”‚   â˜… Create your own Agent                                        â”‚
+â”‚     Manage backups                                               â”‚
+â”‚     Quit                                                         â”‚
+â”‚                                                                  â”‚
+â”‚   j/k: navigate â€¢ enter: select â€¢ q: quit                       â”‚
+â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
 ```
 
 ### 4.2 Agent Builder Flow
 
 ```
 "Create your own Agent"
-         │
-         ▼
-┌─────────────────────────────────┐
-│  Step 1: Choose Your AI Engine   │
-│                                  │
-│  Which installed agent should    │
-│  help you build your sub-agent?  │
-│                                  │
-│  ★ Claude Code (installed)       │  ← Uses claude --print to generate
-│  ○ OpenCode (installed)          │  ← Uses opencode run to generate
-│  ○ Gemini CLI (installed)        │  ← Uses gemini -p to generate
-│  ○ Codex (installed)             │  ← Uses codex exec to generate
-│                                  │
-│  Only installed agents shown.    │
-└──────────┬──────────────────────┘
-           │
-           ▼
-┌─────────────────────────────────┐
-│  Step 2: Describe Your Agent     │
-│                                  │
-│  Tell us what you want your      │
-│  agent to do. Be as specific     │
-│  as you can — the more detail,   │
-│  the better the result.          │
-│                                  │
-│  Examples:                       │
-│  • "Review CSS for a11y issues"  │
-│  • "Generate API docs from code" │
-│  • "Validate DB migrations"      │
-│                                  │
-│  ┌──────────────────────────┐    │
-│  │ I want an agent that     │    │
-│  │ reviews my React         │    │
-│  │ components for           │    │
-│  │ accessibility compliance │    │
-│  │ following WCAG 2.1 AA    │    │
-│  │ standards.               │    │
-│  └──────────────────────────┘    │
-│                                  │
-│  [Continue]  [Back]              │
-└──────────┬──────────────────────┘
-           │
-           ▼
-┌─────────────────────────────────┐
-│  Step 3: SDD Integration         │
-│                                  │
-│  Should this agent be part of    │
-│  the SDD (Spec-Driven Dev)       │
-│  workflow?                       │
-│                                  │
-│  ★ Standalone                    │  ← Independent skill, not part of SDD
-│  ○ New SDD Phase                 │  ← Adds as a new phase in the pipeline
-│  ○ Support for existing phase    │  ← Augments an existing SDD phase
-│                                  │
-│  [Continue]  [Back]              │
-└──────────┬──────────────────────┘
-           │
-           ├── If "New SDD Phase":
-           │   ┌──────────────────────────────┐
-           │   │  Where in the SDD pipeline?   │
-           │   │                               │
-           │   │  explore → propose → spec     │
-           │   │  → design → YOUR PHASE        │
-           │   │  → tasks → apply → verify     │
-           │   │  → archive                    │
-           │   │                               │
-           │   │  Insert after:                │
-           │   │  ○ explore                    │
-           │   │  ○ propose                    │
-           │   │  ○ spec                       │
-           │   │  ★ design                     │
-           │   │  ○ tasks                      │
-           │   │  ○ apply                      │
-           │   │  ○ verify                     │
-           │   └──────────────────────────────┘
-           │
-           ├── If "Support for existing phase":
-           │   ┌──────────────────────────────┐
-           │   │  Which phase to support?      │
-           │   │                               │
-           │   │  ○ explore                    │
-           │   │  ○ propose                    │
-           │   │  ○ spec                       │
-           │   │  ★ design                     │
-           │   │  ○ tasks                      │
-           │   │  ○ apply                      │
-           │   │  ○ verify                     │
-           │   │  ○ archive                    │
-           │   └──────────────────────────────┘
-           │
-           ▼
-┌─────────────────────────────────┐
-│  Step 4: Generating...           │
-│                                  │
-│  Using Claude Code to generate   │
-│  your sub-agent...               │
-│                                  │
-│  [████████████░░░░] 75%          │
-│                                  │
-│  ◌ Analyzing your description    │
-│  ✓ Generating skill definition   │
-│  ◌ Creating trigger patterns     │
-│  ◌ Building agent instructions   │
-└──────────┬──────────────────────┘
-           │
-           ▼
-┌─────────────────────────────────────────────────────────────┐
-│  Step 5: Preview Your Agent                                  │
-│                                                              │
-│  Name: a11y-reviewer                                         │
-│  Description: Reviews React components for WCAG 2.1 AA       │
-│               accessibility compliance                       │
-│  Trigger: When reviewing React/JSX files for accessibility   │
-│  SDD: Supports "design" phase                                │
-│  Engram: ✓ (reads project patterns, saves a11y decisions)    │
-│                                                              │
-│  ── Generated Skill ──────────────────────────────────────   │
-│  │ # A11y Reviewer                                       │   │
-│  │                                                       │   │
-│  │ ## Description                                        │   │
-│  │ Reviews React components for WCAG 2.1 AA compliance.  │   │
-│  │ Checks semantic HTML, ARIA attributes, color contrast, │   │
-│  │ keyboard navigation, and focus management.            │   │
-│  │                                                       │   │
-│  │ ## Trigger                                            │   │
-│  │ When reviewing React/JSX/TSX files for accessibility  │   │
-│  │ compliance, a11y audits, or WCAG validation.          │   │
-│  │                                                       │   │
-│  │ ## Instructions                                       │   │
-│  │ ...                                                   │   │
-│  └───────────────────────────────────────────────────────┘   │
-│                                                              │
-│  Will be installed to:                                       │
-│    • ~/.claude/skills/a11y-reviewer/SKILL.md                 │
-│    • ~/.config/opencode/skills/a11y-reviewer/SKILL.md        │
-│                                                              │
-│  [Install]  [Edit]  [Regenerate]  [Back]                     │
-└──────────┬──────────────────────────────────────────────────┘
-           │
-           ├── If "Edit":
-           │   Opens $EDITOR with the generated SKILL.md
-           │   Returns to preview after editor closes
-           │
-           ├── If "Regenerate":
-           │   Returns to generating screen with same prompt
-           │
-           ▼
-┌─────────────────────────────────┐
-│  Step 6: Installing              │
-│                                  │
-│  Installing "a11y-reviewer"...   │
-│                                  │
-│  ✓ Claude Code — skill installed │
-│  ✓ OpenCode — skill installed    │
-│  ✓ Skill registered in catalog   │
-│  ✓ SDD integration configured   │
-│                                  │
-│  Done! Your agent is ready.      │
-│                                  │
-│  To use it, ask your AI agent    │
-│  to review a component for       │
-│  accessibility.                  │
-│                                  │
-│  [Done]                          │
-└─────────────────────────────────┘
+         â”‚
+         â–¼
+â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
+â”‚  Step 1: Choose Your AI Engine   â”‚
+â”‚                                  â”‚
+â”‚  Which installed agent should    â”‚
+â”‚  help you build your sub-agent?  â”‚
+â”‚                                  â”‚
+â”‚  â˜… Claude Code (installed)       â”‚  â† Uses claude --print to generate
+â”‚  â—‹ OpenCode (installed)          â”‚  â† Uses opencode run to generate
+â”‚  â—‹ Gemini CLI (installed)        â”‚  â† Uses gemini -p to generate
+â”‚  â—‹ Codex (installed)             â”‚  â† Uses codex exec to generate
+â”‚                                  â”‚
+â”‚  Only installed agents shown.    â”‚
+â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¬â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
+           â”‚
+           â–¼
+â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
+â”‚  Step 2: Describe Your Agent     â”‚
+â”‚                                  â”‚
+â”‚  Tell us what you want your      â”‚
+â”‚  agent to do. Be as specific     â”‚
+â”‚  as you can â€” the more detail,   â”‚
+â”‚  the better the result.          â”‚
+â”‚                                  â”‚
+â”‚  Examples:                       â”‚
+â”‚  â€¢ "Review CSS for a11y issues"  â”‚
+â”‚  â€¢ "Generate API docs from code" â”‚
+â”‚  â€¢ "Validate DB migrations"      â”‚
+â”‚                                  â”‚
+â”‚  â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”    â”‚
+â”‚  â”‚ I want an agent that     â”‚    â”‚
+â”‚  â”‚ reviews my React         â”‚    â”‚
+â”‚  â”‚ components for           â”‚    â”‚
+â”‚  â”‚ accessibility compliance â”‚    â”‚
+â”‚  â”‚ following WCAG 2.1 AA    â”‚    â”‚
+â”‚  â”‚ standards.               â”‚    â”‚
+â”‚  â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜    â”‚
+â”‚                                  â”‚
+â”‚  [Continue]  [Back]              â”‚
+â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¬â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
+           â”‚
+           â–¼
+â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
+â”‚  Step 3: SDD Integration         â”‚
+â”‚                                  â”‚
+â”‚  Should this agent be part of    â”‚
+â”‚  the SDD (Spec-Driven Dev)       â”‚
+â”‚  workflow?                       â”‚
+â”‚                                  â”‚
+â”‚  â˜… Standalone                    â”‚  â† Independent skill, not part of SDD
+â”‚  â—‹ New SDD Phase                 â”‚  â† Adds as a new phase in the pipeline
+â”‚  â—‹ Support for existing phase    â”‚  â† Augments an existing SDD phase
+â”‚                                  â”‚
+â”‚  [Continue]  [Back]              â”‚
+â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¬â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
+           â”‚
+           â”œâ”€â”€ If "New SDD Phase":
+           â”‚   â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
+           â”‚   â”‚  Where in the SDD pipeline?   â”‚
+           â”‚   â”‚                               â”‚
+           â”‚   â”‚  explore â†’ propose â†’ spec     â”‚
+           â”‚   â”‚  â†’ design â†’ YOUR PHASE        â”‚
+           â”‚   â”‚  â†’ tasks â†’ apply â†’ verify     â”‚
+           â”‚   â”‚  â†’ archive                    â”‚
+           â”‚   â”‚                               â”‚
+           â”‚   â”‚  Insert after:                â”‚
+           â”‚   â”‚  â—‹ explore                    â”‚
+           â”‚   â”‚  â—‹ propose                    â”‚
+           â”‚   â”‚  â—‹ spec                       â”‚
+           â”‚   â”‚  â˜… design                     â”‚
+           â”‚   â”‚  â—‹ tasks                      â”‚
+           â”‚   â”‚  â—‹ apply                      â”‚
+           â”‚   â”‚  â—‹ verify                     â”‚
+           â”‚   â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
+           â”‚
+           â”œâ”€â”€ If "Support for existing phase":
+           â”‚   â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
+           â”‚   â”‚  Which phase to support?      â”‚
+           â”‚   â”‚                               â”‚
+           â”‚   â”‚  â—‹ explore                    â”‚
+           â”‚   â”‚  â—‹ propose                    â”‚
+           â”‚   â”‚  â—‹ spec                       â”‚
+           â”‚   â”‚  â˜… design                     â”‚
+           â”‚   â”‚  â—‹ tasks                      â”‚
+           â”‚   â”‚  â—‹ apply                      â”‚
+           â”‚   â”‚  â—‹ verify                     â”‚
+           â”‚   â”‚  â—‹ archive                    â”‚
+           â”‚   â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
+           â”‚
+           â–¼
+â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
+â”‚  Step 4: Generating...           â”‚
+â”‚                                  â”‚
+â”‚  Using Claude Code to generate   â”‚
+â”‚  your sub-agent...               â”‚
+â”‚                                  â”‚
+â”‚  [â–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–‘â–‘â–‘â–‘] 75%          â”‚
+â”‚                                  â”‚
+â”‚  â—Œ Analyzing your description    â”‚
+â”‚  âœ“ Generating skill definition   â”‚
+â”‚  â—Œ Creating trigger patterns     â”‚
+â”‚  â—Œ Building agent instructions   â”‚
+â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¬â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
+           â”‚
+           â–¼
+â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
+â”‚  Step 5: Preview Your Agent                                  â”‚
+â”‚                                                              â”‚
+â”‚  Name: a11y-reviewer                                         â”‚
+â”‚  Description: Reviews React components for WCAG 2.1 AA       â”‚
+â”‚               accessibility compliance                       â”‚
+â”‚  Trigger: When reviewing React/JSX files for accessibility   â”‚
+â”‚  SDD: Supports "design" phase                                â”‚
+â”‚  Engram: âœ“ (reads project patterns, saves a11y decisions)    â”‚
+â”‚                                                              â”‚
+â”‚  â”€â”€ Generated Skill â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€   â”‚
+â”‚  â”‚ # A11y Reviewer                                       â”‚   â”‚
+â”‚  â”‚                                                       â”‚   â”‚
+â”‚  â”‚ ## Description                                        â”‚   â”‚
+â”‚  â”‚ Reviews React components for WCAG 2.1 AA compliance.  â”‚   â”‚
+â”‚  â”‚ Checks semantic HTML, ARIA attributes, color contrast, â”‚   â”‚
+â”‚  â”‚ keyboard navigation, and focus management.            â”‚   â”‚
+â”‚  â”‚                                                       â”‚   â”‚
+â”‚  â”‚ ## Trigger                                            â”‚   â”‚
+â”‚  â”‚ When reviewing React/JSX/TSX files for accessibility  â”‚   â”‚
+â”‚  â”‚ compliance, a11y audits, or WCAG validation.          â”‚   â”‚
+â”‚  â”‚                                                       â”‚   â”‚
+â”‚  â”‚ ## Instructions                                       â”‚   â”‚
+â”‚  â”‚ ...                                                   â”‚   â”‚
+â”‚  â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜   â”‚
+â”‚                                                              â”‚
+â”‚  Will be installed to:                                       â”‚
+â”‚    â€¢ ~/.claude/skills/a11y-reviewer/SKILL.md                 â”‚
+â”‚    â€¢ ~/.config/opencode/skills/a11y-reviewer/SKILL.md        â”‚
+â”‚                                                              â”‚
+â”‚  [Install]  [Edit]  [Regenerate]  [Back]                     â”‚
+â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¬â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
+           â”‚
+           â”œâ”€â”€ If "Edit":
+           â”‚   Opens $EDITOR with the generated SKILL.md
+           â”‚   Returns to preview after editor closes
+           â”‚
+           â”œâ”€â”€ If "Regenerate":
+           â”‚   Returns to generating screen with same prompt
+           â”‚
+           â–¼
+â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
+â”‚  Step 6: Installing              â”‚
+â”‚                                  â”‚
+â”‚  Installing "a11y-reviewer"...   â”‚
+â”‚                                  â”‚
+â”‚  âœ“ Claude Code â€” skill installed â”‚
+â”‚  âœ“ OpenCode â€” skill installed    â”‚
+â”‚  âœ“ Skill registered in catalog   â”‚
+â”‚  âœ“ SDD integration configured   â”‚
+â”‚                                  â”‚
+â”‚  Done! Your agent is ready.      â”‚
+â”‚                                  â”‚
+â”‚  To use it, ask your AI agent    â”‚
+â”‚  to review a component for       â”‚
+â”‚  accessibility.                  â”‚
+â”‚                                  â”‚
+â”‚  [Done]                          â”‚
+â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
 ```
 
 ### 4.3 Managing Custom Agents
@@ -263,7 +263,7 @@ After creating agents, users need to manage them. A future iteration will add a 
 - List all custom agents
 - Edit an existing agent (re-open in preview)
 - Delete a custom agent (removes from all configured AI agents)
-- Export an agent (for sharing — future marketplace feature)
+- Export an agent (for sharing â€” future marketplace feature)
 
 For V1, custom agents can be managed manually by editing/deleting the SKILL.md files.
 
@@ -273,7 +273,7 @@ For V1, custom agents can be managed manually by editing/deleting the SKILL.md f
 
 ### 5.1 Generation Engine
 
-The Agent Builder uses **one of the user's installed AI agents** as the generation engine. This is a key architectural decision — we don't ship our own AI model; we leverage whatever the user already has.
+The Agent Builder uses **one of the user's installed AI agents** as the generation engine. This is a key architectural decision â€” we don't ship our own AI model; we leverage whatever the user already has.
 
 #### Engine Abstraction
 
@@ -316,10 +316,10 @@ The SKILL.md format must follow this structure:
 # {Skill Name}
 
 ## Description
-{What this skill does — 1-2 sentences}
+{What this skill does â€” 1-2 sentences}
 
 ## Trigger
-{When this skill should be activated — specific file types, commands, or contexts}
+{When this skill should be activated â€” specific file types, commands, or contexts}
 
 ## Instructions
 {Detailed instructions for the AI agent when this skill is active}
@@ -387,8 +387,8 @@ type GeneratedAgent struct {
 
 type SDDIntegration struct {
     Mode          SDDIntegrationMode // standalone | new_phase | phase_support
-    TargetPhase   string             // e.g. "design" — which phase to support or insert after
-    PhaseName     string             // e.g. "a11y-review" — name of new SDD phase (if new_phase)
+    TargetPhase   string             // e.g. "design" â€” which phase to support or insert after
+    PhaseName     string             // e.g. "a11y-review" â€” name of new SDD phase (if new_phase)
 }
 
 type SDDIntegrationMode string
@@ -426,7 +426,7 @@ The installer writes the SAME `SKILL.md` to ALL agents that were configured duri
 To track which custom agents the user has created (for future management), a local registry file is maintained:
 
 ```
-~/.config/gentle-ai/custom-agents.json
+~/.config/agent-smith/custom-agents.json
 ```
 
 ```json
@@ -458,11 +458,11 @@ When the custom agent has SDD integration, additional configuration is needed:
 The generated skill includes SDD-aware instructions. The orchestrator's system prompt is updated to include a reference to the custom skill:
 
 ```markdown
-<!-- gentle-ai:custom-agent:{name} -->
+<!-- agent-smith:custom-agent:{name} -->
 ## Custom Agent: {Title}
 When executing the "{target_phase}" phase, also load and apply the "{name}" skill
 for additional validation/support.
-<!-- /gentle-ai:custom-agent:{name} -->
+<!-- /agent-smith:custom-agent:{name} -->
 ```
 
 This is injected into the agent's system prompt using the existing `StrategyMarkdownSections` approach (marker-based injection that doesn't clobber user content).
@@ -471,7 +471,7 @@ This is injected into the agent's system prompt using the existing `StrategyMark
 
 A new SDD phase skill is created with the standard SDD skill structure. The orchestrator's dependency graph and phase list are updated to include the new phase at the specified position.
 
-**Important**: This is a more complex integration. For V1, we inject the phase reference into the orchestrator's system prompt. The orchestrator (being an AI) will interpret the dependency graph and execute accordingly. No code changes to the SDD engine are needed — it's all prompt-driven.
+**Important**: This is a more complex integration. For V1, we inject the phase reference into the orchestrator's system prompt. The orchestrator (being an AI) will interpret the dependency graph and execute accordingly. No code changes to the SDD engine are needed â€” it's all prompt-driven.
 
 ---
 
@@ -481,24 +481,24 @@ A new SDD phase skill is created with the standard SDD skill structure. The orch
 
 ```
 internal/
-├── agentbuilder/          # Core agent builder logic
-│   ├── builder.go         # Main builder orchestrator
-│   ├── engine.go          # GenerationEngine interface + implementations
-│   ├── parser.go          # Output parsing and validation
-│   ├── installer.go       # Skill file installation across agents
-│   ├── registry.go        # Custom agent registry (JSON file management)
-│   ├── prompt.go          # Prompt composition logic
-│   └── sdd.go             # SDD integration logic
-├── tui/
-│   ├── screens/
-│   │   ├── agent_builder_engine.go      # Step 1: Engine selection
-│   │   ├── agent_builder_prompt.go      # Step 2: Description input
-│   │   ├── agent_builder_sdd.go         # Step 3: SDD integration
-│   │   ├── agent_builder_generating.go  # Step 4: Generation progress
-│   │   ├── agent_builder_preview.go     # Step 5: Preview + edit
-│   │   └── agent_builder_complete.go    # Step 6: Installation complete
-│   ├── model.go           # Add new Screen constants + AgentBuilder state
-│   └── router.go          # Add agent builder routes
+â”œâ”€â”€ agentbuilder/          # Core agent builder logic
+â”‚   â”œâ”€â”€ builder.go         # Main builder orchestrator
+â”‚   â”œâ”€â”€ engine.go          # GenerationEngine interface + implementations
+â”‚   â”œâ”€â”€ parser.go          # Output parsing and validation
+â”‚   â”œâ”€â”€ installer.go       # Skill file installation across agents
+â”‚   â”œâ”€â”€ registry.go        # Custom agent registry (JSON file management)
+â”‚   â”œâ”€â”€ prompt.go          # Prompt composition logic
+â”‚   â””â”€â”€ sdd.go             # SDD integration logic
+â”œâ”€â”€ tui/
+â”‚   â”œâ”€â”€ screens/
+â”‚   â”‚   â”œâ”€â”€ agent_builder_engine.go      # Step 1: Engine selection
+â”‚   â”‚   â”œâ”€â”€ agent_builder_prompt.go      # Step 2: Description input
+â”‚   â”‚   â”œâ”€â”€ agent_builder_sdd.go         # Step 3: SDD integration
+â”‚   â”‚   â”œâ”€â”€ agent_builder_generating.go  # Step 4: Generation progress
+â”‚   â”‚   â”œâ”€â”€ agent_builder_preview.go     # Step 5: Preview + edit
+â”‚   â”‚   â””â”€â”€ agent_builder_complete.go    # Step 6: Installation complete
+â”‚   â”œâ”€â”€ model.go           # Add new Screen constants + AgentBuilder state
+â”‚   â””â”€â”€ router.go          # Add agent builder routes
 ```
 
 ### 7.2 New Screen Constants
@@ -605,12 +605,12 @@ func (e *OpenCodeEngine) Generate(ctx context.Context, prompt string) (string, e
 }
 ```
 
-### 7.6 Sequence Diagram — Generation Flow
+### 7.6 Sequence Diagram â€” Generation Flow
 
 ```mermaid
 sequenceDiagram
     participant User
-    participant TUI as Gentle AI TUI
+    participant TUI as Agent Smith TUI
     participant Builder as Agent Builder
     participant Engine as Generation Engine<br/>(Claude/OpenCode/etc.)
     participant Parser as Output Parser
@@ -656,7 +656,7 @@ sequenceDiagram
     TUI->>TUI: Show completion
 ```
 
-### 7.7 Architecture Diagram — Component Relationships
+### 7.7 Architecture Diagram â€” Component Relationships
 
 ```mermaid
 graph TB
@@ -708,7 +708,7 @@ graph TB
 
     subgraph STORAGE["Storage"]
         SKILLS_DIR["~/.{agent}/skills/{name}/SKILL.md"]
-        REGISTRY_FILE["~/.config/gentle-ai/custom-agents.json"]
+        REGISTRY_FILE["~/.config/agent-smith/custom-agents.json"]
         SYS_PROMPT["Agent system prompts<br/>(CLAUDE.md / AGENTS.md / etc.)"]
     end
 
@@ -733,11 +733,11 @@ graph TB
 
 ---
 
-## 8. SDD Integration — Deep Dive
+## 8. SDD Integration â€” Deep Dive
 
 ### 8.1 Standalone Mode
 
-The simplest mode. The generated skill is a regular skill file — no SDD awareness. It triggers based on file context or user invocation, just like `react-19` or `typescript`.
+The simplest mode. The generated skill is a regular skill file â€” no SDD awareness. It triggers based on file context or user invocation, just like `react-19` or `typescript`.
 
 ### 8.2 Phase Support Mode
 
@@ -784,13 +784,13 @@ The user selects where in the pipeline to insert the new phase:
 
 | Insert After | Resulting Pipeline |
 |--------------|-------------------|
-| explore | explore → **custom** → propose → spec → design → tasks → apply → verify → archive |
-| propose | explore → propose → **custom** → spec → design → tasks → apply → verify → archive |
-| spec | explore → propose → spec → **custom** → design → tasks → apply → verify → archive |
-| design | explore → propose → spec → design → **custom** → tasks → apply → verify → archive |
-| tasks | explore → propose → spec → design → tasks → **custom** → apply → verify → archive |
-| apply | explore → propose → spec → design → tasks → apply → **custom** → verify → archive |
-| verify | explore → propose → spec → design → tasks → apply → verify → **custom** → archive |
+| explore | explore â†’ **custom** â†’ propose â†’ spec â†’ design â†’ tasks â†’ apply â†’ verify â†’ archive |
+| propose | explore â†’ propose â†’ **custom** â†’ spec â†’ design â†’ tasks â†’ apply â†’ verify â†’ archive |
+| spec | explore â†’ propose â†’ spec â†’ **custom** â†’ design â†’ tasks â†’ apply â†’ verify â†’ archive |
+| design | explore â†’ propose â†’ spec â†’ design â†’ **custom** â†’ tasks â†’ apply â†’ verify â†’ archive |
+| tasks | explore â†’ propose â†’ spec â†’ design â†’ tasks â†’ **custom** â†’ apply â†’ verify â†’ archive |
+| apply | explore â†’ propose â†’ spec â†’ design â†’ tasks â†’ apply â†’ **custom** â†’ verify â†’ archive |
+| verify | explore â†’ propose â†’ spec â†’ design â†’ tasks â†’ apply â†’ verify â†’ **custom** â†’ archive |
 
 ---
 
@@ -807,13 +807,13 @@ The user selects where in the pipeline to insert the new phase:
 | R-AB-05 | The Agent Builder MUST show a preview of the generated skill before installation | P0 |
 | R-AB-06 | The Agent Builder MUST install the generated skill to ALL configured AI agents | P0 |
 | R-AB-07 | The Agent Builder MUST support SDD integration in three modes: standalone, phase support, new phase | P0 |
-| R-AB-08 | The Agent Builder MUST maintain a local registry of custom agents at `~/.config/gentle-ai/custom-agents.json` | P0 |
+| R-AB-08 | The Agent Builder MUST maintain a local registry of custom agents at `~/.config/agent-smith/custom-agents.json` | P0 |
 | R-AB-09 | The Agent Builder MUST allow the user to edit the generated skill before installation (open in $EDITOR) | P1 |
 | R-AB-10 | The Agent Builder MUST allow the user to regenerate the skill with the same prompt | P0 |
 | R-AB-11 | The Agent Builder MUST include Engram integration instructions in every generated skill | P0 |
 | R-AB-12 | The Agent Builder MUST handle generation engine errors gracefully with clear error messages | P0 |
 | R-AB-13 | The Agent Builder MUST support generation timeouts (configurable, default 120s) | P1 |
-| R-AB-14 | The generated skill MUST be a standalone SKILL.md file — no external dependencies | P0 |
+| R-AB-14 | The generated skill MUST be a standalone SKILL.md file â€” no external dependencies | P0 |
 | R-AB-15 | For SDD phase support mode, the agent's system prompt MUST be updated with a marker-based reference to the custom skill | P0 |
 | R-AB-16 | For SDD new phase mode, the orchestrator's dependency graph in the system prompt MUST be updated | P0 |
 | R-AB-17 | The Agent Builder MUST detect which agents were configured by the installer (via existing config scan or state file) | P0 |
@@ -830,7 +830,7 @@ The user selects where in the pipeline to insert the new phase:
 | R-AB-NF-03 | The Agent Builder MUST follow the same Bubbletea + Lipgloss styling as the rest of the TUI | P0 |
 | R-AB-NF-04 | The Agent Builder architecture MUST allow adding new generation engines by implementing the GenerationEngine interface | P0 |
 | R-AB-NF-05 | The custom-agents.json registry format MUST be versioned for forward compatibility | P1 |
-| R-AB-NF-06 | Skill installation MUST be atomic — if installation to any agent fails, already-installed copies are cleaned up | P1 |
+| R-AB-NF-06 | Skill installation MUST be atomic â€” if installation to any agent fails, already-installed copies are cleaned up | P1 |
 
 ---
 
@@ -862,7 +862,7 @@ The user selects where in the pipeline to insert the new phase:
 | Agent skills directory doesn't exist | Create it (same behavior as the main installer) |
 | Generation exceeds timeout | Show timeout error. Offer "Retry with longer timeout" (2x) or "Try different engine" |
 | User prompt is empty | "Continue" button is disabled. Show helper text: "Describe what you want your agent to do" |
-| Network error during generation | Show clear error. Note: all engines run locally — network errors are unlikely but possible with API-based agents |
+| Network error during generation | Show clear error. Note: all engines run locally â€” network errors are unlikely but possible with API-based agents |
 
 ---
 
@@ -898,11 +898,11 @@ The user selects where in the pipeline to insert the new phase:
 
 The Agent Builder deliberately reuses existing infrastructure:
 
-- **Agent detection**: `agents.Adapter.Detect()` — same mechanism as the main installer
-- **Skill paths**: `agents.Adapter.SkillsDir()` — same paths as built-in skill installation
-- **System prompt injection**: `model.StrategyMarkdownSections` — same marker-based injection for SDD integration
+- **Agent detection**: `agents.Adapter.Detect()` â€” same mechanism as the main installer
+- **Skill paths**: `agents.Adapter.SkillsDir()` â€” same paths as built-in skill installation
+- **System prompt injection**: `model.StrategyMarkdownSections` â€” same marker-based injection for SDD integration
 - **TUI patterns**: Same Bubbletea + Lipgloss styling, same keyboard navigation (j/k, Enter, Esc)
-- **Agent registry**: `agents.Registry` — used to enumerate available engines
+- **Agent registry**: `agents.Registry` â€” used to enumerate available engines
 
 ### 14.2 Text Input Considerations
 
@@ -914,7 +914,7 @@ The prompt input (Step 2) is the most complex TUI element. It needs:
 - Basic cursor navigation (arrows, Home/End)
 - Paste support
 
-Consider using [charmbracelet/textarea](https://github.com/charmbracelet/textarea) — a Bubbletea component designed for multi-line text input. This avoids building custom text editing logic.
+Consider using [charmbracelet/textarea](https://github.com/charmbracelet/textarea) â€” a Bubbletea component designed for multi-line text input. This avoids building custom text editing logic.
 
 ### 14.3 Generation as a Goroutine
 
@@ -950,4 +950,5 @@ The builder needs to know which agents to install the skill to. Options:
 2. **Read state file**: If the installer persists its selections somewhere
 3. **Re-run detection**: Use `agents.Adapter.Detect()` for each agent
 
-For V1, option 1 (scan filesystem) is the simplest and most reliable — if the skills directory exists, the agent was configured.
+For V1, option 1 (scan filesystem) is the simplest and most reliable â€” if the skills directory exists, the agent was configured.
+

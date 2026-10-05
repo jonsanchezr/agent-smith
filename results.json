@@ -1,8 +1,8 @@
-{
-  "schema": "gentle-ai-bench.results/v1",
+﻿{
+  "schema": "agent-smith-bench.results/v1",
   "mode": "driven",
-  "binary": "/tmp/claude-1000/-home-gentleman-work-gentle-ai/1ae2fe2e-8ac6-4ab6-ae89-fb010eab12d7/scratchpad/ga",
-  "binary_version": "gentle-ai dev",
+  "binary": "/tmp/claude-1000/-home-gentleman-work-agent-smith/1ae2fe2e-8ac6-4ab6-ae89-fb010eab12d7/scratchpad/ga",
+  "binary_version": "agent-smith dev",
   "journeys": [
     {
       "id": "j60-explicit-active-lineage-keeps-four-lens-correction-and-validator-flow",
@@ -61,7 +61,7 @@
             "--lineage",
             "atomic-four-lens-correction",
             "--cwd",
-            "/tmp/gentle-ai-bench-j60-explicit-active-lineage-keeps-four-lens-correction-and-validator-flow-906768933/home/demo"
+            "/tmp/agent-smith-bench-j60-explicit-active-lineage-keeps-four-lens-correction-and-validator-flow-906768933/home/demo"
           ],
           "exit_code": 0,
           "stderr_bytes": 217,
@@ -76,10 +76,10 @@
             "review",
             "status",
             "--contract",
-            "gentle-ai.review-integration/v2",
+            "agent-smith.review-integration/v2",
             "--next-transition",
             "--cwd",
-            "/tmp/gentle-ai-bench-j60-explicit-active-lineage-keeps-four-lens-correction-and-validator-flow-906768933/home/demo",
+            "/tmp/agent-smith-bench-j60-explicit-active-lineage-keeps-four-lens-correction-and-validator-flow-906768933/home/demo",
             "--lineage",
             "atomic-four-lens-correction"
           ],
@@ -97,10 +97,10 @@
             "review",
             "status",
             "--contract",
-            "gentle-ai.review-integration/v2",
+            "agent-smith.review-integration/v2",
             "--next-transition",
             "--cwd",
-            "/tmp/gentle-ai-bench-j60-explicit-active-lineage-keeps-four-lens-correction-and-validator-flow-906768933/home/demo",
+            "/tmp/agent-smith-bench-j60-explicit-active-lineage-keeps-four-lens-correction-and-validator-flow-906768933/home/demo",
             "--lineage",
             "atomic-four-lens-correction"
           ],
@@ -118,7 +118,7 @@
             "review",
             "capture-result",
             "--cwd",
-            "/tmp/gentle-ai-bench-j60-explicit-active-lineage-keeps-four-lens-correction-and-validator-flow-906768933/home/demo",
+            "/tmp/agent-smith-bench-j60-explicit-active-lineage-keeps-four-lens-correction-and-validator-flow-906768933/home/demo",
             "--lineage",
             "atomic-four-lens-correction",
             "--target",
@@ -130,7 +130,7 @@
             "--order",
             "0",
             "--input",
-            "/tmp/gentle-ai-bench-j60-explicit-active-lineage-keeps-four-lens-correction-and-validator-flow-906768933/atomic-reviewer-0.json"
+            "/tmp/agent-smith-bench-j60-explicit-active-lineage-keeps-four-lens-correction-and-validator-flow-906768933/atomic-reviewer-0.json"
           ],
           "exit_code": 0,
           "stderr_bytes": 0,
@@ -145,10 +145,10 @@
             "review",
             "status",
             "--contract",
-            "gentle-ai.review-integration/v2",
+            "agent-smith.review-integration/v2",
             "--next-transition",
             "--cwd",
-            "/tmp/gentle-ai-bench-j60-explicit-active-lineage-keeps-four-lens-correction-and-validator-flow-906768933/home/demo",
+            "/tmp/agent-smith-bench-j60-explicit-active-lineage-keeps-four-lens-correction-and-validator-flow-906768933/home/demo",
             "--lineage",
             "atomic-four-lens-correction"
           ],
@@ -166,7 +166,7 @@
             "review",
             "capture-result",
             "--cwd",
-            "/tmp/gentle-ai-bench-j60-explicit-active-lineage-keeps-four-lens-correction-and-validator-flow-906768933/home/demo",
+            "/tmp/agent-smith-bench-j60-explicit-active-lineage-keeps-four-lens-correction-and-validator-flow-906768933/home/demo",
             "--lineage",
             "atomic-four-lens-correction",
             "--target",
@@ -178,7 +178,7 @@
             "--order",
             "1",
             "--input",
-            "/tmp/gentle-ai-bench-j60-explicit-active-lineage-keeps-four-lens-correction-and-validator-flow-906768933/atomic-reviewer-1.json"
+            "/tmp/agent-smith-bench-j60-explicit-active-lineage-keeps-four-lens-correction-and-validator-flow-906768933/atomic-reviewer-1.json"
           ],
           "exit_code": 0,
           "stderr_bytes": 0,
@@ -193,10 +193,10 @@
             "review",
             "status",
             "--contract",
-            "gentle-ai.review-integration/v2",
+            "agent-smith.review-integration/v2",
             "--next-transition",
             "--cwd",
-            "/tmp/gentle-ai-bench-j60-explicit-active-lineage-keeps-four-lens-correction-and-validator-flow-906768933/home/demo",
+            "/tmp/agent-smith-bench-j60-explicit-active-lineage-keeps-four-lens-correction-and-validator-flow-906768933/home/demo",
             "--lineage",
             "atomic-four-lens-correction"
           ],
@@ -214,7 +214,7 @@
             "review",
             "capture-result",
             "--cwd",
-            "/tmp/gentle-ai-bench-j60-explicit-active-lineage-keeps-four-lens-correction-and-validator-flow-906768933/home/demo",
+            "/tmp/agent-smith-bench-j60-explicit-active-lineage-keeps-four-lens-correction-and-validator-flow-906768933/home/demo",
             "--lineage",
             "atomic-four-lens-correction",
             "--target",
@@ -226,7 +226,7 @@
             "--order",
             "2",
             "--input",
-            "/tmp/gentle-ai-bench-j60-explicit-active-lineage-keeps-four-lens-correction-and-validator-flow-906768933/atomic-reviewer-2.json"
+            "/tmp/agent-smith-bench-j60-explicit-active-lineage-keeps-four-lens-correction-and-validator-flow-906768933/atomic-reviewer-2.json"
           ],
           "exit_code": 0,
           "stderr_bytes": 0,
@@ -241,10 +241,10 @@
             "review",
             "status",
             "--contract",
-            "gentle-ai.review-integration/v2",
+            "agent-smith.review-integration/v2",
             "--next-transition",
             "--cwd",
-            "/tmp/gentle-ai-bench-j60-explicit-active-lineage-keeps-four-lens-correction-and-validator-flow-906768933/home/demo",
+            "/tmp/agent-smith-bench-j60-explicit-active-lineage-keeps-four-lens-correction-and-validator-flow-906768933/home/demo",
             "--lineage",
             "atomic-four-lens-correction"
           ],
@@ -262,7 +262,7 @@
             "review",
             "capture-result",
             "--cwd",
-            "/tmp/gentle-ai-bench-j60-explicit-active-lineage-keeps-four-lens-correction-and-validator-flow-906768933/home/demo",
+            "/tmp/agent-smith-bench-j60-explicit-active-lineage-keeps-four-lens-correction-and-validator-flow-906768933/home/demo",
             "--lineage",
             "atomic-four-lens-correction",
             "--target",
@@ -274,7 +274,7 @@
             "--order",
             "3",
             "--input",
-            "/tmp/gentle-ai-bench-j60-explicit-active-lineage-keeps-four-lens-correction-and-validator-flow-906768933/atomic-reviewer-3.json"
+            "/tmp/agent-smith-bench-j60-explicit-active-lineage-keeps-four-lens-correction-and-validator-flow-906768933/atomic-reviewer-3.json"
           ],
           "exit_code": 0,
           "stderr_bytes": 0,
@@ -289,10 +289,10 @@
             "review",
             "status",
             "--contract",
-            "gentle-ai.review-integration/v2",
+            "agent-smith.review-integration/v2",
             "--next-transition",
             "--cwd",
-            "/tmp/gentle-ai-bench-j60-explicit-active-lineage-keeps-four-lens-correction-and-validator-flow-906768933/home/demo",
+            "/tmp/agent-smith-bench-j60-explicit-active-lineage-keeps-four-lens-correction-and-validator-flow-906768933/home/demo",
             "--lineage",
             "atomic-four-lens-correction"
           ],
@@ -370,9 +370,10 @@
   "core_journeys": 1,
   "notes": [
     "Driven mode: every journey ran in a fresh temp dir with its own HOME, XDG_*, throwaway git repo and local bare remote.",
-    "That HOME is a fresh install, so receipt-driven development starts off. Every journey declares its own precondition: one that reviews opted in first through `gentle-ai review mode enable --scope global`, uncounted; one whose subject is the switch touched it not at all.",
+    "That HOME is a fresh install, so receipt-driven development starts off. Every journey declares its own precondition: one that reviews opted in first through `agent-smith review mode enable --scope global`, uncounted; one whose subject is the switch touched it not at all.",
     "Reviewer results were synthesized from the binary's own collect envelope. No model was called.",
     "No wall-clock timing is measured or reported.",
     "by_design is a carve-out from out_of_band, not a subtraction from it: those blocks are still blocks and still in the total. Every one is listed with its declared shape and the verified quote of the product's own next-action text."
   ]
 }
+

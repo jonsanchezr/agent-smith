@@ -1,8 +1,8 @@
-{
-  "uid": "gentle-ai-usage",
-  "title": "Gentle AI — Usage",
+﻿{
+  "uid": "agent-smith-usage",
+  "title": "Gentle AI â€” Usage",
   "tags": [
-    "gentle-ai",
+    "agent-smith",
     "telemetry"
   ],
   "timezone": "browser",
@@ -1970,7 +1970,7 @@
     {
       "id": 505,
       "title": "Most popular models per subagent",
-      "description": "Ranks the community’s most observed models for each named subagent and shows the effort and hosts behind that usage. VictoriaMetrics: sum of increase() on gentle_runtime_responses_total plus gentle_runtime_launches_total grouped by agent_class, provider, model (excluding orchestrator/unknown), sorted by subagent then observations. Known gap: PromQL has no per-group Rank/percentage-share or string-aggregation primitive equivalent to the original SQL's window functions and group_concat, so the Rank, \"Most common selected effort\", \"Share of subagent (%)\" and \"Hosts\" columns are not reproduced; only Subagent, Provider, Model and Observations are shown.",
+      "description": "Ranks the communityâ€™s most observed models for each named subagent and shows the effort and hosts behind that usage. VictoriaMetrics: sum of increase() on gentle_runtime_responses_total plus gentle_runtime_launches_total grouped by agent_class, provider, model (excluding orchestrator/unknown), sorted by subagent then observations. Known gap: PromQL has no per-group Rank/percentage-share or string-aggregation primitive equivalent to the original SQL's window functions and group_concat, so the Rank, \"Most common selected effort\", \"Share of subagent (%)\" and \"Hosts\" columns are not reproduced; only Subagent, Provider, Model and Observations are shown.",
       "type": "table",
       "gridPos": {
         "x": 0,
@@ -3428,3 +3428,4 @@
     }
   ]
 }
+

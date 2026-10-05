@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+﻿#!/usr/bin/env bash
 set -euo pipefail
 
 die() {
@@ -61,12 +61,13 @@ chmod 600 "$MINISIGN_SIGNING_PUBLIC_KEY_FILE"
 canary=$work/canary.txt
 signature=$work/canary.txt.minisig
 trusted="repo=$GITHUB_REPOSITORY;tag=$release_tag"
-printf 'gentle-ai release signing preflight\n' >"$canary"
+printf 'agent-smith release signing preflight\n' >"$canary"
 if ! timeout 15s minisign -S -s "$MINISIGN_SECRET_KEY_FILE" -m "$canary" -x "$signature" \
-  -c 'gentle-ai release preflight' -t "$trusted" </dev/null >/dev/null 2>&1; then
+  -c 'agent-smith release preflight' -t "$trusted" </dev/null >/dev/null 2>&1; then
   die "signing canary failed"
 fi
 verified=$(minisign -VQ -m "$canary" -x "$signature" -P "$derived") || die "canary verification failed"
 [[ "$verified" == "$trusted" ]] || die "canary trusted comment does not bind the exact repository and tag"
 
 printf 'release signing preflight: key match and canary verified\n'
+

@@ -9,7 +9,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/reviewtransaction"
+	"github.com/jonsanchezr/agent-smith/v4/internal/reviewtransaction"
 )
 
 // partiallyCapturedReview starts a high-risk review and captures every selected
@@ -137,3 +137,4 @@ func reviewAuthorityRevisionForTest(t *testing.T, repo, lineage string) string {
 	}
 	return record.Revision
 }
+

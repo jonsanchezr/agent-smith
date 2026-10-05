@@ -4,13 +4,13 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/reviewtransaction"
+	"github.com/jonsanchezr/agent-smith/v4/internal/reviewtransaction"
 )
 
 const bindingMarker = reviewtransaction.ReviewerBindingMarker
 const contextMarker = reviewtransaction.ReviewerContextMarker
 const resultSchema = `{"subject_hash":"<artifact_subject.subject_hash>","inspection":{"status":"completed","paths":["<complete unique unordered set>"]},"findings":[{"location":"path:line or path:start-end","severity":"CRITICAL","claim":"observable incorrect behavior","evidence_class":"deterministic","causal_disposition":"introduced","proof_refs":["concrete proof"]}],"evidence":["what was inspected"]}`
-const inspectionPrefix = `gentle-ai review inspect-candidate --repository-context <repository_context> --expected-revision <revision> --lineage <lineage> --target <target> --lens <lens> --order <order> --operation `
+const inspectionPrefix = `agent-smith review inspect-candidate --repository-context <repository_context> --expected-revision <revision> --lineage <lineage> --target <target> --lens <lens> --order <order> --operation `
 
 // InspectionCommands returns an independent list of immutable candidate inspection operations.
 func InspectionCommands() []string {
@@ -102,3 +102,4 @@ Required top-level fields: %s. Finding fields: location, severity, claim, eviden
 When clean, return the bound subject, completed inspection, "findings":[], and one evidence entry.`, title, input, focus, resultSchema, bindingMarker, envelope.CompletedInspectionStatus, strings.Join(envelope.RequiredTopLevelFields, ", "))
 	return prompt, true
 }
+

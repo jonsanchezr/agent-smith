@@ -6,19 +6,19 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/opencode"
+	"github.com/jonsanchezr/agent-smith/v4/internal/opencode"
 	"io"
 	"os"
 	"path/filepath"
 	"runtime"
 	"strings"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/assets"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/components/mutationjournal"
+	"github.com/jonsanchezr/agent-smith/v4/internal/assets"
+	"github.com/jonsanchezr/agent-smith/v4/internal/components/mutationjournal"
 )
 
-const ownershipSchema = "gentle-ai.telemetry-runtime-ownership/v1"
-const ownershipMarker = "// gentle-ai:managed telemetry-runtime/v1\n"
+const ownershipSchema = "agent-smith.telemetry-runtime-ownership/v1"
+const ownershipMarker = "// agent-smith:managed telemetry-runtime/v1\n"
 
 // approvedPriorPluginDigests is an append-only provenance allowlist. Each
 // managed plugin change must add the immediately previous embedded asset digest.
@@ -55,7 +55,7 @@ type managedManifest struct {
 // ManagedPaths accepts the adapter's resolved config directory, including XDG.
 // The manifest lives outside plugins; no user JSON or exporter is modified.
 func ManagedPaths(configDir string) []string {
-	return []string{filepath.Join(configDir, "plugins", "telemetry-runtime.ts"), filepath.Join(configDir, ".gentle-ai-telemetry-runtime.json")}
+	return []string{filepath.Join(configDir, "plugins", "telemetry-runtime.ts"), filepath.Join(configDir, ".agent-smith-telemetry-runtime.json")}
 }
 
 // Refuse indirection strictly inside the caller-resolved configuration root,
@@ -78,7 +78,7 @@ func checkManagedPath(configDir, path string) error {
 		return err
 	} else if err == nil && info.Mode()&os.ModeSymlink != 0 {
 		if target, statErr := os.Stat(root); statErr != nil || !target.IsDir() {
-			return fmt.Errorf("telemetry runtime symlink conflict: %s is a symlink that does not resolve to an existing directory; point it at a directory or replace it with one, then rerun 'gentle-ai sync'", root)
+			return fmt.Errorf("telemetry runtime symlink conflict: %s is a symlink that does not resolve to an existing directory; point it at a directory or replace it with one, then rerun 'agent-smith sync'", root)
 		}
 	}
 	for _, candidate := range []string{filepath.Dir(path), path} {
@@ -90,7 +90,7 @@ func checkManagedPath(configDir, path string) error {
 			return err
 		}
 		if err == nil && info.Mode()&os.ModeSymlink != 0 {
-			return fmt.Errorf("telemetry runtime symlink conflict: %s is a symlink inside the managed root; replace it with a regular file or directory, then rerun 'gentle-ai sync'", candidate)
+			return fmt.Errorf("telemetry runtime symlink conflict: %s is a symlink inside the managed root; replace it with a regular file or directory, then rerun 'agent-smith sync'", candidate)
 		}
 	}
 	return nil
@@ -157,7 +157,7 @@ func inspect(configDir string) ([][]byte, error) {
 	}
 	assetDir := "opencode/plugins/"
 	_, approvedPrior := approvedPriorPluginDigests[manifest.File.AfterHash]
-	if strings.HasPrefix(manifest.File.After, "// gentle-ai:managed telemetry-runtime/v2\n") {
+	if strings.HasPrefix(manifest.File.After, "// agent-smith:managed telemetry-runtime/v2\n") {
 		assetDir = "opencode/plugins-v2/"
 		// V2 has no released prior asset digest yet. V1 provenance never admits V2.
 		approvedPrior = false
@@ -382,3 +382,4 @@ func RemoveManaged(configDir string) (removed []string, err error) {
 	}
 	return removed, nil
 }
+

@@ -1,9 +1,9 @@
-# Gentle-AI™ Codebase Guide
+﻿# agent-smithâ„¢ Codebase Guide
 
 > [!NOTE]
-> These docs track `main`, which may include unreleased changes. For the latest release, see the [v4.0.0 docs](https://github.com/Gentleman-Programming/gentle-ai/tree/v4.0.0/docs).
+> These docs track `main`, which may include unreleased changes. For the latest release, see the [v4.0.0 docs](https://github.com/jonsanchezr/agent-smith/tree/v4.0.0/docs).
 
-This guide helps maintainers find the right code path before changing Gentle-AI. It is an index, not a full API reference.
+This guide helps maintainers find the right code path before changing agent-smith. It is an index, not a full API reference.
 
 ## Who this is for
 
@@ -16,13 +16,13 @@ This guide helps maintainers find the right code path before changing Gentle-AI.
 
 ## 90-second mental model
 
-Gentle-AI is a Go CLI/TUI that configures AI coding agents. It installs and syncs managed assets such as ODD guidance, skills, MCP entries, permissions, personas, GGA support, Engram™ wiring, skill registries, and community tool/plugin helpers.
+agent-smith is a Go CLI/TUI that configures AI coding agents. It installs and syncs managed assets such as ODD guidance, skills, MCP entries, permissions, personas, GGA support, Engramâ„¢ wiring, skill registries, and community tool/plugin helpers.
 
 ```text
 User
   |
   v
-gentle-ai CLI / Bubbletea TUI
+agent-smith CLI / Bubbletea TUI
   |
   +--> detection + flag normalization
   +--> planner resolves components and dependencies
@@ -46,7 +46,7 @@ Golden rule: **agent-specific paths belong in adapters; reusable behavior belong
 | [Repository map](codebase/repository-map.md) | Find package ownership and placement rules. |
 | [Memory core](codebase/memory-core.md) | Understand the Engram boundary and what this repo wires vs owns. |
 | [Interfaces](codebase/interfaces.md) | Compare CLI, MCP, local HTTP API boundary, and TUI surfaces. |
-| [Sync and cloud](codebase/sync-and-cloud.md) | Separate Gentle-AI config sync from Engram memory/cloud sync. |
+| [Sync and cloud](codebase/sync-and-cloud.md) | Separate agent-smith config sync from Engram memory/cloud sync. |
 | [Dashboard](codebase/dashboard.md) | Know what dashboard code is absent from this repo and how to avoid inventing it. |
 | [Integrations](codebase/integrations.md) | Change agent adapters, plugins, and setup boundaries safely. |
 | [Maintainer playbook](codebase/maintainer-playbook.md) | Use checklists by change type and PR review guardrails. |
@@ -78,3 +78,4 @@ Golden rule: **agent-specific paths belong in adapters; reusable behavior belong
 ## Next step
 
 Read [Mental model](codebase/mental-model.md) next.
+

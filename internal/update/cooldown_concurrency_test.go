@@ -11,8 +11,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/state"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/system"
+	"github.com/jonsanchezr/agent-smith/v4/internal/state"
+	"github.com/jonsanchezr/agent-smith/v4/internal/system"
 )
 
 func TestCheckAllWithCooldown_ConcurrentReviewModeDisablePreservesMode(t *testing.T) {
@@ -210,17 +210,17 @@ func awaitSignal(t *testing.T, ctx context.Context, signal <-chan struct{}, mess
 
 func buildCandidateBinary(t *testing.T) string {
 	t.Helper()
-	binaryName := "gentle-ai"
+	binaryName := "agent-smith"
 	if runtime.GOOS == "windows" {
 		binaryName += ".exe"
 	}
 	binary := filepath.Join(t.TempDir(), binaryName)
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
-	command := exec.CommandContext(ctx, "go", "build", "-o", binary, "./cmd/gentle-ai")
+	command := exec.CommandContext(ctx, "go", "build", "-o", binary, "./cmd/agent-smith")
 	command.Dir = repositoryRoot(t)
 	if output, err := command.CombinedOutput(); err != nil {
-		t.Fatalf("build candidate gentle-ai binary: %v\n%s", err, output)
+		t.Fatalf("build candidate agent-smith binary: %v\n%s", err, output)
 	}
 	return binary
 }
@@ -233,3 +233,4 @@ func repositoryRoot(t *testing.T) string {
 	}
 	return filepath.Clean(filepath.Join(filepath.Dir(sourceFile), "..", ".."))
 }
+

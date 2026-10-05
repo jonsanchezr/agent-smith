@@ -1,16 +1,16 @@
-# Architecture & Development
+﻿# Architecture & Development
 
 > [!NOTE]
-> These docs track `main`, which may include unreleased changes. For the latest release, see the [v4.0.0 docs](https://github.com/Gentleman-Programming/gentle-ai/tree/v4.0.0/docs).
+> These docs track `main`, which may include unreleased changes. For the latest release, see the [v4.0.0 docs](https://github.com/jonsanchezr/agent-smith/tree/v4.0.0/docs).
 
-← [Back to README](../README.md)
+â† [Back to README](../README.md)
 
 ---
 
 ## Architecture
 
 ```
-cmd/gentle-ai/             CLI entrypoint
+cmd/agent-smith/             CLI entrypoint
 cmd/gentle-telemetry/      Self-hosted telemetry collector (see telemetry-collector.md)
 internal/
   app/                     Command dispatch + runtime wiring
@@ -30,7 +30,7 @@ internal/
     telemetryruntime/      Native runtime telemetry event adapters and managed hooks
     reviewassets/          Runtime review contract rendering for each agent
     communitytool/         Community tool install/guidance/config orchestration
-    opencodeagents/        OpenCode-compatible agents owned by gentle-ai
+    opencodeagents/        OpenCode-compatible agents owned by agent-smith
     opencodedefault/       OpenCode default_agent ownership and custom agent discovery
     opencodeplugin/        OpenCode TUI plugin registration/local plugin helpers
     opencoderuntimeplugins/  Names and eligibility of managed OpenCode runtime plugins
@@ -65,10 +65,10 @@ go test ./...
 RUN_FULL_E2E=1 RUN_BACKUP_TESTS=1 ./e2e/docker-test.sh
 
 # Dry-run smoke test (macOS/Linux)
-gentle-ai install --dry-run --agent claude-code --preset minimal
+agent-smith install --dry-run --agent claude-code --preset minimal
 
 # Dry-run smoke test (Windows PowerShell)
-gentle-ai.exe install --dry-run --agent claude-code --preset minimal
+agent-smith.exe install --dry-run --agent claude-code --preset minimal
 ```
 
 Test coverage is broad and changes frequently. Keep this section qualitative unless counts are generated automatically:
@@ -87,7 +87,7 @@ Test coverage is broad and changes frequently. Keep this section qualitative unl
 |--|---------------|-----------------|
 | **Purpose** | Dev environment (editors, shells, terminals) | AI development layer (agents, memory, skills) |
 | **Installs** | Neovim, Fish/Zsh, Tmux/Zellij, Ghostty | Configures the [supported AI agents](agents.md) |
-| **Overlap** | None — complementary | None — different layer |
+| **Overlap** | None â€” complementary | None â€” different layer |
 
 Install Gentleman.Dots first for your dev environment, then AI Gentle Stack for the AI layer on top.
 
@@ -96,3 +96,4 @@ Install Gentleman.Dots first for your dev environment, then AI Gentle Stack for 
 ## License
 
 MIT
+

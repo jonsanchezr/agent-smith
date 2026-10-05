@@ -51,7 +51,7 @@ func issue1800State(r *journeyRun) ([]byte, issue1800Authority, error) {
 	if err != nil {
 		return nil, issue1800Authority{}, err
 	}
-	stateBytes, err := os.ReadFile(filepath.Join(strings.TrimSpace(common), "gentle-ai", "review-transactions", "v2", issue1800Lineage, "review-state.json"))
+	stateBytes, err := os.ReadFile(filepath.Join(strings.TrimSpace(common), "agent-smith", "review-transactions", "v2", issue1800Lineage, "review-state.json"))
 	var record struct {
 		State issue1800Authority `json:"state"`
 	}
@@ -213,7 +213,7 @@ func abandonIssue1800Authority(r *journeyRun) error {
 	}
 	if observation.ExitCode != 0 || json.Unmarshal([]byte(strings.TrimSpace(observation.Stdout)), &result) != nil ||
 		result.Operation != "review/abandon" || result.Record.LineageID != entry.LineageID || result.Record.Reason != "operator_disposition" || result.Record.Actor != "bench" ||
-		result.Record.QuarantinePath == "" || result.Record.Abandonment.Schema != "gentle-ai.review-abandon-authorization/v2" ||
+		result.Record.QuarantinePath == "" || result.Record.Abandonment.Schema != "agent-smith.review-abandon-authorization/v2" ||
 		result.Record.Abandonment.LineageID != entry.LineageID || result.Record.Abandonment.Revision != entry.Revision || result.Record.Abandonment.SnapshotIdentity != entry.SnapshotIdentity ||
 		strings.Join(result.Record.Abandonment.DiscardedWork.CapturedLensResults, "\x00") != strings.Join(entry.DiscardedWork.CapturedLensResults, "\x00") ||
 		result.Record.Abandonment.DiscardedWork.FindingsPresent != entry.DiscardedWork.FindingsPresent || result.Record.Abandonment.DiscardedWork.EvidenceRecordsPresent != entry.DiscardedWork.EvidenceRecordsPresent {
@@ -248,3 +248,4 @@ func proveIssue1800FreshReviewRequired(r *journeyRun) error {
 	}
 	return nil
 }
+

@@ -15,8 +15,8 @@ import (
 	"testing"
 	"time"
 
-	piagent "github.com/gentleman-programming/gentle-ai/v4/internal/agents/pi"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/components/filemerge"
+	piagent "github.com/jonsanchezr/agent-smith/v4/internal/agents/pi"
+	"github.com/jonsanchezr/agent-smith/v4/internal/components/filemerge"
 )
 
 func TestPiCodeGraphUnselectedIsNoOp(t *testing.T) {
@@ -28,7 +28,7 @@ func TestPiCodeGraphUnselectedIsNoOp(t *testing.T) {
 	if result.Changed || len(result.Children) != 0 {
 		t.Fatalf("result = %#v, want no-op", result)
 	}
-	if _, err := os.Stat(filepath.Join(home, ".gentle-ai", "pi-codegraph.json")); !os.IsNotExist(err) {
+	if _, err := os.Stat(filepath.Join(home, ".agent-smith", "pi-codegraph.json")); !os.IsNotExist(err) {
 		t.Fatalf("manifest exists after unselected reconciliation: %v", err)
 	}
 }
@@ -71,7 +71,7 @@ func TestPiCodeGraphReconcileInjectsOnlyCompatibleToolsAndGuidanceForEveryChild(
 func TestPiCodeGraphRejectsParentMarkerAndRestoresOnConflict(t *testing.T) {
 	home := t.TempDir()
 	settings := filepath.Join(home, ".pi", "agent", "mcp.json")
-	writePiFile(t, filepath.Join(home, ".pi", "agent", "APPEND_SYSTEM.md"), "<!-- gentle-ai:codegraph-guidance -->")
+	writePiFile(t, filepath.Join(home, ".pi", "agent", "APPEND_SYSTEM.md"), "<!-- agent-smith:codegraph-guidance -->")
 	writePiFile(t, filepath.Join(home, ".pi", "agent", "subagents", "worker.md"), "---\ntools: bash\n---\nwork\n")
 	writePiFile(t, settings, `{"mcpServers":{"codegraph":{"command":"other"}}}`)
 	before, _ := os.ReadFile(settings)
@@ -519,7 +519,7 @@ func TestPiCodeGraphFailureRestoresNewMCPAndChild(t *testing.T) {
 	writePiFile(t, childPath, original)
 	previous := piCodeGraphAtomicWrite
 	piCodeGraphAtomicWrite = func(path string, data []byte, mode os.FileMode) (filemerge.WriteResult, error) {
-		if path == filepath.Join(home, ".gentle-ai", "pi-codegraph.json") {
+		if path == filepath.Join(home, ".agent-smith", "pi-codegraph.json") {
 			return filemerge.WriteResult{}, os.ErrPermission
 		}
 		return previous(path, data, mode)
@@ -543,7 +543,7 @@ func TestPiCodeGraphFailureRemovesNewPackageOverlayWithoutVerificationSuccess(t 
 	writePiFile(t, packageChild, "---\ntools: bash\n---\npackage instructions\n")
 	previous := piCodeGraphAtomicWrite
 	piCodeGraphAtomicWrite = func(path string, data []byte, mode os.FileMode) (filemerge.WriteResult, error) {
-		if path == filepath.Join(home, ".gentle-ai", "pi-codegraph.json") {
+		if path == filepath.Join(home, ".agent-smith", "pi-codegraph.json") {
 			return filemerge.WriteResult{}, os.ErrPermission
 		}
 		return previous(path, data, mode)
@@ -566,7 +566,7 @@ func TestPiCodeGraphPendingProbePreservesConfiguredFiles(t *testing.T) {
 	home := t.TempDir()
 	mcpPath := filepath.Join(home, ".pi", "agent", "mcp.json")
 	childPath := filepath.Join(home, ".pi", "agent", "subagents", "worker.md")
-	manifestPath := filepath.Join(home, ".gentle-ai", "pi-codegraph.json")
+	manifestPath := filepath.Join(home, ".agent-smith", "pi-codegraph.json")
 	writePiFile(t, childPath, "---\ntools: bash\n---\nwork\n")
 	installFakeCodeGraph(t)
 	previousProbe := piCodeGraphEffectiveMCPProbe
@@ -616,7 +616,7 @@ func TestPiCodeGraphPendingProbeRejectsConflictingChildAndRollsBack(t *testing.T
 	if got := string(mustReadPiFile(t, childPath)); got != original {
 		t.Fatalf("child after rollback = %q, want %q", got, original)
 	}
-	if _, statErr := os.Stat(filepath.Join(home, ".gentle-ai", "pi-codegraph.json")); !os.IsNotExist(statErr) {
+	if _, statErr := os.Stat(filepath.Join(home, ".agent-smith", "pi-codegraph.json")); !os.IsNotExist(statErr) {
 		t.Fatalf("pending manifest persisted after child failure: %v", statErr)
 	}
 }
@@ -631,7 +631,7 @@ func TestPiCodeGraphUninstallRollsBackWhenManifestRemovalFails(t *testing.T) {
 	if _, err := ReconcilePiCodeGraph(PiCodeGraphOptions{HomeDir: home, Selected: true, EffectiveMCPProbe: piProbeForTest}); err != nil {
 		t.Fatal(err)
 	}
-	manifestPath := filepath.Join(home, ".gentle-ai", "pi-codegraph.json")
+	manifestPath := filepath.Join(home, ".agent-smith", "pi-codegraph.json")
 	previousRemove := piCodeGraphRemove
 	piCodeGraphRemove = func(path string) error {
 		if path == manifestPath {
@@ -674,7 +674,7 @@ func TestPiCodeGraphUninstallFailsClosedOnChildReadFailure(t *testing.T) {
 	if _, err := UninstallPiCodeGraph(home); err == nil {
 		t.Fatal("UninstallPiCodeGraph() error = nil, want child read failure")
 	}
-	if _, err := os.Stat(filepath.Join(home, ".gentle-ai", "pi-codegraph.json")); err != nil {
+	if _, err := os.Stat(filepath.Join(home, ".agent-smith", "pi-codegraph.json")); err != nil {
 		t.Fatalf("manifest missing after failed cleanup: %v", err)
 	}
 }
@@ -683,7 +683,7 @@ func TestPiCodeGraphReconcileJoinsJournalRestoreFailure(t *testing.T) {
 	home := t.TempDir()
 	child := filepath.Join(home, ".pi", "agent", "subagents", "worker.md")
 	writePiFile(t, child, "---\ntools: bash\n---\nwork\n")
-	manifestPath := filepath.Join(home, ".gentle-ai", "pi-codegraph.json")
+	manifestPath := filepath.Join(home, ".agent-smith", "pi-codegraph.json")
 	previousWrite := piCodeGraphAtomicWrite
 	piCodeGraphAtomicWrite = func(path string, data []byte, mode os.FileMode) (filemerge.WriteResult, error) {
 		if path == manifestPath {
@@ -872,7 +872,7 @@ func TestPiCodeGraphPreservesSensitiveFileModes(t *testing.T) {
 	for _, tt := range []struct {
 		path string
 		want os.FileMode
-	}{{mcpPath, 0o600}, {childPath, 0o640}, {filepath.Join(home, ".gentle-ai", "pi-codegraph.json"), 0o600}} {
+	}{{mcpPath, 0o600}, {childPath, 0o640}, {filepath.Join(home, ".agent-smith", "pi-codegraph.json"), 0o600}} {
 		info, err := os.Stat(tt.path)
 		if err != nil || info.Mode().Perm() != tt.want {
 			t.Fatalf("mode %q = %v, %v; want %v", tt.path, info.Mode(), err, tt.want)
@@ -890,7 +890,7 @@ func TestPiCodeGraphUninstallRejectsManifestPathEscapeAndMissingOwnedChildIsSucc
 	home := t.TempDir()
 	outside := filepath.Join(t.TempDir(), "outside.md")
 	writePiFile(t, outside, "do not modify\n")
-	manifestPath := filepath.Join(home, ".gentle-ai", "pi-codegraph.json")
+	manifestPath := filepath.Join(home, ".agent-smith", "pi-codegraph.json")
 	writePiFile(t, manifestPath, `{"children":{"`+outside+`":{"after":"owned","afterHash":"deadbeef"}}}`)
 	if err := os.Chmod(manifestPath, 0o600); err != nil {
 		t.Fatal(err)
@@ -1094,3 +1094,4 @@ func TestCodeGraphIsolatedManifestWithConfiguredAgentDir(t *testing.T) {
 		t.Fatalf("default manifest was removed: %v", err)
 	}
 }
+

@@ -1,15 +1,15 @@
 # Review Integration Contract
 
 > [!NOTE]
-> These docs track `main`, which may include unreleased changes. For the latest release, see the [v4.0.0 docs](https://github.com/Gentleman-Programming/gentle-ai/tree/v4.0.0/docs).
+> These docs track `main`, which may include unreleased changes. For the latest release, see the [v4.0.0 docs](https://github.com/jonsanchezr/agent-smith/tree/v4.0.0/docs).
 
-← [Back to README](../README.md)
+â† [Back to README](../README.md)
 
-`gentle-ai.review-integration/v2` coordinates one immutable review transaction at a time. Go owns the candidate snapshot, review admission, correction boundary, terminal burn, and all provider-facing bindings. Claude Code, OpenCode, Codex, and Pi transport provider-issued work; no runtime adapter decides review or delivery.
+`agent-smith.review-integration/v2` coordinates one immutable review transaction at a time. Go owns the candidate snapshot, review admission, correction boundary, terminal burn, and all provider-facing bindings. Claude Code, OpenCode, Codex, and Pi transport provider-issued work; no runtime adapter decides review or delivery.
 
 ## RDD defaults to ON
 
-RDD is on by default and opt-out. With no configured preference, status reports `effective: on, source: default` without saving a user decision. Explicit global or clone-local OFF wins; use `gentle-ai review mode disable` to opt out. Automation must not toggle the mode or persist a preference on the user's behalf. Candidate consent is separate, and delivery always follows ordinary repository policy. Enabling revalidates the current candidate; it never resumes stale authority.
+RDD is on by default and opt-out. With no configured preference, status reports `effective: on, source: default` without saving a user decision. Explicit global or clone-local OFF wins; use `agent-smith review mode disable` to opt out. Automation must not toggle the mode or persist a preference on the user's behalf. Candidate consent is separate, and delivery always follows ordinary repository policy. Enabling revalidates the current candidate; it never resumes stale authority.
 
 ## Quick path
 
@@ -21,9 +21,9 @@ The orchestrator enters this lifecycle once per candidate, after an authorized i
 4. Follow ordinary repository policy for commit, push, PR, release, and archive.
 
 ```bash
-gentle-ai review status \
+agent-smith review status \
   --cwd <repo> \
-  --contract gentle-ai.review-integration/v2 \
+  --contract agent-smith.review-integration/v2 \
   --agent claude-code \
   --next-transition
 ```
@@ -58,7 +58,7 @@ An exact replay of an active START can return `replayed`. A genuinely new START 
 
 ### 3. Bound calls drive the transaction
 
-A reviewing START carries `next_transition.execute(review.status)` — the provider-issued re-entry for its frozen binding. The parent runs that command verbatim, with the repository as process cwd, and satisfies every later STATUS and bound capture call only with the exact tokens each returned transition names. The parent routes only from that transaction's returned `next_transition`:
+A reviewing START carries `next_transition.execute(review.status)` â€” the provider-issued re-entry for its frozen binding. The parent runs that command verbatim, with the repository as process cwd, and satisfies every later STATUS and bound capture call only with the exact tokens each returned transition names. The parent routes only from that transaction's returned `next_transition`:
 
 | Transition | Parent action |
 | --- | --- |
@@ -103,13 +103,13 @@ Native Go owns frozen lenses, provider context and admission, refutation, one bo
 | Wrong, stale, or mismatched acknowledgement | Treat the error as non-mutating, retain the original binding, then re-query bound STATUS. | Validation fails before mutation; the authority and pending acknowledgement remain replayable. |
 | Exact acknowledgement | Run the returned command once. If its outcome is uncertain, re-query bound STATUS instead of guessing or replaying an invented command. | Under the existing lock, Go validates the complete binding and token, then burns the exact lineage and artifacts. |
 
-The acknowledgement transition is an execution detail of `gentle-ai.review-integration/v2`; it does not authorize delivery. Escalated and other non-approved terminal paths retain their existing response and STATUS behavior and do not gain an acknowledgement transition. After a malformed, incomplete, or unavailable capture, retain the exact lineage, revision, and target binding, query bound STATUS once, and follow only the reoffered capture route.
+The acknowledgement transition is an execution detail of `agent-smith.review-integration/v2`; it does not authorize delivery. Escalated and other non-approved terminal paths retain their existing response and STATUS behavior and do not gain an acknowledgement transition. After a malformed, incomplete, or unavailable capture, retain the exact lineage, revision, and target binding, query bound STATUS once, and follow only the reoffered capture route.
 
 After a successful burn, no terminal receipt, tombstone, witness, mirror, or delivery authority survives. Other lineages and worktrees are unaffected.
 
 ## Reviewer transport
 
-The provider contract is shared by Claude Code, OpenCode, Codex, and Pi. Go derives frozen trees, manifest, subject hash, role, binding, schema, evidence limits, and admission. Adapters transport opaque provider output and never parse bindings, manufacture a verdict, or mutate review authority. Gentle AI writes nothing into the Pi system prompt because gentle-pi owns it, so this contract ships as `orchestration/pi.md` in the published provider contract bundle, which gentle-pi mirrors and injects at session start.
+The provider contract is shared by Claude Code, OpenCode, Codex, and Pi. Go derives frozen trees, manifest, subject hash, role, binding, schema, evidence limits, and admission. Adapters transport opaque provider output and never parse bindings, manufacture a verdict, or mutate review authority. Agent Smith writes nothing into the Pi system prompt because gentle-pi owns it, so this contract ships as `orchestration/pi.md` in the published provider contract bundle, which gentle-pi mirrors and injects at session start.
 
 Each provider-issued capture input is one slot. Its reviewer prompt starts with `GENTLE_AI_REVIEW_BINDING ` followed by one-line binding JSON. A result echoes the exact `subject_hash`, reports completed inspection of the full manifest, and supplies structured findings/evidence. On malformed, incomplete, or unavailable inspection, query bound STATUS again; relaunch only when it reoffers the exact same slot.
 
@@ -117,29 +117,29 @@ Reviewers inspect only provider-bound immutable trees. They never inspect the li
 
 ### Non-lens provider roles: refuter and targeted validator
 
-`gentle-ai review capture-refuter` and `gentle-ai review capture-validation` bind the transaction-wide refuter batch and the correction-bound targeted validator the same way `review capture-result` binds a lens — `--lineage`, `--target`, `--expected-revision` (plus `--request-hash` for the validator) — and exactly one of three modes. A compiled runtime (Claude Code, Codex, OpenCode) passes `--agent` and `--execute`: Go materializes the role request, runs its own in-process adapter, and admits the raw result; no submission descriptor exists for this form, and `--materialize`/`--input` refuse typed for it. Pi is host-relay, so `--execute` refuses typed for it: Go never spawns a process for a pi role. STATUS instead renders the pi collect input as `--materialize=true` plus a `submission` descriptor, exactly like the lens `capture-result` path — `gentle-pi` materializes the read-only prompt, runs the model itself, and submits the raw result through `--input=<path|->`, whose `{{value}}` slot repeats every binding token (including `--agent`) and drops only the `--materialize` selector. Go admits that submission through the same raw admitters the compiled `--execute` path uses, with the same binding; no adapter runs and no retry is granted, so an unadmittable submission leaves the slot open for STATUS to reoffer, exactly like a malformed in-process capture.
+`agent-smith review capture-refuter` and `agent-smith review capture-validation` bind the transaction-wide refuter batch and the correction-bound targeted validator the same way `review capture-result` binds a lens â€” `--lineage`, `--target`, `--expected-revision` (plus `--request-hash` for the validator) â€” and exactly one of three modes. A compiled runtime (Claude Code, Codex, OpenCode) passes `--agent` and `--execute`: Go materializes the role request, runs its own in-process adapter, and admits the raw result; no submission descriptor exists for this form, and `--materialize`/`--input` refuse typed for it. Pi is host-relay, so `--execute` refuses typed for it: Go never spawns a process for a pi role. STATUS instead renders the pi collect input as `--materialize=true` plus a `submission` descriptor, exactly like the lens `capture-result` path â€” `gentle-pi` materializes the read-only prompt, runs the model itself, and submits the raw result through `--input=<path|->`, whose `{{value}}` slot repeats every binding token (including `--agent`) and drops only the `--materialize` selector. Go admits that submission through the same raw admitters the compiled `--execute` path uses, with the same binding; no adapter runs and no retry is granted, so an unadmittable submission leaves the slot open for STATUS to reoffer, exactly like a malformed in-process capture.
 
-The role submission descriptor is a negotiated status contract change, so the negotiated status schema for this lifecycle is `gentle-ai.review-integration.status/v9` (v5 forbade a `submission` field on role inputs). Go no longer owns a pi adapter or the `~/.pi/gentle-ai/models.json` model-routing lookup it used to read before spawning a role process for pi; `gentle-pi`'s own host relay owns that routing now, the same way it already owns routing for the lens path.
+The role submission descriptor is a negotiated status contract change, so the negotiated status schema for this lifecycle is `agent-smith.review-integration.status/v9` (v5 forbade a `submission` field on role inputs). Go no longer owns a pi adapter or the `~/.pi/agent-smith/models.json` model-routing lookup it used to read before spawning a role process for pi; `gentle-pi`'s own host relay owns that routing now, the same way it already owns routing for the lens path.
 
 ## Corrections and consent
 
 Native Go alone selects lenses, classifies candidate causality, performs refutation, derives repository evidence, and permits at most one bounded correction. A validator that cannot inspect its immutable trees has no verdict; report that block rather than submitting a failed validation.
 
-Medium and high-risk START may return the typed `gentle-ai.review-integration.consent/v3` envelope. Relay the complete choice envelope losslessly, preserve machine tokens and invocations exactly, and run only the invocation selected by the human. Global RDD mode permits review; it never grants per-candidate consent. A decline is not the kill switch.
+Medium and high-risk START may return the typed `agent-smith.review-integration.consent/v3` envelope. Relay the complete choice envelope losslessly, preserve machine tokens and invocations exactly, and run only the invocation selected by the human. Global RDD mode permits review; it never grants per-candidate consent. A decline is not the kill switch.
 
-## Read-only risk assessment (`gentle-ai review assess`)
+## Read-only risk assessment (`agent-smith review assess`)
 
-`gentle-ai review assess --cwd <repo> [--agent <runtime>] [--base-ref <ref> --committed-only] [--untracked-scope exclude|select --intended-untracked <path> --expected-untracked-inventory <digest>] [--escalate-item <1-6> --escalate-reason <text>] [--json]` prints the same candidate risk classification START uses to select lenses (`reviewtransaction.AssessSnapshotRisk`), without creating any review authority, lineage, or store mutation. It works identically with receipt-driven development on or off, so a host can gate delegated verification on the result before ever calling `review start`.
+`agent-smith review assess --cwd <repo> [--agent <runtime>] [--base-ref <ref> --committed-only] [--untracked-scope exclude|select --intended-untracked <path> --expected-untracked-inventory <digest>] [--escalate-item <1-6> --escalate-reason <text>] [--json]` prints the same candidate risk classification START uses to select lenses (`reviewtransaction.AssessSnapshotRisk`), without creating any review authority, lineage, or store mutation. It works identically with receipt-driven development on or off, so a host can gate delegated verification on the result before ever calling `review start`.
 
 It builds the exact same candidate `review start` would: current changes by default, or an immutable base-to-HEAD comparison with `--base-ref` (which requires `--committed-only` to acknowledge dirty tracked changes, exactly like `review start`). The untracked-scope flags accept the same values `review start` does. The optional `--agent` declares the runtime identity to carry on `next_transition` below; it is validated exactly as `review status --agent` is.
 
 The optional `--escalate-item` and `--escalate-reason` let an agent raise the risk to `high` by citing one high-risk item. They must be passed together: `--escalate-item` is an integer from 1 to 6 (1 data or irreversible effects, 2 security, 3 contracts others consume, 4 concurrency, 5 delivery or environment, 6 no test would catch a regression), and `--escalate-reason` is a non-empty reason of at most 500 bytes (UTF-8); keep it to one line. Escalation raises `passive` or `medium` to `high`, never lowers a tier, and appends an `agent_escalation` reason naming the item. Missing either flag, an item outside 1-6, or an empty or oversized reason fails with a rerun hint.
 
-With `--json`, it prints the typed `gentle-ai.review-assessment/v1` envelope:
+With `--json`, it prints the typed `agent-smith.review-assessment/v1` envelope:
 
 ```json
 {
-  "schema": "gentle-ai.review-assessment/v1",
+  "schema": "agent-smith.review-assessment/v1",
   "risk": "medium",
   "reasons": [{"code": "executable_change", "path": "notes/scratch.txt"}],
   "changed_paths": 1,
@@ -149,10 +149,10 @@ With `--json`, it prints the typed `gentle-ai.review-assessment/v1` envelope:
   "review_due_reason": "slice_budget_reached",
   "next_transition": {
     "operation": "review.status",
-    "command": "gentle-ai review status --cwd <repo> --contract gentle-ai.review-integration/v2 --agent claude-code --next-transition --base-ref 15ea98ed --committed-only",
+    "command": "agent-smith review status --cwd <repo> --contract agent-smith.review-integration/v2 --agent claude-code --next-transition --base-ref 15ea98ed --committed-only",
     "arguments": [
       {"name": "cwd", "value": "<repo>"},
-      {"name": "contract", "value": "gentle-ai.review-integration/v2"},
+      {"name": "contract", "value": "agent-smith.review-integration/v2"},
       {"name": "agent", "value": "claude-code"},
       {"name": "next-transition", "value": "true"},
       {"name": "base-ref", "value": "15ea98ed"},
@@ -166,9 +166,9 @@ With `--json`, it prints the typed `gentle-ai.review-assessment/v1` envelope:
 
 `candidate.consumed` reports whether this exact candidate identity's terminal review authority was already acknowledged (`reviewtransaction.CompactTargetConsumed`, the same evidence `review status` itself consults before ever offering a fresh START for the identical identity), so a caller never re-derives that from a tombstone.
 
-`review_due` and `review_due_reason` turn the tier into the one consequence an orchestrator needs, in evaluation order: a consumed candidate always reports `already_reviewed` (`review_due: false`) regardless of tier; `high` risk always reports `review_due: true` with `high_risk`; `medium` reports `review_due: true` with `slice_budget_reached` once `changed_lines` reaches `reviewtransaction.LargeChangeLines` (400) over the assessed range, else `review_due: false` with `under_budget`; `passive` always reports `review_due: false` with `passive`. `changed_lines` is whatever range the caller assessed — pass `--base-ref <last reviewed boundary> --committed-only` to make it the accumulated ODD slice.
+`review_due` and `review_due_reason` turn the tier into the one consequence an orchestrator needs, in evaluation order: a consumed candidate always reports `already_reviewed` (`review_due: false`) regardless of tier; `high` risk always reports `review_due: true` with `high_risk`; `medium` reports `review_due: true` with `slice_budget_reached` once `changed_lines` reaches `reviewtransaction.LargeChangeLines` (400) over the assessed range, else `review_due: false` with `under_budget`; `passive` always reports `review_due: false` with `passive`. `changed_lines` is whatever range the caller assessed â€” pass `--base-ref <last reviewed boundary> --committed-only` to make it the accumulated ODD slice.
 
-`next_transition` is present only when `review_due` is `true`: it is the exact, literally runnable `review status ... --next-transition` preflight continuation, built with the same argument builders and conventions `review status` itself uses, so an orchestrator executes `next_transition.command` verbatim instead of reconstructing the invocation from prose. Argument order is fixed: `--cwd`, `--contract`, the optional `--agent` the caller declared, `--next-transition`, and — only for a named base comparison — the caller's own `--base-ref` echoed verbatim plus `--committed-only`.
+`next_transition` is present only when `review_due` is `true`: it is the exact, literally runnable `review status ... --next-transition` preflight continuation, built with the same argument builders and conventions `review status` itself uses, so an orchestrator executes `next_transition.command` verbatim instead of reconstructing the invocation from prose. Argument order is fixed: `--cwd`, `--contract`, the optional `--agent` the caller declared, `--next-transition`, and â€” only for a named base comparison â€” the caller's own `--base-ref` echoed verbatim plus `--committed-only`.
 
 Without `--json`, it prints the same information as human-readable text, including a `review due: yes/no (<reason>) -> <command>` line.
 
@@ -176,7 +176,7 @@ When the candidate cannot be built or classified (for example an unresolvable `-
 
 ## Delivery remains human-owned
 
-`gentle-ai review validate` and named gates (`post-apply`, `pre-commit`, `pre-push`, `pre-pr`, and `release`) are compatibility/informational commands. They never discover authority or decide delivery:
+`agent-smith review validate` and named gates (`post-apply`, `pre-commit`, `pre-push`, `pre-pr`, and `release`) are compatibility/informational commands. They never discover authority or decide delivery:
 
 | Mode | Informational result |
 | --- | --- |
@@ -197,22 +197,22 @@ A `stop` carries one reason code and no executable transition. The table below i
 
 | Reason code | Continuation |
 | --- | --- |
-| `captured_artifacts_unverifiable` | Terminal — a captured reviewer artifact failed local verification. Ask a maintainer to inspect the B authority, or run `gentle-ai review mode disable --scope clone --cwd <repo>`. |
-| `captured_result_selection_unavailable` | Terminal — an internal result-selection invariant failed. Ask a maintainer to inspect the lineage, or run `gentle-ai review mode disable --scope clone --cwd <repo>`. |
-| `corrected_candidate_unavailable` | Change the correction candidate in B, then re-query `gentle-ai review status --cwd <repo> --contract gentle-ai.review-integration/v2 --agent {{GENTLE_AI_RUNTIME_AGENT_ID}} --next-transition` with the captured lineage and target. Do not reuse the pre-correction target. |
-| `empty_base_diff_bootstrap_required` | Terminal — the committed base has no reviewable paths. Use the separately authorized empty-root bootstrap for a new target, or run `gentle-ai review mode disable --scope clone --cwd <repo>`. |
-| `lens_context_budget_exceeded` | Terminal — immutable reviewer context cannot be truncated. Reduce the B candidate scope and start a new transaction, or run `gentle-ai review mode disable --scope clone --cwd <repo>`. |
-| `correction_context_budget_exceeded` | Release this review authority: the corrected candidate's evidence plus its recorded findings cannot fit the runtime context budget, so no targeted validation can ever be assembled and `gentle-ai review invalidate` refuses once lens results are admitted. Run `gentle-ai review abandon --cwd <repo> --lineage <id> --expected-revision <revision> --reason operator_disposition --actor <actor> --maintainer-authorization <binding>` (run `gentle-ai review abandon` with no flags to print the binding template). The STATUS stop carries that release as `next_transition.continuation` with `operation: "abandon"` whenever the authority is eligible, and omits it entirely when it is not, rather than naming a command the live operation would refuse. Then review the change as smaller candidates, or run `gentle-ai review mode disable --scope clone --cwd <repo>`. |
-| `managed_assets_outdated` | Run the exact sync command named in the stop's `continuation` field (anchored to the executable that reported the stale assets, so it cannot resolve to a different `gentle-ai` on `PATH`, and bound to the runtime agent STATUS was asked for), then re-query the exact repository-bound STATUS command; the same candidate is offered again once the recorded digest converges. The quoted Windows form is cmd.exe command syntax; PowerShell requires the call operator (`& "..." sync ...`). |
-| `corrupted_or_unverifiable_authority` | Terminal — the authority is unreadable or unsupported. Ask a maintainer to inspect it, or run `gentle-ai review mode disable --scope clone --cwd <repo>`. |
-| `manual_intervention_required` | Terminal — the authority state is outside the negotiated lifecycle. Ask a maintainer to inspect it, or run `gentle-ai review mode disable --scope clone --cwd <repo>`. |
-| `missing_authority_binding` | Terminal — a current target had no authority binding. File a bounded defect with the lineage, or run `gentle-ai review mode disable --scope clone --cwd <repo>`. |
-| `native_stop_required` | Terminal — the lineage is escalated but has no native continuation. Ask a maintainer to inspect it, or run `gentle-ai review mode disable --scope clone --cwd <repo>`. |
-| `recovery_scope_unchanged` | Change B so its target identity differs, then retry the exact returned `gentle-ai review recover` invocation. |
-| `staged_workspace_overlay_recovery_unavailable` | Terminal — pass `--lineage <id>` to recover an existing lineage, or drop `--workspace-overlay` and start a fresh target; otherwise run `gentle-ai review mode disable --scope clone --cwd <repo>`. |
-| `unachievable_lens_slot` | A host reported a selected reviewer slot unachievable under current conditions. If that was transient, re-run `gentle-ai review capture-unachievable` with the same binding and `--withdraw=true` so B re-offers the same slot. If it is not transient, reduce the B candidate scope and start a new `gentle-ai review start`, or run `gentle-ai review mode disable --scope clone --cwd <repo>`. |
-| `target_already_acknowledged` | Terminal: this exact target was already acknowledged and its review authority burned. No further review action is required; delivery follows ordinary repository policy. Changed targets remain eligible for review. Only when deliberately requesting a new independent review, use `gentle-ai review start`; do not automatically restart this consumed target. |
-| `rdd_disabled` | Run the exact source-scoped `gentle-ai review mode enable` command rendered by STATUS, then re-run its exact repository-bound STATUS command. |
+| `captured_artifacts_unverifiable` | Terminal â€” a captured reviewer artifact failed local verification. Ask a maintainer to inspect the B authority, or run `agent-smith review mode disable --scope clone --cwd <repo>`. |
+| `captured_result_selection_unavailable` | Terminal â€” an internal result-selection invariant failed. Ask a maintainer to inspect the lineage, or run `agent-smith review mode disable --scope clone --cwd <repo>`. |
+| `corrected_candidate_unavailable` | Change the correction candidate in B, then re-query `agent-smith review status --cwd <repo> --contract agent-smith.review-integration/v2 --agent {{GENTLE_AI_RUNTIME_AGENT_ID}} --next-transition` with the captured lineage and target. Do not reuse the pre-correction target. |
+| `empty_base_diff_bootstrap_required` | Terminal â€” the committed base has no reviewable paths. Use the separately authorized empty-root bootstrap for a new target, or run `agent-smith review mode disable --scope clone --cwd <repo>`. |
+| `lens_context_budget_exceeded` | Terminal â€” immutable reviewer context cannot be truncated. Reduce the B candidate scope and start a new transaction, or run `agent-smith review mode disable --scope clone --cwd <repo>`. |
+| `correction_context_budget_exceeded` | Release this review authority: the corrected candidate's evidence plus its recorded findings cannot fit the runtime context budget, so no targeted validation can ever be assembled and `agent-smith review invalidate` refuses once lens results are admitted. Run `agent-smith review abandon --cwd <repo> --lineage <id> --expected-revision <revision> --reason operator_disposition --actor <actor> --maintainer-authorization <binding>` (run `agent-smith review abandon` with no flags to print the binding template). The STATUS stop carries that release as `next_transition.continuation` with `operation: "abandon"` whenever the authority is eligible, and omits it entirely when it is not, rather than naming a command the live operation would refuse. Then review the change as smaller candidates, or run `agent-smith review mode disable --scope clone --cwd <repo>`. |
+| `managed_assets_outdated` | Run the exact sync command named in the stop's `continuation` field (anchored to the executable that reported the stale assets, so it cannot resolve to a different `agent-smith` on `PATH`, and bound to the runtime agent STATUS was asked for), then re-query the exact repository-bound STATUS command; the same candidate is offered again once the recorded digest converges. The quoted Windows form is cmd.exe command syntax; PowerShell requires the call operator (`& "..." sync ...`). |
+| `corrupted_or_unverifiable_authority` | Terminal â€” the authority is unreadable or unsupported. Ask a maintainer to inspect it, or run `agent-smith review mode disable --scope clone --cwd <repo>`. |
+| `manual_intervention_required` | Terminal â€” the authority state is outside the negotiated lifecycle. Ask a maintainer to inspect it, or run `agent-smith review mode disable --scope clone --cwd <repo>`. |
+| `missing_authority_binding` | Terminal â€” a current target had no authority binding. File a bounded defect with the lineage, or run `agent-smith review mode disable --scope clone --cwd <repo>`. |
+| `native_stop_required` | Terminal â€” the lineage is escalated but has no native continuation. Ask a maintainer to inspect it, or run `agent-smith review mode disable --scope clone --cwd <repo>`. |
+| `recovery_scope_unchanged` | Change B so its target identity differs, then retry the exact returned `agent-smith review recover` invocation. |
+| `staged_workspace_overlay_recovery_unavailable` | Terminal â€” pass `--lineage <id>` to recover an existing lineage, or drop `--workspace-overlay` and start a fresh target; otherwise run `agent-smith review mode disable --scope clone --cwd <repo>`. |
+| `unachievable_lens_slot` | A host reported a selected reviewer slot unachievable under current conditions. If that was transient, re-run `agent-smith review capture-unachievable` with the same binding and `--withdraw=true` so B re-offers the same slot. If it is not transient, reduce the B candidate scope and start a new `agent-smith review start`, or run `agent-smith review mode disable --scope clone --cwd <repo>`. |
+| `target_already_acknowledged` | Terminal: this exact target was already acknowledged and its review authority burned. No further review action is required; delivery follows ordinary repository policy. Changed targets remain eligible for review. Only when deliberately requesting a new independent review, use `agent-smith review start`; do not automatically restart this consumed target. |
+| `rdd_disabled` | Run the exact source-scoped `agent-smith review mode enable` command rendered by STATUS, then re-run its exact repository-bound STATUS command. |
 
 ## Published v1 compatibility reference
 
@@ -232,3 +232,4 @@ The published v1 directory contains 23 strict JSON Schemas and 24 deterministic 
 - [ ] `approved` acknowledgement was retained and run only from the provider-owned START, STATUS, or terminal-closure transition.
 - [ ] Commit, push, PR, release, and archive followed ordinary repository policy.
 - [ ] Each delivery action has explicit authorization.
+

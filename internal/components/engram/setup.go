@@ -7,7 +7,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
 )
 
 // execCommandContext is a package-level seam over exec.CommandContext,
@@ -159,3 +159,4 @@ func ShouldAttemptSetup(mode SetupMode, agent model.AgentID) bool {
 		return slug == "opencode"
 	}
 }
+

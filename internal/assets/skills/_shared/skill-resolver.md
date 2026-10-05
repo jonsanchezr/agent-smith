@@ -1,4 +1,4 @@
-# Skill Resolver — Universal Protocol
+﻿# Skill Resolver â€” Universal Protocol
 
 Any agent that **delegates work to sub-agents** MUST use this protocol to resolve relevant skills and pass them safely.
 
@@ -18,9 +18,9 @@ The registry is an **index** of skill names, triggers, scopes, and exact `SKILL.
 
 Resolution order:
 1. Use the session cache if present.
-2. `mem_search(query: "skill-registry", project: "{project}")` → `mem_get_observation(id)` for full content.
+2. `mem_search(query: "skill-registry", project: "{project}")` â†’ `mem_get_observation(id)` for full content.
 3. Fallback: read `.atl/skill-registry.md` from the project root.
-4. No registry found → proceed without project skills and warn the user to run `gentle-ai skill-registry refresh`.
+4. No registry found â†’ proceed without project skills and warn the user to run `agent-smith skill-registry refresh`.
 
 ### Step 2: Match Relevant Skills
 
@@ -52,10 +52,10 @@ The sub-agent MUST read those files before task-specific work. `SKILL.md` is the
 
 Sub-agents MUST report `skill_resolution`:
 
-- `paths-injected` — received exact skill paths from the delegator and loaded them.
-- `fallback-registry` — no paths received, self-loaded paths from the registry.
-- `fallback-path` — loaded an explicit fallback path outside the registry.
-- `none` — no skills loaded.
+- `paths-injected` â€” received exact skill paths from the delegator and loaded them.
+- `fallback-registry` â€” no paths received, self-loaded paths from the registry.
+- `fallback-path` â€” loaded an explicit fallback path outside the registry.
+- `none` â€” no skills loaded.
 
 If a sub-agent reports anything other than `paths-injected`, the orchestrator MUST re-read the registry before the next delegation.
 
@@ -70,3 +70,4 @@ If a sub-agent reports anything other than `paths-injected`, the orchestrator MU
 - **ODD Orchestrator**: resolves paths for bounded exploration, implementation and verification delegations.
 - **judgment-day**: resolves paths before Judge A, Judge B, and Fix Agent.
 - **pr-review and future delegators**: use this protocol when launching sub-agents.
+

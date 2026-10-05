@@ -4,7 +4,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/reviewtransaction"
+	"github.com/jonsanchezr/agent-smith/v4/internal/reviewtransaction"
 )
 
 // openCodeHostEchoedMaterialization reproduces what an OpenCode host actually
@@ -145,3 +145,4 @@ func TestOpenCodeReviewTransportPassesThroughOnlyByteExactMaterialization(t *tes
 		t.Fatalf("host-echoed provider prompt is not the Go materialization")
 	}
 }
+

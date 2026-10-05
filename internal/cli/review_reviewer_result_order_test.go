@@ -4,7 +4,7 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/reviewtransaction"
+	"github.com/jonsanchezr/agent-smith/v4/internal/reviewtransaction"
 )
 
 func TestPrepareCompactReviewerResultsPreservesSelectedLensOrderAndAliases(t *testing.T) {
@@ -32,3 +32,4 @@ func TestPrepareCompactReviewerResultsPreservesSelectedLensOrderAndAliases(t *te
 		t.Fatalf("canonical lens order = %v, want %v", got, selected)
 	}
 }
+

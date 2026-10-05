@@ -13,15 +13,15 @@ import (
 	"testing"
 	"time"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/agents/codex"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/agents/kimi"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/backup"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/installcmd"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/pipeline"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/planner"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/state"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/system"
+	"github.com/jonsanchezr/agent-smith/v4/internal/agents/codex"
+	"github.com/jonsanchezr/agent-smith/v4/internal/agents/kimi"
+	"github.com/jonsanchezr/agent-smith/v4/internal/backup"
+	"github.com/jonsanchezr/agent-smith/v4/internal/installcmd"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
+	"github.com/jonsanchezr/agent-smith/v4/internal/pipeline"
+	"github.com/jonsanchezr/agent-smith/v4/internal/planner"
+	"github.com/jonsanchezr/agent-smith/v4/internal/state"
+	"github.com/jonsanchezr/agent-smith/v4/internal/system"
 )
 
 // missingBinaryLookPath simulates all installable binaries (engram, gga) as
@@ -142,7 +142,7 @@ func TestRunInstallReturnsStatePersistenceFailure(t *testing.T) {
 		t.Fatalf("pre-install config read error = %v, want absent", err)
 	}
 	statePath := state.Path(home)
-	target := filepath.Join(home, ".gentle-ai", "persisted-state.json")
+	target := filepath.Join(home, ".agent-smith", "persisted-state.json")
 	if err := os.Rename(statePath, target); err != nil {
 		t.Fatal(err)
 	}
@@ -1558,7 +1558,7 @@ func TestRunInstallAntigravityInitializesCLISettingsAfterEngramSetup(t *testing.
 	// This test targets antigravity settings initialization after engram
 	// setup, not agent install behavior, so simulate Antigravity as already
 	// installed (its Detect looks for ~/.gemini/antigravity) — otherwise
-	// gentle-ai correctly refuses to proceed for an undetected agent.
+	// agent-smith correctly refuses to proceed for an undetected agent.
 	if err := os.MkdirAll(filepath.Join(home, ".gemini", "antigravity"), 0o755); err != nil {
 		t.Fatalf("MkdirAll(.gemini/antigravity): %v", err)
 	}
@@ -1617,7 +1617,7 @@ func TestRunInstallDeduplicatesSharedEngramSetupSlugs(t *testing.T) {
 
 	// This test targets shared-slug engram setup dedup, not agent install
 	// behavior, so simulate Antigravity as already installed (its Detect
-	// looks for ~/.gemini/antigravity) — otherwise gentle-ai correctly
+	// looks for ~/.gemini/antigravity) — otherwise agent-smith correctly
 	// refuses to proceed for an undetected agent.
 	if err := os.MkdirAll(filepath.Join(home, ".gemini", "antigravity"), 0o755); err != nil {
 		t.Fatalf("MkdirAll(.gemini/antigravity): %v", err)
@@ -1734,7 +1734,7 @@ func TestRunInstallGGALinuxIncludesTempCleanupBeforeClone(t *testing.T) {
 		}
 		// Match the clone intent (URL + dest) instead of the full literal command,
 		// so the test stays valid when extra flags like --depth/--branch are added.
-		if strings.Contains(cmd, "git") && strings.Contains(cmd, "https://github.com/Gentleman-Programming/gentleman-guardian-angel.git") && strings.Contains(cmd, "/tmp/gentleman-guardian-angel") {
+		if strings.Contains(cmd, "git") && strings.Contains(cmd, "https://github.com/jonsanchezr/gentleman-guardian-angel.git") && strings.Contains(cmd, "/tmp/gentleman-guardian-angel") {
 			cloneIdx = i
 		}
 	}
@@ -2187,10 +2187,10 @@ func TestRunInstallUpgradeIdempotency(t *testing.T) {
 			orchestratorCount, content)
 	}
 
-	// 3. No duplicate gentle-ai marker blocks — each section's open marker
+	// 3. No duplicate agent-smith marker blocks — each section's open marker
 	// must appear exactly once.
 	for _, sectionID := range []string{"engram-protocol"} {
-		openMarker := "<!-- gentle-ai:" + sectionID + " -->"
+		openMarker := "<!-- agent-smith:" + sectionID + " -->"
 		count := strings.Count(content, openMarker)
 		if count != 1 {
 			t.Errorf("CLAUDE.md contains %d occurrences of marker %q, want exactly 1:\n%s",
@@ -2507,21 +2507,21 @@ func TestOpenCodePersonaBeforeODDRoutingPreservesAllSections(t *testing.T) {
 	// Engram must coexist even when persona replaces the AGENTS.md file.
 
 	// Engram protocol section must be present
-	if !strings.Contains(text, "<!-- gentle-ai:engram-protocol -->") {
+	if !strings.Contains(text, "<!-- agent-smith:engram-protocol -->") {
 		t.Error("AGENTS.md missing engram-protocol open marker (issue #121 regression: persona may have overwritten engram section)")
 	}
-	if !strings.Contains(text, "<!-- /gentle-ai:engram-protocol -->") {
+	if !strings.Contains(text, "<!-- /agent-smith:engram-protocol -->") {
 		t.Error("AGENTS.md missing engram-protocol close marker")
 	}
 
 	// Engram section must not be duplicated
-	marker := "<!-- gentle-ai:engram-protocol -->"
+	marker := "<!-- agent-smith:engram-protocol -->"
 	if count := strings.Count(text, marker); count != 1 {
 		t.Errorf("AGENTS.md contains %d occurrences of %q, want exactly 1 (no duplicates)", count, marker)
 	}
 
 	// ODD routing lives in the managed OpenCode agent prompt, not AGENTS.md.
-	if strings.Contains(text, "<!-- gentle-ai:agent-routing -->") {
+	if strings.Contains(text, "<!-- agent-smith:agent-routing -->") {
 		t.Error("AGENTS.md should not contain OpenCode routing guidance")
 	}
 
@@ -2532,7 +2532,7 @@ func TestOpenCodePersonaBeforeODDRoutingPreservesAllSections(t *testing.T) {
 		t.Fatalf("ReadFile(opencode.json) error = %v", err)
 	}
 	jsonText := string(jsonContent)
-	if !strings.Contains(jsonText, `"gentle-orchestrator"`) || !strings.Contains(jsonText, "gentle-ai:agent-routing") {
+	if !strings.Contains(jsonText, `"agent-smith-orchestrator"`) || !strings.Contains(jsonText, "agent-smith:agent-routing") {
 		t.Error("opencode.json missing managed ordinary ODD routing prompt")
 	}
 	if strings.Contains(jsonText, `"sdd-orchestrator"`) {
@@ -2562,7 +2562,7 @@ func TestRunInstallKimiBootstrapsHub(t *testing.T) {
 
 	// This test targets kimiSystemPromptHubStep bootstrap content, not agent
 	// install behavior, so simulate Kimi as already installed — otherwise
-	// gentle-ai correctly refuses to proceed for an undetected runtime.
+	// agent-smith correctly refuses to proceed for an undetected runtime.
 	restoreKimiLookPath := kimi.LookPathOverride
 	kimi.LookPathOverride = func(string) (string, error) { return "/usr/local/bin/kimi", nil }
 	t.Cleanup(func() { kimi.LookPathOverride = restoreKimiLookPath })
@@ -2894,3 +2894,4 @@ func TestRunInstall_Context7WorkspaceScope_FailurePath(t *testing.T) {
 		t.Fatalf("RunInstall() with unwriteable workspace target expected error, got nil")
 	}
 }
+

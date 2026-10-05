@@ -17,39 +17,39 @@ import (
 	"strings"
 	"time"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/agents"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/agents/claude"
-	codexagent "github.com/gentleman-programming/gentle-ai/v4/internal/agents/codex"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/agents/kimi"
-	opencodeagent "github.com/gentleman-programming/gentle-ai/v4/internal/agents/opencode"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/assets"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/backup"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/components/agentguidance"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/components/agenthooks"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/components/communitytool"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/components/engram"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/components/filemerge"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/components/gga"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/components/legacyassets"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/components/mcp"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/components/opencodeagents"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/components/opencodedefault"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/components/opencodeplugin"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/components/opencoderuntimeplugins"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/components/permissions"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/components/persona"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/components/reviewassets"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/components/skills"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/components/telemetryruntime"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/components/theme"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/installcmd"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
-	opencodeactivation "github.com/gentleman-programming/gentle-ai/v4/internal/opencode"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/pipeline"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/planner"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/state"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/system"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/verify"
+	"github.com/jonsanchezr/agent-smith/v4/internal/agents"
+	"github.com/jonsanchezr/agent-smith/v4/internal/agents/claude"
+	codexagent "github.com/jonsanchezr/agent-smith/v4/internal/agents/codex"
+	"github.com/jonsanchezr/agent-smith/v4/internal/agents/kimi"
+	opencodeagent "github.com/jonsanchezr/agent-smith/v4/internal/agents/opencode"
+	"github.com/jonsanchezr/agent-smith/v4/internal/assets"
+	"github.com/jonsanchezr/agent-smith/v4/internal/backup"
+	"github.com/jonsanchezr/agent-smith/v4/internal/components/agentguidance"
+	"github.com/jonsanchezr/agent-smith/v4/internal/components/agenthooks"
+	"github.com/jonsanchezr/agent-smith/v4/internal/components/communitytool"
+	"github.com/jonsanchezr/agent-smith/v4/internal/components/engram"
+	"github.com/jonsanchezr/agent-smith/v4/internal/components/filemerge"
+	"github.com/jonsanchezr/agent-smith/v4/internal/components/gga"
+	"github.com/jonsanchezr/agent-smith/v4/internal/components/legacyassets"
+	"github.com/jonsanchezr/agent-smith/v4/internal/components/mcp"
+	"github.com/jonsanchezr/agent-smith/v4/internal/components/opencodeagents"
+	"github.com/jonsanchezr/agent-smith/v4/internal/components/opencodedefault"
+	"github.com/jonsanchezr/agent-smith/v4/internal/components/opencodeplugin"
+	"github.com/jonsanchezr/agent-smith/v4/internal/components/opencoderuntimeplugins"
+	"github.com/jonsanchezr/agent-smith/v4/internal/components/permissions"
+	"github.com/jonsanchezr/agent-smith/v4/internal/components/persona"
+	"github.com/jonsanchezr/agent-smith/v4/internal/components/reviewassets"
+	"github.com/jonsanchezr/agent-smith/v4/internal/components/skills"
+	"github.com/jonsanchezr/agent-smith/v4/internal/components/telemetryruntime"
+	"github.com/jonsanchezr/agent-smith/v4/internal/components/theme"
+	"github.com/jonsanchezr/agent-smith/v4/internal/installcmd"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
+	opencodeactivation "github.com/jonsanchezr/agent-smith/v4/internal/opencode"
+	"github.com/jonsanchezr/agent-smith/v4/internal/pipeline"
+	"github.com/jonsanchezr/agent-smith/v4/internal/planner"
+	"github.com/jonsanchezr/agent-smith/v4/internal/state"
+	"github.com/jonsanchezr/agent-smith/v4/internal/system"
+	"github.com/jonsanchezr/agent-smith/v4/internal/verify"
 )
 
 type InstallResult struct {
@@ -117,9 +117,9 @@ var (
 	probeEngramProtocolFlag        = engram.ProbeProtocolFlag
 	probeEngramProtocolFlagCommand = engram.ProbeProtocolFlagCommand
 
-	// AppVersion is the gentle-ai version that will be written into backup manifests.
+	// AppVersion is the agent-smith version that will be written into backup manifests.
 	// It is set by app.go before any CLI operation so that every backup created during
-	// an install or sync records which version of gentle-ai made it.
+	// an install or sync records which version of agent-smith made it.
 	// Default "dev" matches the ldflags default in app.Version.
 	AppVersion = "dev"
 )
@@ -295,7 +295,7 @@ func RunInstall(args []string, detection system.DetectionResult) (InstallResult,
 		agentIDs = append(agentIDs, string(a))
 	}
 
-	// When the user ran `gentle-ai install --agent X` (explicit agent flag),
+	// When the user ran `agent-smith install --agent X` (explicit agent flag),
 	// merge into the existing state so that previously installed agents and
 	// model assignments are preserved. A full install (no --agent flag) keeps
 	// overwrite semantics so the TUI selection is the source of truth.
@@ -387,7 +387,7 @@ func mergeFullInstallState(existing, fresh state.InstallState) state.InstallStat
 }
 
 // mergeExplicitAgentInstallState merges a fresh single-agent install's state
-// into the previously persisted ~/.gentle-ai/state.json (so `install --agent
+// into the previously persisted ~/.agent-smith/state.json (so `install --agent
 // X` preserves other previously installed agents and model assignments).
 //
 // When the existing state file is simply absent (first install, or an agent
@@ -500,7 +500,7 @@ func withReadyAgentRunNote(report verify.Report, resolved planner.ResolvedPlan) 
 
 // withFailedVerificationNote replaces the generic verify.VerificationIssuesMessage
 // with one naming the concrete command that retries the install for the
-// agents that were actually resolved this run: `gentle-ai install --agent
+// agents that were actually resolved this run: `agent-smith install --agent
 // <agent1>,<agent2>`. There is no `repair` case in the CLI dispatcher
 // (internal/app/app.go), so the old generic text named a command that could
 // never succeed -- a false continuation worse than no note at all.
@@ -519,7 +519,7 @@ func withFailedVerificationNote(report verify.Report, resolved planner.ResolvedP
 	for i, agent := range resolved.Agents {
 		names[i] = string(agent)
 	}
-	report.FinalNote = verify.VerificationIssuesMessageForCommand("gentle-ai install --agent " + strings.Join(names, ","))
+	report.FinalNote = verify.VerificationIssuesMessageForCommand("agent-smith install --agent " + strings.Join(names, ","))
 	return report
 }
 
@@ -608,7 +608,7 @@ func goInstallBinDirFromGoEnv() (string, error) {
 	return "", fmt.Errorf("go env returned empty GOBIN and GOPATH")
 }
 
-const engramBetaGoInstallPackage = "github.com/Gentleman-Programming/engram/cmd/engram@main"
+const engramBetaGoInstallPackage = "github.com/jonsanchezr/engram/cmd/engram@main"
 
 func installBetaEngramFromMain() (string, error) {
 	if err := runCommand("go", "install", engramBetaGoInstallPackage); err != nil {
@@ -744,7 +744,7 @@ func (s *runtimeState) compatibilityChangedFiles() []string {
 }
 
 func newInstallRuntime(homeDir string, scope InstallScope, channel InstallChannel, selection model.Selection, resolved planner.ResolvedPlan, profile system.PlatformProfile) (*installRuntime, error) {
-	backupRoot := filepath.Join(homeDir, ".gentle-ai", "backups")
+	backupRoot := filepath.Join(homeDir, ".agent-smith", "backups")
 	compatibilityTransaction, err := newCompatibilityRefreshTransaction(homeDir, resolved.OrderedComponents, selection)
 	if err != nil {
 		return nil, err
@@ -943,7 +943,7 @@ func (s nativeReviewAgentStep) Run() error {
 }
 
 func nativeReviewPreservedAction(path string) string {
-	return fmt.Sprintf("Native review agent %s was preserved, not updated: ownership cannot be verified (missing ledger entry or differing recorded hash). This does not mean you customized the file. Keeping it unchanged is valid. To opt into management, back up this file and verify the backup, remove only this warned file, then rerun your existing gentle-ai install or gentle-ai sync command with the same runtime, scope, and model choices. See docs/rollback.md for per-file recovery. Gentle AI will not adopt or delete it automatically.", path)
+	return fmt.Sprintf("Native review agent %s was preserved, not updated: ownership cannot be verified (missing ledger entry or differing recorded hash). This does not mean you customized the file. Keeping it unchanged is valid. To opt into management, back up this file and verify the backup, remove only this warned file, then rerun your existing agent-smith install or agent-smith sync command with the same runtime, scope, and model choices. See docs/rollback.md for per-file recovery. Agent Smith will not adopt or delete it automatically.", path)
 }
 
 type managedOpenCodePluginsInstallStep struct {
@@ -1009,7 +1009,7 @@ func OpenCodeSDKInstallProposal(homeDir string) (*OpenCodeSDKConsent, error) {
 		} else if manager == "" {
 			manager = "npm"
 		}
-		return nil, fmt.Errorf("automatic OpenCode SDK install refused: %w; run `%s` manually, then retry Gentle AI", err, openCodeSDKInstallContinuation(runtime.GOOS, config, manager, dependency))
+		return nil, fmt.Errorf("automatic OpenCode SDK install refused: %w; run `%s` manually, then retry Agent Smith", err, openCodeSDKInstallContinuation(runtime.GOOS, config, manager, dependency))
 	}
 	executable, err := cmdLookPath("npm")
 	if err != nil {
@@ -1021,7 +1021,7 @@ func OpenCodeSDKInstallProposal(homeDir string) (*OpenCodeSDKConsent, error) {
 	}
 	if blocker := openCodeSDKIsolationBlocker(executable, physicalExe); blocker != "" {
 		// refusal:by-design world-action: credential isolation stays mandatory, so a manager that needs the user's shell environment runs manually
-		return nil, fmt.Errorf("automatic OpenCode SDK install refused: npm on PATH %s and cannot run in the credential-isolated installer environment; run `%s` manually in your normal shell, then retry Gentle AI", blocker, openCodeSDKInstallContinuation(runtime.GOOS, config, "npm", dependency))
+		return nil, fmt.Errorf("automatic OpenCode SDK install refused: npm on PATH %s and cannot run in the credential-isolated installer environment; run `%s` manually in your normal shell, then retry Agent Smith", blocker, openCodeSDKInstallContinuation(runtime.GOOS, config, "npm", dependency))
 	}
 	exeDigest, err := openCodeSDKExecutableDigest(physicalExe)
 	if err != nil {
@@ -1205,7 +1205,7 @@ func (s openCodePluginDependencyPreflightStep) Run() error {
 		}
 		if !openCodeSDKInstalled(config, dependency) {
 			// refusal:by-design world-action: the external manager did not materialize the requested package
-			return fmt.Errorf("%s SDK install verification failed: %s completed without materializing %s in %s; package-manager changes are not covered by Gentle AI rollback; run `%s` manually in your normal shell, then retry", proposal.Manager, proposal.Manager, dependency, config, openCodeSDKInstallContinuation(runtime.GOOS, config, proposal.Manager, dependency))
+			return fmt.Errorf("%s SDK install verification failed: %s completed without materializing %s in %s; package-manager changes are not covered by Agent Smith rollback; run `%s` manually in your normal shell, then retry", proposal.Manager, proposal.Manager, dependency, config, openCodeSDKInstallContinuation(runtime.GOOS, config, proposal.Manager, dependency))
 		}
 		return nil
 	}
@@ -1213,10 +1213,10 @@ func (s openCodePluginDependencyPreflightStep) Run() error {
 		location := openCodeSDKInstallContinuation(runtime.GOOS, config, "npm", dependency)
 		if runtime.GOOS == "windows" {
 			// refusal:by-design world-action: PowerShell must run the displayed manual install
-			return fmt.Errorf("OpenCode V2 requires installed %s before managed plugins can be written; in PowerShell run: %s; then retry Gentle AI", dependency, location)
+			return fmt.Errorf("OpenCode V2 requires installed %s before managed plugins can be written; in PowerShell run: %s; then retry Agent Smith", dependency, location)
 		}
 		// refusal:by-design world-action: the operator must run the displayed manual install
-		return fmt.Errorf("OpenCode V2 requires installed %s before managed plugins can be written; run `%s`, then retry Gentle AI", dependency, location)
+		return fmt.Errorf("OpenCode V2 requires installed %s before managed plugins can be written; run `%s`, then retry Agent Smith", dependency, location)
 	}
 	manager := openCodePluginPackageManager(config)
 	if manager == "" {
@@ -1236,10 +1236,10 @@ func (s openCodePluginDependencyPreflightStep) Run() error {
 	location := openCodeSDKInstallContinuation(runtime.GOOS, config, manager, dependency)
 	if runtime.GOOS == "windows" {
 		// refusal:by-design world-action: this command is generated for PowerShell, not cmd.exe
-		return fmt.Errorf("OpenCode V2 requires installed %s before managed plugins can be written; in PowerShell run: %s; then retry Gentle AI", dependency, location)
+		return fmt.Errorf("OpenCode V2 requires installed %s before managed plugins can be written; in PowerShell run: %s; then retry Agent Smith", dependency, location)
 	}
 	// refusal:by-design world-action: the runnable package-manager command is selected from the user's package ownership and quoted config path at runtime
-	return fmt.Errorf("OpenCode V2 requires installed %s before managed plugins can be written; run `%s`, then retry Gentle AI", dependency, location)
+	return fmt.Errorf("OpenCode V2 requires installed %s before managed plugins can be written; run `%s`, then retry Agent Smith", dependency, location)
 }
 
 // Bun ownership is a manual-only route even when Bun is unavailable on PATH.
@@ -1265,10 +1265,10 @@ func openCodeSDKManualBunError(config, dependency string) error {
 	location := openCodeSDKInstallContinuation(runtime.GOOS, config, "bun", dependency)
 	if runtime.GOOS == "windows" {
 		// refusal:by-design world-action: Bun-owned packages require an operator-run PowerShell continuation
-		return fmt.Errorf("OpenCode V2 requires installed %s before managed plugins can be written; Bun-owned packages cannot be provisioned automatically; in PowerShell run: %s; then retry Gentle AI", dependency, location)
+		return fmt.Errorf("OpenCode V2 requires installed %s before managed plugins can be written; Bun-owned packages cannot be provisioned automatically; in PowerShell run: %s; then retry Agent Smith", dependency, location)
 	}
 	// refusal:by-design world-action: Bun-owned packages require an operator-run continuation
-	return fmt.Errorf("OpenCode V2 requires installed %s before managed plugins can be written; Bun-owned packages cannot be provisioned automatically; run `%s`, then retry Gentle AI", dependency, location)
+	return fmt.Errorf("OpenCode V2 requires installed %s before managed plugins can be written; Bun-owned packages cannot be provisioned automatically; run `%s`, then retry Agent Smith", dependency, location)
 }
 
 // The process receives no ambient package-manager auth, user configuration,
@@ -1296,7 +1296,7 @@ func openCodeSDKRunApprovedManager(proposal *OpenCodeSDKConsent) error {
 		return fmt.Errorf("OpenCode package manager executable changed before launch; review it again and retry")
 	}
 	if err := openCodeSDKCheckProjectConfig(proposal.ConfigDir); err != nil {
-		return fmt.Errorf("automatic OpenCode SDK install refused: %w; run `%s` manually, then retry Gentle AI", err, openCodeSDKInstallContinuation(runtime.GOOS, proposal.ConfigDir, proposal.Manager, proposal.Dependency))
+		return fmt.Errorf("automatic OpenCode SDK install refused: %w; run `%s` manually, then retry Agent Smith", err, openCodeSDKInstallContinuation(runtime.GOOS, proposal.ConfigDir, proposal.Manager, proposal.Dependency))
 	}
 	state, err := openCodeSDKPackageState(proposal.ConfigDir)
 	if err != nil || state != proposal.stateSignature {
@@ -1312,9 +1312,9 @@ func openCodeSDKRunApprovedManager(proposal *OpenCodeSDKConsent) error {
 		return fmt.Errorf("OpenCode SDK config directory changed before launch; review it again and retry")
 	}
 	if err := openCodeSDKCheckProjectConfig(proposal.ConfigDir); err != nil {
-		return fmt.Errorf("automatic OpenCode SDK install refused: %w; run `%s` manually, then retry Gentle AI", err, openCodeSDKInstallContinuation(runtime.GOOS, proposal.ConfigDir, proposal.Manager, proposal.Dependency))
+		return fmt.Errorf("automatic OpenCode SDK install refused: %w; run `%s` manually, then retry Agent Smith", err, openCodeSDKInstallContinuation(runtime.GOOS, proposal.ConfigDir, proposal.Manager, proposal.Dependency))
 	}
-	isolated, err := os.MkdirTemp("", "gentle-ai-opencode-sdk-")
+	isolated, err := os.MkdirTemp("", "agent-smith-opencode-sdk-")
 	if err != nil {
 		return fmt.Errorf("prepare isolated SDK installer environment: %w", err)
 	}
@@ -1333,7 +1333,7 @@ func openCodeSDKRunApprovedManager(proposal *OpenCodeSDKConsent) error {
 	// Never reflect raw command errors or output: both may embed credentials.
 	// Only the failure class (start, exit code, signal, deadline) is reported.
 	// refusal:by-design world-action: package manager failed without exposing its possibly sensitive output
-	return fmt.Errorf("%s SDK install failed: %s %s; package-manager changes are not covered by Gentle AI rollback; run `%s` manually in your normal shell, then retry", proposal.Manager, proposal.Manager, openCodeSDKFailureClass(err, ctx.Err(), openCodeSDKInstallTimeout), openCodeSDKInstallContinuation(runtime.GOOS, proposal.ConfigDir, proposal.Manager, proposal.Dependency))
+	return fmt.Errorf("%s SDK install failed: %s %s; package-manager changes are not covered by Agent Smith rollback; run `%s` manually in your normal shell, then retry", proposal.Manager, proposal.Manager, openCodeSDKFailureClass(err, ctx.Err(), openCodeSDKInstallTimeout), openCodeSDKInstallContinuation(runtime.GOOS, proposal.ConfigDir, proposal.Manager, proposal.Dependency))
 }
 
 func openCodeSDKIsolatedEnv(isolated string, proposal *OpenCodeSDKConsent) []string {
@@ -1515,7 +1515,7 @@ func (s agentRoutingGuidanceStep) Run() error {
 	}
 
 	// Pi owns its prompt delivery, but old installs left only allowlisted
-	// Gentle AI sections in APPEND_SYSTEM.md. Retire those before skipping prompt
+	// Agent Smith sections in APPEND_SYSTEM.md. Retire those before skipping prompt
 	// injection so install and every sync path converge without recreating routing.
 	if adapter.Agent() == model.AgentPi {
 		result, err := agentguidance.RetirePiSystemPromptBlocks(s.homeDir, adapter)
@@ -1688,7 +1688,7 @@ func migrateLegacyOpenCodeAgents(settingsPath string, agent model.AgentID) (bool
 		return false, nil, err
 	}
 	agents, _ := root["agent"].(map[string]any)
-	current := map[string]bool{"gentle-orchestrator": true}
+	current := map[string]bool{"agent-smith-orchestrator": true}
 	for _, name := range opencodeagents.Roles(agent) {
 		current[name] = true
 	}
@@ -1697,7 +1697,7 @@ func migrateLegacyOpenCodeAgents(settingsPath string, agent model.AgentID) (bool
 	var removedReview []string
 	for name, value := range agents {
 		entry, ok := value.(map[string]any)
-		if !ok || entry["__managed_by"] != "gentle-ai/sdd" {
+		if !ok || entry["__managed_by"] != "agent-smith/sdd" {
 			continue
 		}
 		changed = true
@@ -1744,7 +1744,7 @@ func migrateLegacyOpenCodeAgents(settingsPath string, agent model.AgentID) (bool
 // user's and is preserved together with its orchestrator task permission.
 //
 // A task permission is dropped only for a review agent this run removed as
-// Gentle AI's: here in the managed shape, or earlier in the same run under the
+// Agent Smith's: here in the managed shape, or earlier in the same run under the
 // v3.7.0 marker (legacyRemoved). A permission whose agent was already absent
 // carries no ownership proof and is the user's.
 func retireOpenCodeFamilyReviewAgents(settingsPath string, agent model.AgentID, legacyRemoved []string) (bool, error) {
@@ -1786,7 +1786,7 @@ func retireOpenCodeFamilyReviewAgents(settingsPath string, agent model.AgentID, 
 			changed = true
 		}
 	}
-	orchestrator, _ := agents["gentle-orchestrator"].(map[string]any)
+	orchestrator, _ := agents["agent-smith-orchestrator"].(map[string]any)
 	permission, _ := orchestrator["permission"].(map[string]any)
 	if task, ok := permission["task"].(map[string]any); ok {
 		for _, name := range opencodeagents.ReviewNames() {
@@ -1822,7 +1822,7 @@ func installOpenCodeReviewProviderRoles(settingsPath string, agent model.AgentID
 		task[name] = "allow"
 	}
 	roles := map[string]any{
-		"gentle-orchestrator": map[string]any{"permission": map[string]any{"task": task}},
+		"agent-smith-orchestrator": map[string]any{"permission": map[string]any{"task": task}},
 	}
 	if model.SupportsReceiptDrivenDevelopment(agent) {
 		roles["review-refuter"] = opencodeagents.Refuter()
@@ -1844,7 +1844,7 @@ func installOpenCodeReviewProviderRoles(settingsPath string, agent model.AgentID
 
 // installOpenCodeODDParityAgents installs the ODD/JD/review-lens subagents at
 // functional parity with Gentle Shell's global agents (#4471). Prior to this,
-// only gentle-orchestrator, gentleman, review-refuter, and review-validator
+// only agent-smith-orchestrator, gentleman, review-refuter, and review-validator
 // survived the SDD overlay's retirement; JD and the four review lenses were
 // dropped as collateral.
 func installOpenCodeODDParityAgents(settingsPath string) (bool, error) {
@@ -2061,7 +2061,7 @@ type prepareBackupStep struct {
 	source      backup.BackupSource
 	description string
 
-	// appVersion is the gentle-ai version that created this backup.
+	// appVersion is the agent-smith version that created this backup.
 	// When set, it is written into the manifest as CreatedByVersion.
 	appVersion string
 }
@@ -2102,7 +2102,7 @@ func (s prepareBackupStep) Run() error {
 			if manifest, duplicate, dupErr := backup.DuplicateManifest(s.backupRoot, checksum); dupErr != nil {
 				log.Printf("backup: check duplicate: %v", dupErr)
 			} else if duplicate && manifestTargetsMatch(manifest, s.targets) {
-				rollbackDir, err := os.MkdirTemp("", "gentle-ai-rollback-*")
+				rollbackDir, err := os.MkdirTemp("", "agent-smith-rollback-*")
 				if err != nil {
 					return fmt.Errorf("create transaction snapshot directory: %w", err)
 				}
@@ -2284,9 +2284,9 @@ func (s agentInstallStep) ID() string {
 // Run executes Pi's package installation commands only. Other selected
 // agents remain config targets regardless of whether their runtime is present.
 //
-// The `pi` binary itself is never installed by gentle-ai
+// The `pi` binary itself is never installed by agent-smith
 // (validatePiInstallPreflight refuses if it is not already on PATH), but once
-// it is present, its own `pi install ...` subcommands install gentle-ai's Pi
+// it is present, its own `pi install ...` subcommands install agent-smith's Pi
 // package stack through that already-present tool.
 func (s agentInstallStep) Run() error {
 	if s.agent != model.AgentPi {
@@ -3088,7 +3088,7 @@ func runCommandSequenceWithProgress(commands [][]string, progress pipeline.Progr
 }
 
 // homebrewNoSideEffectEnv are the environment variables executeCommand adds
-// to a brew invocation so gentle-ai's own tap/install/reinstall steps never
+// to a brew invocation so agent-smith's own tap/install/reinstall steps never
 // trigger Homebrew's slow, network-dependent auto-update or its
 // post-install cache cleanup as a side effect of an unrelated install.
 var homebrewNoSideEffectEnv = []string{
@@ -3439,7 +3439,7 @@ func componentPathsWithWorkspaceScoped(homeDir, workspaceDir string, scope Insta
 			case model.StrategyTOMLFile:
 				if p := adapter.MCPConfigPath(targetDir, "engram"); p != "" {
 					paths = append(paths, p)
-					// Track the gentle-ai files written alongside the Codex config.toml
+					// Track the agent-smith files written alongside the Codex config.toml
 					// so they are restored on rollback and removed on uninstall.
 					codexHomeDir := filepath.Dir(p)
 					paths = append(paths,
@@ -3834,7 +3834,7 @@ func runPostApplyVerification(input postApplyVerificationInput) verify.Report {
 						}
 						return err
 					}
-					return fmt.Errorf("retired managed file still exists; rerun `gentle-ai sync` to finish retiring it")
+					return fmt.Errorf("retired managed file still exists; rerun `agent-smith sync` to finish retiring it")
 				},
 			})
 			continue
@@ -3962,14 +3962,14 @@ func engramHealthChecks(state *runtimeState, agentIDs []model.AgentID) []verify.
 // engramInstallCommand names the install continuation for a missing engram
 // binary so the warning that reports it is actionable on its own.
 func engramInstallCommand(agentIDs []model.AgentID) string {
-	return fmt.Sprintf("gentle-ai install --agent %s --components engram", joinAgentIDs(agentIDs))
+	return fmt.Sprintf("agent-smith install --agent %s --components engram", joinAgentIDs(agentIDs))
 }
 
 // antigravityCollisionCheck returns a soft verify check that warns the user
 // when Antigravity and Gemini CLI are selected together. These agents
 // intentionally share ~/.gemini/GEMINI.md because Antigravity uses a
 // Gemini-compatible prompt surface; the last synced agent routing guidance
-// controls the shared gentle-ai:agent-routing section.
+// controls the shared agent-smith:agent-routing section.
 func antigravityCollisionCheck(agents []model.AgentID) []verify.Check {
 	hasAntigravitySurface := false
 	hasGemini := false
@@ -3992,7 +3992,7 @@ func antigravityCollisionCheck(agents []model.AgentID) []verify.Check {
 			Run: func(context.Context) error {
 				return fmt.Errorf(
 					"Antigravity and Gemini CLI write rules to ~/.gemini/GEMINI.md\n" +
-						"Antigravity intentionally uses the Gemini-compatible global prompt surface; the last synced agent routing guidance controls the shared gentle-ai:agent-routing section.\n" +
+						"Antigravity intentionally uses the Gemini-compatible global prompt surface; the last synced agent routing guidance controls the shared agent-smith:agent-routing section.\n" +
 						"Prefer Antigravity for new installs; keep Gemini CLI selected only when you intentionally want that legacy prompt to be the active one.",
 				)
 			},
@@ -4087,7 +4087,7 @@ func claudeAliasesToStrings(m map[string]model.ClaudeModelAlias) map[string]stri
 	out := make(map[string]string, len(m))
 	for k, v := range m {
 		// Claude Code owns the main session/orchestrator model; do not persist it
-		// as a Gentle AI model assignment.
+		// as a Agent Smith model assignment.
 		if k == "orchestrator" {
 			continue
 		}
@@ -4172,3 +4172,4 @@ func codexOrchestratorFromState(a *state.CodexOrchestratorAssignmentState) *mode
 	}
 	return &model.CodexOrchestratorAssignment{Model: a.Model, Effort: model.CodexEffort(a.Effort)}
 }
+

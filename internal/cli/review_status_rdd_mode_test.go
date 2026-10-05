@@ -10,7 +10,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/reviewtransaction"
+	"github.com/jonsanchezr/agent-smith/v4/internal/reviewtransaction"
 )
 
 func TestNegotiatedStatusMatchesReviewStartRDDMode(t *testing.T) {
@@ -91,10 +91,10 @@ func TestNegotiatedStatusMatchesReviewStartRDDMode(t *testing.T) {
 func TestNegotiatedStatusFailsWhenEffectiveModeCannotResolve(t *testing.T) {
 	home := reviewModeHome(t)
 	repo := initReviewCLIRepo(t)
-	if err := os.MkdirAll(filepath.Join(home, ".gentle-ai"), 0o755); err != nil {
+	if err := os.MkdirAll(filepath.Join(home, ".agent-smith"), 0o755); err != nil {
 		t.Fatal(err)
 	}
-	if err := os.WriteFile(filepath.Join(home, ".gentle-ai", "state.json"), []byte("{\n"), 0o600); err != nil {
+	if err := os.WriteFile(filepath.Join(home, ".agent-smith", "state.json"), []byte("{\n"), 0o600); err != nil {
 		t.Fatal(err)
 	}
 
@@ -173,3 +173,4 @@ func TestDisabledStatusStaysSilentForEveryCWDSpelling(t *testing.T) {
 		})
 	}
 }
+

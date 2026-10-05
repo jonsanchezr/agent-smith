@@ -6,7 +6,7 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/reviewtransaction"
+	"github.com/jonsanchezr/agent-smith/v4/internal/reviewtransaction"
 )
 
 func TestPowerShell51ReviewerPayloadBindsProviderArtifactSubject(t *testing.T) {
@@ -41,3 +41,4 @@ func powerShell51ReviewerPayloadForTest(t *testing.T, repo string, record review
 	return admittedReviewerPayloadForTest(t, repo, record, lens, order,
 		"checked exact target through Windows PowerShell 5.1")
 }
+

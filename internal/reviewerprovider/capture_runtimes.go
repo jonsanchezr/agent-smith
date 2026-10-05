@@ -1,6 +1,6 @@
 package reviewerprovider
 
-import "github.com/gentleman-programming/gentle-ai/v4/internal/model"
+import "github.com/jonsanchezr/agent-smith/v4/internal/model"
 
 // ApprovedRuntimeContextBudget is the provider-owned cap on the complete
 // reviewer context one runtime is handed for a single capture: the whole
@@ -55,3 +55,4 @@ func CapturesInProcess(agent model.AgentID) bool {
 		return false
 	}
 }
+

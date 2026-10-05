@@ -4,7 +4,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/reviewtransaction"
+	"github.com/jonsanchezr/agent-smith/v4/internal/reviewtransaction"
 )
 
 // This file is the RED-first proof for organic-dx Phase 3b: in-band route
@@ -85,3 +85,4 @@ func TestNegotiatedDeclineAndDisabledKillSwitchAreTypedNotStarted(t *testing.T) 
 		t.Fatalf("rdd-disabled failure code = %q, want a typed %q code", disabled.Code, "rdd_disabled")
 	}
 }
+

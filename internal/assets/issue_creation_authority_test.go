@@ -26,7 +26,7 @@ func TestIssueCreationAuthorityBoundary(t *testing.T) {
 	if !strings.Contains(string(agents), canonicalRegistryRow) {
 		t.Fatalf("AGENTS.md must route the canonical issue-creation identity directly to the embedded authority; missing row %q", canonicalRegistryRow)
 	}
-	for _, stale := range []string{"gentle-ai-issue-creation", "[`skills/issue-creation/SKILL.md`](skills/issue-creation/SKILL.md)"} {
+	for _, stale := range []string{"agent-smith-issue-creation", "[`skills/issue-creation/SKILL.md`](skills/issue-creation/SKILL.md)"} {
 		if strings.Contains(string(agents), stale) {
 			t.Fatalf("AGENTS.md still references stale issue-creation authority %q", stale)
 		}
@@ -37,7 +37,7 @@ func TestIssueCreationAuthorityBoundary(t *testing.T) {
 		t.Fatal("embedded issue-creation authority must retain canonical frontmatter identity name: issue-creation")
 	}
 
-	collaborationPath := filepath.Join(repositoryRoot, "skills", "gentle-ai-collab-perfect", "SKILL.md")
+	collaborationPath := filepath.Join(repositoryRoot, "skills", "agent-smith-collab-perfect", "SKILL.md")
 	collaboration, err := os.ReadFile(collaborationPath)
 	if err != nil {
 		t.Fatalf("read collaboration skill: %v", err)
@@ -72,7 +72,7 @@ func TestIssueCreationAuthorityBoundary(t *testing.T) {
 func TestPRLabelMutationsUseCanonicalIssueCreationAuthority(t *testing.T) {
 	repositoryRoot := filepath.Join("..", "..")
 	for _, path := range []string{
-		filepath.Join(repositoryRoot, "skills", "gentle-ai-collab-perfect", "SKILL.md"),
+		filepath.Join(repositoryRoot, "skills", "agent-smith-collab-perfect", "SKILL.md"),
 		filepath.Join(repositoryRoot, "skills", "branch-pr", "SKILL.md"),
 	} {
 		content, err := os.ReadFile(path)
@@ -124,3 +124,4 @@ func TestDelegatedWorkflowMutationContract(t *testing.T) {
 		}
 	}
 }
+

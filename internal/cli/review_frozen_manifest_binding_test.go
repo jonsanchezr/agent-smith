@@ -9,7 +9,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/reviewtransaction"
+	"github.com/jonsanchezr/agent-smith/v4/internal/reviewtransaction"
 )
 
 // A capture input without an inlined manifest is bound to the frozen candidate
@@ -188,3 +188,4 @@ func TestNegotiatedStatusBindsManifestlessCaptureSubjectsToTheFrozenDigest(t *te
 		t.Fatalf("a forged subject digest must be refused by the frozen binding, got %v", err)
 	}
 }
+

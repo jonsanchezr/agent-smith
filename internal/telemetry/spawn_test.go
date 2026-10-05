@@ -33,7 +33,7 @@ func TestBuildSendCommandInvokesSelfWithTelemetrySendAndPipesPayloadOnStdin(t *t
 	osExecutable = func() (string, error) { return fake, nil }
 	t.Cleanup(func() { osExecutable = orig })
 
-	payload := []byte(`{"schema":"gentle-ai.telemetry-event/v1","event":"install"}`)
+	payload := []byte(`{"schema":"agent-smith.telemetry-event/v1","event":"install"}`)
 	cmd, stdinRead, err := buildSendCommand(payload)
 	if err != nil {
 		t.Fatal(err)
@@ -69,7 +69,7 @@ func TestSpawnDetachedSendDoesNotBlockAndReaches(t *testing.T) {
 	osExecutable = func() (string, error) { return fake, nil }
 	t.Cleanup(func() { osExecutable = orig })
 
-	payload := []byte(`{"schema":"gentle-ai.telemetry-event/v1","event":"heartbeat"}`)
+	payload := []byte(`{"schema":"agent-smith.telemetry-event/v1","event":"heartbeat"}`)
 	if err := DefaultSpawn(context.Background(), payload); err != nil {
 		t.Fatal(err)
 	}
@@ -93,3 +93,4 @@ func TestSpawnDetachedSendDoesNotBlockAndReaches(t *testing.T) {
 		time.Sleep(10 * time.Millisecond)
 	}
 }
+

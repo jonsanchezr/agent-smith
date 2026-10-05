@@ -13,9 +13,9 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/app"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/assets"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/cli"
+	"github.com/jonsanchezr/agent-smith/v4/internal/app"
+	"github.com/jonsanchezr/agent-smith/v4/internal/assets"
+	"github.com/jonsanchezr/agent-smith/v4/internal/cli"
 )
 
 // This corpus exists because of #2506: the product states runnable commands
@@ -46,7 +46,7 @@ type documentedInvocation struct {
 
 // --- extraction -----------------------------------------------------------
 
-var inlineInvocationRegexp = regexp.MustCompile("`(gentle-ai [^`\n]+)`")
+var inlineInvocationRegexp = regexp.MustCompile("`(agent-smith [^`\n]+)`")
 
 func extractInvocations(source, content string) []documentedInvocation {
 	var out []documentedInvocation
@@ -65,7 +65,7 @@ func extractInvocations(source, content string) []documentedInvocation {
 				index++
 				command = strings.TrimSuffix(command, "\\") + " " + strings.TrimSpace(lines[index])
 			}
-			if strings.HasPrefix(command, "gentle-ai ") {
+			if strings.HasPrefix(command, "agent-smith ") {
 				out = append(out, documentedInvocation{source: at, command: command})
 			}
 			continue
@@ -225,7 +225,7 @@ func classifyWords(words []string, safeVerbs map[string]bool, repo string) ([]st
 			// A placeholder is only substitutable where a value belongs: in a
 			// --flag word or as the value of the bare flag before it. In a
 			// verb or positional slot the command's own identity is
-			// templated ("gentle-ai review <verb>"), a reference to a family
+			// templated ("agent-smith review <verb>"), a reference to a family
 			// of commands rather than a runnable claim.
 			bareFlagBefore := index > 0 && strings.HasPrefix(words[index-1], "--") && !strings.Contains(words[index-1], "=")
 			if !strings.HasPrefix(word, "--") && !bareFlagBefore {
@@ -411,7 +411,7 @@ func TestDocumentedInvocationsRunAsDocumented(t *testing.T) {
 		if err != nil {
 			t.Fatal(err)
 		}
-		for _, retired := range []string{"/sdd-", "/gentle-sdd-", "gentle-ai sdd-", "SDD phases", "SDD agents", "OpenSpec"} {
+		for _, retired := range []string{"/sdd-", "/gentle-sdd-", "agent-smith sdd-", "SDD phases", "SDD agents", "OpenSpec"} {
 			if strings.Contains(string(content), retired) {
 				t.Errorf("%s still advertises retired %q", name, retired)
 			}
@@ -508,3 +508,4 @@ func TestDocumentedInvocationsRunAsDocumented(t *testing.T) {
 	t.Logf("documented invocation corpus: %d unique commands (%d occurrences): executed %d, parse-only %d, presence-only %d, quarantined %d",
 		len(unique), len(corpus), counts[tierExecuted], counts[tierParse], counts[tierPresence], quarantined)
 }
+

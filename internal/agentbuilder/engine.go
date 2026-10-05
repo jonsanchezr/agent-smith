@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"os/exec"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
 )
 
 // GenerationEngine abstracts the AI CLI tool used to generate a skill.
@@ -133,3 +133,4 @@ func (e *MockEngine) Available() bool      { return e.IsAvailable }
 func (e *MockEngine) Generate(_ context.Context, _ string) (string, error) {
 	return e.Output, e.Err
 }
+

@@ -6,14 +6,14 @@ import (
 	"os"
 	"strings"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/assets"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/components/filemerge"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/components/opencodedefault"
+	"github.com/jonsanchezr/agent-smith/v4/internal/assets"
+	"github.com/jonsanchezr/agent-smith/v4/internal/components/filemerge"
+	"github.com/jonsanchezr/agent-smith/v4/internal/components/opencodedefault"
 )
 
 const (
-	backgroundStart = "<!-- gentle-ai:opencode-background-subagents -->"
-	backgroundEnd   = "<!-- /gentle-ai:opencode-background-subagents -->"
+	backgroundStart = "<!-- agent-smith:opencode-background-subagents -->"
+	backgroundEnd   = "<!-- /agent-smith:opencode-background-subagents -->"
 )
 
 // ApplyOpenCodeBackgroundPolicy updates only the managed orchestrator prompt.
@@ -77,3 +77,4 @@ func mustBackgroundOverlay(managed map[string]any) []byte {
 	overlay, _ := json.Marshal(map[string]any{"agent": map[string]any{opencodedefault.ManagedAgent: map[string]any{"prompt": prompt}}})
 	return overlay
 }
+

@@ -16,7 +16,7 @@ import (
 	"time"
 )
 
-const runtimeAck = `{"schema":"gentle-ai.telemetry-runtime-delivery/v1","decision":"stored"}`
+const runtimeAck = `{"schema":"agent-smith.telemetry-runtime-delivery/v1","decision":"stored"}`
 
 func runtimeHome(t *testing.T) string {
 	t.Helper()
@@ -247,3 +247,4 @@ func TestRuntimeSendRefusesRedirectAndUserinfo(t *testing.T) {
 		t.Fatal("followed redirect or accepted userinfo/http")
 	}
 }
+

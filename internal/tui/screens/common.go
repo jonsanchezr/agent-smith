@@ -1,7 +1,7 @@
 package screens
 
 import (
-	"github.com/gentleman-programming/gentle-ai/v4/internal/tui/styles"
+	"github.com/jonsanchezr/agent-smith/v4/internal/tui/styles"
 )
 
 func renderOptions(options []string, cursor int) string {
@@ -56,3 +56,4 @@ func renderRadio(label string, selected bool, focused bool) string {
 
 	return styles.UnselectedStyle.Render(prefix+markerStyle.Render(marker)+" "+label) + "\n"
 }
+

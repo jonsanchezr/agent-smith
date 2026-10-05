@@ -5,8 +5,8 @@ import (
 	"strings"
 	"testing"
 
-	codexagent "github.com/gentleman-programming/gentle-ai/v4/internal/agents/codex"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/components/engram"
+	codexagent "github.com/jonsanchezr/agent-smith/v4/internal/agents/codex"
+	"github.com/jonsanchezr/agent-smith/v4/internal/components/engram"
 )
 
 type installedDeliveryGuaranteeInvariant struct {
@@ -141,3 +141,4 @@ func TestDeliveryGuarantee_InstalledOutputs(t *testing.T) {
 		assertRejectsOppositeFailureContract(t, "codex engram-instructions.md (full+passive-capture)", instructions, installedFullFailureContract, fullPositiveFailureContract, fullOppositeFailureContract)
 	})
 }
+

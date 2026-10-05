@@ -16,10 +16,10 @@ import (
 	"testing"
 	"time"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/assets"
-	runtimeopencode "github.com/gentleman-programming/gentle-ai/v4/internal/opencode"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/reviewerprovider"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/reviewtransaction"
+	"github.com/jonsanchezr/agent-smith/v4/internal/assets"
+	runtimeopencode "github.com/jonsanchezr/agent-smith/v4/internal/opencode"
+	"github.com/jonsanchezr/agent-smith/v4/internal/reviewerprovider"
+	"github.com/jonsanchezr/agent-smith/v4/internal/reviewtransaction"
 )
 
 func TestOpenCodeReviewTransportFinalLensClosesAndBurnsThroughSharedGoReducer(t *testing.T) {
@@ -1450,3 +1450,4 @@ func TestOpenCodeV2RelayAdmitsBoundLensAndNamesAgentMismatch(t *testing.T) {
 	}
 	assertApprovedCompactAuthorityBurned(t, store, record.State.LineageID)
 }
+

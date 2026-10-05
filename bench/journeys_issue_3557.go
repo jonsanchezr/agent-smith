@@ -29,7 +29,7 @@ func issue3557DanglingSymlinkFixture(sandbox *Sandbox) error {
 	if err := os.MkdirAll(filepath.Join(sandbox.Home, ".claude"), 0o755); err != nil {
 		return err
 	}
-	statePath := filepath.Join(sandbox.Home, ".gentle-ai", "state.json")
+	statePath := filepath.Join(sandbox.Home, ".agent-smith", "state.json")
 	state := fmt.Sprintf(`{"installed_agents":["opencode","claude-code"],"last_update_check":%q}`, time.Now().UTC().Format(time.RFC3339Nano))
 	if err := sandbox.write(statePath, state); err != nil {
 		return err
@@ -58,12 +58,12 @@ func issue3557SymlinkSkip(sandbox *Sandbox) string {
 
 func issue3557VerifyDoctor(sandbox *Sandbox, observation Observation) error {
 	if observation.ExitCode != 0 {
-		return fmt.Errorf("gentle-ai doctor exited %d: %s", observation.ExitCode, firstLine(observation.Stderr))
+		return fmt.Errorf("agent-smith doctor exited %d: %s", observation.ExitCode, firstLine(observation.Stderr))
 	}
-	if strings.Contains(observation.Stdout, "gentle-ai sync") {
+	if strings.Contains(observation.Stdout, "agent-smith sync") {
 		return fmt.Errorf("doctor recommended the unrunnable sync recovery: %s", observation.Stdout)
 	}
-	for _, want := range []string{sandbox.Scratch["issue-3557-config"], "inspect", "gentle-ai doctor"} {
+	for _, want := range []string{sandbox.Scratch["issue-3557-config"], "inspect", "agent-smith doctor"} {
 		if !strings.Contains(observation.Stdout, want) {
 			return fmt.Errorf("doctor output missing %q: %s", want, observation.Stdout)
 		}
@@ -97,7 +97,7 @@ func issue3557VerifyDoctor(sandbox *Sandbox, observation Observation) error {
 	if string(state) != sandbox.Scratch["issue-3557-state-content"] {
 		return fmt.Errorf("doctor changed state.json: got %q, want %q", string(state), sandbox.Scratch["issue-3557-state-content"])
 	}
-	backupPath := filepath.Join(sandbox.Home, ".gentle-ai", "backups")
+	backupPath := filepath.Join(sandbox.Home, ".agent-smith", "backups")
 	if _, err := os.Lstat(backupPath); err == nil {
 		return fmt.Errorf("doctor unexpectedly created %q", backupPath)
 	} else if !os.IsNotExist(err) {
@@ -111,10 +111,11 @@ func issue3557Journeys() []Journey {
 		ID:     "j117-doctor-dangling-managed-config",
 		Review: reviewUntouched,
 		Title:  "Doctor identifies a dangling managed config symlink without recommending sync",
-		Source: "https://github.com/Gentleman-Programming/gentle-ai/issues/3557",
+		Source: "https://github.com/jonsanchezr/agent-smith/issues/3557",
 		Steps: []Step{
 			{Name: "fixture: dangling OpenCode managed config symlink", Fixture: issue3557DanglingSymlinkFixture},
 			{Name: "doctor reports manual repair and preserves the filesystem", Skip: issue3557SymlinkSkip, Args: issue3557DoctorArgs, After: issue3557VerifyDoctor},
 		},
 	}}
 }
+

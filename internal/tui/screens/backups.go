@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/backup"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/tui/styles"
+	"github.com/jonsanchezr/agent-smith/v4/internal/backup"
+	"github.com/jonsanchezr/agent-smith/v4/internal/tui/styles"
 )
 
 // BackupMaxVisible is the maximum number of backup items shown at once.
@@ -245,3 +245,4 @@ func RenderRenameBackup(manifest backup.Manifest, inputText string, cursorPos in
 
 	return b.String()
 }
+

@@ -2,7 +2,7 @@
 
 package cli
 
-import "github.com/gentleman-programming/gentle-ai/v4/internal/model"
+import "github.com/jonsanchezr/agent-smith/v4/internal/model"
 
 func usesAnchoredCompatibilityTransaction() bool {
 	return false
@@ -11,3 +11,4 @@ func usesAnchoredCompatibilityTransaction() bool {
 func newCompatibilityRefreshTransaction(string, []model.ComponentID, model.Selection) (compatibilityRefreshTransaction, error) {
 	return nil, nil
 }
+

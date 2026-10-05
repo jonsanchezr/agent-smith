@@ -7,7 +7,7 @@ import (
 	"encoding/json"
 	"strings"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/reviewtransaction"
+	"github.com/jonsanchezr/agent-smith/v4/internal/reviewtransaction"
 )
 
 const (
@@ -59,7 +59,7 @@ func reviewAtomicStartLineage(ctx context.Context, root, targetIdentity string) 
 	if err != nil {
 		return "", err
 	}
-	sum := sha256.Sum256(append([]byte("gentle-ai.review-start-lineage/v3\x00"), payload...))
+	sum := sha256.Sum256(append([]byte("agent-smith.review-start-lineage/v3\x00"), payload...))
 	return "review-" + hex.EncodeToString(sum[:])[:reviewDerivedStartLineageDigits], nil
 }
 
@@ -89,3 +89,4 @@ func reviewPendingAcknowledgementLineage(ctx context.Context, root, targetIdenti
 	}
 	return "", nil
 }
+

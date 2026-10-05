@@ -15,7 +15,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/telemetry"
+	"github.com/jonsanchezr/agent-smith/v4/internal/telemetry"
 )
 
 type runtimeHeldInput struct {
@@ -355,7 +355,7 @@ func TestTelemetryRuntimeStdin(t *testing.T) {
 		if err != nil || event.Host != "pi" || event.Rows[0].AgentClass != "sdd-apply" || bytes.Contains(body, []byte("PRIVATE")) || bytes.Contains(body, []byte("batch_id")) {
 			t.Error("unsafe remote event", err)
 		}
-		_, _ = io.WriteString(w, `{"schema":"gentle-ai.telemetry-runtime-delivery/v1","decision":"stored"}`)
+		_, _ = io.WriteString(w, `{"schema":"agent-smith.telemetry-runtime-delivery/v1","decision":"stored"}`)
 	})
 	r, w, err := os.Pipe()
 	if err != nil {
@@ -373,7 +373,7 @@ func TestTelemetryRuntimeStdin(t *testing.T) {
 		t.Fatal(err)
 	}
 	var result map[string]string
-	if json.Unmarshal(out.Bytes(), &result) != nil || len(result) != 2 || result["schema"] != "gentle-ai.telemetry-runtime-send/v1" || result["decision"] != "stored" || requests != 1 {
+	if json.Unmarshal(out.Bytes(), &result) != nil || len(result) != 2 || result["schema"] != "agent-smith.telemetry-runtime-send/v1" || result["decision"] != "stored" || requests != 1 {
 		t.Fatal(out.String(), requests)
 	}
 	if !reflect.DeepEqual(before, runtimeCLIDisk(t, home)) {
@@ -396,3 +396,4 @@ func TestTelemetryRuntimeRemovedRoutes(t *testing.T) {
 		t.Fatal("removed route wrote artifacts")
 	}
 }
+

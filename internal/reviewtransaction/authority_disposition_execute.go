@@ -13,11 +13,11 @@ import (
 	"strings"
 	"time"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/pathquote"
+	"github.com/jonsanchezr/agent-smith/v4/internal/pathquote"
 )
 
 // AuthorityDispositionProofSchema identifies AuthorityDispositionProof's shape.
-const AuthorityDispositionProofSchema = "gentle-ai.review-authority-disposition-proof/v1"
+const AuthorityDispositionProofSchema = "agent-smith.review-authority-disposition-proof/v1"
 
 // errAuthorityDispositionShape is returned whenever a plan's closure does
 // not have the one shape this executor admits: exactly one seed, at least
@@ -560,7 +560,7 @@ func discoverAuthorityDispositionRecord(ctx context.Context, base, seed, planDig
 			continue
 		}
 		if matched != nil {
-			return CompactReclaimRecord{}, false, errors.New("authority disposition execution refused: duplicate quarantine records for the same plan digest; run `gentle-ai review inspect-authority` and escalate the report")
+			return CompactReclaimRecord{}, false, errors.New("authority disposition execution refused: duplicate quarantine records for the same plan digest; run `agent-smith review inspect-authority` and escalate the report")
 		}
 		found := record
 		matched = &found
@@ -590,7 +590,7 @@ func resumeAuthorityDispositionRecord(ctx context.Context, record CompactReclaim
 		return record, err
 	}
 	if sourceExists == residueExists {
-		return record, errors.New("authority disposition execution refused: ambiguous prepared residue state; run `gentle-ai review inspect-authority` and escalate the report")
+		return record, errors.New("authority disposition execution refused: ambiguous prepared residue state; run `agent-smith review inspect-authority` and escalate the report")
 	}
 	if sourceExists {
 		if err := reclaimQuarantineResidue(record.SourcePath, residuePath); err != nil {
@@ -640,7 +640,7 @@ func resumeAuthorityDispositionRecord(ctx context.Context, record CompactReclaim
 // execution still refuses, by name.
 func readBackAuthorityDisposition(ctx context.Context, root string, record CompactReclaimRecord, retainedDiagnostics map[string]string) (CompactReclaimRecord, error) {
 	if record.Status != CompactReclaimCommitted {
-		return record, fmt.Errorf("authority disposition execution refused: readback observed a non-committed record; run `gentle-ai review inspect-authority --cwd %s` and escalate the report", pathquote.Quote(root))
+		return record, fmt.Errorf("authority disposition execution refused: readback observed a non-committed record; run `agent-smith review inspect-authority --cwd %s` and escalate the report", pathquote.Quote(root))
 	}
 	report, err := InspectCompactRecoveryEdges(ctx, root)
 	if err != nil {
@@ -649,18 +649,18 @@ func readBackAuthorityDisposition(ctx context.Context, root string, record Compa
 	closureMembers := authorityDispositionClosureMembers(record)
 	for _, diagnostic := range report.EntryDiagnostics {
 		if closureMembers[diagnostic.LineageID] {
-			return record, fmt.Errorf("authority disposition execution refused: retained graph still carries a %q diagnostic for quarantined closure member %q; run `gentle-ai review inspect-authority --cwd %s` and escalate the report", diagnostic.Problem, diagnostic.LineageID, pathquote.Quote(root))
+			return record, fmt.Errorf("authority disposition execution refused: retained graph still carries a %q diagnostic for quarantined closure member %q; run `agent-smith review inspect-authority --cwd %s` and escalate the report", diagnostic.Problem, diagnostic.LineageID, pathquote.Quote(root))
 		}
 		if problem, retained := retainedDiagnostics[diagnostic.LineageID]; !retained || problem != diagnostic.Problem {
-			return record, fmt.Errorf("authority disposition execution refused: retained-graph readback observed %q diagnostic on %q, which the disposed plan never scoped; run `gentle-ai review inspect-authority --cwd %s` and escalate the report", diagnostic.Problem, diagnostic.LineageID, pathquote.Quote(root))
+			return record, fmt.Errorf("authority disposition execution refused: retained-graph readback observed %q diagnostic on %q, which the disposed plan never scoped; run `agent-smith review inspect-authority --cwd %s` and escalate the report", diagnostic.Problem, diagnostic.LineageID, pathquote.Quote(root))
 		}
 	}
 	for _, edge := range report.Edges {
 		if member := edge.PredecessorLineageID; closureMembers[member] {
-			return record, fmt.Errorf("authority disposition execution refused: retained graph still references quarantined closure member %q; run `gentle-ai review inspect-authority --cwd %s` and escalate the report", member, pathquote.Quote(root))
+			return record, fmt.Errorf("authority disposition execution refused: retained graph still references quarantined closure member %q; run `agent-smith review inspect-authority --cwd %s` and escalate the report", member, pathquote.Quote(root))
 		}
 		if member := edge.SuccessorLineageID; closureMembers[member] {
-			return record, fmt.Errorf("authority disposition execution refused: retained graph still references quarantined closure member %q; run `gentle-ai review inspect-authority --cwd %s` and escalate the report", member, pathquote.Quote(root))
+			return record, fmt.Errorf("authority disposition execution refused: retained graph still references quarantined closure member %q; run `agent-smith review inspect-authority --cwd %s` and escalate the report", member, pathquote.Quote(root))
 		}
 	}
 	return record, nil
@@ -687,3 +687,4 @@ func cloneAuthorityDispositionRevisions(revisions map[string]string) map[string]
 	}
 	return cloned
 }
+

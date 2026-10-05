@@ -3,8 +3,8 @@ package screens
 import (
 	"strings"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/tui/styles"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
+	"github.com/jonsanchezr/agent-smith/v4/internal/tui/styles"
 )
 
 func PersonaOptions() []model.PersonaID {
@@ -44,3 +44,4 @@ func RenderPersona(selected model.PersonaID, cursor int) string {
 
 	return b.String()
 }
+

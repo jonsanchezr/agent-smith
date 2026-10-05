@@ -8,8 +8,8 @@ import (
 	"slices"
 	"strings"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/agents"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
+	"github.com/jonsanchezr/agent-smith/v4/internal/agents"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
 )
 
 const codeGraphUpstreamVersion = "1.4.1"
@@ -261,3 +261,4 @@ func restoreCodeGraphPaths(snapshots []codeGraphSnapshot) error {
 	}
 	return restoreErr
 }
+

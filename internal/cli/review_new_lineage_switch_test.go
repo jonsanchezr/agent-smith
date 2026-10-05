@@ -8,7 +8,7 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/reviewtransaction"
+	"github.com/jonsanchezr/agent-smith/v4/internal/reviewtransaction"
 )
 
 // TestReviewStartAlwaysCreatesCompactAuthority proves real START has no
@@ -101,3 +101,4 @@ func joinReviewCLILines(lines []string) string {
 	}
 	return joined
 }
+

@@ -9,8 +9,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/reviewtransaction"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
+	"github.com/jonsanchezr/agent-smith/v4/internal/reviewtransaction"
 )
 
 func derivedRangeTerminalStatus(t *testing.T, repo string) ReviewTargetStatusResult {
@@ -216,3 +216,4 @@ func TestNextTransitionDerivedRangeAcknowledgementStaysTerminal(t *testing.T) {
 		t.Fatalf("new committed range suppressed: %#v", changed)
 	}
 }
+

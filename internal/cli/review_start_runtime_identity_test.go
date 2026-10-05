@@ -14,9 +14,9 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/catalog"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/reviewtransaction"
+	"github.com/jonsanchezr/agent-smith/v4/internal/catalog"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
+	"github.com/jonsanchezr/agent-smith/v4/internal/reviewtransaction"
 )
 
 // reviewPrintedIdentityRegexp captures the runtime identity any command this
@@ -76,7 +76,7 @@ func TestDirectReviewStartRefusalInventsNoRuntimeIdentity(t *testing.T) {
 		t.Fatalf("did not reach the direct-route refusal that names a continuation: %s", message)
 	}
 
-	opening := strings.Index(message, "`gentle-ai review start ")
+	opening := strings.Index(message, "`agent-smith review start ")
 	if opening < 0 {
 		t.Fatalf("refusal has no negotiated start command: %s", message)
 	}
@@ -89,8 +89,8 @@ func TestDirectReviewStartRefusalInventsNoRuntimeIdentity(t *testing.T) {
 	if strings.Contains(command, "--agent") || strings.Contains(command, reviewUndeclaredRuntimeIdentitySlot) {
 		t.Fatalf("unbound recovery command guesses a runtime identity: %s", command)
 	}
-	if len(words) < 3 || words[0] != "gentle-ai" || words[1] != "review" || words[2] != "start" {
-		t.Fatalf("recovery command = %#v, want gentle-ai review start", words)
+	if len(words) < 3 || words[0] != "agent-smith" || words[1] != "review" || words[2] != "start" {
+		t.Fatalf("recovery command = %#v, want agent-smith review start", words)
 	}
 	t.Chdir(repo)
 	var recovered bytes.Buffer
@@ -293,7 +293,7 @@ func TestPrintedRuntimeIdentityGuardCatchesTheShippedDefect(t *testing.T) {
 		"compiled constant in a format slot": `package cli
 
 func reviewNegotiatedStartCommand(snapshot Snapshot) string {
-	return fmt.Sprintf("gentle-ai review start --contract %s --agent %s --target %s --projection %s",
+	return fmt.Sprintf("agent-smith review start --contract %s --agent %s --target %s --projection %s",
 		ReviewIntegrationContractV2, model.AgentClaudeCode, snapshot.Identity, facadeProjection(snapshot.Projection))
 }
 `,
@@ -303,7 +303,7 @@ func reviewNegotiatedStartCommand(snapshot Snapshot) string {
 
 var reviewStopReasonNarration = map[string]string{
 	"corrected_candidate_unavailable": "Change the candidate content, then re-run " +
-		"` + "`" + `gentle-ai review status --cwd <repo> --contract gentle-ai.review-integration/v2 --agent claude-code --next-transition` + "`" + `.",
+		"` + "`" + `agent-smith review status --cwd <repo> --contract agent-smith.review-integration/v2 --agent claude-code --next-transition` + "`" + `.",
 }
 `,
 	} {
@@ -388,3 +388,4 @@ func withoutReplayRuntimeIdentity(t *testing.T, arguments []string) []string {
 	}
 	return append([]string(nil), arguments...)
 }
+

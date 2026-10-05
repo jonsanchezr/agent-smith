@@ -4,7 +4,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
 )
 
 func TestRenderPersonaClarifiesCustomKeepsExistingPersona(t *testing.T) {
@@ -31,3 +31,4 @@ func TestRenderPresetClarifiesCustomManualSelection(t *testing.T) {
 		t.Fatalf("RenderPreset still shows old custom preset wording; output:\n%s", out)
 	}
 }
+

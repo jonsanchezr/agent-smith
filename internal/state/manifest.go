@@ -12,17 +12,17 @@ import (
 	"sort"
 	"time"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/components/filemerge"
+	"github.com/jonsanchezr/agent-smith/v4/internal/components/filemerge"
 )
 
 // ManifestSchema is the on-disk identity; bump the suffix on incompatible changes.
-const ManifestSchema = "gentle-ai.managed-assets/v1"
+const ManifestSchema = "agent-smith.managed-assets/v1"
 
 const (
 	manifestFileName = "managed-assets.manifest.json"
 	journalFileName  = "managed-assets.journal"
 	journalCapBytes  = 1 << 20 // 1 MiB
-	StateDirName     = ".gentle-ai"
+	StateDirName     = ".agent-smith"
 )
 
 // Producer is the binary identity that wrote a manifest.
@@ -261,3 +261,4 @@ func capJournal(homeDir string) error {
 	marker := fmt.Sprintf(`{"ts":%q,"op":"truncated"}`+"\n", time.Now().UTC().Format(time.RFC3339Nano))
 	return os.WriteFile(path, []byte(marker), 0o644)
 }
+

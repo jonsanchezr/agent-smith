@@ -18,13 +18,13 @@ func TestVerificationIssuesMessageForCommandNamesTheGivenCommand(t *testing.T) {
 		},
 		{
 			name:    "install retry command",
-			command: "gentle-ai install --agent claude-code",
-			want:    "Installation completed with verification issues. Run `gentle-ai install --agent claude-code` to retry the failed checks.",
+			command: "agent-smith install --agent claude-code",
+			want:    "Installation completed with verification issues. Run `agent-smith install --agent claude-code` to retry the failed checks.",
 		},
 		{
 			name:    "sync retry command",
-			command: "gentle-ai sync",
-			want:    "Installation completed with verification issues. Run `gentle-ai sync` to retry the failed checks.",
+			command: "agent-smith sync",
+			want:    "Installation completed with verification issues. Run `agent-smith sync` to retry the failed checks.",
 		},
 	}
 	for _, tt := range tests {
@@ -58,3 +58,4 @@ func containsRepair(s string) bool {
 	}
 	return false
 }
+

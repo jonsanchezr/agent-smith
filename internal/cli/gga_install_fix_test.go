@@ -7,8 +7,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/system"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
+	"github.com/jonsanchezr/agent-smith/v4/internal/system"
 )
 
 // TestGGAFixInstallErrorWhenAlreadyAvailable tests that when GGA install
@@ -163,3 +163,4 @@ func TestGGAFixInstallErrorWhenNotAvailable(t *testing.T) {
 		t.Fatalf("Expected network error in message, got: %v", err)
 	}
 }
+

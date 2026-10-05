@@ -7,7 +7,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/tui/styles"
+	"github.com/jonsanchezr/agent-smith/v4/internal/tui/styles"
 )
 
 // RenderSync handles all states of the sync screen.
@@ -115,3 +115,4 @@ func renderSyncResult(files []string, syncErr error) string {
 
 	return b.String()
 }
+

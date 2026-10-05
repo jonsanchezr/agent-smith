@@ -1,6 +1,6 @@
-{
-  "schema": "gentle-ai.review-integration.start/v1",
-  "contract": "gentle-ai.review-integration/v1",
+﻿{
+  "schema": "agent-smith.review-integration.start/v1",
+  "contract": "agent-smith.review-integration/v1",
   "operation": "review.start",
   "action": "created",
   "lenses_required": true,
@@ -40,3 +40,4 @@
     "target_identity": "sha256:136dc6556e3bac8c2e7f7af7cc5ec361f449e383a997638128729059fefa06a5"
   }
 }
+

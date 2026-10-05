@@ -20,7 +20,7 @@ func TestPolicyRuntimeVersionFixture(t *testing.T) {
 		{"windows", []string{`C:\fixture\opencode.exe`, "--version"}, true, 0, "1.18.10\n"},
 		{"reject runtime call", []string{"opencode", "run"}, true, 2, ""},
 		{"reject extra args", []string{"opencode", "--version", "extra"}, true, 2, ""},
-		{"bench unchanged", []string{"gentle-ai-bench", "run"}, false, 0, ""},
+		{"bench unchanged", []string{"agent-smith-bench", "run"}, false, 0, ""},
 	} {
 		t.Run(tt.name, func(t *testing.T) {
 			var out bytes.Buffer
@@ -33,7 +33,7 @@ func TestPolicyRuntimeVersionFixture(t *testing.T) {
 }
 
 func TestPolicyRuntimeFixturePathPrecedence(t *testing.T) {
-	s, err := newSandbox("gentle-ai", t.TempDir())
+	s, err := newSandbox("agent-smith", t.TempDir())
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -49,3 +49,4 @@ func TestPolicyRuntimeFixturePathPrecedence(t *testing.T) {
 	}
 	t.Fatal("missing PATH")
 }
+

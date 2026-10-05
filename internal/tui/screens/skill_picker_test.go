@@ -4,12 +4,12 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/tui/styles"
+	"github.com/jonsanchezr/agent-smith/v4/internal/tui/styles"
 )
 
 func TestSkillPickerCanonicalRowsAndActions(t *testing.T) {
 	skills := AllSkillsOrdered()
-	labels := []string{"Judgment Day", "Go Testing", "Gentle AI Bench", "Skill Creator", "Skill Improver", "Branch & PR", "Issue Creation", "Skill Registry", "Chained PR", "Cognitive Doc Design", "Comment Writer", "Work Unit Commits", "RDD Defect Workflow", "Systemic Issue Triage"}
+	labels := []string{"Judgment Day", "Go Testing", "Agent Smith Bench", "Skill Creator", "Skill Improver", "Branch & PR", "Issue Creation", "Skill Registry", "Chained PR", "Cognitive Doc Design", "Comment Writer", "Work Unit Commits", "RDD Defect Workflow", "Systemic Issue Triage"}
 	if len(skills) != len(labels) {
 		t.Fatalf("canonical skills = %d, want %d", len(skills), len(labels))
 	}
@@ -38,3 +38,4 @@ func TestSkillPickerCanonicalRowsAndActions(t *testing.T) {
 		t.Fatal("small viewport did not follow Back with a scroll hint")
 	}
 }
+

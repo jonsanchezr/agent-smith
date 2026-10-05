@@ -3,7 +3,7 @@ package screens
 import (
 	"strings"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/tui/styles"
+	"github.com/jonsanchezr/agent-smith/v4/internal/tui/styles"
 )
 
 // RenderABGenerating renders the generation-in-progress (or error) screen.
@@ -34,3 +34,4 @@ func RenderABGenerating(engineName string, spinnerFrame int, genErr error, curso
 
 	return b.String()
 }
+

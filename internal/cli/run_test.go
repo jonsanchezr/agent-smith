@@ -14,16 +14,16 @@ import (
 	"testing"
 	"time"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/agents/opencode"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/assets"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/backup"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/components/opencoderuntimeplugins"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/components/telemetryruntime"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
-	opencodeactivation "github.com/gentleman-programming/gentle-ai/v4/internal/opencode"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/pipeline"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/planner"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/telemetry"
+	"github.com/jonsanchezr/agent-smith/v4/internal/agents/opencode"
+	"github.com/jonsanchezr/agent-smith/v4/internal/assets"
+	"github.com/jonsanchezr/agent-smith/v4/internal/backup"
+	"github.com/jonsanchezr/agent-smith/v4/internal/components/opencoderuntimeplugins"
+	"github.com/jonsanchezr/agent-smith/v4/internal/components/telemetryruntime"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
+	opencodeactivation "github.com/jonsanchezr/agent-smith/v4/internal/opencode"
+	"github.com/jonsanchezr/agent-smith/v4/internal/pipeline"
+	"github.com/jonsanchezr/agent-smith/v4/internal/planner"
+	"github.com/jonsanchezr/agent-smith/v4/internal/telemetry"
 )
 
 // themeSettingsFixture puts the effective JSONC in the project and a distinct
@@ -870,7 +870,7 @@ func TestV2SDKProvisionRejectsChangedOwnershipAndUnmaterializedPackage(t *testin
 	if err != nil || proposal == nil {
 		t.Fatalf("refreshed proposal = %+v, %v", proposal, err)
 	}
-	if err := (openCodePluginDependencyPreflightStep{homeDir: home, consent: proposal}).Run(); err == nil || !strings.Contains(err.Error(), "without materializing") || !strings.Contains(err.Error(), "not covered by Gentle AI rollback") {
+	if err := (openCodePluginDependencyPreflightStep{homeDir: home, consent: proposal}).Run(); err == nil || !strings.Contains(err.Error(), "without materializing") || !strings.Contains(err.Error(), "not covered by Agent Smith rollback") {
 		t.Fatalf("successful manager without SDK passed: %v", err)
 	}
 	if _, err := os.Stat(marker); err != nil {
@@ -1387,7 +1387,7 @@ func TestOpenCodeTelemetryOrdinaryInstall(t *testing.T) {
 					t.Fatal("missing embedded runtime asset", err)
 				}
 				paths, err := backupTargets(home, rt.workspaceDir, ScopeGlobal, selection, resolved)
-				if err != nil || !slices.Contains(paths, path) || !slices.Contains(paths, filepath.Join(filepath.Dir(filepath.Dir(path)), ".gentle-ai-telemetry-runtime.json")) {
+				if err != nil || !slices.Contains(paths, path) || !slices.Contains(paths, filepath.Join(filepath.Dir(filepath.Dir(path)), ".agent-smith-telemetry-runtime.json")) {
 					t.Fatal("runtime pair absent from install backup", err)
 				}
 			} else if !os.IsNotExist(err) {
@@ -1400,3 +1400,4 @@ func TestOpenCodeTelemetryOrdinaryInstall(t *testing.T) {
 		})
 	}
 }
+

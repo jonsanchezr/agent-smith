@@ -1,4 +1,4 @@
-# The story of fixing RDD
+﻿# The story of fixing RDD
 
 > How two sleepless days, an entire community and three monthly resets turned into a release. For the technical detail, see [organic-rdd.md](organic-rdd.md).
 
@@ -12,17 +12,17 @@ The hard part is not the idea, it is that it **must not get in the way**. A syst
 
 You change something. The tool looks at **what** you changed, not how much.
 
-- **Edited a README** → it asks nothing. Zero ceremony.
-- **Wrote a thousand lines of documentation** → still nothing. Size does not matter.
-- **Touched two lines of login code** → four reviewers.
+- **Edited a README** â†’ it asks nothing. Zero ceremony.
+- **Wrote a thousand lines of documentation** â†’ still nothing. Size does not matter.
+- **Touched two lines of login code** â†’ four reviewers.
 
 And if you want none of it:
 
 ```
-gentle-ai review mode disable
+agent-smith review mode disable
 ```
 
-Done. It is off. **Not "off but still in your way"** — off. Do whatever you want, and if you turn it back on it tells you it is going to re-validate whatever was never reviewed.
+Done. It is off. **Not "off but still in your way"** â€” off. Do whatever you want, and if you turn it back on it tells you it is going to re-validate whatever was never reviewed.
 
 ---
 
@@ -58,7 +58,7 @@ The architecture was never the problem. The absence of anything making it bindin
 
 ### The second run
 
-Same model class. Same person. Same decisions. What changed was that the decisions were now enforced by **phases with explicit contracts, one writer per lane, verify before asserting, and the rule that a failing existing test is never edited — you stop and report.**
+Same model class. Same person. Same decisions. What changed was that the decisions were now enforced by **phases with explicit contracts, one writer per lane, verify before asserting, and the rule that a failing existing test is never edited â€” you stop and report.**
 
 That last rule alone caught **nine wrong premises**. Nine times an agent was about to fix something, an old test went red, and it turned out the test was right and the diagnosis was not.
 
@@ -112,7 +112,7 @@ The mechanical ones. The ones derived from the code rather than from a list some
 
 One walks the syntax tree looking for error messages that name a command, and checks that the command and its flags **actually exist**. It found messages pointing at things that were not there.
 
-Another rejects new functions nobody calls. When I removed the Codex cleanup, it told me **fifteen functions** had gone dead — an entire parser that existed only for that. I deleted them following that evidence.
+Another rejects new functions nobody calls. When I removed the Codex cleanup, it told me **fifteen functions** had gone dead â€” an entire parser that existed only for that. I deleted them following that evidence.
 
 That guard was eight hours old when it found its first real defect.
 
@@ -140,16 +140,16 @@ At some point I stopped arguing about whether it was better and measured it.
 
 The tool counts how often you get stuck and, above all, **how** you get stuck:
 
-- **In band** — it stops you and tells you what to run
-- **Out of band** — it stops you and tells you nothing
-- **Dead end** — it stops you and there is nothing you can do
+- **In band** â€” it stops you and tells you what to run
+- **Out of band** â€” it stops you and tells you nothing
+- **Dead end** â€” it stops you and there is nothing you can do
 
 It does not measure speed. Speed depends on the provider and the day; friction is yours.
 
 And it ships. It is in the repository, it drives a real binary rather than a mock, and you can point it at your own build:
 
 ```
-cd bench && go run . run --binary $(command -v gentle-ai)
+cd bench && go run . run --binary $(command -v agent-smith)
 ```
 
 That is deliberate. A number I publish and you cannot reproduce is a claim about my honesty. A number you can run yourself is evidence.
@@ -174,13 +174,13 @@ Once the benchmark existed, the obvious move was to stop reading it and start ru
 
 That is a small idea with one sharp edge: **the loop only works if you are allowed to find that the instrument is wrong.** A loop that can only ever fix the product will happily converge on a lie.
 
-Round one was tidy. Two blocks named a maintainer when the operator could have cleared them alone, and in both cases the correct reason was already sitting in the JSON — computed, published for machines, and thrown away on the line a human reads. Two others turned out to be refusing correctly, which was worth the same as fixing them, because now it is written down why.
+Round one was tidy. Two blocks named a maintainer when the operator could have cleared them alone, and in both cases the correct reason was already sitting in the JSON â€” computed, published for machines, and thrown away on the line a human reads. Two others turned out to be refusing correctly, which was worth the same as fixing them, because now it is written down why.
 
 Then the corpus grew to thirty-six and round two found the one I would not have found on my own.
 
 **The kill switch did not stop anything from being written.** Turn reviews off, and `review start` refuses, correctly. Run `review finalize` and it returns success, state approved, terminal receipt on disk. A review had been approved with reviews switched off.
 
-The cause was almost funny. The authorization function was correct. It had two modes, one for starting and one for advancing, and the advancing one was documented, in the source, as *"Disabled mode rejects it"*. It was called from nowhere. One production caller, always passing the other mode. **The guard was written, reasoned about, commented, and never wired up** — which is exactly why a unit test on it passed happily the whole time.
+The cause was almost funny. The authorization function was correct. It had two modes, one for starting and one for advancing, and the advancing one was documented, in the source, as *"Disabled mode rejects it"*. It was called from nowhere. One production caller, always passing the other mode. **The guard was written, reasoned about, commented, and never wired up** â€” which is exactly why a unit test on it passed happily the whole time.
 
 And it mattered beyond tidiness, because the promise is that turning reviews back on re-validates whatever was never reviewed. A receipt minted while the switch was off survives being turned back on, and nothing re-validates it.
 
@@ -188,7 +188,7 @@ Round three, I broke my own measurement. I built the binary with the wrong packa
 
 Round four found the same defect for the third time on this branch. The specific reason computed, published to the machine envelope, discarded on the human path. Three separate places, months apart. That stopped being a bug the second time; the third time it is a shape, and it is now written down as one.
 
-That round also caught something more embarrassing than a bug: an escalated review told the operator to `run review.status`. It looks like a command. It is the internal routing name, and typing it does nothing. Worse, when I first fixed it I was about to translate it into the real command — and the agent doing the work proved that the real command **also** resolves nothing there. It describes the state; it does not move it. Naming a command that runs and does not help is more expensive than naming nothing, because now the person trusts it.
+That round also caught something more embarrassing than a bug: an escalated review told the operator to `run review.status`. It looks like a command. It is the internal routing name, and typing it does nothing. Worse, when I first fixed it I was about to translate it into the real command â€” and the agent doing the work proved that the real command **also** resolves nothing there. It describes the state; it does not move it. Naming a command that runs and does not help is more expensive than naming nothing, because now the person trusts it.
 
 The loop is still running. That is not a failure to converge; it is what a loop looks like while it is honest.
 
@@ -214,7 +214,7 @@ The four macOS defects: closed and verified on real hardware, not on a synthetic
 
 Windows updates itself for the first time.
 
-Codex used to start up broken after syncing, and now it **does not touch its configuration file at all** — verified with the same inode number before and after, meaning it is not opened for writing at all, not merely that the same bytes get written back.
+Codex used to start up broken after syncing, and now it **does not touch its configuration file at all** â€” verified with the same inode number before and after, meaning it is not opened for writing at all, not merely that the same bytes get written back.
 
 The kill switch is a kill switch.
 
@@ -239,3 +239,4 @@ And things remain open, written down in the technical document, because an hones
 **The community finds what audits do not.** The four most valuable reports of these days came from people using the tool on their machine, with their repository, with their odd configuration. No internal audit would have found them, because an audit looks for what you already know to look for.
 
 **And the rule that ran over everything else:** if you tell someone what to do, make sure it works.
+

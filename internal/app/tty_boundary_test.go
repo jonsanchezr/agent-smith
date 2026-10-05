@@ -14,8 +14,8 @@ import (
 	"time"
 
 	tea "github.com/charmbracelet/bubbletea"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/state"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/system"
+	"github.com/jonsanchezr/agent-smith/v4/internal/state"
+	"github.com/jonsanchezr/agent-smith/v4/internal/system"
 )
 
 func assumeInteractiveTTY(t *testing.T) {
@@ -103,7 +103,7 @@ func TestRunArgsNoArgumentRequiresInteractiveStdinAndStdout(t *testing.T) {
 			if err == nil {
 				t.Fatalf("RunArgs(nil) error = nil, want non-nil terminal guidance")
 			}
-			for _, want := range []string{"--version", "gentle-ai update", "--help"} {
+			for _, want := range []string{"--version", "agent-smith update", "--help"} {
 				if !strings.Contains(err.Error(), want) {
 					t.Fatalf("RunArgs(nil) error = %q, want actionable guidance containing %q", err, want)
 				}
@@ -234,11 +234,11 @@ func TestBuiltBinaryClosedStdinRefusesBeforeBubbleTea(t *testing.T) {
 		t.Fatal("runtime.Caller failed")
 	}
 	repoRoot := filepath.Join(filepath.Dir(sourceFile), "..", "..")
-	binaryPath := filepath.Join(t.TempDir(), "gentle-ai")
-	build := exec.Command("go", "build", "-o", binaryPath, "./cmd/gentle-ai")
+	binaryPath := filepath.Join(t.TempDir(), "agent-smith")
+	build := exec.Command("go", "build", "-o", binaryPath, "./cmd/agent-smith")
 	build.Dir = repoRoot
 	if output, err := build.CombinedOutput(); err != nil {
-		t.Fatalf("go build ./cmd/gentle-ai: %v\n%s", err, output)
+		t.Fatalf("go build ./cmd/agent-smith: %v\n%s", err, output)
 	}
 
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
@@ -262,7 +262,7 @@ func TestBuiltBinaryClosedStdinRefusesBeforeBubbleTea(t *testing.T) {
 	}
 
 	combined := stdout.String() + stderr.String()
-	for _, want := range []string{"--version", "gentle-ai update", "--help"} {
+	for _, want := range []string{"--version", "agent-smith update", "--help"} {
 		if !strings.Contains(combined, want) {
 			t.Fatalf("built binary output = %q, want actionable guidance containing %q", combined, want)
 		}
@@ -280,3 +280,4 @@ func slicesContains(values []string, want string) bool {
 	}
 	return false
 }
+

@@ -1,4 +1,4 @@
-name: Feature Request
+﻿name: Feature Request
 description: Suggest a new feature or enhancement for Gentle AI
 labels: ["type:feature", "status:needs-review"]
 
@@ -6,9 +6,9 @@ body:
   - type: markdown
     attributes:
       value: |
-        ## 📋 How this works
+        ## ðŸ“‹ How this works
 
-        1. **Submit** this feature request → it gets the `status:needs-review` label automatically
+        1. **Submit** this feature request â†’ it gets the `status:needs-review` label automatically
         2. **Review** precedes approval: adding `status:approved` follows the canonical issue-creation workflow contract, requiring a current direct human instruction for the exact target/action and verified actor `MAINTAIN`/`ADMIN` capability (or a separately authorized closure)
         3. **Only then** should you (or anyone) open a PR to implement it
 
@@ -19,7 +19,7 @@ body:
     attributes:
       label: Pre-flight Checklist
       options:
-        - label: I have searched [existing issues](https://github.com/Gentleman-Programming/gentle-ai/issues) and this is not a duplicate
+        - label: I have searched [existing issues](https://github.com/jonsanchezr/agent-smith/issues) and this is not a duplicate
           required: true
         - label: I understand that PRs will be rejected if the linked issue does not have `status:approved`
           required: true
@@ -27,7 +27,7 @@ body:
   - type: dropdown
     id: area
     attributes:
-      label: 🔍 Affected Area
+      label: ðŸ” Affected Area
       description: Which area of Gentle AI would this feature affect?
       options:
         - CLI (commands, flags)
@@ -44,7 +44,7 @@ body:
   - type: textarea
     id: problem
     attributes:
-      label: 💡 Problem Statement
+      label: ðŸ’¡ Problem Statement
       description: Is your feature request related to a problem? Describe it clearly.
       placeholder: |
         I'm always frustrated when...
@@ -56,7 +56,7 @@ body:
   - type: textarea
     id: solution
     attributes:
-      label: 📦 Proposed Solution
+      label: ðŸ“¦ Proposed Solution
       description: Describe the solution you'd like. Be as specific as possible.
       placeholder: |
         Example usage:
@@ -70,7 +70,7 @@ body:
   - type: textarea
     id: alternatives
     attributes:
-      label: 🔄 Alternatives Considered
+      label: ðŸ”„ Alternatives Considered
       description: Describe any alternative solutions or features you've considered.
     validations:
       required: false
@@ -78,7 +78,8 @@ body:
   - type: textarea
     id: context
     attributes:
-      label: 📎 Additional Context
+      label: ðŸ“Ž Additional Context
       description: Add any other context, screenshots, or examples about the feature request here.
     validations:
       required: false
+

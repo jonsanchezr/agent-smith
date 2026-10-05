@@ -1,27 +1,27 @@
 # Telemetry Collector
 
 > [!NOTE]
-> These docs track `main`, which may include unreleased changes. For the latest release, see the [v4.0.0 docs](https://github.com/Gentleman-Programming/gentle-ai/tree/v4.0.0/docs).
+> These docs track `main`, which may include unreleased changes. For the latest release, see the [v4.0.0 docs](https://github.com/jonsanchezr/agent-smith/tree/v4.0.0/docs).
 
-← [Back to README](../README.md)
+â† [Back to README](../README.md)
 
-`cmd/gentle-telemetry` is the self-hosted collector for gentle-ai's anonymous
-telemetry (issue [#4310](https://github.com/Gentleman-Programming/gentle-ai/issues/4310)).
-It answers one question — "how many people use this, and how" — from events
+`cmd/gentle-telemetry` is the self-hosted collector for agent-smith's anonymous
+telemetry (issue [#4310](https://github.com/jonsanchezr/agent-smith/issues/4310)).
+It answers one question â€” "how many people use this, and how" â€” from events
 the client sends opportunistically, without ever learning who they are or
 where they run.
 
 The client side (when to send, `DO_NOT_TRACK`/`GENTLE_AI_TELEMETRY`/`CI`
-opt-out, `gentle-ai telemetry status|enable|disable|preview`) is implemented
+opt-out, `agent-smith telemetry status|enable|disable|preview`) is implemented
 on a sibling branch and is out of scope here. This document covers the
 collector: the wire contract it accepts, storage and retention, the deploy
 kit under `deploy/telemetry/`, and how to read `/v1/summary`.
 
-## Wire contract: `gentle-ai.telemetry-event/v1`
+## Wire contract: `agent-smith.telemetry-event/v1`
 
 ```json
 {
-  "schema": "gentle-ai.telemetry-event/v1",
+  "schema": "agent-smith.telemetry-event/v1",
   "event": "install | heartbeat",
   "install_id": "uuid-v4, generated once by the client",
   "sent_at": "RFC3339 UTC",
@@ -53,7 +53,7 @@ Once the canonical copy is published, point the collector at it instead of
 keeping two copies of the same schema.
 
 **What the collector never receives or stores**: the payload above carries
-no paths, repository names, usernames, hostnames, prompts, or diffs — that
+no paths, repository names, usernames, hostnames, prompts, or diffs â€” that
 is a client-side guarantee. The one thing the *collector* independently
 guarantees on its own side is that it never persists or logs the caller's
 IP address; see [No IP addresses, anywhere](#no-ip-addresses-anywhere).
@@ -62,8 +62,8 @@ IP address; see [No IP addresses, anywhere](#no-ip-addresses-anywhere).
 the schema is closed with either an `enum` (`event`, `os`, `arch`,
 `agents[]`, `components[]`, and `schema` itself) or a `pattern`
 (`install_id`, `version`, `sent_at`). `agents[]` and `components[]` accept
-only the fixed sets of known agent and component ids gentle-ai ships —
-never an arbitrary string — and `additionalProperties: false` at every
+only the fixed sets of known agent and component ids agent-smith ships â€”
+never an arbitrary string â€” and `additionalProperties: false` at every
 object level rejects any field this document doesn't name.
 `TestEventSchema_EveryStringPropertyIsClosed` walks the schema and fails
 the build if a future string property is ever added without one of these
@@ -84,14 +84,14 @@ Native clients send once over HTTPS, without redirects, with a 3-second network
 budget and bounded acknowledgement. Failure discards metrics; no client queue,
 outbox, retry, cooldown, daemon, or migration cleanup exists. Server deduplication
 remains defensive: HTTP 200 returns exactly
-`{"schema":"gentle-ai.telemetry-runtime-delivery/v1","decision":"stored"}` or
+`{"schema":"agent-smith.telemetry-runtime-delivery/v1","decision":"stored"}` or
 `duplicate`. A conflicting identity returns 409; invalid, oversized, rate-limited,
 and unavailable requests return 400, 413, 429, and 500 respectively. Clients do
 not retry any of them or retain the event after a lost response.
 
 Existing SQLite `runtime_deliveries`/`runtime_rows`, `user_version=1`, transactional
 storage, and startup/daily retention remain unchanged. Rate limiting for
-`/v1/runtime-events` has its own budget, separate from `/v1/events` — see
+`/v1/runtime-events` has its own budget, separate from `/v1/events` â€” see
 [Rate limiting](#rate-limiting).
 `received_at` is delivery time, not activity time. Existing `--retention-days`
 purges whole deliveries strictly before the UTC cutoff; deduplication ends when
@@ -103,14 +103,14 @@ production configuration change, or deployment is included.
 `--runtime-store` selects how a newly stored `/v1/runtime-events` delivery is
 persisted:
 
-- `sqlite` (default): today's behavior, unchanged — `runtime_deliveries` and
+- `sqlite` (default): today's behavior, unchanged â€” `runtime_deliveries` and
   `runtime_rows` as described above, no counters, `GET /metrics` serves an
   empty body.
 - `metrics`: no raw rows at all. The delivery is deduplicated by id alone in
   `runtime_delivery_ids(delivery_id TEXT PRIMARY KEY, received_at INTEGER NOT
   NULL)`, and its rows are folded into an in-memory Prometheus counters
   registry instead. This table stores no payload, because in this mode there
-  is no canonical payload to compare a repeat against — a repeated id is
+  is no canonical payload to compare a repeat against â€” a repeated id is
   always treated as `duplicate`, the same trust model as any bare idempotency
   key (contrast `runtime_deliveries`, which detects a same-id-different-payload
   conflict via its stored `canonical_payload`). It shares `--retention-days`
@@ -119,7 +119,7 @@ persisted:
 - `both`: writes raw rows and observes into the registry, for a transition
   window before cutover.
 
-A delivery is only ever observed into the registry once, on `stored` — never
+A delivery is only ever observed into the registry once, on `stored` â€” never
 on `duplicate`, and never at all under `sqlite`.
 
 `GET /metrics` renders that registry as Prometheus text exposition
@@ -174,7 +174,7 @@ exposition lines (17.5 MB), which is above VictoriaMetrics' default
 `-promscrape.maxScrapeSize=64MiB` (see [VictoriaMetrics](#victoriametrics)).
 
 **Cutover**: the default stays `sqlite` until the VictoriaMetrics deploy
-(`deploy/telemetry/`, not yet built — see the feature's task list) is
+(`deploy/telemetry/`, not yet built â€” see the feature's task list) is
 installed, backfilled, and verified. Flipping `--runtime-store` before that
 exists means either losing runtime history (`metrics` with nothing scraping
 `/metrics` yet) or, in `both`, doubling work for no benefit.
@@ -183,11 +183,11 @@ exists means either losing runtime history (`metrics` with nothing scraping
 
 | Endpoint | Method | Auth | Notes |
 |---|---|---|---|
-| `/v1/events` | POST | none | Body ≤ 4 KiB, strict schema validation, own per-address rate limit (`--rate-limit-per-minute`). `202` on accept, `400` invalid, `413` oversize, `429` rate-limited. |
-| `/v1/runtime-events` | POST | none | Body ≤ 16 KiB; strict public observations; own per-address rate limit (`--runtime-rate-limit-per-minute`). `200` with `stored`/`duplicate`; one client attempt only. |
+| `/v1/events` | POST | none | Body â‰¤ 4 KiB, strict schema validation, own per-address rate limit (`--rate-limit-per-minute`). `202` on accept, `400` invalid, `413` oversize, `429` rate-limited. |
+| `/v1/runtime-events` | POST | none | Body â‰¤ 16 KiB; strict public observations; own per-address rate limit (`--runtime-rate-limit-per-minute`). `200` with `stored`/`duplicate`; one client attempt only. |
 | `/v1/summary` | GET | `Authorization: Bearer <token>` | Returns the JSON described below. `401` without a valid token. |
 | `/healthz` | GET | none | Liveness check for the reverse proxy / process supervisor. |
-| `/metrics` | GET | none | Prometheus text exposition of the runtime counters registry — see [Runtime metrics for VictoriaMetrics](#runtime-metrics-for-victoriametrics). Empty body under `--runtime-store=sqlite` (the default). |
+| `/metrics` | GET | none | Prometheus text exposition of the runtime counters registry â€” see [Runtime metrics for VictoriaMetrics](#runtime-metrics-for-victoriametrics). Empty body under `--runtime-store=sqlite` (the default). |
 
 ### No IP addresses, anywhere
 
@@ -198,7 +198,7 @@ exists means either losing runtime history (`metrics` with nothing scraping
 - The `events` table has no column that could hold a remote address (see
   the schema below); `Event`, decoded from the request body, structurally
   cannot carry one either, since the wire contract has no such field.
-- HTTP handler logs record the event kind and outcome only — never
+- HTTP handler logs record the event kind and outcome only â€” never
   `r.RemoteAddr`. `TestHandleEvents_NeverStoresOrLogsRemoteAddress` in
   `internal/telemetrycollector/handlers_test.go` asserts this against both
   the database row and the log output for a request from a known address.
@@ -224,7 +224,7 @@ readable without rerunning the installer.
 ```sql
 CREATE TABLE events (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
-  received_at INTEGER NOT NULL,    -- Unix nanoseconds, UTC (not RFC3339 text —
+  received_at INTEGER NOT NULL,    -- Unix nanoseconds, UTC (not RFC3339 text â€”
                                     -- see the comment on receivedAtKey in storage.go
                                     -- for why a text encoding broke day-boundary comparisons)
   event TEXT NOT NULL,             -- "install" | "heartbeat"
@@ -254,7 +254,7 @@ rollup missed while the process was down) and then once a day, anchored to
 is never more than a few minutes stale on the dashboard regardless of when
 the process last restarted:
 
-1. Rolls up **yesterday**'s events into `rollups_daily` (idempotent — safe
+1. Rolls up **yesterday**'s events into `rollups_daily` (idempotent â€” safe
    to re-run after a crash or restart).
 2. Purges raw `events` rows and whole sqlite-mode runtime deliveries older
    than `--retention-days` (default 90).
@@ -324,7 +324,7 @@ once, under its newest version/agents/RDD state); *any* event makes it
   last 12 ISO (Monday-start) weeks, including the current, partial week.
 - **`agent_distribution` / `component_distribution` / `version_distribution`
   / `rdd_enabled_ratio`**: aggregated over the trailing 30 days. This window
-  is a design choice, not part of the wire contract — the issue asks for
+  is a design choice, not part of the wire contract â€” the issue asks for
   these distributions without specifying a period, so 30 days was chosen to
   answer "who's using it now" without a second rollups table. **These are
   install-days, not distinct installs**: an install active on 10 different
@@ -333,14 +333,14 @@ once, under its newest version/agents/RDD state); *any* event makes it
   not "how many distinct installs use X".
 - Both computations read `rollups_daily` for every day except today, and
   read today's not-yet-rolled-up events directly from the `events` table,
-  merging the two — matching the design's "computed from `rollups_daily`
+  merging the two â€” matching the design's "computed from `rollups_daily`
   plus today's raw events."
 - **`downloads`**: public download counts, fetched daily from the npm
   registry (`--npm-package`, repeatable, default `gentle-pi`,
   `gentle-engram`) and the GitHub API (`--github-repo`, repeatable, default
-  `Gentleman-Programming/gentle-ai`) — see
+  `jonsanchezr/agent-smith`) â€” see
   [External download counts](#external-download-counts). Nothing here
-  comes from a gentle-ai install; it is a public count of who downloaded
+  comes from a agent-smith install; it is a public count of who downloaded
   the tools, not telemetry about how they are used.
 
 All of this is computed on demand in `BuildSummary`
@@ -355,7 +355,7 @@ address (see "Deriving the client address" below): `--rate-limit-per-minute`
 (default 60) for `/v1/events`, and `--runtime-rate-limit-per-minute`
 (default 600) for `/v1/runtime-events`. They used to share one bucket,
 which meant frequent runtime heartbeats and infrequent stored events
-competed for the same budget — stored deliveries plateaued at exactly the
+competed for the same budget â€” stored deliveries plateaued at exactly the
 configured limit while heartbeats were rejected once it was exhausted, and
 "active machines" counts collapsed as a result. Burst capacity equals each
 limit, refilled continuously at `limit/60` tokens per second. Buckets are
@@ -373,7 +373,7 @@ which case it is the first `X-Forwarded-For` hop that parses as an IP
 address (falling back to `X-Real-IP`, then the peer). A forwarded value
 that does not parse as an IP is skipped rather than trusted verbatim: a
 misconfigured reverse proxy has been observed sending
-`X-Forwarded-For: (null), <client>`, which — without this validation —
+`X-Forwarded-For: (null), <client>`, which â€” without this validation â€”
 keyed every client on the literal string `"(null)"`, collapsing the rate
 limiter (and "active machines" counts derived from it) to a single shared
 bucket. When a trusted proxy's forwarded header has no element that
@@ -391,17 +391,17 @@ address"`, with the header's value itself never logged.
 --runtime-metrics-ttl 24h                                  # idle series eviction on /metrics; 0 disables (keep far above the scrape interval)
 --rate-limit-per-minute 60                                 # per-address budget on /v1/events
 --runtime-rate-limit-per-minute 600                         # per-address budget on /v1/runtime-events
---runtime-store sqlite                                      # sqlite (default) | metrics | both — see Runtime metrics for VictoriaMetrics
+--runtime-store sqlite                                      # sqlite (default) | metrics | both â€” see Runtime metrics for VictoriaMetrics
 --trusted-proxy-cidr 127.0.0.0/8 --trusted-proxy-cidr ::1/128  # peers allowed to set X-Forwarded-For (repeatable; this is the default)
 --npm-package gentle-pi --npm-package gentle-engram        # npm packages to fetch daily downloads for (repeatable; this is the default)
---github-repo Gentleman-Programming/gentle-ai              # GitHub repo to fetch release downloads for (repeatable; this is the default)
+--github-repo jonsanchezr/agent-smith              # GitHub repo to fetch release downloads for (repeatable; this is the default)
 --github-token-file <path>                                  # optional: raises the GitHub API rate limit
 ```
 
 The process listens on loopback by default (port 18181, chosen simply
-because it was free on the reference VPS — 8080/8787-style defaults were
-already taken by other services there) and expects a reverse proxy — this
-deploy kit targets a cPanel/WHM box, so that means Apache, not Caddy — in
+because it was free on the reference VPS â€” 8080/8787-style defaults were
+already taken by other services there) and expects a reverse proxy â€” this
+deploy kit targets a cPanel/WHM box, so that means Apache, not Caddy â€” in
 front of it for TLS. It shuts down gracefully on `SIGINT`/`SIGTERM`,
 draining in-flight requests before exiting, and waits for any in-flight
 daily maintenance run (see [Retention](#retention)) to finish before
@@ -410,11 +410,11 @@ connection.
 
 **Building it**: `cmd/gentle-telemetry` is not currently wired into
 `.goreleaser.yaml`. The existing config builds a single binary
-(`cmd/gentle-ai`) with release hooks specific to that binary (provider
+(`cmd/agent-smith`) with release hooks specific to that binary (provider
 contract bundling, release provenance, minisign signing); bolting a second,
 unrelated binary onto the same `archives:`/`builds:` block would either
 duplicate those hooks unnecessarily or silently bundle `gentle-telemetry`
-into the `gentle-ai` release archive. Until there is a real need for signed
+into the `agent-smith` release archive. Until there is a real need for signed
 releases of the collector, build it directly:
 
 ```
@@ -428,13 +428,13 @@ go build ./cmd/gentle-telemetry
 ## Deploying (`deploy/telemetry/`)
 
 This kit targets a real reference VPS shape: **AlmaLinux 9 with cPanel/WHM**,
-Apache (`httpd`) already bound to 80/443, systemd, and Docker — 3 vCPU,
+Apache (`httpd`) already bound to 80/443, systemd, and Docker â€” 3 vCPU,
 3.6 GiB RAM. There is no Caddy here, and none is installed by this kit.
 
 Subdomains on this server are **not** cPanel accounts: they are explicit
 `<VirtualHost>` blocks appended directly to
 `/etc/apache2/conf.d/includes/post_virtualhost_global.conf` (confirmed by
-inspecting the existing `engram.condetuti.com` blocks there — a `:80` block
+inspecting the existing `engram.condetuti.com` blocks there â€” a `:80` block
 that lets the ACME challenge through and redirects everything else to
 HTTPS, and a `:443` block with the Let's Encrypt certificate paths and
 `ProxyPass`). An EasyApache "userdata" include is **never loaded** for a
@@ -442,16 +442,16 @@ domain configured this way, so this kit does not use one.
 
 | File | Purpose |
 |---|---|
-| `apache/telemetry-vhost.conf.tmpl` | Template for the two `<VirtualHost>` blocks (`:80` and `:443`), mirroring the existing pattern: proxies `/v1/`, `/healthz`, and (with `--with-grafana`) `/grafana/` to loopback, asserts `X-Forwarded-For` from Apache itself, force-HTTPS except for the ACME challenge path, and a supplementary access log that omits the client address for `/v1/`. `__DOMAIN__` is substituted by `install.sh --domain`. Not applied automatically — see below. |
+| `apache/telemetry-vhost.conf.tmpl` | Template for the two `<VirtualHost>` blocks (`:80` and `:443`), mirroring the existing pattern: proxies `/v1/`, `/healthz`, and (with `--with-grafana`) `/grafana/` to loopback, asserts `X-Forwarded-For` from Apache itself, force-HTTPS except for the ACME challenge path, and a supplementary access log that omits the client address for `/v1/`. `__DOMAIN__` is substituted by `install.sh --domain`. Not applied automatically â€” see below. |
 | `gentle-telemetry.service` | systemd unit: runs as the static `gentle-telemetry` system user (created by `install.sh`), `StateDirectory=gentle-telemetry`, and a hardened sandbox (no new privileges, restricted syscalls/namespaces/capabilities, private `/tmp` and devices). See [Why a static user, not `DynamicUser`](#why-a-static-user-not-dynamicuser). |
-| `gentle-telemetry-backup` + `.service` + `.timer` | Nightly `sqlite3 VACUUM INTO` snapshot uploaded via `rclone copy` to a configurable remote, then deleted locally; also backs up VictoriaMetrics when it is installed. The logic lives in the standalone `gentle-telemetry-backup` script (installed to `/usr/local/bin`), not inline in the unit's `ExecStart` — systemd expands `$VAR`/`${VAR}` there using its own environment before the shell runs, which would mangle a script's local variables. The unit runs as root for simplicity: it just needs read access to the collector's state directory. See [VictoriaMetrics](#victoriametrics). |
+| `gentle-telemetry-backup` + `.service` + `.timer` | Nightly `sqlite3 VACUUM INTO` snapshot uploaded via `rclone copy` to a configurable remote, then deleted locally; also backs up VictoriaMetrics when it is installed. The logic lives in the standalone `gentle-telemetry-backup` script (installed to `/usr/local/bin`), not inline in the unit's `ExecStart` â€” systemd expands `$VAR`/`${VAR}` there using its own environment before the shell runs, which would mangle a script's local variables. The unit runs as root for simplicity: it just needs read access to the collector's state directory. See [VictoriaMetrics](#victoriametrics). |
 | `victoria-metrics.service` | systemd unit for single-node VictoriaMetrics, installed with `--with-victoria-metrics`; runs as the static `victoria-metrics` system user with the same hardening approach as `gentle-telemetry.service`. See [VictoriaMetrics](#victoriametrics). |
 | `victoria-metrics-scrape.yaml` | The one `promscrape.config` job (`gentle-telemetry`, 15s interval) scraping the collector's `/metrics` on `127.0.0.1:18181`. Installed to `/etc/victoria-metrics/scrape.yaml`. |
 | `grafana/` | Datasource and dashboard provisioning for an optional on-box Grafana; see [Grafana dashboards](#grafana-dashboards). With both `--with-grafana` and `--with-victoria-metrics`, also provisions the `gentle-runtime-vm` Prometheus datasource. |
-| `install.sh` | Creates the static `gentle-telemetry` system user (migrating an older `DynamicUser`-layout install in place if found), installs the binary, `sqlite3` and `rclone` (via `dnf`), the systemd units, and a generated summary token; with `--domain`, renders the vhost template to `/root/telemetry-vhost.conf.rendered`; with `--with-grafana`, installs Grafana OSS from its official rpm repo; with `--with-victoria-metrics`, installs single-node VictoriaMetrics (see [VictoriaMetrics](#victoriametrics)). It never edits `post_virtualhost_global.conf`, runs `apachectl configtest`, or reloads `httpd` — those, plus DNS and the certificate, are printed at the end as operator steps, in the order they must run. |
+| `install.sh` | Creates the static `gentle-telemetry` system user (migrating an older `DynamicUser`-layout install in place if found), installs the binary, `sqlite3` and `rclone` (via `dnf`), the systemd units, and a generated summary token; with `--domain`, renders the vhost template to `/root/telemetry-vhost.conf.rendered`; with `--with-grafana`, installs Grafana OSS from its official rpm repo; with `--with-victoria-metrics`, installs single-node VictoriaMetrics (see [VictoriaMetrics](#victoriametrics)). It never edits `post_virtualhost_global.conf`, runs `apachectl configtest`, or reloads `httpd` â€” those, plus DNS and the certificate, are printed at the end as operator steps, in the order they must run. |
 
 ```
-sudo ./deploy/telemetry/install.sh --local-source /path/to/gentle-ai/checkout \
+sudo ./deploy/telemetry/install.sh --local-source /path/to/agent-smith/checkout \
   --domain telemetry.example.com --with-grafana
 ```
 
@@ -484,11 +484,11 @@ a static system user/group (`useradd --system --home-dir
 /var/lib/gentle-telemetry --shell /sbin/nologin --user-group
 gentle-telemetry`), and the unit runs with `DynamicUser=no`,
 `User=gentle-telemetry`, `Group=gentle-telemetry`. `StateDirectory` then
-resolves to the real directory `/var/lib/gentle-telemetry` — no symlink,
-nothing under `/var/lib/private` — owned by that user, with
+resolves to the real directory `/var/lib/gentle-telemetry` â€” no symlink,
+nothing under `/var/lib/private` â€” owned by that user, with
 `StateDirectoryMode=0750`. Grafana gets access via a POSIX ACL scoped to
 exactly two paths: the state directory itself (`u:grafana:rx`) and
-`events.sqlite` (`u:grafana:r`) — never an ancestor.
+`events.sqlite` (`u:grafana:r`) â€” never an ancestor.
 
 **Migrating an existing install**: run `install.sh` again. It detects the
 old layout (`/var/lib/gentle-telemetry` is a symlink into
@@ -511,7 +511,7 @@ On a cPanel/WHM box, Apache selects a name-based vhost only among the
 vhosts already bound to the address a request arrived on, so a
 `*:80`/`*:443` block is silently skipped once any other vhost (cPanel's
 own defaults included) is bound to the server's IPv4 address instead of
-`*` — requests for the subdomain fall through to cPanel's default vhost
+`*` â€” requests for the subdomain fall through to cPanel's default vhost
 (404), and Certbot's HTTP-01 challenge fails the same way. `install.sh`
 renders both blocks bound to that same IPv4 address automatically,
 detected from an existing `:443` vhost in `${APACHE_INCLUDE_FILE}`; pass
@@ -539,7 +539,7 @@ when every other vhost on the box is also `*`).
    ```
    The template's `:80` block serves the ACME challenge from
    `/var/www/gentle-telemetry-acme` (confirm this matches how the existing
-   vhosts on this box serve `/.well-known/acme-challenge/` — this kit
+   vhosts on this box serve `/.well-known/acme-challenge/` â€” this kit
    could not read the live `post_virtualhost_global.conf` to verify that
    detail directly, only mirror the pattern as described). Add a renewal
    hook so Apache picks up the renewed certificate, matching this server's
@@ -571,7 +571,7 @@ On the reference shape (3 vCPU, 3.6 GiB RAM, already running cPanel and
 Docker): the collector itself is a single lightweight Go process, roughly
 **~30 MB RSS** at this scale. Grafana OSS is heavier, roughly **~200 MB
 RSS** once warmed up. Both fit comfortably alongside the existing cPanel
-and Docker workloads on this host, but Grafana is optional for a reason —
+and Docker workloads on this host, but Grafana is optional for a reason â€”
 pass `--with-grafana` only when you actually want the on-box dashboard;
 skip it if `/v1/summary` (see below) is enough.
 
@@ -594,8 +594,8 @@ the new file; there is no overlap window, so coordinate with whatever reads
 ### Retention
 
 Raw events older than `--retention-days` (default 90) are purged by the
-daily job; `rollups_daily` — and therefore the historical monthly/weekly
-counts in `/v1/summary` — is retained indefinitely. To change the retention
+daily job; `rollups_daily` â€” and therefore the historical monthly/weekly
+counts in `/v1/summary` â€” is retained indefinitely. To change the retention
 window, edit the `--retention-days` flag in
 `/etc/systemd/system/gentle-telemetry.service` and
 `systemctl daemon-reload && systemctl restart gentle-telemetry.service`.
@@ -604,8 +604,8 @@ The daily job catches up: if the process was down for a while, the next
 run rolls up every UTC day between the last one it committed (or the
 oldest raw event, on a fresh database) and yesterday, not just yesterday.
 Each day's rollup is one all-or-nothing transaction, and a shutdown only
-ever stops the catch-up loop *between* days — the in-progress day always
-either finishes and commits, or never starts — so a restart mid-catch-up
+ever stops the catch-up loop *between* days â€” the in-progress day always
+either finishes and commits, or never starts â€” so a restart mid-catch-up
 never leaves a half-written day behind.
 
 ### VictoriaMetrics
@@ -621,7 +621,7 @@ get scraped and kept with effectively unlimited retention.
 | Binary | `/usr/local/bin/victoria-metrics` (the release's `victoria-metrics-prod` asset, checksum-verified against that release's own `_checksums.txt` before install) |
 | Unit | `/etc/systemd/system/victoria-metrics.service`, static `victoria-metrics` system user, same hardening approach as `gentle-telemetry.service` |
 | Data | `/var/lib/victoria-metrics`, `-retentionPeriod=100y` |
-| Scrape config | `/etc/victoria-metrics/scrape.yaml` — one job, `gentle-telemetry`, `scrape_interval: 15s`, `metrics_path: /metrics`, target `127.0.0.1:18181` |
+| Scrape config | `/etc/victoria-metrics/scrape.yaml` â€” one job, `gentle-telemetry`, `scrape_interval: 15s`, `metrics_path: /metrics`, target `127.0.0.1:18181` |
 | HTTP API | loopback only, `127.0.0.1:8428` (never proxied publicly by this kit) |
 
 Install is idempotent: re-running `install.sh --with-victoria-metrics`
@@ -635,7 +635,7 @@ come up before returning.
 **How the scrape works**: `-promscrape.config=/etc/victoria-metrics/scrape.yaml`
 tells VictoriaMetrics to pull the collector's `/metrics` endpoint every 15s
 over loopback. The collector's own counters reset to 0 on every process
-restart (an in-memory registry — see
+restart (an in-memory registry â€” see
 [Runtime metrics for VictoriaMetrics](#runtime-metrics-for-victoriametrics)),
 so every PromQL query against this data uses `increase()`/`rate()`, never
 the raw counter value, and a restart never shows up as a drop.
@@ -674,7 +674,7 @@ http://127.0.0.1:8428`, not default) alongside the existing SQLite
 datasource, so dashboard panels can reference it directly without a
 manual re-link after install.
 
-**Dashboard**: in `deploy/telemetry/grafana/dashboards/gentle-ai-usage.json`,
+**Dashboard**: in `deploy/telemetry/grafana/dashboards/agent-smith-usage.json`,
 the 25 runtime panels under the "Live activity" and "Subagents" rows (live
 deliveries/responses/tokens/hosts, subagent coverage and breakdowns, host
 and model and effort usage, token coverage, error and duration observations)
@@ -703,7 +703,7 @@ curl -sH "Authorization: Bearer $(sudo cat /etc/gentle-telemetry/summary.token)"
   period.
 - **What people run it with**: `agent_distribution` and
   `component_distribution` (remember: install-days over the trailing 30
-  days, not distinct installs — see [above](#get-v1summary)).
+  days, not distinct installs â€” see [above](#get-v1summary)).
 - **RDD adoption**: `rdd_enabled_ratio`.
 - **Upgrade lag**: `version_distribution`.
 
@@ -719,10 +719,10 @@ Four runtime tables read retained `runtime_rows` joined to `runtime_deliveries`:
 
 | Panel | Values grouped by UTC receipt day |
 |---|---|
-| Runtime received observations — responses | Response occurrences by public provider/model, model evidence, and tool host |
-| Runtime received observations — launches | Launch occurrences by agent class, selected effort, and separately effective effort |
-| Runtime received observations — tokens and coverage | Six independent token sums, each with reported/unavailable/unsupported counts |
-| Runtime received observations — duration and errors | Measured count and millisecond sum by request/message/unavailable kind and error category |
+| Runtime received observations â€” responses | Response occurrences by public provider/model, model evidence, and tool host |
+| Runtime received observations â€” launches | Launch occurrences by agent class, selected effort, and separately effective effort |
+| Runtime received observations â€” tokens and coverage | Six independent token sums, each with reported/unavailable/unsupported counts |
+| Runtime received observations â€” duration and errors | Measured count and millisecond sum by request/message/unavailable kind and error category |
 
 These are received observations, not complete consumption or reconstructed
 sessions. A null token sum means no reported values; a reported zero remains zero.
@@ -750,7 +750,7 @@ with the collector's SQLite driver; no production Grafana deployment is required
 ### Grafana setup
 
 `--with-grafana` installs Grafana OSS (free, self-hosted) on the same VPS
-with a read-only view over the collector's own SQLite database — no second
+with a read-only view over the collector's own SQLite database â€” no second
 copy of the data, no separate store to keep in sync. It is entirely
 optional; `/v1/summary` above already answers the headline questions.
 
@@ -793,20 +793,20 @@ A few things follow from that setup, worth knowing before relying on it:
   though it only directly targets `STATE_DIR` itself, not the database
   file.
 
-**Dashboard**: `deploy/telemetry/grafana/dashboards/gentle-ai-usage.json`,
+**Dashboard**: `deploy/telemetry/grafana/dashboards/agent-smith-usage.json`,
 provisioned via `deploy/telemetry/grafana/provisioning/dashboards/telemetry.yaml`
-into the "Gentle AI" folder. Its panels:
+into the "Agent Smith" folder. Its panels:
 
 | Panel | What it shows |
 |---|---|
-| Unique installs per month | `SELECT substr(day,1,7) AS month, COUNT(DISTINCT key) ... GROUP BY month` over `rollups_daily.active_install` — matches `/v1/summary`'s `installs_per_month`. |
-| Weekly active installs | Same idea, bucketed by SQLite's `strftime('%W')` (Monday-based week-of-year). This can disagree with the API's ISO week numbering right at a year boundary — read it as a trend, not a byte-for-byte match to `/v1/summary`. |
-| Agent / component distribution | Install-days over the trailing 30 rolled-up days, from `rollups_daily.agent`/`.component` — same install-days semantics as `/v1/summary` (see [above](#get-v1summary)), not distinct installs. |
+| Unique installs per month | `SELECT substr(day,1,7) AS month, COUNT(DISTINCT key) ... GROUP BY month` over `rollups_daily.active_install` â€” matches `/v1/summary`'s `installs_per_month`. |
+| Weekly active installs | Same idea, bucketed by SQLite's `strftime('%W')` (Monday-based week-of-year). This can disagree with the API's ISO week numbering right at a year boundary â€” read it as a trend, not a byte-for-byte match to `/v1/summary`. |
+| Agent / component distribution | Install-days over the trailing 30 rolled-up days, from `rollups_daily.agent`/`.component` â€” same install-days semantics as `/v1/summary` (see [above](#get-v1summary)), not distinct installs. |
 | RDD enabled ratio | Share of install-days over the trailing 30 days reporting `rdd_enabled=true`. |
-| Version distribution | Install-days per version over the trailing 30 days — a proxy for upgrade lag. |
-| Events per day | Raw event volume from the `events` table directly, so — unlike every other panel here — it is bounded by `--retention-days`: older days are gone once purged, since `rollups_daily` does not keep a raw event count. |
-| npm downloads per day | Daily download counts for `--npm-package` (gentle-pi, gentle-engram by default), from `rollups_daily.npm_downloads_day`. See [External download counts](#external-download-counts) — this is a public count, not telemetry. |
-| gentle-ai release downloads | Cumulative GitHub release asset download counts per tag, from `rollups_daily.github_release_downloads_total` — the latest known total per tag, not a per-day delta. See [External download counts](#external-download-counts) — also a public count, not telemetry. |
+| Version distribution | Install-days per version over the trailing 30 days â€” a proxy for upgrade lag. |
+| Events per day | Raw event volume from the `events` table directly, so â€” unlike every other panel here â€” it is bounded by `--retention-days`: older days are gone once purged, since `rollups_daily` does not keep a raw event count. |
+| npm downloads per day | Daily download counts for `--npm-package` (gentle-pi, gentle-engram by default), from `rollups_daily.npm_downloads_day`. See [External download counts](#external-download-counts) â€” this is a public count, not telemetry. |
+| agent-smith release downloads | Cumulative GitHub release asset download counts per tag, from `rollups_daily.github_release_downloads_total` â€” the latest known total per tag, not a per-day delta. See [External download counts](#external-download-counts) â€” also a public count, not telemetry. |
 
 **Reverse proxy**: the `:443` block in `apache/telemetry-vhost.conf.tmpl`
 proxies `/grafana/` to `127.0.0.1:3000`; `install.sh --with-grafana` sets
@@ -825,14 +825,14 @@ The script prints that file's path once. Read it with
 `sudo cat /etc/grafana/admin-password` and sign in at
 `https://telemetry.example.com/grafana/` as `gentle`. Grafana only seeds
 `admin_user`/`admin_password` into its own database on that very first
-startup — on a re-run against an already-initialized Grafana, rotate the
+startup â€” on a re-run against an already-initialized Grafana, rotate the
 live password instead with `grafana cli --homepath /usr/share/grafana admin reset-admin-password
 <new-password>` on the VPS (and update `/etc/grafana/admin-password` to
 match, so the two stay in sync). To change it via the UI later:
-**Administration → Users → gentle**.
+**Administration â†’ Users â†’ gentle**.
 
 **The access log**: the `:443` block's `CustomLog` directive logs every
-request through this vhost — `/v1/`, `/healthz`, and `/grafana/` alike —
+request through this vhost â€” `/v1/`, `/healthz`, and `/grafana/` alike â€”
 using a format (`%t "%r" %>s %b`) that never includes the client address,
 matching the collector's own guarantee that it never stores or logs the
 caller's IP (see [No IP addresses, anywhere](#no-ip-addresses-anywhere)
@@ -840,14 +840,14 @@ and its test). Requests ARE logged; the address is simply never part of
 what gets written. Since `telemetry.example.com` is its own explicit
 `<VirtualHost>` rather than a cPanel-managed per-domain vhost, this
 `CustomLog` directive fully replaces the main server's default access log
-for this vhost's requests — Apache does not additionally write a second,
+for this vhost's requests â€” Apache does not additionally write a second,
 IP-bearing log entry alongside it. Grafana and the dashboards above never
 read this log anyway; they only ever see the SQLite database.
 
 ## External download counts
 
 Alongside the collector's own telemetry, the daily job also fetches two
-**public** counts that have nothing to do with any gentle-ai install:
+**public** counts that have nothing to do with any agent-smith install:
 
 - **npm downloads** (`--npm-package`, repeatable, default `gentle-pi`,
   `gentle-engram`): `GET https://api.npmjs.org/downloads/point/last-day/<pkg>`,
@@ -855,8 +855,8 @@ Alongside the collector's own telemetry, the daily job also fetches two
   it reports (npm's "last-day" is always the day *before* the request,
   since today's count is still incomplete).
 - **GitHub release downloads** (`--github-repo`, repeatable, default
-  `Gentleman-Programming/gentle-ai`; optional `--github-token-file` to
-  raise the rate limit — the token is never logged): `GET
+  `jonsanchezr/agent-smith`; optional `--github-token-file` to
+  raise the rate limit â€” the token is never logged): `GET
   https://api.github.com/repos/<owner>/<repo>/releases?per_page=100`,
   following the response's `Link: rel="next"` header for up to 10 pages
   (1,000 releases) so older releases are not silently dropped, and summing
@@ -871,6 +871,7 @@ Alongside the collector's own telemetry, the daily job also fetches two
 Both are stored in `rollups_daily` (`npm_downloads_day` / `key=<pkg>`,
 `github_release_downloads_total` / `key=<tag>`) alongside the collector's
 own metrics, purely so `/v1/summary` and the dashboard can read them from
-the same store — they are never derived from, or joined against, any
+the same store â€” they are never derived from, or joined against, any
 install's data. A failure fetching one package or repo is logged once and
 simply retried the next day; it never touches ingest or the other sources.
+

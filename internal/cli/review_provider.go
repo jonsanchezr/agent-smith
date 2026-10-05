@@ -7,8 +7,8 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/reviewerprovider"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/reviewtransaction"
+	"github.com/jonsanchezr/agent-smith/v4/internal/reviewerprovider"
+	"github.com/jonsanchezr/agent-smith/v4/internal/reviewtransaction"
 )
 
 const (
@@ -163,3 +163,4 @@ func reviewProviderAdmitRaw(ctx context.Context, root string, state reviewtransa
 	}
 	return reviewProviderAdmittedResult{Frozen: frozen, Subject: subject, Result: result, NativeResult: native, CandidateCausalFindingIDs: candidateCausalIDs, Admission: admission}, nil
 }
+

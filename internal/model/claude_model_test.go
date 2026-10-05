@@ -3,7 +3,7 @@ package model_test
 import (
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
 )
 
 // TestClaudeModelAliasValid verifies that Valid accepts exactly the four
@@ -117,3 +117,4 @@ func TestClaudePhaseAssignmentsFromLegacyPreservesModelsWithDefaultEffort(t *tes
 		t.Fatalf("invalid legacy alias should be ignored, got %+v", got["bad"])
 	}
 }
+

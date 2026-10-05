@@ -1,7 +1,7 @@
-# ga-4882: telemetry lock loses same-process updates on Windows
+﻿# ga-4882: telemetry lock loses same-process updates on Windows
 
 Claimed 2026-09-23 (issuecomment-5796980665). Branch fix/4882-telemetry-increment-syncs
-(worktree ~/gentleman/gentle-ai-4882) from origin/main a773ccfb.
+(worktree ~/gentleman/agent-smith-4882) from origin/main a773ccfb.
 
 ## Root-cause position (verified)
 
@@ -23,13 +23,13 @@ Claimed 2026-09-23 (issuecomment-5796980665). Branch fix/4882-telemetry-incremen
 3. [done] GREEN + full internal/telemetry suite + gofmt/vet (delegated): focused GREEN,
    suite ok 8.2s, gofmt/vet clean, GOOS=windows build ok.
 4. [done] Commit 7ce9baa7 + push; PR #4914 opened (Closes #4882, type:bug requested from maintainer).
-5. [done] Native review lineage review-d61a45dd63798350 (medium, 1 lens): approved + acknowledged/burned. Advisories: R3-1 WARNING state_lock_windows.go:27, R3-2/R3-3 SUGGESTION state_lock.go:50-64 — all informational, separate later work.
+5. [done] Native review lineage review-d61a45dd63798350 (medium, 1 lens): approved + acknowledged/burned. Advisories: R3-1 WARNING state_lock_windows.go:27, R3-2/R3-3 SUGGESTION state_lock.go:50-64 â€” all informational, separate later work.
 
 ## Evidence
 
-- Task 1 (RED): stage 0 — build failure (lockFileExclusive not yet a var, tests written
+- Task 1 (RED): stage 0 â€” build failure (lockFileExclusive not yet a var, tests written
   first: cannot assign to lockFileExclusive, 4 sites). After the behavior-neutral seam
-  (pure rename to lockFileExclusivePlatform + package var), stage 1 — both configs of
+  (pure rename to lockFileExclusivePlatform + package var), stage 1 â€” both configs of
   TestUpdateSameProcessExclusionSurvivesBrokenFileLock fail with the mechanism
   reproduced: "Counters.Syncs = 1, want 20: same-process updates were lost"; WriteFileAtomic
   independently flagged "the replacement did not land" (lost-update window observed).
@@ -48,3 +48,4 @@ Claimed 2026-09-23 (issuecomment-5796980665). Branch fix/4882-telemetry-incremen
   recorded. Also pending external: type:bug label (maintainer-side).
 
 - CI 2026-09-23: Unit Tests red once on TestDocumentedInvocationsRunAsDocumented/executed/sync_# (TempDir RemoveAll cleanup race, internal/app). Triaged as pre-existing environment flake: telemetry writer dev-gated off in this job, diff adds no writer/file, local x15 green branch+base. Triage comment on PR (issuecomment-5797855289). type:bug label pending maintainer.
+

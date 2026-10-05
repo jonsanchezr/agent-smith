@@ -15,7 +15,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/reviewtransaction"
+	"github.com/jonsanchezr/agent-smith/v4/internal/reviewtransaction"
 )
 
 func TestNegotiatedReviewStartMatchesVersionedFixture(t *testing.T) {
@@ -534,7 +534,7 @@ func TestReviewRecoverHelpDocumentsProjectionAndCanonicalAuthorization(t *testin
 		t.Fatal(err)
 	}
 	help := output.String()
-	for _, required := range []string{"--projection", "default: predecessor projection", "gentle-ai.review-recovery-authorization/v1", "target_identity"} {
+	for _, required := range []string{"--projection", "default: predecessor projection", "agent-smith.review-recovery-authorization/v1", "target_identity"} {
 		if !strings.Contains(help, required) {
 			t.Fatalf("review recover help missing %q:\n%s", required, help)
 		}
@@ -595,7 +595,7 @@ func recoveryProjectionArgs(repo string, predecessor reviewtransaction.CompactRe
 }
 
 func reviewRecoveryAuthorization(lineage, revision, identity, actor, reason string) string {
-	return "gentle-ai.review-recovery-authorization/v1\npredecessor_lineage=" + lineage + "\npredecessor_revision=" + revision +
+	return "agent-smith.review-recovery-authorization/v1\npredecessor_lineage=" + lineage + "\npredecessor_revision=" + revision +
 		"\ntarget_identity=" + identity + "\nactor=" + actor + "\nreason=" + reason
 }
 
@@ -921,7 +921,7 @@ func reviewStartOutputTargetIdentity(t *testing.T, fields map[string]json.RawMes
 }
 
 func TestNegotiatedReviewStartRejectsInvalidContractsBeforeAuthorityMutation(t *testing.T) {
-	for _, contract := range []string{"", "gentle-ai.review-integration/v3", " " + ReviewIntegrationContractV1} {
+	for _, contract := range []string{"", "agent-smith.review-integration/v3", " " + ReviewIntegrationContractV1} {
 		t.Run(strings.ReplaceAll(contract, "/", "_"), func(t *testing.T) {
 			repo := initReviewCLIRepo(t)
 			if err := os.WriteFile(filepath.Join(repo, "tracked.txt"), []byte("candidate\n"), 0o644); err != nil {
@@ -1236,3 +1236,4 @@ func isReviewCLITrackedPath(t *testing.T, repo, path string) bool {
 	command := exec.Command("git", "-C", repo, "ls-files", "--error-unmatch", "--", path)
 	return command.Run() == nil
 }
+

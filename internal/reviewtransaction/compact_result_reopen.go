@@ -12,10 +12,10 @@ import (
 )
 
 const (
-	AdmittedReviewerResultSchemaV1         = "gentle-ai.review-admitted-result/v1"
-	AdmittedReviewerResultSchema           = "gentle-ai.review-admitted-result/v2"
+	AdmittedReviewerResultSchemaV1         = "agent-smith.review-admitted-result/v1"
+	AdmittedReviewerResultSchema           = "agent-smith.review-admitted-result/v2"
 	CompactResultReopenOperation           = "review/reopen-results"
-	compactResultReopenAuthorizationSchema = "gentle-ai.review-result-reopen-authorization/v1"
+	compactResultReopenAuthorizationSchema = "agent-smith.review-result-reopen-authorization/v1"
 	compactReviewerResultSizeLimit         = 4 << 20
 )
 
@@ -351,3 +351,4 @@ func compactProviderLensMatches(provided, expected string) bool {
 		"readability": LensReadability, "reliability": LensReliability,
 	}[provided] == expected
 }
+

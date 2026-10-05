@@ -5,7 +5,7 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/system"
+	"github.com/jonsanchezr/agent-smith/v4/internal/system"
 )
 
 // TestGGAAvailableDetectsViaLookPath verifies that ggaAvailable returns true
@@ -172,3 +172,4 @@ func TestGGAAvailableBrewPathsSkippedOnLinux(t *testing.T) {
 		t.Fatalf("ggaAvailable() checked Homebrew paths on Linux (%d calls), expected 0", statCallCount)
 	}
 }
+

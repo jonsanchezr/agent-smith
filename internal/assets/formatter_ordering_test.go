@@ -9,7 +9,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/versions"
+	"github.com/jonsanchezr/agent-smith/v4/internal/versions"
 )
 
 func TestSDDOrchestratorsRequireSafeFormatterOrdering(t *testing.T) {
@@ -362,3 +362,4 @@ func TestArchOpenCodeProvisioningRunsPublishedRepairBeforeVersionCheck(t *testin
 		t.Fatal("Arch must run the package-published postinstall repair in its package directory and fail closed on the pinned version before installing other runtimes")
 	}
 }
+

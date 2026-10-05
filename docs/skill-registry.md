@@ -1,55 +1,55 @@
-# Skill Registry
+﻿# Skill Registry
 
 > [!NOTE]
-> These docs track `main`, which may include unreleased changes. For the latest release, see the [v4.0.0 docs](https://github.com/Gentleman-Programming/gentle-ai/tree/v4.0.0/docs).
+> These docs track `main`, which may include unreleased changes. For the latest release, see the [v4.0.0 docs](https://github.com/jonsanchezr/agent-smith/tree/v4.0.0/docs).
 
-← [Back to README](../README.md)
+â† [Back to README](../README.md)
 
 The skill registry is a project-local index that lets every supported agent find the same skills without rewriting them. It stores skill names, full descriptions, scopes, and exact `SKILL.md` paths.
 
 ## When To Use It
 
-Use `gentle-ai skill-registry refresh` after you add, remove, rename, or move skills. Normal installs wire this refresh into startup hooks where the agent supports them, including Codex, Claude Code, OpenCode, and Pi through `gentle-pi`.
+Use `agent-smith skill-registry refresh` after you add, remove, rename, or move skills. Normal installs wire this refresh into startup hooks where the agent supports them, including Codex, Claude Code, OpenCode, and Pi through `gentle-pi`.
 
 ## Runtime Flow
 
 ```text
 User task
-   │
-   ▼
+   â”‚
+   â–¼
 Orchestrator reads .atl/skill-registry.md
-   │
-   ▼
+   â”‚
+   â–¼
 Matches task + file context against full skill descriptions
-   │
-   ▼
+   â”‚
+   â–¼
 Passes exact SKILL.md paths to subagent
-   │
-   ▼
+   â”‚
+   â–¼
 Subagent reads full skills before work
-   │
-   ▼
+   â”‚
+   â–¼
 Subagent executes with original skill intent preserved
 ```
 
 ## Refresh Flow
 
 ```text
-gentle-ai skill-registry refresh
-   │
-   ├─ Scan project skill roots first
-   │     skills/, .opencode/skills/, .claude/skills/, ...
-   │
-   ├─ Scan global agent skill roots second
-   │     ~/.config/opencode/skills/, ~/.claude/skills/, ...
-   │
-   ├─ Deduplicate by skill name
-   │     project skill wins over global skill
-   │
-   ├─ Parse frontmatter
-   │     name + full description + path + scope
-   │
-   └─ Write .atl/skill-registry.md + cache
+agent-smith skill-registry refresh
+   â”‚
+   â”œâ”€ Scan project skill roots first
+   â”‚     skills/, .opencode/skills/, .claude/skills/, ...
+   â”‚
+   â”œâ”€ Scan global agent skill roots second
+   â”‚     ~/.config/opencode/skills/, ~/.claude/skills/, ...
+   â”‚
+   â”œâ”€ Deduplicate by skill name
+   â”‚     project skill wins over global skill
+   â”‚
+   â”œâ”€ Parse frontmatter
+   â”‚     name + full description + path + scope
+   â”‚
+   â””â”€ Write .atl/skill-registry.md + cache
 ```
 
 ## Registry Contract
@@ -82,14 +82,14 @@ The subagent then reads those files. This keeps the original `SKILL.md` as the s
 
 ```text
 New reusable pattern
-   │
-   ▼
+   â”‚
+   â–¼
 skill-creator creates SKILL.md
-   │
-   ▼
+   â”‚
+   â–¼
 skill-registry indexes SKILL.md path and full description
-   │
-   ▼
+   â”‚
+   â–¼
 orchestrator passes matching paths to agents
 ```
 
@@ -97,19 +97,19 @@ orchestrator passes matching paths to agents
 
 ```text
 Existing skills
-   │
-   ▼
+   â”‚
+   â–¼
 skill-improver reads .atl/skill-registry.md
-   │
-   ▼
+   â”‚
+   â–¼
 Audits each indexed SKILL.md against docs/skill-style-guide.md
-   │
-   ├─ Audit mode: report issues only
-   │
-   └─ Apply mode: safely refactor skills and preserve intent
-   │
-   ▼
-Run gentle-ai skill-registry refresh again
+   â”‚
+   â”œâ”€ Audit mode: report issues only
+   â”‚
+   â””â”€ Apply mode: safely refactor skills and preserve intent
+   â”‚
+   â–¼
+Run agent-smith skill-registry refresh again
 ```
 
 ## Why Not Compact Rules?
@@ -136,16 +136,17 @@ prints it instead of writing `.atl/skill-registry.md`, the cache, or
 `.gitignore`. Handy for debugging what a delegator would see.
 
 ```bash
-gentle-ai skill-registry list          # name<TAB>scope<TAB>path
-gentle-ai skill-registry list --json   # machine-readable, includes descriptions
+agent-smith skill-registry list          # name<TAB>scope<TAB>path
+agent-smith skill-registry list --json   # machine-readable, includes descriptions
 ```
 
 ## Quick Check
 
 ```bash
-gentle-ai skill-registry refresh --force
+agent-smith skill-registry refresh --force
 ```
 
 Open `.atl/skill-registry.md` and verify each row has a useful description and a real `SKILL.md` path.
 
-← [Back to README](../README.md)
+â† [Back to README](../README.md)
+

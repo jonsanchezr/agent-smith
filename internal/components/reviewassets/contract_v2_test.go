@@ -5,8 +5,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/opencode"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
+	"github.com/jonsanchezr/agent-smith/v4/internal/opencode"
 )
 
 func TestOpenCodeV2ContractAuthorizesReviewWithV2ToolNames(t *testing.T) {
@@ -26,3 +26,4 @@ func TestOpenCodeV2ContractAuthorizesReviewWithV2ToolNames(t *testing.T) {
 		t.Fatalf("V2 contract must name the V2 `subagent` tool and `agent` field")
 	}
 }
+

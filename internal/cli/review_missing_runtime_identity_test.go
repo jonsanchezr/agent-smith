@@ -6,7 +6,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
 )
 
 // The documented negotiated lifecycle route in
@@ -157,3 +157,4 @@ func TestDeclaredBuiltInRuntimeUsesProvenExecutorBoundary(t *testing.T) {
 		})
 	}
 }
+

@@ -5,7 +5,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/reviewtransaction"
+	"github.com/jonsanchezr/agent-smith/v4/internal/reviewtransaction"
 )
 
 func TestRenderInstallReviewModeExplainsChoiceAndGlobalScope(t *testing.T) {
@@ -64,3 +64,4 @@ func TestInstallReviewModeOptionsFailClosedOnStatusError(t *testing.T) {
 type assertiveError struct{}
 
 func (assertiveError) Error() string { return "cannot read configured RDD mode" }
+

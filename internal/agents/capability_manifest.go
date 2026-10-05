@@ -4,7 +4,7 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/agents/capabilitymanifest"
+	"github.com/jonsanchezr/agent-smith/v4/internal/agents/capabilitymanifest"
 )
 
 var (
@@ -111,3 +111,4 @@ func ResolveCapabilityManifest(adapter Adapter) (AgentCapabilityManifest, error)
 
 	return manifest, nil
 }
+

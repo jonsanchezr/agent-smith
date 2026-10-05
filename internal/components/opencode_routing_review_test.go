@@ -4,7 +4,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/assets"
+	"github.com/jonsanchezr/agent-smith/v4/internal/assets"
 )
 
 // OpenCode retains the parent orchestrator and provider-bound review route,
@@ -27,7 +27,8 @@ func TestOpenCodeRetainsParentRoutingAndReview(t *testing.T) {
 		}
 	}
 	provider := assets.MustRead("opencode/plugins/opencode-review-transport.ts")
-	if !strings.Contains(provider, "gentle-ai") {
-		t.Error("OpenCode review transport no longer routes to Gentle AI")
+	if !strings.Contains(provider, "agent-smith") {
+		t.Error("OpenCode review transport no longer routes to Agent Smith")
 	}
 }
+

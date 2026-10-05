@@ -1,12 +1,12 @@
-{
-  "schema": "gentle-ai.review-integration.capabilities/v1",
-  "contract": "gentle-ai.review-integration/v1",
+﻿{
+  "schema": "agent-smith.review-integration.capabilities/v1",
+  "contract": "agent-smith.review-integration/v1",
   "protocol": {
     "major": 1,
     "minor": 0
   },
   "package": {
-    "name": "gentle-ai",
+    "name": "agent-smith",
     "version": "2.1.7-test",
     "release_channel": "prerelease"
   },
@@ -44,20 +44,20 @@
     "workspace"
   ],
   "schemas": [
-    "gentle-ai.review-authority-status/v1",
-    "gentle-ai.review-gate-request/v1",
-    "gentle-ai.review-integration.capabilities/v1",
-    "gentle-ai.review-integration.failure/v1",
-    "gentle-ai.review-integration.operation/v1",
-    "gentle-ai.review-integration.projection/v1",
-    "gentle-ai.review-integration.start/v1",
-    "gentle-ai.review-integration.status/v1",
-    "gentle-ai.review-receipt/v1",
-    "gentle-ai.review-receipt/v2",
-    "gentle-ai.review-result-artifact/v1",
-    "https://gentle-ai.dev/schema/review/refuter/v1",
-    "https://gentle-ai.dev/schema/review/reviewer/v1",
-    "https://gentle-ai.dev/schema/review/validator/v1"
+    "agent-smith.review-authority-status/v1",
+    "agent-smith.review-gate-request/v1",
+    "agent-smith.review-integration.capabilities/v1",
+    "agent-smith.review-integration.failure/v1",
+    "agent-smith.review-integration.operation/v1",
+    "agent-smith.review-integration.projection/v1",
+    "agent-smith.review-integration.start/v1",
+    "agent-smith.review-integration.status/v1",
+    "agent-smith.review-receipt/v1",
+    "agent-smith.review-receipt/v2",
+    "agent-smith.review-result-artifact/v1",
+    "https://agent-smith.dev/schema/review/refuter/v1",
+    "https://agent-smith.dev/schema/review/reviewer/v1",
+    "https://agent-smith.dev/schema/review/validator/v1"
   ],
   "features": {
     "mandatory": [
@@ -184,3 +184,4 @@
     }
   }
 }
+

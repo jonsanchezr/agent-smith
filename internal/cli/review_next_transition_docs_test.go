@@ -6,7 +6,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/assets"
+	"github.com/jonsanchezr/agent-smith/v4/internal/assets"
 )
 
 // reviewStopTransitionCallRegexp extracts every literal reason code passed to
@@ -123,19 +123,19 @@ func TestEveryReviewStopReasonCodeHasAShippedContinuation(t *testing.T) {
 	// once as D, then every grouped entry may name that exact alias. This keeps
 	// the rendered contract compact without letting an alias conceal a changed
 	// command or a dead-end terminal code.
-	const disableCommand = "`D` means `gentle-ai review mode disable --scope clone --cwd <B>`"
+	const disableCommand = "`D` means `agent-smith review mode disable --scope clone --cwd <B>`"
 	const statusCommand = "`S` means re-query the exact captured target-root STATUS command with lineage and target."
 	for alias, definition := range map[string]string{"D": disableCommand, "S": statusCommand} {
 		if !strings.Contains(section, definition) {
 			t.Fatalf("shipped %s does not define grouped %s as its exact continuation", reviewLedgerContractAsset, alias)
 		}
 	}
-	namesOtherContinuation := regexp.MustCompile("`gentle-ai [a-z][a-z-]*|`--[a-z][a-z-]*")
+	namesOtherContinuation := regexp.MustCompile("`agent-smith [a-z][a-z-]*|`--[a-z][a-z-]*")
 	for code, continuation := range assetCodes {
 		if strings.Contains(continuation, "`D`") || strings.Contains(continuation, "`S`") || namesOtherContinuation.MatchString(continuation) {
 			continue
 		}
-		t.Errorf("shipped %s entry for %q names no runnable `gentle-ai` command, no `--flag` to pass on the same invocation, and no D/S continuation alias, so this stop reads as a dead end", reviewLedgerContractAsset, code)
+		t.Errorf("shipped %s entry for %q names no runnable `agent-smith` command, no `--flag` to pass on the same invocation, and no D/S continuation alias, so this stop reads as a dead end", reviewLedgerContractAsset, code)
 	}
 
 	// Issue #3972: the clone-local override can only disable, so
@@ -144,8 +144,8 @@ func TestEveryReviewStopReasonCodeHasAShippedContinuation(t *testing.T) {
 	// enables is the global form, and the rdd_disabled continuation must name
 	// it, or the documented loop is rdd_disabled -> clone enable (no-op) ->
 	// rdd_disabled.
-	if continuation := assetCodes["rdd_disabled"]; !strings.Contains(continuation, "`gentle-ai review mode enable --scope global`") {
-		t.Errorf("shipped %s entry for rdd_disabled does not name the command that enables (`gentle-ai review mode enable --scope global`): %q", reviewLedgerContractAsset, continuation)
+	if continuation := assetCodes["rdd_disabled"]; !strings.Contains(continuation, "`agent-smith review mode enable --scope global`") {
+		t.Errorf("shipped %s entry for rdd_disabled does not name the command that enables (`agent-smith review mode enable --scope global`): %q", reviewLedgerContractAsset, continuation)
 	}
 }
 
@@ -194,27 +194,27 @@ func reviewStopReasonDocsCompleteDocuments(t *testing.T) map[string]string {
 }
 
 // reviewStatusNextTransitionInvocationRegexp matches any backtick-quoted
-// `gentle-ai review status ... --next-transition` invocation.
-var reviewStatusNextTransitionInvocationRegexp = regexp.MustCompile("`gentle-ai review status[^`]*--next-transition`")
+// `agent-smith review status ... --next-transition` invocation.
+var reviewStatusNextTransitionInvocationRegexp = regexp.MustCompile("`agent-smith review status[^`]*--next-transition`")
 
 // TestNamedReviewStatusNextTransitionIsAlwaysComplete is the execution-based
-// RED-first proof for adversarial finding F1: `gentle-ai review status
+// RED-first proof for adversarial finding F1: `agent-smith review status
 // --next-transition` alone is refused by this real CLI --
 //
-//	Error: --action-eligibility and --next-transition require --contract gentle-ai.review-integration/v1
+//	Error: --action-eligibility and --next-transition require --contract agent-smith.review-integration/v1
 //
 // -- and even the error's own suggested `--contract` names the LEGACY v1
 // schema, not the v2 contract this table's own Route section requires
-// routing from. The only form that actually runs is `gentle-ai review
-// status --cwd <repo> --contract gentle-ai.review-integration/v2 --agent
+// routing from. The only form that actually runs is `agent-smith review
+// status --cwd <repo> --contract agent-smith.review-integration/v2 --agent
 // claude-code --next-transition` (confirmed by execution: exit 0, real
 // next_transition JSON returned). Every backtick-quoted invocation in the
 // shipped asset and its docs source must be this complete form.
 func TestNamedReviewStatusNextTransitionIsAlwaysComplete(t *testing.T) {
 	for label, content := range reviewStopReasonDocsCompleteDocuments(t) {
 		for _, invocation := range reviewStatusNextTransitionInvocationRegexp.FindAllString(content, -1) {
-			if !strings.Contains(invocation, "--contract gentle-ai.review-integration/v2") || !reviewAgentBindingRegexp.MatchString(invocation) {
-				t.Errorf("%s: %s is incomplete -- the real CLI refuses --next-transition without --contract gentle-ai.review-integration/v2 and a bound --agent (verified by execution)", label, invocation)
+			if !strings.Contains(invocation, "--contract agent-smith.review-integration/v2") || !reviewAgentBindingRegexp.MatchString(invocation) {
+				t.Errorf("%s: %s is incomplete -- the real CLI refuses --next-transition without --contract agent-smith.review-integration/v2 and a bound --agent (verified by execution)", label, invocation)
 			}
 		}
 	}
@@ -229,11 +229,11 @@ func TestNamedReviewStatusNextTransitionIsAlwaysComplete(t *testing.T) {
 var reviewAgentBindingRegexp = regexp.MustCompile("--agent [^ `]+")
 
 // reviewReopenResultsInvocationRegexp matches any backtick-quoted
-// `gentle-ai review reopen-results ...` invocation.
-var reviewReopenResultsInvocationRegexp = regexp.MustCompile("`gentle-ai review reopen-results[^`]*`")
+// `agent-smith review reopen-results ...` invocation.
+var reviewReopenResultsInvocationRegexp = regexp.MustCompile("`agent-smith review reopen-results[^`]*`")
 
 // TestNamedReviewReopenResultsIsAlwaysComplete is the execution-based
-// RED-first proof for adversarial finding F7: `gentle-ai review
+// RED-first proof for adversarial finding F7: `agent-smith review
 // reopen-results --prepare --quarantine-lens <lens>` alone is refused --
 //
 //	Error: review reopen-results requires --cwd, --lineage, --expected-revision, --target, --reason, and --actor
@@ -241,12 +241,12 @@ var reviewReopenResultsInvocationRegexp = regexp.MustCompile("`gentle-ai review 
 // (verified by execution). Every backtick-quoted invocation must name all
 // six required flags.
 func TestNamedReviewReopenResultsIsAlwaysComplete(t *testing.T) {
-	const bareNominalReference = "`gentle-ai review reopen-results`"
+	const bareNominalReference = "`agent-smith review reopen-results`"
 	requiredFlags := []string{"--cwd", "--lineage", "--expected-revision", "--target", "--reason", "--actor"}
 	for label, content := range reviewStopReasonDocsCompleteDocuments(t) {
 		for _, invocation := range reviewReopenResultsInvocationRegexp.FindAllString(content, -1) {
 			// A bare, flagless mention is a nominal reference to the command
-			// ("`gentle-ai review reopen-results` is a bounded maintenance
+			// ("`agent-smith review reopen-results` is a bounded maintenance
 			// operation..."), not an attempted invocation -- only a span that
 			// already carries at least one flag is claiming to be runnable.
 			if invocation == bareNominalReference {
@@ -261,28 +261,28 @@ func TestNamedReviewReopenResultsIsAlwaysComplete(t *testing.T) {
 	}
 }
 
-// reviewModeDisableInvocationRegexp matches any backtick-quoted `gentle-ai
+// reviewModeDisableInvocationRegexp matches any backtick-quoted `agent-smith
 // review mode disable ...` invocation.
-var reviewModeDisableInvocationRegexp = regexp.MustCompile("`gentle-ai review mode disable[^`]*`")
+var reviewModeDisableInvocationRegexp = regexp.MustCompile("`agent-smith review mode disable[^`]*`")
 
 // TestNamedReviewModeDisableIsAlwaysCloneScoped is the execution-based
 // RED-first proof for adversarial finding F6: `--scope` defaults to
-// `global` (review_mode.go's own flag default), so `gentle-ai review mode
+// `global` (review_mode.go's own flag default), so `agent-smith review mode
 // disable` with no `--scope` disables receipt-driven development for every
 // repository on the machine, not just the one the orchestrator meant.
-// Verified by execution: the bare form writes ~/.gentle-ai/state.json;
+// Verified by execution: the bare form writes ~/.agent-smith/state.json;
 // `--scope clone --cwd <B>` writes only under the selected target root's
-// .git/gentle-ai directory. Every invocation in the shipped asset must name
+// .git/agent-smith directory. Every invocation in the shipped asset must name
 // that clone-scoped target-root form.
 func TestNamedReviewModeDisableIsAlwaysCloneScoped(t *testing.T) {
 	content := assets.MustRead(reviewLedgerContractAsset)
 	invocations := reviewModeDisableInvocationRegexp.FindAllString(content, -1)
 	if len(invocations) == 0 {
-		t.Fatal("found no `gentle-ai review mode disable` invocations in the shipped asset; the extraction is stale")
+		t.Fatal("found no `agent-smith review mode disable` invocations in the shipped asset; the extraction is stale")
 	}
 	for _, invocation := range invocations {
 		if !strings.Contains(invocation, "--scope clone") || !strings.Contains(invocation, "--cwd <B>") {
-			t.Errorf("shipped asset: %s defaults to global scope if run as printed (verified by execution: omitting --scope writes ~/.gentle-ai/state.json machine-wide) -- name --scope clone --cwd <B> instead", invocation)
+			t.Errorf("shipped asset: %s defaults to global scope if run as printed (verified by execution: omitting --scope writes ~/.agent-smith/state.json machine-wide) -- name --scope clone --cwd <B> instead", invocation)
 		}
 	}
 }
@@ -344,3 +344,4 @@ func reviewStopReasonDocsSection(t *testing.T, docs string) string {
 	}
 	return rest
 }
+

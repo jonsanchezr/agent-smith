@@ -7,8 +7,8 @@ import (
 	"os/exec"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/telemetry"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/testenv"
+	"github.com/jonsanchezr/agent-smith/v4/internal/telemetry"
+	"github.com/jonsanchezr/agent-smith/v4/internal/testenv"
 )
 
 // TestMain gives the whole internal/app test binary a safe, sandboxed HOME
@@ -55,7 +55,7 @@ func TestMain(m *testing.M) {
 	// Pi's config path directly from the environment, independent of the
 	// sandboxed HOME set up below.
 	testenv.Isolate()
-	testHome, err := os.MkdirTemp("", "gentle-ai-app-test-home-*")
+	testHome, err := os.MkdirTemp("", "agent-smith-app-test-home-*")
 	if err != nil {
 		panic(err)
 	}
@@ -74,3 +74,4 @@ func TestMain(m *testing.M) {
 	_ = os.RemoveAll(testHome)
 	os.Exit(code)
 }
+

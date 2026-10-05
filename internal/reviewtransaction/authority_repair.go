@@ -17,9 +17,9 @@ import (
 )
 
 const (
-	AuthorityRepairAssessmentSchema    = "gentle-ai.review-authority-repair-assessment/v1"
-	AuthorityRepairAssessmentSchemaID  = "https://gentle-ai.dev/contracts/review-integration/v1/schemas/authority-repair-assessment.schema.json"
-	AuthorityRepairAuthorizationSchema = "gentle-ai.review-repair-authorization/v1"
+	AuthorityRepairAssessmentSchema    = "agent-smith.review-authority-repair-assessment/v1"
+	AuthorityRepairAssessmentSchemaID  = "https://agent-smith.dev/contracts/review-integration/v1/schemas/authority-repair-assessment.schema.json"
+	AuthorityRepairAuthorizationSchema = "agent-smith.review-repair-authorization/v1"
 
 	AuthorityRepairClassLegacyV1HistoricalAlias               AuthorityRepairClass       = "legacy_v1_historical_alias"
 	AuthorityRepairCauseUnsupportedHistoricalV1OperationAlias AuthorityRepairCause       = "unsupported_historical_v1_operation_alias"
@@ -764,9 +764,9 @@ func authorityRepairRoot(root string) (string, string, error) {
 	if err != nil || !info.IsDir() {
 		return "", "", errors.New("repository common directory is invalid")
 	}
-	sum := sha256.Sum256([]byte("gentle-ai.review-repository-binding/v1\n" + common))
+	sum := sha256.Sum256([]byte("agent-smith.review-repository-binding/v1\n" + common))
 	binding := "sha256:" + hex.EncodeToString(sum[:])
-	return filepath.Join(common, "gentle-ai", "review-transactions"), binding, nil
+	return filepath.Join(common, "agent-smith", "review-transactions"), binding, nil
 }
 
 func (assessment AuthorityRepairAssessment) Validate() error {
@@ -1082,12 +1082,12 @@ func repairAuthorityDispositionAtRepo(ctx context.Context, repo, planDigest, inv
 		//
 		// Fix cycle 2 (WARNING-4, sdd-verify cycle-2): base bb3c22a9's own
 		// version of this exact refusal ended with a runnable continuation
-		// ("run `gentle-ai review repair --preflight` again for the current
+		// ("run `agent-smith review repair --preflight` again for the current
 		// values"); Wave 6 Slice S3 replaced the CLI-level pre-check this
 		// refusal now lives in without carrying that continuation text
 		// forward, so cycle-1's CRITICAL-2 fix (which restored the CAUSE
 		// reaching the operator) still left it silent about what to do next.
-		return CompactReclaimRecord{}, fmt.Errorf("%w: submitted plan_digest/inventory_revision does not match the current provider-derived plan; run `gentle-ai review repair --preflight` again for the current values", ErrConcurrentUpdate)
+		return CompactReclaimRecord{}, fmt.Errorf("%w: submitted plan_digest/inventory_revision does not match the current provider-derived plan; run `agent-smith review repair --preflight` again for the current values", ErrConcurrentUpdate)
 	}
 	plan.Authorization = authorization
 	return executeAuthorityDisposition(ctx, repo, plan)
@@ -1171,3 +1171,4 @@ func RepairAuthorityDisposition(ctx context.Context, repo, planDigest, inventory
 	}
 	return repairAuthorityDispositionAtRepo(ctx, repo, planDigest, inventoryRevision, actor, reason, authorization, nil)
 }
+

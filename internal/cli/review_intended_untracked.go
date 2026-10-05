@@ -8,18 +8,18 @@ import (
 	"io"
 	"strings"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/reviewtransaction"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
+	"github.com/jonsanchezr/agent-smith/v4/internal/reviewtransaction"
 )
 
-const reviewIntendedUntrackedSelectionSchema = "gentle-ai.review-intended-untracked-selection/v1"
+const reviewIntendedUntrackedSelectionSchema = "agent-smith.review-intended-untracked-selection/v1"
 
 // reviewIntendedUntrackedInventoryCommand is the runnable form of the STATUS
 // that publishes the canonical untracked inventory. `--next-transition` is
 // refused without a negotiated contract and runtime identity, so a refusal
 // that names the bare form sends the operator to a command that fails
 // (issue #2895).
-const reviewIntendedUntrackedInventoryCommand = "gentle-ai review status --cwd <repo> --contract " + ReviewIntegrationContractV2 + " --agent <runtime> --next-transition"
+const reviewIntendedUntrackedInventoryCommand = "agent-smith review status --cwd <repo> --contract " + ReviewIntegrationContractV2 + " --agent <runtime> --next-transition"
 
 type reviewRepeatedPathFlag []string
 
@@ -37,7 +37,7 @@ type reviewSingleValueFlag struct {
 func (flag *reviewSingleValueFlag) String() string { return flag.value }
 func (flag *reviewSingleValueFlag) Set(value string) error {
 	if flag.set {
-		return errors.New("untracked scope flags may only be specified once; rerun gentle-ai review start with one declaration")
+		return errors.New("untracked scope flags may only be specified once; rerun agent-smith review start with one declaration")
 	}
 	flag.value, flag.set = value, true
 	return nil
@@ -66,13 +66,13 @@ func decodeReviewIntendedUntrackedSelection(raw string) (reviewSingleValueFlag, 
 	var value reviewIntendedUntrackedSelection
 	if err := decoder.Decode(&value); err != nil || decoder.Decode(&struct{}{}) != io.EOF || value.Schema != reviewIntendedUntrackedSelectionSchema || value.Intended == nil {
 		// refusal:by-design operator-knowledge: only the caller can supply the exact provider-owned intended-untracked selection JSON.
-		return reviewSingleValueFlag{}, nil, reviewSingleValueFlag{}, errors.New("--intended-untracked-selection must be exact gentle-ai.review-intended-untracked-selection/v1 JSON")
+		return reviewSingleValueFlag{}, nil, reviewSingleValueFlag{}, errors.New("--intended-untracked-selection must be exact agent-smith.review-intended-untracked-selection/v1 JSON")
 	}
 	return reviewSingleValueFlag{value: value.UntrackedScope, set: true}, reviewRepeatedPathFlag(value.Intended), reviewSingleValueFlag{value: value.ExpectedInventory, set: true}, nil
 }
 
 func reviewIntendedUntrackedScopeForTarget(ctx context.Context, builder reviewtransaction.SnapshotBuilder, mode reviewSingleValueFlag, selected reviewRepeatedPathFlag, expectedDigest reviewSingleValueFlag) (reviewIntendedUntrackedScope, error) {
-	return intendedUntrackedScopeForTarget(ctx, builder, mode, selected, expectedDigest, reviewIntendedUntrackedInventoryCommand, "gentle-ai review start")
+	return intendedUntrackedScopeForTarget(ctx, builder, mode, selected, expectedDigest, reviewIntendedUntrackedInventoryCommand, "agent-smith review start")
 }
 
 // intendedUntrackedDeclarationShape validates the flag-shape of an untracked
@@ -131,7 +131,7 @@ func intendedUntrackedScopeForTarget(ctx context.Context, builder reviewtransact
 }
 
 func reviewIntendedUntrackedSelectionRequired(scope reviewIntendedUntrackedScope) error {
-	return intendedUntrackedSelectionRequired(scope, reviewIntendedUntrackedInventoryCommand, "gentle-ai review start")
+	return intendedUntrackedSelectionRequired(scope, reviewIntendedUntrackedInventoryCommand, "agent-smith review start")
 }
 
 func intendedUntrackedSelectionRequired(scope reviewIntendedUntrackedScope, inventoryCommand, selectionCommand string) error {
@@ -182,3 +182,4 @@ func reviewStartIntendedUntrackedArguments(scope reviewIntendedUntrackedScope) [
 	}
 	return arguments
 }
+

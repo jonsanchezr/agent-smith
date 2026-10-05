@@ -8,8 +8,8 @@ import (
 	"runtime"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/system"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
+	"github.com/jonsanchezr/agent-smith/v4/internal/system"
 )
 
 const testHome = "/tmp/home"
@@ -276,3 +276,4 @@ func TestMCPConfigPathIgnoresServerName(t *testing.T) {
 		t.Fatalf("MCPConfigPath() filename = %q, want mcp.json", filepath.Base(got1))
 	}
 }
+

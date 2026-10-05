@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/releasepolicy"
+	"github.com/jonsanchezr/agent-smith/v4/internal/releasepolicy"
 )
 
 func main() {
@@ -18,3 +18,4 @@ func main() {
 	}
 	fmt.Println("release distribution policy: exact current Linux/macOS snapshot and sole Homebrew publisher verified")
 }
+

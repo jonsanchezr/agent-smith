@@ -1,4 +1,4 @@
-// Package telemetry implements Gentle AI's anonymous, opt-out usage
+// Package telemetry implements Agent Smith's anonymous, opt-out usage
 // telemetry (issue #4309). It knows how many installs stay alive and how
 // they use the review pipeline, without collecting anything about the user,
 // their code, or their machine identity.
@@ -13,10 +13,10 @@ package telemetry
 import "time"
 
 // EventSchema identifies the JSON POST body sent to the collector.
-const EventSchema = "gentle-ai.telemetry-event/v1"
+const EventSchema = "agent-smith.telemetry-event/v1"
 
-// StatusSchema identifies the `gentle-ai telemetry status` projection.
-const StatusSchema = "gentle-ai.telemetry-status/v1"
+// StatusSchema identifies the `agent-smith telemetry status` projection.
+const StatusSchema = "agent-smith.telemetry-status/v1"
 
 // EventInstall and EventHeartbeat are the two event kinds the contract
 // defines. No other value is ever sent.
@@ -36,7 +36,7 @@ const EndpointEnvVar = "GENTLE_AI_TELEMETRY_ENDPOINT"
 // enrollment step, before any event is ever built or sent. That one
 // enrollment run sends nothing at all; the first real send only happens on
 // a later trigger. It is never printed by the sender itself.
-const NoticeLine = "Gentle AI sends anonymous usage metrics (version, OS, agents, counters) and may send anonymous runtime usage from supported Pi/OpenCode/Codex integrations (public model, effort, agent class, available token usage, timing, error categories); runtime usage is never stored locally; run gentle-ai telemetry disable to opt out."
+const NoticeLine = "Agent Smith sends anonymous usage metrics (version, OS, agents, counters) and may send anonymous runtime usage from supported Pi/OpenCode/Codex integrations (public model, effort, agent class, available token usage, timing, error categories); runtime usage is never stored locally; run agent-smith telemetry disable to opt out."
 
 // MaxPayloadBytes bounds the JSON POST body per the issue's contract.
 const MaxPayloadBytes = 4096
@@ -57,3 +57,4 @@ const HeartbeatInterval = 24 * time.Hour
 // spawning another one, so a blocked or unreachable endpoint does not
 // respawn a failing child on every install/update/sync/review/sdd-attempt.
 const FailureBackoff = 6 * time.Hour
+

@@ -7,9 +7,9 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/state"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/system"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
+	"github.com/jonsanchezr/agent-smith/v4/internal/state"
+	"github.com/jonsanchezr/agent-smith/v4/internal/system"
 )
 
 func TestMergeExplicitAgentInstallStatePreservesExistingAssignmentsWhenFreshStateIsEmpty(t *testing.T) {
@@ -105,7 +105,7 @@ func TestRunInstallPersistsConfiguredSelection(t *testing.T) {
 	t.Cleanup(func() { osUserHomeDir = original })
 	// This test targets state persistence, not agent install behavior, so
 	// simulate Cursor as already installed (its Detect checks for ~/.cursor)
-	// — otherwise gentle-ai correctly refuses to proceed for an undetected
+	// — otherwise agent-smith correctly refuses to proceed for an undetected
 	// desktop-app agent.
 	if err := os.MkdirAll(filepath.Join(home, ".cursor"), 0o755); err != nil {
 		t.Fatalf("MkdirAll(.cursor): %v", err)
@@ -176,7 +176,7 @@ func TestMergeExplicitAgentInstallStatePreservesFreshAssignments(t *testing.T) {
 // from TestMergeExplicitAgentInstallStateSkipsCorruptState (install/sync
 // surface audit finding 2). The old assertion (ok == false, no error) let
 // RunInstall silently return (result, nil) on an unreadable/corrupted
-// ~/.gentle-ai/state.json — the pipeline ran to completion, but the user's
+// ~/.agent-smith/state.json — the pipeline ran to completion, but the user's
 // agent selection was never persisted and the CLI reported success anyway.
 // The honest contract is: an unreadable existing state during an explicit
 // `--agent` install must fail loudly instead of vanishing.
@@ -197,12 +197,12 @@ func TestMergeExplicitAgentInstallStateFailsHonestlyOnCorruptState(t *testing.T)
 }
 
 // TestRunInstallFailsHonestlyWhenExistingStateIsCorruptDuringExplicitAgentInstall
-// closes install/sync surface audit finding 2: previously, `gentle-ai install
-// --agent X` against a corrupted ~/.gentle-ai/state.json completed the whole
+// closes install/sync surface audit finding 2: previously, `agent-smith install
+// --agent X` against a corrupted ~/.agent-smith/state.json completed the whole
 // pipeline (files written, verification passed) and RunInstall returned
 // (result, nil) -- reported success -- WITHOUT ever calling state.Write. The
 // user believed the install fully completed; state.json stayed corrupted
-// forever, silently breaking every future `gentle-ai sync`.
+// forever, silently breaking every future `agent-smith sync`.
 func TestRunInstallFailsHonestlyWhenExistingStateIsCorruptDuringExplicitAgentInstall(t *testing.T) {
 	home := t.TempDir()
 	original := osUserHomeDir
@@ -222,3 +222,4 @@ func TestRunInstallFailsHonestlyWhenExistingStateIsCorruptDuringExplicitAgentIns
 		t.Fatal("RunInstall() error = nil, want an error naming the unreadable install state instead of a silent success")
 	}
 }
+

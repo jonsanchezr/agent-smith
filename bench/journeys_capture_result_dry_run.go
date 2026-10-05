@@ -82,7 +82,7 @@ func exerciseCaptureResultDryRun(r *journeyRun) error {
 		"schema": true, "operation": true, "validation": true, "lineage_id": true,
 		"lens": true, "selected_order": true, "subject_hash": true, "admission_decision": true,
 	}
-	if response["schema"] != "gentle-ai.review-capture-result-dry-run/v1" || response["operation"] != "review/capture-result" ||
+	if response["schema"] != "agent-smith.review-capture-result-dry-run/v1" || response["operation"] != "review/capture-result" ||
 		response["validation"] != "accepted" || response["lineage_id"] != envelope.argument("lineage") ||
 		response["lens"] != envelope.argument("lens") || response["selected_order"] != float64(order) ||
 		response["subject_hash"] != input.ArtifactSubject.SubjectHash || response["admission_decision"] != "completed" ||
@@ -136,3 +136,4 @@ func readCaptureResultDryRunStatus(r *journeyRun, lineage string) (statusEnvelop
 	}
 	return envelope, document, nil
 }
+

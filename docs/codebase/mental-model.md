@@ -1,17 +1,17 @@
-# Mental Model
+﻿# Mental Model
 
 > [!NOTE]
-> These docs track `main`, which may include unreleased changes. For the latest release, see the [v4.0.0 docs](https://github.com/Gentleman-Programming/gentle-ai/tree/v4.0.0/docs).
+> These docs track `main`, which may include unreleased changes. For the latest release, see the [v4.0.0 docs](https://github.com/jonsanchezr/agent-smith/tree/v4.0.0/docs).
 
 [Back to Codebase Guide](../CODEBASE-GUIDE.md)
 
-Gentle-AI is an ecosystem configurator for AI coding agents. It owns the installer, sync flows, adapters, and managed asset injection; it does not own the runtime behavior of external agents or Engram internals.
+agent-smith is an ecosystem configurator for AI coding agents. It owns the installer, sync flows, adapters, and managed asset injection; it does not own the runtime behavior of external agents or Engram internals.
 
 ## What this project is
 
 | It is | Evidence in this repo |
 |---|---|
-| Go CLI and Bubbletea TUI | `cmd/gentle-ai/main.go`, `internal/app/`, `internal/tui/` |
+| Go CLI and Bubbletea TUI | `cmd/agent-smith/main.go`, `internal/app/`, `internal/tui/` |
 | Agent configuration orchestrator | `internal/agents/`, `internal/components/`, `internal/planner/`, `internal/pipeline/` |
 | Asset distributor | `internal/assets/`, `internal/components/agentguidance/`, `internal/components/skills/` |
 | External tool integrator | `internal/components/engram/`, `internal/components/gga/`, `internal/components/mcp/` |
@@ -22,13 +22,13 @@ Gentle-AI is an ecosystem configurator for AI coding agents. It owns the install
 |---|---|
 | Engram's memory database implementation | This repo installs and configures Engram, then documents commands in `docs/engram.md`. |
 | A local dashboard server | No dashboard or HTMX server files are present in the repository. |
-| A generic package manager | Dependency hints and installs support Gentle-AI components only. |
+| A generic package manager | Dependency hints and installs support agent-smith components only. |
 | The AI agent runtime | Claude Code, OpenCode, Cursor, and other agents consume generated config outside this repo. |
 
 ## 90-second architecture model
 
 ```text
-cmd/gentle-ai/main.go
+cmd/agent-smith/main.go
   -> internal/app          command dispatch, version wiring, help
   -> internal/cli          non-interactive install/sync/uninstall/restore flows
   -> internal/tui          interactive Bubbletea screens and async messages
@@ -63,3 +63,4 @@ install/sync path
 ## Navigation
 
 Previous: [Codebase Guide](../CODEBASE-GUIDE.md) | Next: [Repository map](repository-map.md)
+

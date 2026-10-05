@@ -12,9 +12,9 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/model"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/reviewerprovider"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/reviewtransaction"
+	"github.com/jonsanchezr/agent-smith/v4/internal/model"
+	"github.com/jonsanchezr/agent-smith/v4/internal/reviewerprovider"
+	"github.com/jonsanchezr/agent-smith/v4/internal/reviewtransaction"
 )
 
 // piRefuterReview builds a reviewing authority whose one captured lens carries
@@ -968,3 +968,4 @@ func TestReviewProviderMaterializeEvidenceSummarizesGeneratedPaths(t *testing.T)
 		t.Fatalf("authored path lost its complete patch: %q", authored)
 	}
 }
+

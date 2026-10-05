@@ -1,8 +1,8 @@
-{
-  "schema": "gentle-ai.review-state-record/v2",
+﻿{
+  "schema": "agent-smith.review-state-record/v2",
   "revision": "sha256:63295f005ab32d0ab0ddcd8c234f92cda7765f2377315d6ccbee0b6aec0344d8",
   "state": {
-    "schema": "gentle-ai.review-state/v2",
+    "schema": "agent-smith.review-state/v2",
     "lineage_id": "review-a39b858db5f00bbb",
     "generation": 1,
     "state": "approved",
@@ -62,3 +62,4 @@
     "evidence_hash": "sha256:385d48f6f85747c9a6a1c577ab3e68b76f10882da43f4a025414d11bbff7fe8c"
   }
 }
+

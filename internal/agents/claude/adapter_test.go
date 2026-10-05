@@ -9,11 +9,11 @@ import (
 	"runtime"
 	"testing"
 
-	"github.com/gentleman-programming/gentle-ai/v4/internal/components/filemerge"
-	"github.com/gentleman-programming/gentle-ai/v4/internal/system"
+	"github.com/jonsanchezr/agent-smith/v4/internal/components/filemerge"
+	"github.com/jonsanchezr/agent-smith/v4/internal/system"
 )
 
-// TestMergeUserConfigForcesOAuthFileTo0600OnContentChange pins gentle-ai#5006(F5):
+// TestMergeUserConfigForcesOAuthFileTo0600OnContentChange pins agent-smith#5006(F5):
 // the OAuth-bearing ~/.claude.json must always end at 0600, tightening it if the
 // file was created insecurely, even though rewriting an existing file otherwise
 // preserves its current mode by default.
@@ -227,3 +227,4 @@ func TestSlashCommands(t *testing.T) {
 		t.Fatalf("CommandsDir() = %q, want %q", got, want)
 	}
 }
+
