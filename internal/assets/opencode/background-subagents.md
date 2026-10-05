@@ -1,4 +1,4 @@
-﻿<!-- agent-smith:opencode-background-subagents -->
+<!-- agent-smith:opencode-background-subagents -->
 ### OpenCode Background Subagent Policy
 
 Use OpenCode's Task tool with `background: true` only for independent, read-only exploration, audit, or review work where the parent can continue non-overlapping work.
