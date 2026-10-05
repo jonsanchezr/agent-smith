@@ -179,3 +179,44 @@ func TestRequestedBundledSkillsAreInPresetSkillSets(t *testing.T) {
 	}
 }
 
+// TestSkillsForPresetIncludesSpecKitSkills asserts that every default preset
+// (excluding Minimal and Custom) includes the 9 speckit-* skill IDs. The
+// speckit subsystem exposes its own runtime (uv tool install specify-cli) and
+// must be wired into the default install flow, not an opt-in.
+func TestSkillsForPresetIncludesSpecKitSkills(t *testing.T) {
+	expected := []model.SkillID{
+		model.SkillSpecKitConstitution,
+		model.SkillSpecKitSpecify,
+		model.SkillSpecKitClarify,
+		model.SkillSpecKitPlan,
+		model.SkillSpecKitChecklist,
+		model.SkillSpecKitTasks,
+		model.SkillSpecKitAnalyze,
+		model.SkillSpecKitImplement,
+		model.SkillSpecKitConverge,
+	}
+	for _, preset := range []model.PresetID{model.PresetFullGentleman, model.PresetEcosystemOnly} {
+		t.Run(string(preset), func(t *testing.T) {
+			got := SkillsForPreset(preset)
+			present := make(map[model.SkillID]struct{}, len(got))
+			for _, id := range got {
+				present[id] = struct{}{}
+			}
+			for _, want := range expected {
+				if _, ok := present[want]; !ok {
+					t.Errorf("SkillsForPreset(%q) missing %q", preset, want)
+				}
+			}
+		})
+	}
+	// Minimal and Custom must NOT pull in speckit-* skills.
+	for _, preset := range []model.PresetID{model.PresetMinimal, model.PresetCustom} {
+		got := SkillsForPreset(preset)
+		for _, id := range got {
+			if len(id) >= 8 && id[:8] == "speckit-" {
+				t.Errorf("SkillsForPreset(%q) unexpectedly includes %q", preset, id)
+			}
+		}
+	}
+}
+

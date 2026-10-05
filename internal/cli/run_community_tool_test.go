@@ -36,7 +36,7 @@ func TestInstallRuntimeStagePlanAddsCommunityToolStepsInSelectionOrder(t *testin
 	for _, step := range plan.Apply {
 		got = append(got, step.ID())
 	}
-	want := []string{"apply:rollback-restore", "community-tool:codegraph"}
+	want := []string{"apply:rollback-restore", "speckit:runtime-install", "community-tool:codegraph"}
 	if !reflect.DeepEqual(got, want) {
 		t.Fatalf("apply step IDs = %#v, want %#v", got, want)
 	}
@@ -634,7 +634,7 @@ func TestInstallPipelinePropagatesInitialPiPendingWhenPiUnselected(t *testing.T)
 		state:     &runtimeState{},
 	}
 
-	if err := runtime.stagePlan().Apply[1].Run(); err != nil {
+	if err := runtime.stagePlan().Apply[2].Run(); err != nil {
 		t.Fatalf("Run() error = %v", err)
 	}
 	if runtime.state.piCodeGraph == nil || !reflect.DeepEqual(runtime.state.piCodeGraph.ManualActions, pending.ManualActions) {

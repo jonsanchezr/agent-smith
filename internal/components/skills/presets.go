@@ -33,6 +33,16 @@ var selectableFoundationSkills = []model.SkillID{
 	model.SkillWorkUnitCommits,
 	model.SkillRDDDefectWorkflow,
 	model.SkillSystemicIssueTriage,
+	// Spec Kit (alternative SDD workflow via /specify CLI)
+	model.SkillSpecKitConstitution,
+	model.SkillSpecKitSpecify,
+	model.SkillSpecKitClarify,
+	model.SkillSpecKitPlan,
+	model.SkillSpecKitChecklist,
+	model.SkillSpecKitTasks,
+	model.SkillSpecKitAnalyze,
+	model.SkillSpecKitImplement,
+	model.SkillSpecKitConverge,
 }
 
 var foundationSkills = excludeSkills(selectableFoundationSkills, contributorSkills)
@@ -76,4 +86,3 @@ func copySkills(src []model.SkillID) []model.SkillID {
 	copy(dst, src)
 	return dst
 }
-

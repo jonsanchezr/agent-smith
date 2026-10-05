@@ -850,6 +850,21 @@ func (r *installRuntime) stagePlan() pipeline.StagePlan {
 		step.backgroundPolicy = r.backgroundActivation != nil && r.backgroundActivation.Capability().Ready() && r.background.Effective == model.OpenCodeBackgroundOn
 		apply = append(apply, step)
 	}
+
+	// Spec-kit runtime auto-install runs after the skills component has
+	// written the speckit-* SKILL.md files, so the user can read the
+	// guidance even when `uv` is missing. The step degrades gracefully when
+	// Python or uv is absent and only proceeds when `specify` is not yet on
+	// PATH. It is intentionally NOT registered in buildStagePlan, so a dry
+	// run (which returns before installRuntime.stagePlan is built) skips it
+	// cleanly without any extra branching.
+	if selectionHasSpecKitSkill(r.selection) {
+		apply = append(apply, specKitRuntimeInstallStep{
+			id:        "speckit:runtime-install",
+			selection: r.selection,
+		})
+	}
+
 	for _, agent := range r.resolved.Agents {
 		if nativeReviewAgentSupported(agent) {
 			apply = append(apply, nativeReviewAgentStep{id: "agent:native-review:" + string(agent), agent: agent, homeDir: r.homeDir, workspaceDir: r.workspaceDir, scope: r.scope, selection: r.selection, state: r.state})
@@ -2179,6 +2194,48 @@ func (s openCodeBackgroundActivationStep) Run() error {
 
 func (s openCodeBackgroundActivationStep) Rollback() error { return s.plan.Rollback() }
 
+// specKitRuntimeInstallStep installs the spec-kit /specify CLI via uv when
+// the resolved selection includes at least one speckit-* skill. It is a
+// graceful-degradation step:
+//
+//   - If python3 or uv is missing on PATH, it logs a clear hint and returns
+//     nil — the speckit-* SKILL.md files have already been written by the
+//     skills component, so the user keeps the documentation even though the
+//     runtime will not work yet.
+//   - If `specify` is already on PATH (user installed it manually), it skips
+//     without touching uv.
+//   - It only fails when uv tool install itself returns an error, so a real
+//     install failure (e.g. no network) is surfaced rather than swallowed.
+//
+// The step is intentionally not registered in buildStagePlan, so dry-run
+// (which short-circuits before installRuntime.stagePlan is built) skips it
+// without any explicit dry-run branching.
+type specKitRuntimeInstallStep struct {
+	id        string
+	selection model.Selection
+}
+
+func (s specKitRuntimeInstallStep) ID() string { return s.id }
+
+func (s specKitRuntimeInstallStep) Run() error {
+	pythonOK, uvOK, specifyOK, err := skills.SpeckitInstallAvailable()
+	if err != nil {
+		return fmt.Errorf("probe spec-kit runtime availability: %w", err)
+	}
+	if !pythonOK || !uvOK {
+		log.Printf("spec-kit: skipping auto-install — Python 3 and uv are required (see https://docs.astral.sh/uv/ for installation). The /speckit-* skills are still installed but `specify` CLI commands will fail at runtime.")
+		return nil
+	}
+	if specifyOK {
+		log.Printf("spec-kit: `specify` CLI is already on PATH; skipping uv tool install.")
+		return nil
+	}
+	if err := skills.RunSpeckitInstall(); err != nil {
+		return fmt.Errorf("auto-install spec-kit runtime (uv tool install specify-cli): %w", err)
+	}
+	return nil
+}
+
 func (s rollbackRestoreStep) ID() string {
 	return s.id
 }
@@ -3163,6 +3220,19 @@ func selectedSkillIDs(selection model.Selection) []model.SkillID {
 	}
 
 	return skills.SkillsForPreset(selection.Preset)
+}
+
+// selectionHasSpecKitSkill reports whether the resolved skill selection
+// (selection.Skills if explicit, otherwise the preset-derived set) contains
+// at least one speckit-* skill. The spec-kit runtime auto-install step is
+// only registered when this is true.
+func selectionHasSpecKitSkill(selection model.Selection) bool {
+	for _, id := range selectedSkillIDs(selection) {
+		if strings.HasPrefix(string(id), "speckit-") {
+			return true
+		}
+	}
+	return false
 }
 
 func backupTargets(homeDir, workspaceDir string, scope InstallScope, selection model.Selection, resolved planner.ResolvedPlan) ([]string, error) {
@@ -4172,4 +4242,3 @@ func codexOrchestratorFromState(a *state.CodexOrchestratorAssignmentState) *mode
 	}
 	return &model.CodexOrchestratorAssignment{Model: a.Model, Effort: model.CodexEffort(a.Effort)}
 }
-

@@ -9,7 +9,16 @@
       "skill-registry",
       "chained-pr",
       "cognitive-doc-design",
-      "work-unit-commits"
+      "work-unit-commits",
+      "speckit-constitution",
+      "speckit-specify",
+      "speckit-clarify",
+      "speckit-plan",
+      "speckit-checklist",
+      "speckit-tasks",
+      "speckit-analyze",
+      "speckit-implement",
+      "speckit-converge"
     ]
   },
   {
@@ -22,7 +31,16 @@
       "skill-registry",
       "chained-pr",
       "cognitive-doc-design",
-      "work-unit-commits"
+      "work-unit-commits",
+      "speckit-constitution",
+      "speckit-specify",
+      "speckit-clarify",
+      "speckit-plan",
+      "speckit-checklist",
+      "speckit-tasks",
+      "speckit-analyze",
+      "speckit-implement",
+      "speckit-converge"
     ]
   },
   {

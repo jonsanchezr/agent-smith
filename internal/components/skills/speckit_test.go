@@ -90,26 +90,26 @@ func TestSpeckitAvailableSpecifyAbsent(t *testing.T) {
 	}
 }
 
-// TestSpeckitInstallSucceeds verifies speckitInstall succeeds when both commands succeed.
+// TestSpeckitInstallSucceeds verifies Install succeeds when both commands succeed.
 func TestSpeckitInstallSucceeds(t *testing.T) {
 	original := commandFunc
-	commandFunc = func(name string, args ...string) commander {
+	commandFunc = func(name string, args ...string) Commander {
 		return &fakeCmd{err: nil}
 	}
 	defer func() { commandFunc = original }()
 
-	err := speckitInstall()
+	err := Install()
 	if err != nil {
-		t.Errorf("speckitInstall() error = %v, want nil", err)
+		t.Errorf("Install() error = %v, want nil", err)
 	}
 }
 
-// TestSpeckitInstallFailsOnUvToolInstall verifies speckitInstall returns an error
+// TestSpeckitInstallFailsOnUvToolInstall verifies Install returns an error
 // when uv tool install fails.
 func TestSpeckitInstallFailsOnUvToolInstall(t *testing.T) {
 	original := commandFunc
 	callCount := 0
-	commandFunc = func(name string, args ...string) commander {
+	commandFunc = func(name string, args ...string) Commander {
 		callCount++
 		if callCount == 1 {
 			return &fakeCmd{err: errors.New("uv tool install failed")}
@@ -118,24 +118,24 @@ func TestSpeckitInstallFailsOnUvToolInstall(t *testing.T) {
 	}
 	defer func() { commandFunc = original }()
 
-	err := speckitInstall()
+	err := Install()
 	if err == nil {
-		t.Fatalf("speckitInstall() error = nil, want error containing 'uv tool install'")
+		t.Fatalf("Install() error = nil, want error containing 'uv tool install'")
 	}
 	if !errors.Is(err, errors.New("uv tool install failed")) {
 		// Check error message contains "uv tool install"
 		if !strings.Contains(err.Error(), "uv tool install") {
-			t.Errorf("speckitInstall() error = %v, want error containing 'uv tool install'", err)
+			t.Errorf("Install() error = %v, want error containing 'uv tool install'", err)
 		}
 	}
 }
 
-// TestSpeckitInstallFailsOnSpecifyInit verifies speckitInstall returns an error
+// TestSpeckitInstallFailsOnSpecifyInit verifies Install returns an error
 // when specify init fails.
 func TestSpeckitInstallFailsOnSpecifyInit(t *testing.T) {
 	original := commandFunc
 	callCount := 0
-	commandFunc = func(name string, args ...string) commander {
+	commandFunc = func(name string, args ...string) Commander {
 		callCount++
 		if callCount == 2 {
 			return &fakeCmd{err: errors.New("specify init failed")}
@@ -144,14 +144,14 @@ func TestSpeckitInstallFailsOnSpecifyInit(t *testing.T) {
 	}
 	defer func() { commandFunc = original }()
 
-	err := speckitInstall()
+	err := Install()
 	if err == nil {
-		t.Fatalf("speckitInstall() error = nil, want error containing 'specify init'")
+		t.Fatalf("Install() error = nil, want error containing 'specify init'")
 	}
 	if !errors.Is(err, errors.New("specify init failed")) {
 		// Check error message contains "specify init"
 		if !strings.Contains(err.Error(), "specify init") {
-			t.Errorf("speckitInstall() error = %v, want error containing 'specify init'", err)
+			t.Errorf("Install() error = %v, want error containing 'specify init'", err)
 		}
 	}
 }
