@@ -23,7 +23,7 @@ func TestNormalizePersonaRemapsGentlemanNeutralArtifacts(t *testing.T) {
 }
 
 func TestNormalizePersonaDoesNotFlagCanonicalPersonas(t *testing.T) {
-	for _, value := range []string{"", "gentleman", "neutral", "custom"} {
+	for _, value := range []string{"", "agent-smith", "neutral", "custom"} {
 		_, remapped, err := normalizePersona(value)
 		if err != nil {
 			t.Fatalf("normalizePersona(%q) error = %v", value, err)

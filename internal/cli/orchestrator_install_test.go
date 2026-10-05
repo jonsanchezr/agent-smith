@@ -121,7 +121,7 @@ func TestInstallAndSyncDeliverOrchestratorOnceForEveryRuntime(t *testing.T) {
 			selection := model.Selection{
 				Agents:     []model.AgentID{agent},
 				Components: []model.ComponentID{model.ComponentPersona},
-				Persona:    model.PersonaGentleman,
+				Persona:    model.PersonaAgentSmith,
 			}
 
 			runInstallInjectionSteps(t, newTestInstallRuntime(t, home, selection))

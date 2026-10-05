@@ -625,7 +625,7 @@ func TestInstallPersonaOnlyRollbackRestoresOpenCodeSettingsAfterCleanup(t *testi
 	selection := model.Selection{
 		Agents:     []model.AgentID{model.AgentOpenCode},
 		Components: []model.ComponentID{model.ComponentPersona},
-		Persona:    model.PersonaGentleman,
+		Persona:    model.PersonaAgentSmith,
 	}
 	resolved := planner.ResolvedPlan{Agents: selection.Agents, OrderedComponents: selection.Components}
 	runtime, err := newInstallRuntime(home, ScopeGlobal, ChannelStable, selection, resolved, system.PlatformProfile{})
@@ -2483,7 +2483,7 @@ func TestOpenCodePersonaBeforeODDRoutingPreservesAllSections(t *testing.T) {
 			"--agent", "opencode",
 			"--component", "persona",
 			"--component", "engram",
-			"--persona", "gentleman",
+			"--persona", "agent-smith",
 		},
 		system.DetectionResult{},
 	)

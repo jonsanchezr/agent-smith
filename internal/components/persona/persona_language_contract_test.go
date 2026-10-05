@@ -12,7 +12,7 @@ import (
 func TestInjectGentlemanNeutralArtifactsRoutesToNeutralContent(t *testing.T) {
 	home := t.TempDir()
 
-	result, err := Inject(home, opencodeAdapter(), model.PersonaGentlemanNeutralArtifacts)
+	result, err := Inject(home, opencodeAdapter(), model.PersonaAgentSmithNeutralArtifacts)
 	if err != nil {
 		t.Fatalf("Inject() error = %v", err)
 	}

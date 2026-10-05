@@ -73,7 +73,7 @@ func TestFullPresetUninstallOpenCodeFamilyAgents(t *testing.T) {
 			}
 			agents["my-agent"] = map[string]any{"prompt": "User owned"}
 			agents["jd-judge-a"].(map[string]any)["prompt"] = "User modified judge"
-			agents["gentleman"].(map[string]any)["prompt"] = "User modified gentleman"
+			agents["agent-smith"].(map[string]any)["prompt"] = "User modified gentleman"
 			orchestrator := agents["agent-smith-orchestrator"].(map[string]any)
 			permission := orchestrator["permission"].(map[string]any)
 			task := permission["task"].(map[string]any)
@@ -106,7 +106,7 @@ func TestFullPresetUninstallOpenCodeFamilyAgents(t *testing.T) {
 				t.Fatalf("default_agent not restored: %s", first)
 			}
 			remaining := after["agent"].(map[string]any)
-			if remaining["my-agent"] == nil || remaining["jd-judge-a"].(map[string]any)["prompt"] != "User modified judge" || remaining["gentleman"].(map[string]any)["prompt"] != "User modified gentleman" {
+			if remaining["my-agent"] == nil || remaining["jd-judge-a"].(map[string]any)["prompt"] != "User modified judge" || remaining["agent-smith"].(map[string]any)["prompt"] != "User modified gentleman" {
 				t.Fatalf("user agent prompt changed: %s", first)
 			}
 			for name, value := range remaining {

@@ -54,7 +54,7 @@ func TestComponentApplyStepOpenClawWorkspaceScopedInjections(t *testing.T) {
 				homeDir:      home,
 				workspaceDir: workspace,
 				agents:       []model.AgentID{model.AgentOpenClaw},
-				selection:    model.Selection{Persona: model.PersonaGentleman},
+				selection:    model.Selection{Persona: model.PersonaAgentSmith},
 				profile:      system.PlatformProfile{PackageManager: "brew"},
 				scope:        ScopeWorkspace,
 			}
@@ -145,7 +145,7 @@ func TestComponentSyncStepOpenClawGlobalInjections(t *testing.T) {
 				homeDir:      home,
 				workspaceDir: workspace,
 				agents:       []model.AgentID{model.AgentOpenClaw},
-				selection:    model.Selection{Persona: model.PersonaGentleman},
+				selection:    model.Selection{Persona: model.PersonaAgentSmith},
 			}
 
 			if err := step.Run(); err != nil {
@@ -204,7 +204,7 @@ func testGlobalArtifactRoots(t *testing.T, sync bool) {
 				Agents:     []model.AgentID{model.AgentOpenClaw, model.AgentWindsurf, model.AgentPi},
 				Components: []model.ComponentID{model.ComponentPersona, model.ComponentSkills},
 				Skills:     []model.SkillID{model.SkillGoTesting},
-				Persona:    model.PersonaGentleman, StrictTDD: true,
+				Persona:    model.PersonaAgentSmith, StrictTDD: true,
 			}
 			if config != "malformed" {
 				selection.Components = append(selection.Components, model.ComponentEngram, model.ComponentContext7)
@@ -267,7 +267,7 @@ func TestExplicitWorkspaceInstallOverridesOpenClawConfig(t *testing.T) {
 	selection := model.Selection{
 		Agents:     []model.AgentID{model.AgentOpenClaw, model.AgentWindsurf, model.AgentPi},
 		Components: []model.ComponentID{model.ComponentPersona, model.ComponentSkills},
-		Skills:     []model.SkillID{model.SkillGoTesting}, Persona: model.PersonaGentleman,
+		Skills:     []model.SkillID{model.SkillGoTesting}, Persona: model.PersonaAgentSmith,
 	}
 	rt, err := newInstallRuntime(home, ScopeWorkspace, ChannelStable, selection, planner.ResolvedPlan{Agents: selection.Agents, OrderedComponents: selection.Components}, system.PlatformProfile{})
 	if err != nil {

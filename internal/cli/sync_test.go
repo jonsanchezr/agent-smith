@@ -1193,7 +1193,7 @@ func TestComponentSyncStepRunsPersonaInjectForSync(t *testing.T) {
 		component: model.ComponentPersona,
 		homeDir:   home,
 		agents:    []model.AgentID{model.AgentOpenCode},
-		selection: model.Selection{Persona: model.PersonaGentleman},
+		selection: model.Selection{Persona: model.PersonaAgentSmith},
 	}
 
 	if err := step.Run(); err != nil {
@@ -1215,7 +1215,7 @@ func TestComponentSyncStepRunsPersonaInjectForSync(t *testing.T) {
 	settings := filepath.Join(home, ".config", "opencode", "opencode.json")
 	if _, err := os.Stat(settings); err == nil {
 		raw, _ := os.ReadFile(settings)
-		if strings.Contains(string(raw), "gentleman") {
+		if strings.Contains(string(raw), "agent-smith") {
 			t.Errorf("opencode.json should NOT contain gentleman agent after sync; got:\n%s", string(raw))
 		}
 	}
@@ -1581,7 +1581,7 @@ func TestSyncPersonaOnlyRollbackRestoresOpenCodeSettingsAfterGentlemanCleanup(t 
 	selection := model.Selection{
 		Agents:     []model.AgentID{model.AgentOpenCode},
 		Components: []model.ComponentID{model.ComponentPersona, model.ComponentID("later-failure")},
-		Persona:    model.PersonaGentleman,
+		Persona:    model.PersonaAgentSmith,
 	}
 	targets, err := syncBackupTargetsScoped(home, "", ScopeGlobal, selection, resolveAdapters(selection.Agents))
 	if err != nil {
@@ -4883,7 +4883,7 @@ func TestSyncBackupManifestIncludesCodexHooksJSON(t *testing.T) {
 func TestSyncCodexGentlemanConvergesWithHooksJSON(t *testing.T) {
 	home := t.TempDir()
 	selection := BuildSyncSelection(SyncFlags{}, []model.AgentID{model.AgentCodex, model.AgentClaudeCode})
-	selection.Persona = model.PersonaGentleman
+	selection.Persona = model.PersonaAgentSmith
 	if selection.HasComponent(model.ComponentSDD) {
 		t.Fatal("default sync selected legacy SDD")
 	}
@@ -4962,7 +4962,7 @@ func TestSyncPersonaPathsExcludeOpenCodeAgentJson(t *testing.T) {
 	reg, _ := agents.NewDefaultRegistry()
 	a, _ := reg.Get(model.AgentOpenCode)
 
-	paths := syncPersonaPathsWithWorkspaceScoped(home, "", ScopeGlobal, model.Selection{Persona: model.PersonaGentleman}, []agents.Adapter{a})
+	paths := syncPersonaPathsWithWorkspaceScoped(home, "", ScopeGlobal, model.Selection{Persona: model.PersonaAgentSmith}, []agents.Adapter{a})
 
 	settingsPath := filepath.Join(home, ".config", "opencode", "opencode.json")
 	for _, p := range paths {
@@ -4985,9 +4985,9 @@ func TestSyncPersonaPathsDeclareManagedClaudeOutputStyle(t *testing.T) {
 		wantConfig string
 	}{
 		{
-			name:       "gentleman",
-			persona:    model.PersonaGentleman,
-			wantStyle:  filepath.Join(home, ".claude", "output-styles", "gentleman.md"),
+			name:       "agent-smith",
+			persona:    model.PersonaAgentSmith,
+			wantStyle:  filepath.Join(home, ".claude", "output-styles", "agent-smith.md"),
 			unwanted:   filepath.Join(home, ".claude", "output-styles", "neutral.md"),
 			wantConfig: filepath.Join(home, ".claude", "settings.json"),
 		},
@@ -4995,14 +4995,14 @@ func TestSyncPersonaPathsDeclareManagedClaudeOutputStyle(t *testing.T) {
 			name:       "neutral",
 			persona:    model.PersonaNeutral,
 			wantStyle:  filepath.Join(home, ".claude", "output-styles", "neutral.md"),
-			unwanted:   filepath.Join(home, ".claude", "output-styles", "gentleman.md"),
+			unwanted:   filepath.Join(home, ".claude", "output-styles", "agent-smith.md"),
 			wantConfig: filepath.Join(home, ".claude", "settings.json"),
 		},
 		{
 			name:       "legacy neutral alias",
-			persona:    model.PersonaGentlemanNeutralArtifacts,
+			persona:    model.PersonaAgentSmithNeutralArtifacts,
 			wantStyle:  filepath.Join(home, ".claude", "output-styles", "neutral.md"),
-			unwanted:   filepath.Join(home, ".claude", "output-styles", "gentleman.md"),
+			unwanted:   filepath.Join(home, ".claude", "output-styles", "agent-smith.md"),
 			wantConfig: filepath.Join(home, ".claude", "settings.json"),
 		},
 	}
@@ -5034,18 +5034,18 @@ func TestSyncBackupTargetsCaptureBothManagedOutputStyles(t *testing.T) {
 	reg, _ := agents.NewDefaultRegistry()
 	a, _ := reg.Get(model.AgentClaudeCode)
 
-	gentleman := filepath.Join(home, ".claude", "output-styles", "gentleman.md")
+	agentSmith := filepath.Join(home, ".claude", "output-styles", "agent-smith.md")
 	neutral := filepath.Join(home, ".claude", "output-styles", "neutral.md")
 
-	for _, persona := range []model.PersonaID{model.PersonaGentleman, model.PersonaNeutral} {
+	for _, persona := range []model.PersonaID{model.PersonaAgentSmith, model.PersonaNeutral} {
 		selection := model.Selection{Persona: persona, Components: []model.ComponentID{model.ComponentPersona}}
 		targets, err := syncBackupTargetsScoped(home, "", ScopeGlobal, selection, []agents.Adapter{a})
 		if err != nil {
 			t.Fatalf("syncBackupTargets(%q) error = %v", persona, err)
 		}
 
-		if !containsPath(targets, gentleman) {
-			t.Errorf("syncBackupTargets(%q) missing gentleman.md; got %v", persona, targets)
+		if !containsPath(targets, agentSmith) {
+			t.Errorf("syncBackupTargets(%q) missing agent-smith.md; got %v", persona, targets)
 		}
 		if !containsPath(targets, neutral) {
 			t.Errorf("syncBackupTargets(%q) missing neutral.md; got %v", persona, targets)
@@ -5058,15 +5058,15 @@ func TestPersonaSyncOutputStyleSwitchIsIdempotent(t *testing.T) {
 	selection := model.Selection{
 		Agents:     []model.AgentID{model.AgentClaudeCode},
 		Components: []model.ComponentID{model.ComponentPersona},
-		Persona:    model.PersonaGentlemanNeutralArtifacts,
+		Persona:    model.PersonaAgentSmithNeutralArtifacts,
 	}
-	gentleman := filepath.Join(home, ".claude", "output-styles", "gentleman.md")
+	agentSmith := filepath.Join(home, ".claude", "output-styles", "agent-smith.md")
 
-	if _, err := persona.Inject(home, claude.NewAdapter(), model.PersonaGentleman); err != nil {
-		t.Fatalf("Inject(gentleman) error = %v", err)
+	if _, err := persona.Inject(home, claude.NewAdapter(), model.PersonaAgentSmith); err != nil {
+		t.Fatalf("Inject(agent-smith) error = %v", err)
 	}
-	if _, err := os.Stat(gentleman); err != nil {
-		t.Fatalf("precondition: gentleman output style missing: %v", err)
+	if _, err := os.Stat(agentSmith); err != nil {
+		t.Fatalf("precondition: agent-smith output style missing: %v", err)
 	}
 
 	first, err := RunSyncWithSelection(home, selection)
@@ -5076,8 +5076,8 @@ func TestPersonaSyncOutputStyleSwitchIsIdempotent(t *testing.T) {
 	if first.FilesChanged == 0 || first.NoOp {
 		t.Fatalf("first sync files changed = %d, no-op = %t; want output-style switch", first.FilesChanged, first.NoOp)
 	}
-	if _, err := os.Stat(gentleman); !os.IsNotExist(err) {
-		t.Fatalf("first sync left retired gentleman output style: %v", err)
+	if _, err := os.Stat(agentSmith); !os.IsNotExist(err) {
+		t.Fatalf("first sync left retired agent-smith output style: %v", err)
 	}
 
 	second, err := RunSyncWithSelection(home, selection)
@@ -5096,7 +5096,7 @@ func TestBackupTargetsCaptureBothManagedOutputStyles(t *testing.T) {
 	gentleman := filepath.Join(home, ".claude", "output-styles", "gentleman.md")
 	neutral := filepath.Join(home, ".claude", "output-styles", "neutral.md")
 
-	for _, persona := range []model.PersonaID{model.PersonaGentleman, model.PersonaNeutral} {
+	for _, persona := range []model.PersonaID{model.PersonaAgentSmith, model.PersonaNeutral} {
 		selection := model.Selection{Persona: persona, Components: []model.ComponentID{model.ComponentPersona}}
 		resolved := planner.ResolvedPlan{
 			Agents:            []model.AgentID{model.AgentClaudeCode},
@@ -5138,7 +5138,7 @@ func TestRunSyncRegeneratesPersonaBlockBetweenMarkers(t *testing.T) {
 	}
 	if err := state.Write(home, state.InstallState{
 		InstalledAgents: []string{"claude-code"},
-		Persona:         "gentleman",
+		Persona:         "agent-smith",
 	}); err != nil {
 		t.Fatalf("state.Write: %v", err)
 	}
@@ -5624,10 +5624,10 @@ func TestRunSyncWithSelection_ExplicitPersonaWinsOverState(t *testing.T) {
 	if err := os.MkdirAll(filepath.Join(home, ".claude"), 0o755); err != nil {
 		t.Fatalf("MkdirAll: %v", err)
 	}
-	// State says "gentleman" but the caller explicitly chose "neutral".
+	// State says "agent-smith" but the caller explicitly chose "neutral".
 	if err := state.Write(home, state.InstallState{
 		InstalledAgents: []string{"claude-code"},
-		Persona:         "gentleman",
+		Persona:         "agent-smith",
 	}); err != nil {
 		t.Fatalf("state.Write: %v", err)
 	}
@@ -6406,7 +6406,7 @@ func TestSyncOpenCodeSettingsWritersUseSelectedJSONC(t *testing.T) {
 					t.Fatal(err)
 				}
 			}
-			selection := model.Selection{Agents: []model.AgentID{model.AgentOpenCode}, Components: []model.ComponentID{component}, Persona: model.PersonaGentleman}
+			selection := model.Selection{Agents: []model.AgentID{model.AgentOpenCode}, Components: []model.ComponentID{component}, Persona: model.PersonaAgentSmith}
 			paths, err := syncBackupTargetsScoped(home, workspace, ScopeGlobal, selection, resolveAdapters(selection.Agents))
 			if err != nil || !containsString(paths, selected) {
 				t.Fatalf("sync backup targets = %v, %v", paths, err)
@@ -6437,7 +6437,7 @@ func TestSyncPersonaNeutralRemovesSelectedOpenCodeAgentOnly(t *testing.T) {
 		t.Fatal(err)
 	}
 	got, err := os.ReadFile(selected)
-	if err != nil || !bytes.Contains(got, []byte("// preserve user comment")) || !bytes.Contains(got, []byte(`"custom"`)) || bytes.Contains(got, []byte(`"gentleman"`)) {
+	if err != nil || !bytes.Contains(got, []byte("// preserve user comment")) || !bytes.Contains(got, []byte(`"custom"`)) || bytes.Contains(got, []byte(`"agent-smith"`)) {
 		t.Fatalf("neutral selected JSONC = %s, %v", got, err)
 	}
 	got, err = os.ReadFile(decoy)
@@ -6459,7 +6459,7 @@ func TestSyncOpenCodeSettingsWritersRollbackSelectedJSONC(t *testing.T) {
 					t.Fatal(err)
 				}
 			}
-			selection := model.Selection{Agents: []model.AgentID{model.AgentOpenCode}, Components: []model.ComponentID{component}, Persona: model.PersonaGentleman}
+			selection := model.Selection{Agents: []model.AgentID{model.AgentOpenCode}, Components: []model.ComponentID{component}, Persona: model.PersonaAgentSmith}
 			targets, err := syncBackupTargetsScoped(home, workspace, ScopeGlobal, selection, resolveAdapters(selection.Agents))
 			if err != nil || !containsString(targets, selected) {
 				t.Fatalf("snapshot targets = %v, %v", targets, err)
@@ -6615,7 +6615,7 @@ func TestSyncDeliversRoutingGuidanceWithoutSDDComponent(t *testing.T) {
 	runSyncInjectionSteps(t, home, model.Selection{
 		Agents:     []model.AgentID{model.AgentClaudeCode},
 		Components: []model.ComponentID{model.ComponentPersona},
-		Persona:    model.PersonaGentleman,
+		Persona:    model.PersonaAgentSmith,
 	})
 
 	prompt := readTextFile(t, systemPromptFileFor(t, home, model.AgentClaudeCode))
@@ -6630,7 +6630,7 @@ func TestSyncRoutingGuidanceIsIndependentOfSDDSelection(t *testing.T) {
 		selection model.Selection
 	}{
 		{"no components", model.Selection{Agents: []model.AgentID{model.AgentClaudeCode}}},
-		{"persona selected", model.Selection{Agents: []model.AgentID{model.AgentClaudeCode}, Components: []model.ComponentID{model.ComponentPersona}, Persona: model.PersonaGentleman}},
+		{"persona selected", model.Selection{Agents: []model.AgentID{model.AgentClaudeCode}, Components: []model.ComponentID{model.ComponentPersona}, Persona: model.PersonaAgentSmith}},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
 			home := t.TempDir()

@@ -81,7 +81,7 @@ func TestGoldenConfigs(t *testing.T) {
 func TestGoldenPersona_Claude_Gentleman(t *testing.T) {
 	home := t.TempDir()
 
-	result, err := persona.Inject(home, claudeAdapter(), model.PersonaGentleman)
+	result, err := persona.Inject(home, claudeAdapter(), model.PersonaAgentSmith)
 	if err != nil {
 		t.Fatalf("persona.Inject(claude, gentleman) error = %v", err)
 	}
@@ -122,7 +122,7 @@ func TestGoldenPersona_Claude_Neutral(t *testing.T) {
 func TestGoldenPersona_OpenCode_Gentleman(t *testing.T) {
 	home := t.TempDir()
 
-	result, err := persona.Inject(home, opencodeAdapter(), model.PersonaGentleman)
+	result, err := persona.Inject(home, opencodeAdapter(), model.PersonaAgentSmith)
 	if err != nil {
 		t.Fatalf("persona.Inject(opencode, gentleman) error = %v", err)
 	}
@@ -184,7 +184,7 @@ func TestGoldenPersona_OpenCode_Custom(t *testing.T) {
 func TestGoldenPersona_Windsurf_Gentleman(t *testing.T) {
 	home := t.TempDir()
 
-	result, err := persona.Inject(home, windsurfAdapter(), model.PersonaGentleman)
+	result, err := persona.Inject(home, windsurfAdapter(), model.PersonaAgentSmith)
 	if err != nil {
 		t.Fatalf("persona.Inject(windsurf, gentleman) error = %v", err)
 	}
@@ -202,7 +202,7 @@ func TestGoldenPersona_Kiro_Gentleman(t *testing.T) {
 	t.Setenv("APPDATA", filepath.Join(home, "AppData", "Roaming"))
 
 	adapter := kiroAdapter()
-	result, err := persona.Inject(home, adapter, model.PersonaGentleman)
+	result, err := persona.Inject(home, adapter, model.PersonaAgentSmith)
 	if err != nil {
 		t.Fatalf("persona.Inject(kiro, gentleman) error = %v", err)
 	}
@@ -427,7 +427,7 @@ func TestGoldenCombined_Claude(t *testing.T) {
 	engram.SetLookPathForTest(t, "/opt/homebrew/bin/engram", "")
 
 	// Combine retained persona and Engram sections in CLAUDE.md.
-	if _, err := persona.Inject(home, claudeAdapter(), model.PersonaGentleman); err != nil {
+	if _, err := persona.Inject(home, claudeAdapter(), model.PersonaAgentSmith); err != nil {
 		t.Fatalf("persona.Inject error = %v", err)
 	}
 	// Pin the engram version above the Decision 1 floor so the combined
@@ -447,7 +447,7 @@ func TestGoldenCombined_Windsurf(t *testing.T) {
 	engram.SetLookPathForTest(t, "/opt/homebrew/bin/engram", "")
 
 	// Combine retained persona and Engram components.
-	if _, err := persona.Inject(home, windsurfAdapter(), model.PersonaGentleman); err != nil {
+	if _, err := persona.Inject(home, windsurfAdapter(), model.PersonaAgentSmith); err != nil {
 		t.Fatalf("persona.Inject(windsurf) error = %v", err)
 	}
 	if _, err := engram.Inject(home, windsurfAdapter()); err != nil {
@@ -466,7 +466,7 @@ func TestGoldenCombined_Windsurf(t *testing.T) {
 func TestGoldenPersona_Antigravity_Gentleman(t *testing.T) {
 	home := t.TempDir()
 
-	result, err := persona.Inject(home, antigravityAdapter(), model.PersonaGentleman)
+	result, err := persona.Inject(home, antigravityAdapter(), model.PersonaAgentSmith)
 	if err != nil {
 		t.Fatalf("persona.Inject(antigravity, gentleman) error = %v", err)
 	}

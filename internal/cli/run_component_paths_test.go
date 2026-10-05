@@ -317,7 +317,7 @@ func TestComponentPathsGlobalOpenClawAndPiPersonaMatchBackup(t *testing.T) {
 	selection := model.Selection{
 		Agents:     []model.AgentID{model.AgentOpenClaw, model.AgentPi},
 		Components: []model.ComponentID{model.ComponentPersona, model.ComponentEngram, model.ComponentSDD, model.ComponentSkills},
-		Persona:    model.PersonaGentleman, Skills: []model.SkillID{model.SkillGoTesting},
+		Persona:    model.PersonaAgentSmith, Skills: []model.SkillID{model.SkillGoTesting},
 	}
 	adapters := resolveAdapters(selection.Agents)
 	targets, err := backupTargets(home, workspace, ScopeGlobal, selection, planner.ResolvedPlan{Agents: selection.Agents, OrderedComponents: selection.Components})
@@ -1176,7 +1176,7 @@ func TestInstallDeliversRoutingGuidanceWithoutSDDComponent(t *testing.T) {
 	rt := newTestInstallRuntime(t, home, model.Selection{
 		Agents:     []model.AgentID{model.AgentClaudeCode},
 		Components: []model.ComponentID{model.ComponentPersona},
-		Persona:    model.PersonaGentleman,
+		Persona:    model.PersonaAgentSmith,
 	})
 	runInstallInjectionSteps(t, rt)
 
@@ -1239,7 +1239,7 @@ func TestInstallRoutingGuidanceIsIndependentOfSDDSelection(t *testing.T) {
 		selection model.Selection
 	}{
 		{"no components", model.Selection{Agents: []model.AgentID{model.AgentClaudeCode}}},
-		{"persona selected", model.Selection{Agents: []model.AgentID{model.AgentClaudeCode}, Components: []model.ComponentID{model.ComponentPersona}, Persona: model.PersonaGentleman}},
+		{"persona selected", model.Selection{Agents: []model.AgentID{model.AgentClaudeCode}, Components: []model.ComponentID{model.ComponentPersona}, Persona: model.PersonaAgentSmith}},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
 			home := t.TempDir()

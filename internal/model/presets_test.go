@@ -10,7 +10,7 @@ func TestComponentsForPresetFullGentlemanUsesInstallSafeVisualInventory(t *testi
 		name    string
 		persona PersonaID
 	}{
-		{name: "gentleman persona", persona: PersonaGentleman},
+		{name: "gentleman persona", persona: PersonaAgentSmith},
 		{name: "custom persona", persona: PersonaCustom},
 	}
 
@@ -42,7 +42,7 @@ func TestExistingPresetsDoNotImplyCommunityTools(t *testing.T) {
 		t.Run(string(preset), func(t *testing.T) {
 			selection := Selection{
 				Preset:     preset,
-				Components: ComponentsForPreset(preset, PersonaGentleman),
+				Components: ComponentsForPreset(preset, PersonaAgentSmith),
 			}
 			if len(selection.CommunityTools) != 0 {
 				t.Fatalf("preset %q community tools = %v, want none", preset, selection.CommunityTools)

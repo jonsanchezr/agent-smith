@@ -159,13 +159,13 @@ const (
 type PersonaID string
 
 const (
-	PersonaGentleman PersonaID = "gentleman"
-	// PersonaGentlemanNeutralArtifacts is a legacy alias accepted for backward
+	PersonaAgentSmith PersonaID = "agent-smith"
+	// PersonaAgentSmithNeutralArtifacts is a legacy alias accepted for backward
 	// compatibility. The CLI and sync normalization treat it as PersonaNeutral,
 	// and it is never offered as a selectable choice.
-	PersonaGentlemanNeutralArtifacts PersonaID = "gentleman-neutral-artifacts"
-	PersonaNeutral                   PersonaID = "neutral"
-	PersonaCustom                    PersonaID = "custom"
+	PersonaAgentSmithNeutralArtifacts PersonaID = "agent-smith-neutral-artifacts"
+	PersonaNeutral                    PersonaID = "neutral"
+	PersonaCustom                     PersonaID = "custom"
 )
 
 // SystemPromptStrategy defines how an agent's system prompt file is managed.

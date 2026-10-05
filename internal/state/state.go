@@ -96,11 +96,11 @@ type InstallState struct {
 	// ModelAssignments maps sub-agent names to provider/model pairs (OpenCode).
 	ModelAssignments map[string]ModelAssignmentState `json:"model_assignments,omitempty"`
 
-	// Persona records the persona the user installed ("gentleman", "neutral",
+	// Persona records the persona the user installed ("agent-smith", "neutral",
 	// "custom"). Persisted so that `agent-smith sync` regenerates the same persona
-	// the user originally chose instead of defaulting to Gentleman every time.
+	// the user originally chose instead of defaulting to Agent Smith every time.
 	// Empty for state files written before persona persistence was added —
-	// callers fall back to PersonaGentleman in that case.
+	// callers fall back to PersonaAgentSmith in that case.
 	Persona string `json:"persona,omitempty"`
 	// PersonaPresent distinguishes an omitted legacy field from an explicit
 	// empty persona, which must fail closed during sync validation.

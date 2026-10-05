@@ -20,7 +20,7 @@ func TestMigratePersistedPersonaAliasRewritesStateOnce(t *testing.T) {
 	defer func() { personaNoticeWriter = previous }()
 
 	homeDir := t.TempDir()
-	persisted := state.InstallState{Persona: string(model.PersonaGentlemanNeutralArtifacts)}
+	persisted := state.InstallState{Persona: string(model.PersonaAgentSmithNeutralArtifacts)}
 	if err := state.Write(homeDir, persisted); err != nil {
 		t.Fatalf("seed state: %v", err)
 	}
@@ -65,14 +65,14 @@ func TestMigratePersistedPersonaAliasReReadsLatestStateAfterLockContention(t *te
 	home := t.TempDir()
 	// Advisory snapshot taken before the lock exists: it still shows the
 	// legacy alias, but is stale by the time the migration runs.
-	persisted := state.InstallState{Persona: string(model.PersonaGentlemanNeutralArtifacts)}
+	persisted := state.InstallState{Persona: string(model.PersonaAgentSmithNeutralArtifacts)}
 
 	held, err := reviewtransaction.AcquireAuthorityFileLock(mustInstallStateLockPath(t, home))
 	if err != nil {
 		t.Fatal(err)
 	}
 	if err := state.Write(home, state.InstallState{
-		Persona: string(model.PersonaGentlemanNeutralArtifacts),
+		Persona: string(model.PersonaAgentSmithNeutralArtifacts),
 		RDDMode: string(reviewtransaction.RDDModeOn),
 	}); err != nil {
 		t.Fatal(err)
@@ -84,7 +84,7 @@ func TestMigratePersistedPersonaAliasReReadsLatestStateAfterLockContention(t *te
 		t.Fatalf("contended run printed %q, want silence", buf.String())
 	}
 	contended, err := state.Read(home)
-	if err != nil || contended.Persona != string(model.PersonaGentlemanNeutralArtifacts) || contended.RDDMode != string(reviewtransaction.RDDModeOn) {
+	if err != nil || contended.Persona != string(model.PersonaAgentSmithNeutralArtifacts) || contended.RDDMode != string(reviewtransaction.RDDModeOn) {
 		t.Fatalf("state after contended run = %#v, err = %v", contended, err)
 	}
 	if err := held.Release(); err != nil {
@@ -112,7 +112,7 @@ func TestMigratePersistedPersonaAliasReReadsLatestStateAfterLockContention(t *te
 }
 
 func TestMigratePersistedPersonaAliasSkipsUnreadableState(t *testing.T) {
-	persisted := state.InstallState{Persona: string(model.PersonaGentlemanNeutralArtifacts)}
+	persisted := state.InstallState{Persona: string(model.PersonaAgentSmithNeutralArtifacts)}
 	if err := migratePersistedPersonaAlias(t.TempDir(), &persisted, errStateUnreadableForTest); err != nil {
 		t.Fatalf("migrate with read error must be a no-op, got %v", err)
 	}
@@ -135,10 +135,10 @@ func TestApplyResolvedPersonaAliasResolution(t *testing.T) {
 		persisted string
 		want      model.PersonaID
 	}{
-		{name: "persisted legacy alias resolves to neutral", persisted: string(model.PersonaGentlemanNeutralArtifacts), want: model.PersonaNeutral},
-		{name: "persisted gentleman is honored", persisted: string(model.PersonaGentleman), want: model.PersonaGentleman},
+		{name: "persisted legacy alias resolves to neutral", persisted: string(model.PersonaAgentSmithNeutralArtifacts), want: model.PersonaNeutral},
+		{name: "persisted gentleman is honored", persisted: string(model.PersonaAgentSmith), want: model.PersonaAgentSmith},
 		{name: "persisted neutral is honored", persisted: string(model.PersonaNeutral), want: model.PersonaNeutral},
-		{name: "explicit selection wins over persisted alias", selection: model.Selection{Persona: model.PersonaGentleman}, persisted: string(model.PersonaGentlemanNeutralArtifacts), want: model.PersonaGentleman},
+		{name: "explicit selection wins over persisted alias", selection: model.Selection{Persona: model.PersonaAgentSmith}, persisted: string(model.PersonaAgentSmithNeutralArtifacts), want: model.PersonaAgentSmith},
 		{name: "missing persona field uses the documented compatibility default", persisted: "", want: model.PersonaNeutral},
 	}
 
@@ -163,7 +163,7 @@ func TestRunSyncWithSelectionMigratesAliasOnNoOpSync(t *testing.T) {
 	defer func() { personaNoticeWriter = previous }()
 
 	homeDir := t.TempDir()
-	if err := state.Write(homeDir, state.InstallState{Persona: string(model.PersonaGentlemanNeutralArtifacts)}); err != nil {
+	if err := state.Write(homeDir, state.InstallState{Persona: string(model.PersonaAgentSmithNeutralArtifacts)}); err != nil {
 		t.Fatalf("seed state: %v", err)
 	}
 

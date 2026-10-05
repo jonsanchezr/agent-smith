@@ -42,21 +42,21 @@ func TestManagedDirectReplyAssetsEnforceEnglishNoCodeSwitching(t *testing.T) {
 		path        string
 		combineWith string // "" when the asset alone still carries the contract
 	}{
-		{name: "claude gentleman output style", path: "claude/output-style-gentleman.md"},
+		{name: "claude gentleman output style", path: "claude/output-style-agent-smith.md"},
 		{name: "claude neutral output style", path: "claude/output-style-neutral.md"},
 		// Claude and Kimi personas are residuals (Decision 1) — evaluate the
 		// combined persona-residual + output-style channel, not the persona
 		// file alone.
-		{name: "claude gentleman persona", path: "claude/persona-gentleman.md", combineWith: "claude/output-style-gentleman.md"},
-		{name: "generic gentleman persona", path: "generic/persona-gentleman.md"},
+		{name: "claude gentleman persona", path: "claude/persona-agent-smith.md", combineWith: "claude/output-style-agent-smith.md"},
+		{name: "generic gentleman persona", path: "generic/persona-agent-smith.md"},
 		{name: "generic neutral persona", path: "generic/persona-neutral.md"},
-		{name: "hermes gentleman persona", path: "hermes/persona-gentleman.md"},
+		{name: "hermes gentleman persona", path: "hermes/persona-agent-smith.md"},
 		{name: "hermes neutral persona", path: "hermes/persona-neutral.md"},
-		{name: "kiro gentleman persona", path: "kiro/persona-gentleman.md"},
-		{name: "kimi gentleman output style", path: "kimi/output-style-gentleman.md"},
+		{name: "kiro gentleman persona", path: "kiro/persona-agent-smith.md"},
+		{name: "kimi gentleman output style", path: "kimi/output-style-agent-smith.md"},
 		{name: "kimi neutral output style", path: "kimi/output-style-neutral.md"},
-		{name: "kimi gentleman persona", path: "kimi/persona-gentleman.md", combineWith: "kimi/output-style-gentleman.md"},
-		{name: "opencode gentleman persona", path: "opencode/persona-gentleman.md"},
+		{name: "kimi gentleman persona", path: "kimi/persona-agent-smith.md", combineWith: "kimi/output-style-agent-smith.md"},
+		{name: "opencode gentleman persona", path: "opencode/persona-agent-smith.md"},
 	}
 
 	for _, tc := range tests {
@@ -220,11 +220,11 @@ func TestGentlemanPersonaKeepsDirectConversationVoice(t *testing.T) {
 		path        string
 		combineWith string
 	}{
-		{path: "claude/persona-gentleman.md", combineWith: "claude/output-style-gentleman.md"},
-		{path: "generic/persona-gentleman.md"},
-		{path: "kiro/persona-gentleman.md"},
-		{path: "kimi/persona-gentleman.md", combineWith: "kimi/output-style-gentleman.md"},
-		{path: "opencode/persona-gentleman.md"},
+		{path: "claude/persona-agent-smith.md", combineWith: "claude/output-style-agent-smith.md"},
+		{path: "generic/persona-agent-smith.md"},
+		{path: "kiro/persona-agent-smith.md"},
+		{path: "kimi/persona-agent-smith.md", combineWith: "kimi/output-style-agent-smith.md"},
+		{path: "opencode/persona-agent-smith.md"},
 	}
 	for _, tc := range tests {
 		t.Run(tc.path, func(t *testing.T) {
@@ -362,16 +362,16 @@ const neutralToneDialectAntiDriftRequired = "The same rule applies to tone and d
 
 func TestPersonaChannelsCarryPreWriteArtifactSelfCheck(t *testing.T) {
 	paths := []string{
-		"claude/output-style-gentleman.md",
+		"claude/output-style-agent-smith.md",
 		"claude/output-style-neutral.md",
-		"kimi/output-style-gentleman.md",
+		"kimi/output-style-agent-smith.md",
 		"kimi/output-style-neutral.md",
-		"generic/persona-gentleman.md",
+		"generic/persona-agent-smith.md",
 		"generic/persona-neutral.md",
-		"hermes/persona-gentleman.md",
+		"hermes/persona-agent-smith.md",
 		"hermes/persona-neutral.md",
-		"kiro/persona-gentleman.md",
-		"opencode/persona-gentleman.md",
+		"kiro/persona-agent-smith.md",
+		"opencode/persona-agent-smith.md",
 	}
 	for _, path := range paths {
 		t.Run(path, func(t *testing.T) {

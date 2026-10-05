@@ -91,7 +91,7 @@ func TestNormalizeInstallFlagsDefaults(t *testing.T) {
 
 	want := model.Selection{
 		Agents:  []model.AgentID{model.AgentClaudeCode, model.AgentOpenCode, model.AgentKilocode, model.AgentGeminiCLI, model.AgentCodex, model.AgentCursor, model.AgentVSCodeCopilot, model.AgentAntigravity, model.AgentWindsurf, model.AgentKimi, model.AgentQwenCode, model.AgentKiroIDE, model.AgentOpenClaw, model.AgentPi, model.AgentTrae, model.AgentHermes, model.AgentConductor},
-		Persona: model.PersonaGentleman,
+		Persona: model.PersonaAgentSmith,
 		Preset:  model.PresetFullGentleman,
 		Components: []model.ComponentID{
 			model.ComponentEngram,
@@ -115,7 +115,7 @@ func TestNormalizeInstallFlagsDefaults(t *testing.T) {
 
 func TestDefaultInstallPresetsAndPickerExcludeLegacySDD(t *testing.T) {
 	for _, preset := range []model.PresetID{model.PresetFullGentleman, model.PresetEcosystemOnly, model.PresetMinimal} {
-		for _, component := range model.ComponentsForPreset(preset, model.PersonaGentleman) {
+		for _, component := range model.ComponentsForPreset(preset, model.PersonaAgentSmith) {
 			if component == model.ComponentSDD {
 				t.Errorf("preset %s selected legacy SDD", preset)
 			}

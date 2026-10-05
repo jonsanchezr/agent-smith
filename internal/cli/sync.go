@@ -1843,16 +1843,22 @@ func applyResolvedPersona(selection *model.Selection, persisted string) {
 }
 
 // migratePersistedPersonaAlias rewrites a persisted legacy
-// gentleman-neutral-artifacts persona to neutral, printing the remap notice
-// once. State that predates persona persistence, explicit gentleman state,
-// and unreadable state are untouched.
+// agent-smith-neutral-artifacts persona to neutral, printing the remap notice
+// once. It also rewrites the historical "gentleman" and
+// "gentleman-neutral-artifacts" identifier values from before the persona
+// rename to their canonical successors. State that predates persona
+// persistence, explicit agent-smith state, and unreadable state are untouched.
 //
 // The persisted parameter is only an advisory snapshot: the rewrite re-reads
 // the latest state inside the canonical install-state lock and re-checks the
 // alias there, so a concurrent writer's change between the advisory read and
 // the write is never clobbered.
 func migratePersistedPersonaAlias(homeDir string, persisted *state.InstallState, persistedErr error) error {
-	if persistedErr != nil || persisted == nil || persisted.Persona != string(model.PersonaGentlemanNeutralArtifacts) {
+	if persistedErr != nil || persisted == nil {
+		return nil
+	}
+	canonicalPersona, legacyRemap := canonicalizePersonaLegacy(persisted.Persona)
+	if !legacyRemap && persisted.Persona != string(model.PersonaAgentSmithNeutralArtifacts) {
 		return nil
 	}
 	remapped := false
@@ -1866,10 +1872,18 @@ func migratePersistedPersonaAlias(homeDir string, persisted *state.InstallState,
 			}
 			return fmt.Errorf("read persisted installation state: %w", readErr)
 		}
-		if latest.Persona != string(model.PersonaGentlemanNeutralArtifacts) {
-			return nil
+		// Mirror the latest legacy check: a concurrent writer may have already
+		// migrated (canonical values), or may have changed persona entirely.
+		if latest.Persona != string(model.PersonaAgentSmithNeutralArtifacts) {
+			latestCanonical, latestLegacy := canonicalizePersonaLegacy(latest.Persona)
+			if !latestLegacy {
+				return nil
+			}
+			latest.Persona = string(latestCanonical)
 		}
-		latest.Persona = string(model.PersonaNeutral)
+		if latest.Persona == string(model.PersonaAgentSmithNeutralArtifacts) {
+			latest.Persona = string(model.PersonaNeutral)
+		}
 		if err := state.Write(homeDir, latest); err != nil {
 			return fmt.Errorf("persist remapped persona: %w", err)
 		}
@@ -1883,6 +1897,7 @@ func migratePersistedPersonaAlias(homeDir string, persisted *state.InstallState,
 	if remapped {
 		fmt.Fprintln(personaNoticeWriter, personaAliasRemapNotice)
 	}
+	_ = canonicalPersona
 	return nil
 }
 

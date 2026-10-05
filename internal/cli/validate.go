@@ -83,29 +83,68 @@ func NormalizeInstallFlags(flags InstallFlags, detection system.DetectionResult)
 }
 
 // personaAliasRemapNotice is printed whenever the legacy
-// gentleman-neutral-artifacts alias is remapped to the neutral persona.
-const personaAliasRemapNotice = `"gentleman-neutral-artifacts" now maps to "neutral". For a voseo conversation use --persona gentleman.`
+// agent-smith-neutral-artifacts alias is remapped to the neutral persona.
+const personaAliasRemapNotice = `"agent-smith-neutral-artifacts" now maps to "neutral". For a voseo conversation use --persona agent-smith.`
+
+// legacyPersonaValues maps the historical identifier values from before the
+// "Gentleman" → "Agent Smith" rename to the canonical identifier they
+// canonicalize to. Only the renamed entries are kept (the canonical set lives
+// in model.PersonaID constants); explicit neutral/custom are unaffected.
+var legacyPersonaValues = map[string]model.PersonaID{
+	"gentleman":                    model.PersonaAgentSmith,
+	"gentleman-neutral-artifacts":  model.PersonaAgentSmithNeutralArtifacts,
+}
 
 // personaNoticeWriter is swappable in tests.
 var personaNoticeWriter io.Writer = os.Stderr
 
 // normalizePersona resolves a --persona flag or persisted state value.
-// The second return is true when the legacy gentleman-neutral-artifacts
+// The second return is true when the legacy agent-smith-neutral-artifacts
 // alias was remapped to neutral: its name promised a neutral tone, so the
-// name now wins; users who want voseo have --persona gentleman.
+// name now wins; users who want voseo have --persona agent-smith.
 func normalizePersona(value string) (model.PersonaID, bool, error) {
 	if strings.TrimSpace(value) == "" {
-		return model.PersonaGentleman, false, nil
+		return model.PersonaAgentSmith, false, nil
+	}
+
+	// Legacy "gentleman" / "gentleman-neutral-artifacts" values from before the
+	// persona rename are canonicalized first so they enter the canonical switch
+	// as their current identifier.
+	if canonical, remapped := canonicalizePersonaLegacy(value); remapped {
+		value = string(canonical)
 	}
 
 	switch model.PersonaID(value) {
-	case model.PersonaGentlemanNeutralArtifacts:
+	case model.PersonaAgentSmithNeutralArtifacts:
 		return model.PersonaNeutral, true, nil
-	case model.PersonaGentleman, model.PersonaNeutral, model.PersonaCustom:
+	case model.PersonaAgentSmith, model.PersonaNeutral, model.PersonaCustom:
 		return model.PersonaID(value), false, nil
 	default:
 		return "", false, fmt.Errorf("unsupported persona %q", value)
 	}
+}
+
+// canonicalizePersonaLegacy remaps a historical persona identifier value to
+// the canonical identifier it became after the "Gentleman" → "Agent Smith"
+// rename. The second return is true when a legacy value was remapped; unknown
+// values are returned unchanged with remapped=false so callers can decide
+// whether to treat them as fatal.
+func canonicalizePersonaLegacy(value string) (model.PersonaID, bool) {
+	if canonical, ok := legacyPersonaValues[value]; ok {
+		return canonical, true
+	}
+	return model.PersonaID(value), false
+}
+
+// resolveLegacyPersona canonicalizes a persisted persona value to the current
+// identifier set. It returns the canonical PersonaID and a bool indicating
+// whether a legacy value was remapped. Unknown values return ("", false, nil)
+// so callers can decide whether to treat them as fatal.
+func resolveLegacyPersona(value string) (model.PersonaID, bool, bool) {
+	if canonical, ok := legacyPersonaValues[value]; ok {
+		return canonical, true, true
+	}
+	return model.PersonaID(value), false, false
 }
 
 func normalizePreset(value string) (model.PresetID, error) {

@@ -9,7 +9,7 @@ import (
 
 func TestPersonaOptionsExcludeGentlemanNeutralArtifacts(t *testing.T) {
 	for _, option := range PersonaOptions() {
-		if option == model.PersonaGentlemanNeutralArtifacts {
+		if option == model.PersonaAgentSmithNeutralArtifacts {
 			t.Fatalf("PersonaOptions() still offers the remapped legacy alias %q", option)
 		}
 	}
@@ -39,8 +39,8 @@ func TestPersonaDescriptionsNeverReuseNeutral(t *testing.T) {
 // the neutral persona a regional tone, fails here.
 func TestPersonaDescriptionsSeparateToneFromArtifactLanguage(t *testing.T) {
 	managed := []model.PersonaID{
-		model.PersonaGentleman,
-		model.PersonaGentlemanNeutralArtifacts,
+		model.PersonaAgentSmith,
+		model.PersonaAgentSmithNeutralArtifacts,
 		model.PersonaNeutral,
 	}
 	for _, persona := range managed {
@@ -52,14 +52,14 @@ func TestPersonaDescriptionsSeparateToneFromArtifactLanguage(t *testing.T) {
 			t.Fatalf("persona %q must state that technical artifacts are English: %q", persona, description)
 		}
 		mentionsVoseo := strings.Contains(strings.ToLower(description), "voseo")
-		isGentleman := persona == model.PersonaGentleman
+		isGentleman := persona == model.PersonaAgentSmith
 		if mentionsVoseo != isGentleman {
 			t.Fatalf("persona %q voseo claim = %v, want %v (only Gentleman personas carry a regional tone): %q",
 				persona, mentionsVoseo, isGentleman, description)
 		}
 	}
 
-	if personaDescriptions[model.PersonaNeutral] == personaDescriptions[model.PersonaGentlemanNeutralArtifacts] {
+	if personaDescriptions[model.PersonaNeutral] == personaDescriptions[model.PersonaAgentSmithNeutralArtifacts] {
 		t.Fatal("the neutral persona and its legacy alias must stay distinguishable in the review label")
 	}
 }
@@ -69,7 +69,7 @@ func TestPersonaDescriptionsSeparateToneFromArtifactLanguage(t *testing.T) {
 // screen.
 func TestRenderPersonaShowsEveryManagedDescription(t *testing.T) {
 	for _, persona := range []model.PersonaID{
-		model.PersonaGentleman,
+		model.PersonaAgentSmith,
 		model.PersonaNeutral,
 	} {
 		out := RenderPersona(persona, 0)
@@ -87,8 +87,8 @@ func TestRenderPersonaShowsEveryManagedDescription(t *testing.T) {
 // would make them indistinguishable at the point of no return.
 func TestReviewPersonaLabelKeepsThePersonaID(t *testing.T) {
 	for _, persona := range []model.PersonaID{
-		model.PersonaGentleman,
-		model.PersonaGentlemanNeutralArtifacts,
+		model.PersonaAgentSmith,
+		model.PersonaAgentSmithNeutralArtifacts,
 		model.PersonaNeutral,
 	} {
 		label := reviewPersonaLabel(persona)

@@ -141,7 +141,7 @@ func TestRemoveMarkdownSections_RemovesSlimResidualPersonaViaMarkerNotFingerprin
 
 func TestRemoveJSONPaths_RemovesOnlyManagedKeys(t *testing.T) {
 	input := []byte(`{
-  "theme": "gentleman",
+  "theme": "agent-smith",
   "permission": {
     "bash": {
       "*": "allow"
@@ -422,7 +422,7 @@ func TestJSONCleanup_OnRealFileWithTempDir(t *testing.T) {
 	dir := t.TempDir()
 	path := filepath.Join(dir, "settings.json")
 	input := []byte(`{
-  "outputStyle": "Gentleman",
+  "outputStyle": "AgentSmith",
   "mcpServers": {
     "engram": {
       "command": "engram"

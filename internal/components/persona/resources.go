@@ -30,12 +30,12 @@ type ResourcePlan struct {
 }
 
 var managedOutputStyles = []OutputStyle{
-	{Name: "Gentleman", File: "gentleman.md", AssetPath: "claude/output-style-gentleman.md"},
+	{Name: "AgentSmith", File: "agent-smith.md", AssetPath: "claude/output-style-agent-smith.md"},
 	{Name: "Neutral", File: "neutral.md", AssetPath: "claude/output-style-neutral.md"},
 }
 
 func canonicalPersona(persona model.PersonaID) model.PersonaID {
-	if persona == model.PersonaGentlemanNeutralArtifacts {
+	if persona == model.PersonaAgentSmithNeutralArtifacts {
 		return model.PersonaNeutral
 	}
 	return persona

@@ -60,7 +60,7 @@ func TestUninstallOpenCodeFamilyManagedAgents(t *testing.T) {
 				"agent-smith-orchestrator": map[string]any{"prompt": "<!-- agent-smith:orchestrator -->\nmanaged\n<!-- /agent-smith:orchestrator -->\n", "permission": map[string]any{"task": map[string]any{"jd-judge-b": "allow", "jd-judge-a": "allow", "my-agent": "allow"}}},
 			}
 			if agent == model.AgentKilocode {
-				agents["gentleman"] = map[string]any{"mode": "primary", "description": "Senior Architect mentor - helpful first, challenging when it matters", "prompt": "{file:./AGENTS.md}", "tools": map[string]any{"write": true, "edit": true}}
+				agents["agent-smith"] = map[string]any{"mode": "primary", "description": "Senior Architect mentor - helpful first, challenging when it matters", "prompt": "{file:./AGENTS.md}", "tools": map[string]any{"write": true, "edit": true}}
 			}
 			raw, err := json.Marshal(map[string]any{"agent": agents, "other": true})
 			if err != nil {
@@ -85,7 +85,7 @@ func TestUninstallOpenCodeFamilyManagedAgents(t *testing.T) {
 				if _, ok := remaining["jd-judge-b"]; ok {
 					t.Fatalf("managed agent retained: %s", body)
 				}
-				if agent == model.AgentKilocode && remaining["gentleman"] != nil {
+				if agent == model.AgentKilocode && remaining["agent-smith"] != nil {
 					t.Fatalf("Kilo gentleman retained: %s", body)
 				}
 				if remaining["jd-judge-a"] == nil || remaining["my-agent"] == nil {
@@ -1044,7 +1044,7 @@ func TestPartialUninstallClaudeThemeRemovesOnlyThemeAssets(t *testing.T) {
 		}
 	}
 	preserved := map[string]string{
-		filepath.Join(homeDir, ".claude", "settings.json"):                     `{"theme":"active","outputStyle":"gentleman"}`,
+		filepath.Join(homeDir, ".claude", "settings.json"):                     `{"theme":"active","outputStyle":"agent-smith"}`,
 		filepath.Join(homeDir, ".claude", "CLAUDE.md"):                         "# persona\n",
 		filepath.Join(homeDir, ".claude", "output-styles", "gentleman.md"):     "# output style\n",
 		filepath.Join(homeDir, ".claude", "commands", "gentle-sdd-apply.md"):   "# SDD asset\n",

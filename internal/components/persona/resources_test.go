@@ -11,7 +11,7 @@ import (
 
 func TestResourcePlanOutputStylePaths(t *testing.T) {
 	dir := t.TempDir()
-	gentleman := filepath.Join(dir, "gentleman.md")
+	agentSmith := filepath.Join(dir, "agent-smith.md")
 	neutral := filepath.Join(dir, "neutral.md")
 
 	tests := []struct {
@@ -20,29 +20,29 @@ func TestResourcePlanOutputStylePaths(t *testing.T) {
 		want    persona.OutputStylePaths
 	}{
 		{
-			name:    "gentleman writes its selected style without removing neutral",
-			persona: model.PersonaGentleman,
+			name:    "agent-smith writes its selected style without removing neutral",
+			persona: model.PersonaAgentSmith,
 			want: persona.OutputStylePaths{
-				Write:  gentleman,
-				Backup: []string{gentleman, neutral},
+				Write:  agentSmith,
+				Backup: []string{agentSmith, neutral},
 			},
 		},
 		{
-			name:    "neutral writes its selected style and removes retired gentleman",
+			name:    "neutral writes its selected style and removes retired agent-smith",
 			persona: model.PersonaNeutral,
 			want: persona.OutputStylePaths{
 				Write:  neutral,
-				Backup: []string{gentleman, neutral},
-				Remove: []string{gentleman},
+				Backup: []string{agentSmith, neutral},
+				Remove: []string{agentSmith},
 			},
 		},
 		{
-			name:    "legacy neutral alias writes neutral and removes retired gentleman",
-			persona: model.PersonaGentlemanNeutralArtifacts,
+			name:    "legacy neutral alias writes neutral and removes retired agent-smith",
+			persona: model.PersonaAgentSmithNeutralArtifacts,
 			want: persona.OutputStylePaths{
 				Write:  neutral,
-				Backup: []string{gentleman, neutral},
-				Remove: []string{gentleman},
+				Backup: []string{agentSmith, neutral},
+				Remove: []string{agentSmith},
 			},
 		},
 		{

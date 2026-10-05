@@ -252,7 +252,7 @@ func TestPermissionOrderSurvivesCrossWriterMerge(t *testing.T) {
 
 func TestMergeJSONObjectsRecursively(t *testing.T) {
 	base := []byte(`{"plugins":["a"],"settings":{"theme":"default","flags":{"x":true}}}`)
-	overlay := []byte(`{"settings":{"theme":"gentleman","flags":{"y":true}},"extra":1}`)
+	overlay := []byte(`{"settings":{"theme":"agent-smith","flags":{"y":true}},"extra":1}`)
 
 	merged, err := MergeJSONObjects(base, overlay)
 	if err != nil {
@@ -267,7 +267,7 @@ func TestMergeJSONObjectsRecursively(t *testing.T) {
 	settings := got["settings"].(map[string]any)
 	flags := settings["flags"].(map[string]any)
 
-	if settings["theme"] != "gentleman" {
+	if settings["theme"] != "agent-smith" {
 		t.Fatalf("theme = %v", settings["theme"])
 	}
 
@@ -397,7 +397,7 @@ func TestMergeOpenCodeJSONCObjectsInsertionIgnoresClosingBraceComments(t *testin
 
 func TestMergeOpenCodeJSONCObjectsExistingFinalMemberIdempotent(t *testing.T) {
 	base := []byte("{\n  \"theme\": \"default\"  \n}\n")
-	overlay := []byte(`{"theme":"gentleman"}`)
+	overlay := []byte(`{"theme":"agent-smith"}`)
 
 	merged, err := MergeOpenCodeJSONCObjects(base, overlay)
 	if err != nil {
@@ -788,7 +788,7 @@ func TestSharedJSONMergesKeepBaseBehaviorWithoutOpenCodeOptIn(t *testing.T) {
 	}{
 		{"defaults over duplicate keys", `{"permission":{"bash":{"ssh":"deny","ssh":"allow"}}}`, `{"permission":{"read":{"*":"allow"}}}`, kilocodeDefaults},
 		{"json overlay over duplicate keys", "{\n  // note\n  \"mcp\":{\"a\":1,\"a\":2}\n}\n", `{"theme":"x"}`, kilocodeOverlay},
-		{"json overlay over nested comments", "{\n  \"agent\":{/* keep */\"custom\":{}}\n}\n", `{"agent":{"gentleman":{}}}`, kilocodeOverlay},
+		{"json overlay over nested comments", "{\n  \"agent\":{/* keep */\"custom\":{}}\n}\n", `{"agent":{"agent-smith":{}}}`, kilocodeOverlay},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
 			got, err := tc.merge([]byte(tc.base), []byte(tc.overlay))

@@ -23,7 +23,7 @@ func TestPartialUninstallCommitsSucceededAgentsWhenAnotherAgentFails(t *testing.
 	hermesConfig := filepath.Join(home, ".hermes", "config.yaml")
 	hermesSoul := filepath.Join(home, ".hermes", "SOUL.md")
 
-	writeBatchFile(t, claudeSettings, `{"theme":"gentleman","outputStyle":"gentleman","env":{"MY_VAR":"1"}}`)
+	writeBatchFile(t, claudeSettings, `{"theme":"agent-smith","outputStyle":"agent-smith","env":{"MY_VAR":"1"}}`)
 	writeBatchFile(t, hermesConfig, "providers:\n  - name: hermes\n")
 	writeBatchFile(t, hermesSoul, "<!-- agent-smith:persona -->\nmanaged\n<!-- /agent-smith:persona -->\n")
 	if err := state.Write(home, state.InstallState{InstalledAgents: []string{"claude-code", "hermes"}}); err != nil {

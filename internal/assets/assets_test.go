@@ -599,7 +599,7 @@ func TestOpenCodeEmbeddedAssetLayout(t *testing.T) {
 		seen[entry.Name()] = true
 	}
 
-	for _, name := range []string{"commands", "plugins", "agents", "persona-gentleman.md", "background-subagents.md", "orchestrator.md"} {
+	for _, name := range []string{"commands", "plugins", "agents", "persona-agent-smith.md", "background-subagents.md", "orchestrator.md"} {
 		if !seen[name] {
 			t.Fatalf("opencode embedded assets missing %q", name)
 		}
@@ -854,7 +854,7 @@ func TestClaudeEmbeddedAssetLayout(t *testing.T) {
 		seen[entry.Name()] = true
 	}
 
-	for _, name := range []string{"agents", "persona-gentleman.md", "orchestrator.md"} {
+	for _, name := range []string{"agents", "persona-agent-smith.md", "orchestrator.md"} {
 		if !seen[name] {
 			t.Fatalf("claude embedded assets missing %q", name)
 		}
@@ -1092,11 +1092,11 @@ func TestGentlemanLanguageInstructionsDoNotBiasEnglishSessions(t *testing.T) {
 		// Claude/Kimi no longer carry "REPLY ONLY" in the persona residual —
 		// their combined channel exposes the output style's own Language
 		// Rules opener instead (JD-019).
-		{path: "claude/persona-gentleman.md", combineWith: "claude/output-style-gentleman.md", languagePhrase: "Always match the user's current language in your reply."},
-		{path: "generic/persona-gentleman.md", languagePhrase: "Match the user's current language in your REPLY ONLY"},
-		{path: "kiro/persona-gentleman.md", languagePhrase: "Match the user's current language in your REPLY ONLY"},
-		{path: "kimi/persona-gentleman.md", combineWith: "kimi/output-style-gentleman.md", languagePhrase: "Always match the user's current language in your reply."},
-		{path: "opencode/persona-gentleman.md", languagePhrase: "Match the user's current language in your REPLY ONLY"},
+		{path: "claude/persona-agent-smith.md", combineWith: "claude/output-style-agent-smith.md", languagePhrase: "Always match the user's current language in your reply."},
+		{path: "generic/persona-agent-smith.md", languagePhrase: "Match the user's current language in your REPLY ONLY"},
+		{path: "kiro/persona-agent-smith.md", languagePhrase: "Match the user's current language in your REPLY ONLY"},
+		{path: "kimi/persona-agent-smith.md", combineWith: "kimi/output-style-agent-smith.md", languagePhrase: "Always match the user's current language in your reply."},
+		{path: "opencode/persona-agent-smith.md", languagePhrase: "Match the user's current language in your REPLY ONLY"},
 	}
 
 	for _, tc := range personaPaths {
@@ -1129,8 +1129,8 @@ func TestGentlemanLanguageInstructionsDoNotBiasEnglishSessions(t *testing.T) {
 	}
 
 	for _, path := range []string{
-		"claude/output-style-gentleman.md",
-		"kimi/output-style-gentleman.md",
+		"claude/output-style-agent-smith.md",
+		"kimi/output-style-agent-smith.md",
 	} {
 		t.Run(path, func(t *testing.T) {
 			content := MustRead(path)
@@ -1228,7 +1228,7 @@ func TestClaudeManagedOutputStylesAnchorReplyLanguageToLatestUserRequest(t *test
 		artifactContracts []string
 	}{
 		{
-			path: "claude/output-style-gentleman.md",
+			path: "claude/output-style-agent-smith.md",
 			artifactContracts: []string{
 				"Default to English. UI labels, comments, identifiers, and copy are in English",
 				"The persona styles HOW YOU TALK, not WHAT YOU BUILD.",
@@ -1277,7 +1277,7 @@ func TestClaudeGentlemanPersonaPreventsEnglishGreetingCodeSwitching(t *testing.T
 	// Claude's persona section is a residual (Decision 1) — the code-switching
 	// guardrail contract now lives in the output style; evaluate the combined
 	// channel, not the persona file in isolation.
-	content := MustRead("claude/persona-gentleman.md") + "\n" + MustRead("claude/output-style-gentleman.md")
+	content := MustRead("claude/persona-agent-smith.md") + "\n" + MustRead("claude/output-style-agent-smith.md")
 
 	for _, required := range []string{
 		"If the selected reply language is English, every part of the direct reply must be English: greetings, interjections, acknowledgements, transition phrases, and the first sentence.",
@@ -1286,7 +1286,7 @@ func TestClaudeGentlemanPersonaPreventsEnglishGreetingCodeSwitching(t *testing.T
 		"Do not switch languages unless the user does, asks you to, or you are quoting/translating content.",
 	} {
 		if !strings.Contains(content, required) {
-			t.Fatalf("claude/persona-gentleman.md missing code-switching guardrail %q", required)
+			t.Fatalf("claude/persona-agent-smith.md missing code-switching guardrail %q", required)
 		}
 	}
 }
@@ -1306,12 +1306,12 @@ func TestPersonasContainContextualSkillLoadingDirective(t *testing.T) {
 		isClaude  bool
 		invokeMsg string // wording specific to the agent family
 	}{
-		{path: "claude/persona-gentleman.md", isClaude: true, invokeMsg: "invoke it via the built-in `Skill` tool"},
-		{path: "opencode/persona-gentleman.md", isClaude: false, invokeMsg: "read the matching SKILL.md"},
-		{path: "generic/persona-gentleman.md", isClaude: false, invokeMsg: "read the matching SKILL.md"},
+		{path: "claude/persona-agent-smith.md", isClaude: true, invokeMsg: "invoke it via the built-in `Skill` tool"},
+		{path: "opencode/persona-agent-smith.md", isClaude: false, invokeMsg: "read the matching SKILL.md"},
+		{path: "generic/persona-agent-smith.md", isClaude: false, invokeMsg: "read the matching SKILL.md"},
 		{path: "generic/persona-neutral.md", isClaude: false, invokeMsg: "read the matching SKILL.md"},
-		{path: "kiro/persona-gentleman.md", isClaude: false, invokeMsg: "read the matching SKILL.md"},
-		{path: "kimi/persona-gentleman.md", isClaude: false, invokeMsg: "read the matching SKILL.md"},
+		{path: "kiro/persona-agent-smith.md", isClaude: false, invokeMsg: "read the matching SKILL.md"},
+		{path: "kimi/persona-agent-smith.md", isClaude: false, invokeMsg: "read the matching SKILL.md"},
 	}
 
 	for _, tc := range tests {

@@ -38,7 +38,7 @@ func InjectPiPersona(rootDir string, persona model.PersonaID) (InjectionResult, 
 
 	mode := string(persona)
 	if mode == "" {
-		mode = string(model.PersonaGentleman)
+		mode = string(model.PersonaAgentSmith)
 	}
 	content, err := json.MarshalIndent(struct {
 		Mode string `json:"mode"`
@@ -72,11 +72,11 @@ func outputStyleOverlayJSON(name string) []byte {
 // openCodeAgentOverlayJSON defines the Tab-switchable persona agent for OpenCode.
 // SDD is installed separately by the SDD component as "agent-smith-orchestrator";
 // persona injection must not create legacy SDD conductor keys.
-var openCodeAgentOverlayJSON = []byte("{\n  \"agent\": {\n    \"gentleman\": {\n      \"mode\": \"primary\",\n      \"description\": \"Senior Architect mentor - helpful first, challenging when it matters\",\n      \"prompt\": \"{file:./AGENTS.md}\"\n    }\n  }\n}\n")
-var kilocodeAgentOverlayJSON = []byte("{\n  \"agent\": {\n    \"gentleman\": {\n      \"mode\": \"primary\",\n      \"description\": \"Senior Architect mentor - helpful first, challenging when it matters\",\n      \"prompt\": \"{file:./AGENTS.md}\",\n      \"tools\": {\n        \"write\": true,\n        \"edit\": true\n      }\n    }\n  }\n}\n")
+var openCodeAgentOverlayJSON = []byte("{\n  \"agent\": {\n    \"agent-smith\": {\n      \"mode\": \"primary\",\n      \"description\": \"Senior Architect mentor - helpful first, challenging when it matters\",\n      \"prompt\": \"{file:./AGENTS.md}\"\n    }\n  }\n}\n")
+var kilocodeAgentOverlayJSON = []byte("{\n  \"agent\": {\n    \"agent-smith\": {\n      \"mode\": \"primary\",\n      \"description\": \"Senior Architect mentor - helpful first, challenging when it matters\",\n      \"prompt\": \"{file:./AGENTS.md}\",\n      \"tools\": {\n        \"write\": true,\n        \"edit\": true\n      }\n    }\n  }\n}\n")
 
 // Inject performs a full persona injection: the marker-bound markdown block,
-// the OpenCode/Kilocode `gentleman` agent definition in settings JSON, AND
+// the OpenCode/Kilocode `agent-smith` agent definition in settings JSON, AND
 // the Claude Code output-style overlay. Used by `agent-smith install`.
 func Inject(homeDir string, adapter agents.Adapter, persona model.PersonaID) (InjectionResult, error) {
 	return injectInternal(homeDir, adapter, persona, false, "")
@@ -91,10 +91,10 @@ func InjectAtSettingsPath(homeDir string, adapter agents.Adapter, persona model.
 // InjectForSync regenerates the persona assets that `agent-smith sync` is
 // allowed to touch. It writes:
 //   - The marker-bound persona block in the agent's prompt file (markdown).
-//   - The Gentleman output-style file + outputStyle settings overlay (Claude
+//   - The AgentSmith output-style file + outputStyle settings overlay (Claude
 //     Code only — no conflict with other components).
 //
-// It deliberately skips the OpenCode/Kilocode `gentleman` agent definition in
+// It deliberately skips the OpenCode/Kilocode `agent-smith` agent definition in
 // opencode.json/kilocode.json: that JSON merge shares the "agent" key with
 // SDD's agent-smith-orchestrator overlay, so running both in the same sync clobbers
 // each other's entries and breaks idempotency. That overlay remains an
@@ -124,6 +124,14 @@ func injectInternal(homeDir string, adapter agents.Adapter, persona model.Person
 	if persona == model.PersonaCustom {
 		return InjectionResult{}, nil
 	}
+
+	// Migrate pre-rename settings.json keys before any persona cleanup runs, so
+	// installs and syncs see only the canonical "agent-smith" overlay key and
+	// "AgentSmith" outputStyle value.
+	if err := migrateLegacySettingsPersonaKeys(homeDir, selectedSettingsPath); err != nil {
+		return InjectionResult{}, err
+	}
+
 	if adapter.Agent() == model.AgentOpenCode {
 		settingsPath := adapter.SettingsPath(homeDir)
 		if selectedSettingsPath != "" {
@@ -169,12 +177,12 @@ func injectInternal(homeDir string, adapter agents.Adapter, persona model.Person
 			return InjectionResult{}, err
 		}
 
-		// Auto-heal: strip any legacy free-text Gentleman persona block that was
-		// written before the marker-based injection system existed. This is safe
-		// for StrategyMarkdownSections because InjectMarkdownSection preserves
-		// all existing marker sections — only the unmarked free-text preamble is
-		// removed, and StripLegacyPersonaBlock requires ALL three fingerprints
-		// to be present in the pre-marker zone before stripping.
+// Auto-heal: strip any legacy free-text AgentSmith persona block that was
+			// written before the marker-based injection system existed. This is safe
+			// for StrategyMarkdownSections because InjectMarkdownSection preserves
+			// all existing marker sections — only the unmarked free-text preamble is
+			// removed, and StripLegacyPersonaBlock requires ALL three fingerprints
+			// to be present in the pre-marker zone before stripping.
 		healed := filemerge.StripLegacyPersonaBlock(existing)
 
 		// Also strip legacy Agent Teams Lite block (standalone ATL installer leftover).
@@ -248,11 +256,11 @@ func injectInternal(homeDir string, adapter agents.Adapter, persona model.Person
 			break
 		}
 
-		// For non-Gentleman personas (e.g. neutral), the content is just a short
+		// For non-AgentSmith personas (e.g. neutral), the content is just a short
 		// one-liner. Writing ONLY that content would destroy any SDD/engram
 		// sections that are injected later in the pipeline. Instead, we write the
 		// persona content as the base and let subsequent inject steps (SDD, engram)
-		// append their sections. For Gentleman, the content is the full persona
+		// append their sections. For AgentSmith, the content is the full persona
 		// asset which is safe to write as-is.
 		//
 		// If the file already exists and has managed sections (SDD, engram), we
@@ -282,7 +290,7 @@ func injectInternal(homeDir string, adapter agents.Adapter, persona model.Person
 	case model.StrategyInstructionsFile:
 		promptPath := adapter.SystemPromptFile(homeDir)
 
-		// Auto-heal: remove any stale Gentleman persona content left at the
+		// Auto-heal: remove any stale AgentSmith persona content left at the
 		// old VSCode path (~/.github/copilot-instructions.md) that was written
 		// by an older installer version.  VS Code still reads that path for
 		// global instructions, so the two files would conflict.
@@ -290,7 +298,7 @@ func injectInternal(homeDir string, adapter agents.Adapter, persona model.Person
 			changed = true
 		}
 
-		// For non-Gentleman personas, preserve managed sections (same logic
+		// For non-AgentSmith personas, preserve managed sections (same logic
 		// as StrategyFileReplace above).
 		existing, readErr := readFileOrEmpty(promptPath)
 		if readErr != nil {
@@ -396,7 +404,7 @@ func injectInternal(homeDir string, adapter agents.Adapter, persona model.Person
 		outputStyleContent := ""
 		switch {
 		case isGentlemanConversationPersona(persona):
-			outputStyleContent = assets.MustRead("kimi/output-style-gentleman.md")
+			outputStyleContent = assets.MustRead("kimi/output-style-agent-smith.md")
 		case persona == model.PersonaNeutral:
 			outputStyleContent = assets.MustRead("kimi/output-style-neutral.md")
 		}
@@ -410,10 +418,10 @@ func injectInternal(homeDir string, adapter agents.Adapter, persona model.Person
 	}
 
 	// 2. OpenCode/Kilocode agent definitions — Tab-switchable agents in settings.
-	// Gentleman overlay creation remains install-only because this overlay shares
+	// AgentSmith overlay creation remains install-only because this overlay shares
 	// the "agent" key in opencode.json with SDD's agent-smith-orchestrator overlay.
-	// Sync only performs narrow cleanup: OpenCode removes stale gentleman tools,
-	// while non-gentleman personas remove agent.gentleman entirely.
+	// Sync only performs narrow cleanup: OpenCode removes stale agent-smith tools,
+	// while non-agent-smith personas remove agent.agent-smith entirely.
 	if (adapter.Agent() == model.AgentOpenCode || adapter.Agent() == model.AgentKilocode) && persona != model.PersonaCustom {
 		settingsPath := adapter.SettingsPath(homeDir)
 		if adapter.Agent() == model.AgentOpenCode && selectedSettingsPath != "" {
@@ -422,7 +430,7 @@ func injectInternal(homeDir string, adapter agents.Adapter, persona model.Person
 		if settingsPath != "" {
 			if isGentlemanConversationPersona(persona) {
 				if !syncManaged {
-					overlay, managedAgentNames := openCodeAgentOverlayJSON, []string{"gentleman"}
+					overlay, managedAgentNames := openCodeAgentOverlayJSON, []string{"agent-smith"}
 					if adapter.Agent() == model.AgentKilocode {
 						overlay, managedAgentNames = kilocodeAgentOverlayJSON, nil
 					}
@@ -434,9 +442,9 @@ func injectInternal(homeDir string, adapter agents.Adapter, persona model.Person
 					files = append(files, settingsPath)
 				}
 				if syncManaged && adapter.Agent() == model.AgentOpenCode {
-					cleanupResult, err := removeJSONAgentTools(settingsPath, "gentleman")
+					cleanupResult, err := removeJSONAgentTools(settingsPath, "agent-smith")
 					if err != nil {
-						return InjectionResult{}, fmt.Errorf("clean stale gentleman tools from settings: %w", err)
+						return InjectionResult{}, fmt.Errorf("clean stale agent-smith tools from settings: %w", err)
 					}
 					changed = changed || cleanupResult.Changed
 					if cleanupResult.Changed {
@@ -444,12 +452,12 @@ func injectInternal(homeDir string, adapter agents.Adapter, persona model.Person
 					}
 				}
 			} else {
-				// Non-gentleman: remove any residual agent.gentleman key left by a
-				// previous gentleman install. Only the "gentleman" sub-key is removed
+				// Non-agent-smith: remove any residual agent.agent-smith key left by a
+				// previous agent-smith install. Only the "agent-smith" sub-key is removed
 				// from within "agent" — other user-defined agents are preserved.
-				removed, err := removeJSONNestedSubKey(settingsPath, "agent", "gentleman", adapter.Agent() == model.AgentOpenCode)
+				removed, err := removeJSONNestedSubKey(settingsPath, "agent", "agent-smith", adapter.Agent() == model.AgentOpenCode)
 				if err != nil {
-					return InjectionResult{}, fmt.Errorf("clean agent.gentleman from settings: %w", err)
+					return InjectionResult{}, fmt.Errorf("clean agent.agent-smith from settings: %w", err)
 				}
 				if removed {
 					changed = true
@@ -493,7 +501,7 @@ func injectInternal(homeDir string, adapter agents.Adapter, persona model.Person
 			changed = changed || settingsResult.Changed
 			files = append(files, settingsPath)
 		} else if settingsPath != "" {
-			removed, err := removeJSONKeyIfValue(settingsPath, "outputStyle", "Gentleman")
+			removed, err := removeJSONKeyIfValue(settingsPath, "outputStyle", "AgentSmith")
 			if err != nil {
 				return InjectionResult{}, fmt.Errorf("clean outputStyle from settings: %w", err)
 			}
@@ -553,7 +561,7 @@ func injectOpenClawSoulPersona(workspaceDir, content string) (InjectionResult, e
 // or any other managed marker — their presence does not prove that the
 // pre-marker content is installer-owned.
 // isExactLegacyPersonaAsset returns true when the file content is an exact
-// match of one of the known persona assets (gentleman or neutral). This handles
+// match of one of the known persona assets (agent-smith or neutral). This handles
 // the case where an old installer wrote the asset as the entire file with no
 // markers — we can safely replace it because there is zero user content.
 func isExactLegacyPersonaAsset(existing string) bool {
@@ -562,8 +570,8 @@ func isExactLegacyPersonaAsset(existing string) bool {
 		return false
 	}
 	for _, assetPath := range []string{
-		"opencode/persona-gentleman.md",
-		"generic/persona-gentleman.md",
+		"opencode/persona-agent-smith.md",
+		"generic/persona-agent-smith.md",
 		"generic/persona-neutral.md",
 	} {
 		asset := strings.TrimSpace(assets.MustRead(assetPath))
@@ -630,11 +638,11 @@ func shouldStripManagedLegacyPersona(existing string) bool {
 }
 
 // isGentlemanConversationPersona reports whether the persona keeps the voseo
-// conversation tone. The gentleman-neutral-artifacts legacy alias is remapped
+// conversation tone. The agent-smith-neutral-artifacts legacy alias is remapped
 // to neutral (cli.normalizePersona in internal/cli/validate.go, mirrored at
-// the injectInternal entry) and is intentionally NOT gentleman here.
+// the injectInternal entry) and is intentionally NOT agent-smith here.
 func isGentlemanConversationPersona(persona model.PersonaID) bool {
-	return persona == model.PersonaGentleman
+	return persona == model.PersonaAgentSmith
 }
 
 // residualChannel reports whether the adapter already delivers tone/language/
@@ -657,7 +665,7 @@ func personaContent(agent model.AgentID, persona model.PersonaID, residualConten
 	case model.PersonaCustom:
 		return ""
 	default:
-		return gentlemanPersonaContent(agent)
+		return agentSmithPersonaContent(agent)
 	}
 }
 
@@ -676,22 +684,22 @@ func neutralPersonaContent(agent model.AgentID, residualContentAvailable bool) s
 	return assets.MustRead("generic/persona-neutral.md")
 }
 
-func gentlemanPersonaContent(agent model.AgentID) string {
-	// Claude and Kimi Gentleman assets are already residual/slim in place; unlike
+func agentSmithPersonaContent(agent model.AgentID) string {
+	// Claude and Kimi AgentSmith assets are already residual/slim in place; unlike
 	// Neutral, there is no separate residual variant to choose here.
 	switch agent {
 	case model.AgentClaudeCode:
-		return assets.MustRead("claude/persona-gentleman.md")
+		return assets.MustRead("claude/persona-agent-smith.md")
 	case model.AgentOpenCode, model.AgentKilocode:
-		return assets.MustRead("opencode/persona-gentleman.md")
+		return assets.MustRead("opencode/persona-agent-smith.md")
 	case model.AgentKimi:
-		return assets.MustRead("kimi/persona-gentleman.md")
+		return assets.MustRead("kimi/persona-agent-smith.md")
 	case model.AgentKiroIDE:
-		return assets.MustRead("kiro/persona-gentleman.md")
+		return assets.MustRead("kiro/persona-agent-smith.md")
 	case model.AgentHermes:
-		return assets.MustRead("hermes/persona-gentleman.md")
+		return assets.MustRead("hermes/persona-agent-smith.md")
 	default:
-		return assets.MustRead("generic/persona-gentleman.md")
+		return assets.MustRead("generic/persona-agent-smith.md")
 	}
 }
 
@@ -771,9 +779,9 @@ func removeJSONAgentTools(path string, names ...string) (filemerge.WriteResult, 
 // the persona prompt or any other asset is changed. JSONC comments within
 // custom agents cannot be retained by the existing whole-agent merge, an
 // escaped "agent" spelling cannot be located by the JSONC text rewrite, and
-// the Gentleman install cannot merge its agent into malformed JSONC at all.
+// the AgentSmith install cannot merge its agent into malformed JSONC at all.
 // Documents the later cleanup cannot parse are never rewritten by it, so sync
-// and non-Gentleman flows keep tolerating them.
+// and non-AgentSmith flows keep tolerating them.
 func preflightJSONCAgentCleanup(path string, persona model.PersonaID, syncManaged bool) error {
 	raw, err := osReadFile(path)
 	if err != nil {
@@ -799,10 +807,10 @@ func preflightJSONCAgentCleanup(path string, persona model.PersonaID, syncManage
 	// Mirror the presence checks of the cleanups below: an explicit null value
 	// still triggers their rewrite.
 	agents, _ := root["agent"].(map[string]any)
-	gentleman, _ := agents["gentleman"].(map[string]any)
-	_, hasGentleman := agents["gentleman"]
-	_, hasTools := gentleman["tools"]
-	rewrites := !isGentlemanConversationPersona(persona) && hasGentleman ||
+	agentSmith, _ := agents["agent-smith"].(map[string]any)
+	_, hasAgentSmith := agents["agent-smith"]
+	_, hasTools := agentSmith["tools"]
+	rewrites := !isGentlemanConversationPersona(persona) && hasAgentSmith ||
 		isGentlemanConversationPersona(persona) && (!syncManaged || hasTools)
 	if !rewrites {
 		return nil
@@ -878,7 +886,7 @@ var osReadFile = func(path string) ([]byte, error) {
 // agent-smith managed sections (SDD orchestrator, engram protocol, etc.) and
 // returns new content that preserves those sections while replacing only the
 // persona text before them. Returns ("", false) when no preservation is needed
-// (empty file, Gentleman persona, or no managed markers found).
+// (empty file, AgentSmith persona, or no managed markers found).
 func preserveManagedSections(existing, newPersona string, persona model.PersonaID) (string, bool) {
 	if existing == "" || isGentlemanConversationPersona(persona) {
 		return "", false
@@ -932,7 +940,7 @@ func wrapSteeringFile(content string) string {
 	return frontmatter + content
 }
 
-// isLegacyUnwrappedPersona reports whether content is a Gentleman persona
+// isLegacyUnwrappedPersona reports whether content is an AgentSmith persona
 // file written by an older installer version without YAML frontmatter.
 // Requires ALL fingerprints to match (not just one) to reduce false positives.
 // This is only used for legacy path cleanup (e.g. ~/.github/copilot-instructions.md)
@@ -958,7 +966,7 @@ func isLegacyUnwrappedPersona(content string) bool {
 }
 
 // legacyVSCodePersonaPaths returns the old VS Code persona file paths that may
-// contain stale Gentleman persona content from older installer versions.
+// contain stale AgentSmith persona content from older installer versions.
 // These paths are no longer written by the current installer but may still
 // be read by VS Code, causing conflicting instructions.
 func legacyVSCodePersonaPaths(homeDir string) []string {
@@ -980,6 +988,132 @@ func removeFileAtomic(path string) (bool, error) {
 		return false, nil
 	}
 	return false, err
+}
+
+// migrateLegacySettingsPersonaKeys rewrites historical "gentleman" persona
+// keys in OpenCode/Kilocode settings.json and the historical "Gentleman"
+// outputStyle value in Claude settings.json to their canonical post-rename
+// successors ("agent-smith" / "AgentSmith"). Without this pass, the install
+// overlay would treat an existing agent.gentleman block as user data, the
+// stale-tools cleanup would never fire, and the neutral-persona migration
+// would erase user-owned prompt/tools that survived the rename. Existing
+// (non-legacy) entries are untouched. The function is a no-op when no legacy
+// key is present.
+func migrateLegacySettingsPersonaKeys(homeDir, selectedSettingsPath string) error {
+	candidates := legacySettingsMigrationCandidates(homeDir, selectedSettingsPath)
+	for _, path := range candidates {
+		if err := renameLegacyAgentKey(path); err != nil {
+			return err
+		}
+	}
+	if err := renameLegacyOutputStyleValue(homeDir); err != nil {
+		return err
+	}
+	return nil
+}
+
+// legacySettingsMigrationCandidates returns the settings.json paths the
+// pre-rename migration should inspect, derived from the adapter config dir
+// contract. selectedSettingsPath is honored when non-empty so the workspace
+// OpenCode override still migrates after a custom settings location was
+// passed in.
+func legacySettingsMigrationCandidates(homeDir, selectedSettingsPath string) []string {
+	var paths []string
+	if selectedSettingsPath != "" {
+		paths = append(paths, selectedSettingsPath)
+	}
+	return paths
+}
+
+// renameLegacyAgentKey renames `agent.gentleman` to `agent.agent-smith`
+// inside the OpenCode/Kilocode settings at path, preserving all sibling fields
+// and the renamed agent's body. JSONC comments outside the agent subtree are
+// preserved by reusing replaceJSONCTopLevelValue. A missing file, malformed
+// JSON, or absent agent.gentleman key is a no-op. Other agent.* siblings are
+// untouched.
+func renameLegacyAgentKey(path string) error {
+	raw, err := osReadFile(path)
+	if err != nil {
+		return nil
+	}
+	if len(raw) == 0 {
+		return nil
+	}
+
+	root, err := filemerge.UnmarshalJSONObject(raw)
+	if err != nil {
+		// Malformed settings stay malformed — the persona cleanup paths will
+		// tolerate them, so the migration must not error out the install.
+		return nil
+	}
+
+	agentRaw, ok := root["agent"].(map[string]any)
+	if !ok {
+		return nil
+	}
+	legacy, hasLegacy := agentRaw["gentleman"]
+	if !hasLegacy {
+		return nil
+	}
+	delete(agentRaw, "gentleman")
+	if _, hasCanonical := agentRaw["agent-smith"]; !hasCanonical {
+		agentRaw["agent-smith"] = legacy
+	}
+	root["agent"] = agentRaw
+
+	encoded, err := json.MarshalIndent(root, "", "  ")
+	if err != nil {
+		return fmt.Errorf("encode migrated settings: %w", err)
+	}
+	encoded = append(encoded, '\n')
+
+	if preservesJSONComments(path, raw) {
+		encoded, err = replaceJSONCTopLevelValue(raw, encoded, "agent")
+		if err != nil {
+			return fmt.Errorf("preserve JSONC comments during agent.gentleman rename: %w", err)
+		}
+	}
+
+	if _, err := filemerge.WriteFileAtomic(path, encoded, filemerge.ExistingFileMode(path, 0o644)); err != nil {
+		return fmt.Errorf("persist migrated settings: %w", err)
+	}
+	return nil
+}
+
+// renameLegacyOutputStyleValue rewrites the legacy "Gentleman" outputStyle
+// value to the canonical "AgentSmith" successor in any Claude settings.json
+// reachable under homeDir. A missing file or absent/mismatched value is a
+// no-op. Other top-level keys are preserved.
+func renameLegacyOutputStyleValue(homeDir string) error {
+	settingsPath := filepath.Join(homeDir, ".claude", "settings.json")
+	raw, err := osReadFile(settingsPath)
+	if err != nil {
+		return nil
+	}
+	if len(raw) == 0 {
+		return nil
+	}
+
+	root := map[string]any{}
+	if err := json.Unmarshal(raw, &root); err != nil {
+		return nil
+	}
+	current, ok := root["outputStyle"].(string)
+	if !ok || current != "Gentleman" {
+		return nil
+	}
+	root["outputStyle"] = "AgentSmith"
+
+	encoded, err := json.MarshalIndent(root, "", "  ")
+	if err != nil {
+		return fmt.Errorf("encode migrated Claude settings: %w", err)
+	}
+	encoded = append(encoded, '\n')
+
+	if _, err := filemerge.WriteFileAtomic(settingsPath, encoded, filemerge.ExistingFileMode(settingsPath, 0o644)); err != nil {
+		return fmt.Errorf("persist migrated Claude settings: %w", err)
+	}
+	return nil
 }
 
 // removeJSONKeyIfValue reads the JSON object at path, removes the top-level key
@@ -1097,9 +1231,9 @@ func removeJSONNestedSubKey(path, parentKey, subKey string, openCode bool) (bool
 	return true, nil
 }
 
-// cleanLegacyVSCodePersona removes Gentleman persona content from any old VS Code
+// cleanLegacyVSCodePersona removes AgentSmith persona content from any old VS Code
 // persona file paths that are no longer written by the current installer.
-// Only files that contain clear Gentleman persona fingerprints are removed —
+// Only files that contain clear AgentSmith persona fingerprints are removed —
 // files with user-written content are left untouched.
 // Returns true if at least one file was cleaned.
 func cleanLegacyVSCodePersona(homeDir string) (bool, error) {
@@ -1114,7 +1248,7 @@ func cleanLegacyVSCodePersona(homeDir string) (bool, error) {
 		}
 
 		if !isLegacyUnwrappedPersona(string(data)) {
-			// File exists but doesn't look like a Gentleman persona — leave it alone.
+			// File exists but doesn't look like an AgentSmith persona — leave it alone.
 			continue
 		}
 

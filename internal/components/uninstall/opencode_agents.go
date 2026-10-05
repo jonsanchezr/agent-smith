@@ -25,7 +25,7 @@ func removeOpenCodeGentleman(path string, agentID model.AgentID) operation {
 			return false, false, err
 		}
 		agents, _ := root["agent"].(map[string]any)
-		entry, _ := agents["gentleman"].(map[string]any)
+		entry, _ := agents["agent-smith"].(map[string]any)
 		if entry == nil {
 			return false, false, nil
 		}
@@ -33,7 +33,7 @@ func removeOpenCodeGentleman(path string, agentID model.AgentID) operation {
 		if err != nil || !owned {
 			return false, false, err
 		}
-		delete(agents, "gentleman")
+		delete(agents, "agent-smith")
 		encoded, err := filemerge.MarshalJSONPreservingPermissions(raw, root)
 		if err != nil {
 			return false, false, err
@@ -83,7 +83,7 @@ func removeOpenCodeFamilyAgents(path string, agentID model.AgentID) operation {
 			var owned bool
 			var err error
 			switch {
-			case name == "gentleman":
+			case name == "agent-smith":
 				owned, err = opencodeagents.GentlemanShape(agentID, entry)
 			case opencodeagents.UninstallRole(agentID, name):
 				owned, err = opencodeagents.Shape(name, entry)

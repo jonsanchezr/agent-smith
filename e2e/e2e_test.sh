@@ -200,9 +200,9 @@ test_preset_minimal_components() {
 }
 
 test_preset_minimal_with_default_persona_includes_persona() {
-    log_test "Preset minimal with default persona (gentleman) includes persona"
+log_test "Preset minimal with default persona (agent-smith) includes persona"
 
-    # Persona is now decoupled from preset â€” default Gentleman persona is
+    # Persona is now decoupled from preset â€" default Agent Smith persona is
     # installed regardless of which preset the user picks.
     output=$($BINARY install --preset minimal --agent claude-code --dry-run 2>&1) || true
 
@@ -210,7 +210,7 @@ test_preset_minimal_with_default_persona_includes_persona() {
     components_line=$(echo "$output" | grep "Components order:")
 
     assert_output_contains "$components_line" "engram" "Minimal includes engram"
-    assert_output_contains "$components_line" "persona" "Minimal + default Gentleman persona includes persona"
+    assert_output_contains "$components_line" "persona" "Minimal + default Agent Smith persona includes persona"
 }
 
 test_preset_ecosystem_components() {
@@ -248,7 +248,7 @@ test_preset_full_with_custom_persona_excludes_persona() {
 }
 
 test_preset_full_components() {
-    log_test "Preset full-gentleman includes core and optional Gentleman components"
+    log_test "Preset full-gentleman includes core and optional Agent Smith components"
 
     output=$($BINARY install --preset full-gentleman --agent claude-code --dry-run 2>&1) || true
 
@@ -463,11 +463,11 @@ test_cc_engram_injection() {
     fi
 }
 
-test_cc_persona_gentleman() {
-    log_test "Claude Code: persona injection (gentleman)"
+test_cc_persona_agent_smith() {
+    log_test "Claude Code: persona injection (agent-smith)"
     cleanup_test_env
 
-    if $BINARY install --agent claude-code --component persona --persona gentleman 2>&1; then
+    if $BINARY install --agent claude-code --component persona --persona agent-smith 2>&1; then
         assert_file_exists "$HOME/.claude/CLAUDE.md" "CLAUDE.md exists"
         assert_file_contains "$HOME/.claude/CLAUDE.md" "agent-smith:persona" "CLAUDE.md has persona section marker"
         # Claude has an active output-style channel â€” the CLAUDE.md persona
@@ -477,16 +477,16 @@ test_cc_persona_gentleman() {
         assert_file_not_contains "$HOME/.claude/CLAUDE.md" "Senior Architect" "CLAUDE.md persona residual carries no tone content"
         assert_file_size_min "$HOME/.claude/CLAUDE.md" 200 "Persona section is substantial"
         # Output-style file â€” canonical tone channel
-        assert_file_exists "$HOME/.claude/output-styles/gentleman.md" "Output-style file exists"
-        assert_file_contains "$HOME/.claude/output-styles/gentleman.md" "name: Gentleman" "Output-style has YAML frontmatter"
-        assert_file_contains "$HOME/.claude/output-styles/gentleman.md" "keep-coding-instructions: true" "Output-style keeps coding instructions"
-        assert_file_contains "$HOME/.claude/output-styles/gentleman.md" "Senior Architect" "Output-style carries the Gentleman tone content"
+        assert_file_exists "$HOME/.claude/output-styles/agent-smith.md" "Output-style file exists"
+        assert_file_contains "$HOME/.claude/output-styles/agent-smith.md" "name: Agent Smith" "Output-style has YAML frontmatter"
+        assert_file_contains "$HOME/.claude/output-styles/agent-smith.md" "keep-coding-instructions: true" "Output-style keeps coding instructions"
+        assert_file_contains "$HOME/.claude/output-styles/agent-smith.md" "Senior Architect" "Output-style carries the Agent Smith tone content"
         # settings.json outputStyle key
         assert_file_exists "$HOME/.claude/settings.json" "settings.json exists"
         assert_file_contains "$HOME/.claude/settings.json" "outputStyle" "settings.json has outputStyle key"
-        assert_file_contains "$HOME/.claude/settings.json" "Gentleman" "settings.json outputStyle is Gentleman"
+        assert_file_contains "$HOME/.claude/settings.json" "Agent Smith" "settings.json outputStyle is Agent Smith"
     else
-        log_fail "persona (gentleman) install command failed"
+        log_fail "persona (agent-smith) install command failed"
     fi
 }
 
@@ -521,7 +521,7 @@ test_cc_persona_custom_does_nothing() {
         # is imposed, so assert that instead of the file's absence.
         assert_file_not_contains "$HOME/.claude/CLAUDE.md" "Senior Architect\|Rioplatense\|voseo" "CLAUDE.md carries no tone content under custom"
         # No output-style file either.
-        assert_file_not_exists "$HOME/.claude/output-styles/gentleman.md" "No output-style for custom"
+        assert_file_not_exists "$HOME/.claude/output-styles/agent-smith.md" "No output-style for custom"
     else
         log_fail "Custom persona install command failed"
     fi
@@ -729,17 +729,17 @@ test_oc_engram_injection() {
     fi
 }
 
-test_oc_persona_gentleman() {
-    log_test "OpenCode: persona injection (gentleman)"
+test_oc_persona_agent_smith() {
+    log_test "OpenCode: persona injection (agent-smith)"
     cleanup_test_env
 
-    if $BINARY install --agent opencode --component persona --persona gentleman 2>&1; then
+    if $BINARY install --agent opencode --component persona --persona agent-smith 2>&1; then
         local agents_md="$HOME/.config/opencode/AGENTS.md"
         assert_file_exists "$agents_md" "AGENTS.md exists"
-        assert_file_contains "$agents_md" "Senior Architect" "Gentleman persona has 'Senior Architect'"
+        assert_file_contains "$agents_md" "Senior Architect" "Agent Smith persona has 'Senior Architect'"
         assert_file_size_min "$agents_md" 200 "AGENTS.md has substantial content"
     else
-        log_fail "OpenCode persona (gentleman) install command failed"
+        log_fail "OpenCode persona (agent-smith) install command failed"
     fi
 }
 
@@ -897,7 +897,7 @@ test_full_preset_claude_code() {
     cleanup_test_env
 
     # Exercise independent injection components without invoking package downloads.
-    if $BINARY install --agent claude-code --component engram --component persona --component skills --component context7 --component permissions --component theme --preset full-gentleman --persona gentleman 2>&1; then
+    if $BINARY install --agent claude-code --component engram --component persona --component skills --component context7 --component permissions --component theme --preset full-gentleman --persona agent-smith 2>&1; then
         local claude_md="$HOME/.claude/CLAUDE.md"
         local settings="$HOME/.claude/settings.json"
 
@@ -937,7 +937,7 @@ test_full_preset_opencode() {
     log_test "Full-gentleman preset: OpenCode (all components coexist)"
     cleanup_test_env
 
-    if $BINARY install --agent opencode --component engram --component persona --component skills --component context7 --component permissions --component theme --preset full-gentleman --persona gentleman 2>&1; then
+    if $BINARY install --agent opencode --component engram --component persona --component skills --component context7 --component permissions --component theme --preset full-gentleman --persona agent-smith 2>&1; then
         local settings="$HOME/.config/opencode/opencode.json"
         local agents_md="$HOME/.config/opencode/AGENTS.md"
 
@@ -951,7 +951,7 @@ test_full_preset_opencode() {
 
         # OpenCode owns ODD routing in the managed orchestrator prompt in opencode.json.
         assert_file_exists "$agents_md" "AGENTS.md exists"
-        assert_file_contains "$agents_md" "Senior Architect" "Gentleman persona"
+        assert_file_contains "$agents_md" "Senior Architect" "Agent Smith persona"
         assert_file_contains "$settings" "agent-smith:agent-routing" "OpenCode orchestrator has ODD routing"
         assert_file_contains "$agents_md" "agent-smith:engram-protocol" "AGENTS.md has engram protocol"
         assert_no_duplicate_section "$agents_md" "engram-protocol" "No duplicate engram section in AGENTS.md"
@@ -1063,8 +1063,8 @@ test_content_claude_md_sections_substantial() {
     cleanup_test_env
 
     # Install persona and engram alongside unconditional ODD routing guidance.
-    $BINARY install --agent claude-code --component persona --persona gentleman 2>&1 || true
-    $BINARY install --agent claude-code --component engram --persona gentleman 2>&1 || true
+$BINARY install --agent claude-code --component persona --persona agent-smith 2>&1 || true
+    $BINARY install --agent claude-code --component engram --persona agent-smith 2>&1 || true
 
     local claude_md="$HOME/.claude/CLAUDE.md"
     if [ -f "$claude_md" ]; then
@@ -1145,8 +1145,8 @@ test_idempotent_persona_claude() {
     log_test "Idempotency: persona on Claude Code (no duplicate sections)"
     cleanup_test_env
 
-    $BINARY install --agent claude-code --component persona --persona gentleman 2>&1 || true
-    $BINARY install --agent claude-code --component persona --persona gentleman 2>&1 || true
+$BINARY install --agent claude-code --component persona --persona agent-smith 2>&1 || true
+    $BINARY install --agent claude-code --component persona --persona agent-smith 2>&1 || true
 
     local claude_md="$HOME/.claude/CLAUDE.md"
     if [ -f "$claude_md" ]; then
@@ -1289,7 +1289,7 @@ test_idempotent_full_claude() {
     log_test "Idempotency: full injection-only on Claude Code"
     cleanup_test_env
 
-    $BINARY install --agent claude-code --component persona --component context7 --component permissions --component theme --preset full-gentleman --persona gentleman 2>&1 || true
+$BINARY install --agent claude-code --component persona --component context7 --component permissions --component theme --preset full-gentleman --persona agent-smith 2>&1 || true
     local first_md_hash
     first_md_hash=$(md5sum "$HOME/.claude/CLAUDE.md" 2>/dev/null | cut -d' ' -f1)
     # Snapshot settings.json for semantic comparison (engram setup may reorder
@@ -1297,7 +1297,7 @@ test_idempotent_full_claude() {
     # serialization). Byte-exact hashing would false-fail on harmless reorder.
     cp "$HOME/.claude/settings.json" /tmp/gai_settings_run1.json 2>/dev/null || true
 
-    $BINARY install --agent claude-code --component persona --component context7 --component permissions --component theme --preset full-gentleman --persona gentleman 2>&1 || true
+$BINARY install --agent claude-code --component persona --component context7 --component permissions --component theme --preset full-gentleman --persona agent-smith 2>&1 || true
     local second_md_hash
     second_md_hash=$(md5sum "$HOME/.claude/CLAUDE.md" 2>/dev/null | cut -d' ' -f1)
 
@@ -1361,15 +1361,15 @@ test_edge_multiple_agents_same_component() {
 }
 
 test_edge_persona_switch() {
-    log_test "Edge case: switching persona from gentleman to neutral"
+log_test "Edge case: switching persona from agent-smith to neutral"
     cleanup_test_env
 
-    # First install with gentleman. Claude has an active output-style channel,
-    # so the teacher identity ("Senior Architect") lives in the output style â€”
+    # First install with agent-smith. Claude has an active output-style channel,
+    # so the teacher identity ("Senior Architect") lives in the output style â€
     # the CLAUDE.md persona section is a residual pointer (design.md Decision 1).
-    $BINARY install --agent claude-code --component persona --persona gentleman 2>&1 || true
-    assert_file_contains "$HOME/.claude/CLAUDE.md" "Persona Voice" "First install: gentleman persona residual points to the output style"
-    assert_file_contains "$HOME/.claude/output-styles/gentleman.md" "Senior Architect" "First install: gentleman output-style has the teacher identity"
+    $BINARY install --agent claude-code --component persona --persona agent-smith 2>&1 || true
+    assert_file_contains "$HOME/.claude/CLAUDE.md" "Persona Voice" "First install: agent-smith persona residual points to the output style"
+    assert_file_contains "$HOME/.claude/output-styles/agent-smith.md" "Senior Architect" "First install: agent-smith output-style has the teacher identity"
 
     # Then install with neutral â€” should REPLACE persona section AND the
     # selected output style. Neutral is a distinct professional voice (same
@@ -1388,8 +1388,8 @@ test_edge_persona_switch_preserves_sections_opencode() {
     log_test "Edge case: persona switch preserves managed sections (OpenCode)"
     cleanup_test_env
 
-    # Step 1: Install persona and memory with gentleman.
-    $BINARY install --agent opencode --component persona --component engram --persona gentleman 2>&1 || true
+# Step 1: Install persona and memory with agent-smith.
+    $BINARY install --agent opencode --component persona --component engram --persona agent-smith 2>&1 || true
 
     local agents_md="$HOME/.config/opencode/AGENTS.md"
     assert_file_exists "$agents_md" "AGENTS.md after full install"
@@ -1498,7 +1498,7 @@ test_windsurf_persona_and_engram_content() {
     # Windsurf is a desktop app â€” signal its presence without a live agent.
     mkdir -p "$HOME/.codeium/windsurf"
 
-    if $BINARY install --agent windsurf --component persona --component engram --persona gentleman 2>&1; then
+    if $BINARY install --agent windsurf --component persona --component engram --persona agent-smith 2>&1; then
         local rules="$HOME/.codeium/windsurf/memories/global_rules.md"
         assert_file_exists "$rules" "global_rules.md exists"
         assert_file_contains "$rules" "Senior Architect" "Persona injected"
@@ -1544,7 +1544,7 @@ test_integrity_full_preset_all_skills_nonempty() {
     log_test "Integrity: full preset â€” every SKILL.md is non-empty"
     cleanup_test_env
 
-    if $BINARY install --agent opencode --component skills --preset full-gentleman --persona gentleman 2>&1; then
+    if $BINARY install --agent opencode --component skills --preset full-gentleman --persona agent-smith 2>&1; then
         local skill_dir="$HOME/.config/opencode/skills"
         assert_file_count "$skill_dir" "SKILL.md" 8 "Full preset installs 8 foundation skills"
         local all_ok=true
@@ -1755,7 +1755,7 @@ if [ "${RUN_FULL_E2E:-0}" = "1" ]; then
 
     # Category 2: Claude Code injection
     test_cc_engram_injection
-    test_cc_persona_gentleman
+    test_cc_persona_agent_smith
     test_cc_persona_neutral
     test_cc_persona_custom_does_nothing
     test_cc_skills_minimal
@@ -1769,7 +1769,7 @@ if [ "${RUN_FULL_E2E:-0}" = "1" ]; then
 
     # Category 3: OpenCode injection
     test_oc_engram_injection
-    test_oc_persona_gentleman
+    test_oc_persona_agent_smith
     test_oc_persona_neutral
     test_oc_persona_custom_does_nothing
     test_oc_skills_minimal

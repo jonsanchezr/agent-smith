@@ -31,7 +31,7 @@ func TestOpenClawSelectedAdapterRoutesToExpectedInjectors(t *testing.T) {
 	if _, err := agentguidance.InjectStrictTDDWithOptions(workspace, adapter.Agent(), true, agentguidance.RoutingOptions{}); err != nil {
 		t.Fatalf("agentguidance.InjectStrictTDDWithOptions(openclaw) error = %v", err)
 	}
-	if _, err := persona.Inject(workspace, adapter, model.PersonaGentleman); err != nil {
+	if _, err := persona.Inject(workspace, adapter, model.PersonaAgentSmith); err != nil {
 		t.Fatalf("persona.Inject(openclaw) error = %v", err)
 	}
 
@@ -115,7 +115,7 @@ func runOpenClawInjectorChain(t *testing.T, home, workspace string, adapter agen
 	if _, err := agentguidance.InjectStrictTDDWithOptions(workspace, adapter.Agent(), true, agentguidance.RoutingOptions{}); err != nil {
 		t.Fatalf("agentguidance.InjectStrictTDDWithOptions(openclaw) error = %v", err)
 	}
-	if _, err := persona.Inject(workspace, adapter, model.PersonaGentleman); err != nil {
+	if _, err := persona.Inject(workspace, adapter, model.PersonaAgentSmith); err != nil {
 		t.Fatalf("persona.Inject(openclaw) error = %v", err)
 	}
 }

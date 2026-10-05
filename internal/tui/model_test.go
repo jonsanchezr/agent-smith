@@ -613,7 +613,7 @@ func TestPiOnlyAgentContinueSkipsPromptsAndIncludesEngram(t *testing.T) {
 	m := NewModel(system.DetectionResult{}, "dev")
 	m.Screen = ScreenAgents
 	m.Selection.Agents = []model.AgentID{model.AgentPi}
-	m.Selection.Components = componentsForPreset(model.PresetFullGentleman, model.PersonaGentleman)
+	m.Selection.Components = componentsForPreset(model.PresetFullGentleman, model.PersonaAgentSmith)
 	m.Cursor = len(screensAgentOptions())
 
 	updated, _ := m.Update(tea.KeyMsg{Type: tea.KeyEnter})
@@ -2951,7 +2951,7 @@ func TestKiroPickerEscNonCustomWithoutClaudeGoesToPreset(t *testing.T) {
 	m.Selection.Preset = model.PresetFullGentleman
 	// Only Kiro — no Claude.
 	m.Selection.Agents = []model.AgentID{model.AgentKiroIDE}
-	m.Selection.Components = componentsForPreset(model.PresetFullGentleman, model.PersonaGentleman)
+	m.Selection.Components = componentsForPreset(model.PresetFullGentleman, model.PersonaAgentSmith)
 	m.KiroModelPicker = screens.NewKiroModelPickerState()
 
 	updated, _ := m.Update(tea.KeyMsg{Type: tea.KeyEsc})
@@ -4638,7 +4638,7 @@ func TestComponentsForPreset_PersonaMatrix(t *testing.T) {
 		{
 			name:             "full-gentleman + gentleman includes persona and safe agent visuals",
 			preset:           model.PresetFullGentleman,
-			persona:          model.PersonaGentleman,
+			persona:          model.PersonaAgentSmith,
 			wantPersona:      true,
 			wantTheme:        false,
 			wantClaudeTheme:  true,
@@ -4656,7 +4656,7 @@ func TestComponentsForPreset_PersonaMatrix(t *testing.T) {
 		{
 			name:        "minimal + gentleman includes persona",
 			preset:      model.PresetMinimal,
-			persona:     model.PersonaGentleman,
+			persona:     model.PersonaAgentSmith,
 			wantPersona: true,
 		},
 		{
@@ -4680,7 +4680,7 @@ func TestComponentsForPreset_PersonaMatrix(t *testing.T) {
 		{
 			name:    "custom preset returns nil regardless of persona (gentleman)",
 			preset:  model.PresetCustom,
-			persona: model.PersonaGentleman,
+			persona: model.PersonaAgentSmith,
 			wantNil: true,
 		},
 		{
@@ -4749,8 +4749,8 @@ func TestPersonaScreenRecomputesComponentsWhenPresetAlreadySet(t *testing.T) {
 	m := NewModel(system.DetectionResult{}, "dev")
 	m.Screen = ScreenPersona
 	m.Selection.Preset = model.PresetFullGentleman
-	m.Selection.Persona = model.PersonaGentleman
-	m.Selection.Components = componentsForPreset(model.PresetFullGentleman, model.PersonaGentleman)
+	m.Selection.Persona = model.PersonaAgentSmith
+	m.Selection.Components = componentsForPreset(model.PresetFullGentleman, model.PersonaAgentSmith)
 
 	// Confirm that managed persona and visual polish are initially included.
 	hasPersonaBefore := false
@@ -4802,7 +4802,7 @@ func TestPersonaScreenDoesNotRecomputeForCustomPreset(t *testing.T) {
 	m := NewModel(system.DetectionResult{}, "dev")
 	m.Screen = ScreenPersona
 	m.Selection.Preset = model.PresetCustom
-	m.Selection.Persona = model.PersonaGentleman
+	m.Selection.Persona = model.PersonaAgentSmith
 	m.Selection.Components = nil
 
 	m.Cursor = 0 // PersonaGentleman
@@ -4955,7 +4955,7 @@ func TestCodexPicker_EscBackNavToKiroWhenKiroSelected(t *testing.T) {
 	m.ModelConfigMode = false
 	m.Selection.Preset = model.PresetFullGentleman
 	m.Selection.Agents = []model.AgentID{model.AgentKiroIDE, model.AgentCodex}
-	m.Selection.Components = componentsForPreset(model.PresetFullGentleman, model.PersonaGentleman)
+	m.Selection.Components = componentsForPreset(model.PresetFullGentleman, model.PersonaAgentSmith)
 	m.CodexModelPicker = screens.NewCodexModelPickerStateFromAssignments(m.Selection.CodexModelAssignments)
 
 	updated, _ := m.Update(tea.KeyMsg{Type: tea.KeyEsc})
@@ -4974,7 +4974,7 @@ func TestCodexPicker_EscBackNavToClaudeWhenClaudeSelectedNoKiro(t *testing.T) {
 	m.ModelConfigMode = false
 	m.Selection.Preset = model.PresetFullGentleman
 	m.Selection.Agents = []model.AgentID{model.AgentClaudeCode, model.AgentCodex}
-	m.Selection.Components = componentsForPreset(model.PresetFullGentleman, model.PersonaGentleman)
+	m.Selection.Components = componentsForPreset(model.PresetFullGentleman, model.PersonaAgentSmith)
 	m.CodexModelPicker = screens.NewCodexModelPickerStateFromAssignments(m.Selection.CodexModelAssignments)
 
 	updated, _ := m.Update(tea.KeyMsg{Type: tea.KeyEsc})
@@ -4994,7 +4994,7 @@ func TestCodexPicker_EscBackNavToPresetWhenNeitherClaudeNorKiro(t *testing.T) {
 	m.ModelConfigMode = false
 	m.Selection.Preset = model.PresetFullGentleman
 	m.Selection.Agents = []model.AgentID{model.AgentCodex}
-	m.Selection.Components = componentsForPreset(model.PresetFullGentleman, model.PersonaGentleman)
+	m.Selection.Components = componentsForPreset(model.PresetFullGentleman, model.PersonaAgentSmith)
 	m.CodexModelPicker = screens.NewCodexModelPickerStateFromAssignments(m.Selection.CodexModelAssignments)
 
 	updated, _ := m.Update(tea.KeyMsg{Type: tea.KeyEsc})

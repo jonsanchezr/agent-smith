@@ -8,17 +8,17 @@ import (
 )
 
 func PersonaOptions() []model.PersonaID {
-	return []model.PersonaID{model.PersonaGentleman, model.PersonaNeutral, model.PersonaCustom}
+	return []model.PersonaID{model.PersonaAgentSmith, model.PersonaNeutral, model.PersonaCustom}
 }
 
 var personaDescriptions = map[model.PersonaID]string{
-	model.PersonaGentleman: "Voseo conversation; English technical artifacts",
+	model.PersonaAgentSmith: "Voseo conversation; English technical artifacts",
 	// The legacy alias is remapped at normalization time and no longer offered
 	// in the picker; the entry stays so the review screen can label persisted
 	// state that has not been migrated yet.
-	model.PersonaGentlemanNeutralArtifacts: "No regional conversation tone; English technical artifacts (legacy alias, remapped)",
-	model.PersonaNeutral:                   "No regional conversation tone; English technical artifacts",
-	model.PersonaCustom:                    "Do not install a managed persona; choose themes/logo on the next screens",
+	model.PersonaAgentSmithNeutralArtifacts: "No regional conversation tone; English technical artifacts (legacy alias, remapped)",
+	model.PersonaNeutral:                    "No regional conversation tone; English technical artifacts",
+	model.PersonaCustom:                     "Do not install a managed persona; choose themes/logo on the next screens",
 }
 
 func RenderPersona(selected model.PersonaID, cursor int) string {
@@ -26,7 +26,7 @@ func RenderPersona(selected model.PersonaID, cursor int) string {
 
 	b.WriteString(styles.TitleStyle.Render("Choose your Persona"))
 	b.WriteString("\n\n")
-	b.WriteString(styles.SubtextStyle.Render("Your own Gentleman! teaches before it solves."))
+	b.WriteString(styles.SubtextStyle.Render("Your own Agent Smith! teaches before it solves."))
 	b.WriteString("\n\n")
 
 	for idx, persona := range PersonaOptions() {

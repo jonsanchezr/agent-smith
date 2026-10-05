@@ -59,7 +59,7 @@ func TestInjectMergesThemeOverlayIntoAdapterSettings(t *testing.T) {
 	if err := json.Unmarshal(data, &root); err != nil {
 		t.Fatalf("Unmarshal(settings) error = %v", err)
 	}
-	if root.Theme != "gentleman" {
+	if root.Theme != "agent-smith" {
 		t.Fatalf("theme = %q, want gentleman", root.Theme)
 	}
 	if got := root.Permissions["allow"]; len(got) != 1 || got[0] != "Bash(go test ./...)" {
@@ -96,7 +96,7 @@ func TestInjectCreatesAdapterSettingsWhenMissing(t *testing.T) {
 	if err := json.Unmarshal(data, &root); err != nil {
 		t.Fatalf("Unmarshal(settings) error = %v", err)
 	}
-	if root.Theme != "gentleman" {
+	if root.Theme != "agent-smith" {
 		t.Fatalf("theme = %q, want gentleman", root.Theme)
 	}
 }
@@ -127,7 +127,7 @@ func TestInjectAtPathPreservesSelectedJSONCAndLeavesDecoy(t *testing.T) {
 		}
 	}
 	got, err := os.ReadFile(selected)
-	if err != nil || !bytes.Contains(got, []byte(`"theme":"gentleman"`)) || !bytes.Contains(got, []byte(`"custom":true`)) || !bytes.Contains(got, []byte("// selected")) {
+	if err != nil || !bytes.Contains(got, []byte(`"theme":"agent-smith"`)) || !bytes.Contains(got, []byte(`"custom":true`)) || !bytes.Contains(got, []byte("// selected")) {
 		t.Fatalf("selected JSONC = %s, %v", got, err)
 	}
 	got, err = os.ReadFile(decoy)
@@ -306,7 +306,7 @@ func TestInjectVisualThemesPreservesGentlemanClaudeTheme(t *testing.T) {
 		t.Fatalf("Unmarshal(theme) error = %v", err)
 	}
 
-	if root.Name != "gentleman" || root.Base != "dark" {
+	if root.Name != "agent-smith" || root.Base != "dark" {
 		t.Fatalf("theme identity = %q/%q, want gentleman/dark", root.Name, root.Base)
 	}
 	expected := map[string]string{
@@ -332,7 +332,7 @@ func TestInjectVisualThemesPreservesGentlemanClaudeTheme(t *testing.T) {
 }
 
 const (
-	gentlemanClaudeFixture   = `{"name":"gentleman","base":"dark","overrides":{"diffAdded":"#3F4A2D","diffRemoved":"#5C3838","diffAddedWord":"#76946A","diffRemovedWord":"#C34043","chromeYellow":"#DCA561","briefLabelYou":"#DCA561","rainbow_yellow":"#DCA561","yellow_FOR_SUBAGENTS_ONLY":"#DCA561"}}`
+	gentlemanClaudeFixture   = `{"name":"agent-smith","base":"dark","overrides":{"diffAdded":"#3F4A2D","diffRemoved":"#5C3838","diffAddedWord":"#76946A","diffRemovedWord":"#C34043","chromeYellow":"#DCA561","briefLabelYou":"#DCA561","rainbow_yellow":"#DCA561","yellow_FOR_SUBAGENTS_ONLY":"#DCA561"}}`
 	cuteClaudeFixture        = `{"name":"Gentleman Cute","base":"dark","overrides":{"claude":"#F095C8","claudeShimmer":"#FFB1DD","text":"#F6EFF3","inactive":"#A78E9B","subtle":"#76616B","suggestion":"#FFB1DD","permission":"#F095C8","promptBorder":"#F095C8","planMode":"#A9C7EE","autoAccept":"#FF81CC","bashBorder":"#E0C27A","remember":"#E0C27A","success":"#B4E7C7","merged":"#B4E7C7","error":"#FF718F","warning":"#F2B86D","diffAdded":"#1A2420","diffRemoved":"#2D151F","diffAddedWord":"#2D5A45","diffRemovedWord":"#7A2948","userMessageBackground":"#241822","userMessageBackgroundHover":"#342230","selectionBg":"#563040","memoryBackgroundColor":"#1A1218","bashMessageBackgroundColor":"#151316"}}`
 	gentlemanOpenCodeFixture = `{"$schema":"https://opencode.ai/theme.json","theme":{"background":"none","backgroundPanel":"#06080f","backgroundElement":"#06080f","text":"#F3F6F9","textMuted":"#5C6170","primary":"#7FB4CA","secondary":"#A3B5D6","accent":"#E0C15A","error":"#CB7C94","warning":"#DEBA87","success":"#B7CC85","info":"#7FB4CA","border":"#313342","borderActive":"#7FB4CA","borderSubtle":"#232A40","diffAdded":"#B7CC85","diffRemoved":"#CB7C94","diffContext":"#5C6170","diffHunkHeader":"#8394A3","diffHighlightAdded":"#D1E8A9","diffHighlightRemoved":"#DE8FA8","diffAddedBg":"#1a2e1a","diffRemovedBg":"#2e1a1a","diffContextBg":"#0d0f14","diffLineNumber":"#8394A3","diffAddedLineNumberBg":"#1a2e1a","diffRemovedLineNumberBg":"#2e1a1a","markdownText":"#F3F6F9","markdownHeading":"#B5B2D0","markdownLink":"#7FB4CA","markdownLinkText":"#79B8EA","markdownCode":"#B7CC85","markdownBlockQuote":"#DEBA87","markdownEmph":"#7CB9DD","markdownStrong":"#DEBA87","markdownHorizontalRule":"#5C6170","markdownListItem":"#7FB4CA","markdownListEnumeration":"#A3B5D6","markdownImage":"#7FB4CA","markdownImageText":"#79B8EA","markdownCodeBlock":"#F3F6F9","syntaxComment":"#8394A3","syntaxKeyword":"#C99AD6","syntaxFunction":"#B99BF2","syntaxVariable":"#F3F6F9","syntaxString":"#DFBD76","syntaxNumber":"#A4DAA7","syntaxType":"#8FB8DD","syntaxOperator":"#DEBA87","syntaxPunctuation":"#96A2B0"}}`
 	cuteOpenCodeFixture      = `{"$schema":"https://opencode.ai/theme.json","theme":{"background":"none","backgroundPanel":"#1A1218","backgroundElement":"#241822","text":"#F6EFF3","textMuted":"#A78E9B","primary":"#F095C8","secondary":"#D7A0B8","accent":"#F095C8","error":"#FF718F","warning":"#F2B86D","success":"#B4E7C7","info":"#D7A0B8","border":"#342230","borderActive":"#FFB1DD","borderSubtle":"#241822","diffAdded":"#B4E7C7","diffRemoved":"#FF718F","diffContext":"#A78E9B","diffHunkHeader":"#D7A0B8","diffHighlightAdded":"#B4E7C7","diffHighlightRemoved":"#FF718F","diffAddedBg":"#1A2420","diffRemovedBg":"#261019","diffContextBg":"#1A1218","diffLineNumber":"#76616B","diffAddedLineNumberBg":"#1A2420","diffRemovedLineNumberBg":"#261019","markdownText":"#F6EFF3","markdownHeading":"#E0C27A","markdownLink":"#F095C8","markdownLinkText":"#F095C8","markdownCode":"#E0C27A","markdownBlockQuote":"#A78E9B","markdownEmph":"#D7A0B8","markdownStrong":"#E0C27A","markdownHorizontalRule":"#A78E9B","markdownListItem":"#F095C8","markdownListEnumeration":"#D7A0B8","markdownImage":"#F095C8","markdownImageText":"#F095C8","markdownCodeBlock":"#F6EFF3","syntaxComment":"#A78E9B","syntaxKeyword":"#F095C8","syntaxFunction":"#A9C7EE","syntaxVariable":"#F6EFF3","syntaxString":"#B4E7C7","syntaxNumber":"#F2B86D","syntaxType":"#E0C27A","syntaxOperator":"#C4DAF6","syntaxPunctuation":"#A78E9B"}}`

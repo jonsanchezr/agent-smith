@@ -17,7 +17,7 @@ import (
 func TestRenderReviewShowsSkillNames(t *testing.T) {
 	payload := planner.ReviewPayload{
 		Agents:  []model.AgentID{model.AgentClaudeCode},
-		Persona: model.PersonaGentleman,
+		Persona: model.PersonaAgentSmith,
 		Preset:  model.PresetFullGentleman,
 		Components: []planner.ComponentAction{
 			{ID: model.ComponentSkills, Action: "selected"},
@@ -41,7 +41,7 @@ func TestRenderReviewShowsSkillNames(t *testing.T) {
 func TestRenderReviewHidesSkillsSectionWhenEmpty(t *testing.T) {
 	payload := planner.ReviewPayload{
 		Agents:  []model.AgentID{model.AgentClaudeCode},
-		Persona: model.PersonaGentleman,
+		Persona: model.PersonaAgentSmith,
 		Preset:  model.PresetFullGentleman,
 		// No Skills field.
 	}
@@ -106,8 +106,8 @@ func TestRenderReviewSummarizesPersonaConversationAndArtifacts(t *testing.T) {
 		persona model.PersonaID
 		want    string
 	}{
-		{name: "Gentleman", persona: model.PersonaGentleman, want: "Voseo conversation; English technical artifacts"},
-		{name: "Gentleman with English artifacts", persona: model.PersonaGentlemanNeutralArtifacts, want: "No regional conversation tone; English technical artifacts (legacy alias, remapped)"},
+		{name: "Gentleman", persona: model.PersonaAgentSmith, want: "Voseo conversation; English technical artifacts"},
+		{name: "Gentleman with English artifacts", persona: model.PersonaAgentSmithNeutralArtifacts, want: "No regional conversation tone; English technical artifacts (legacy alias, remapped)"},
 		{name: "Neutral", persona: model.PersonaNeutral, want: "No regional conversation tone; English technical artifacts"},
 	}
 

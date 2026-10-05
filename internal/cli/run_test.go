@@ -59,7 +59,7 @@ func TestInstallOpenCodeSettingsWritersUseSelectedJSONC(t *testing.T) {
 	for _, component := range []model.ComponentID{model.ComponentPersona, model.ComponentPermission, model.ComponentContext7} {
 		t.Run(string(component), func(t *testing.T) {
 			home, workspace, selected, decoy, before := themeSettingsFixture(t)
-			selection := model.Selection{Agents: []model.AgentID{model.AgentOpenCode}, Components: []model.ComponentID{component}, Persona: model.PersonaGentleman}
+			selection := model.Selection{Agents: []model.AgentID{model.AgentOpenCode}, Components: []model.ComponentID{component}, Persona: model.PersonaAgentSmith}
 			resolved := planner.ResolvedPlan{Agents: selection.Agents, OrderedComponents: selection.Components}
 			paths, err := backupTargets(home, workspace, ScopeGlobal, selection, resolved)
 			if err != nil || !slices.Contains(paths, selected) {
@@ -133,7 +133,7 @@ func TestInstallOpenCodeSettingsWritersWorkspaceScope(t *testing.T) {
 					stubEngramLookPath(t, home)
 				}
 				stranded := opencode.NewAdapter().SettingsPath(workspace)
-				selection := model.Selection{Agents: []model.AgentID{model.AgentOpenCode}, Components: []model.ComponentID{component}, Persona: model.PersonaGentleman}
+				selection := model.Selection{Agents: []model.AgentID{model.AgentOpenCode}, Components: []model.ComponentID{component}, Persona: model.PersonaAgentSmith}
 				paths, err := backupTargets(home, workspace, ScopeWorkspace, selection, planner.ResolvedPlan{Agents: selection.Agents, OrderedComponents: selection.Components})
 				if err != nil || !slices.Contains(paths, loaded) || slices.Contains(paths, stranded) {
 					t.Fatalf("workspace backup targets = %v, %v; want %q and not %q", paths, err, loaded, stranded)
@@ -216,7 +216,7 @@ func TestInstallOpenCodeSettingsWritersRollbackSelectedJSONC(t *testing.T) {
 	for _, component := range []model.ComponentID{model.ComponentPersona, model.ComponentPermission, model.ComponentContext7} {
 		t.Run(string(component), func(t *testing.T) {
 			home, workspace, selected, decoy, before := themeSettingsFixture(t)
-			selection := model.Selection{Agents: []model.AgentID{model.AgentOpenCode}, Components: []model.ComponentID{component}, Persona: model.PersonaGentleman}
+			selection := model.Selection{Agents: []model.AgentID{model.AgentOpenCode}, Components: []model.ComponentID{component}, Persona: model.PersonaAgentSmith}
 			targets, err := backupTargets(home, workspace, ScopeGlobal, selection, planner.ResolvedPlan{Agents: selection.Agents, OrderedComponents: selection.Components})
 			if err != nil || !slices.Contains(targets, selected) {
 				t.Fatalf("snapshot targets = %v, %v", targets, err)
@@ -260,7 +260,7 @@ type failAfterThemeStep struct {
 func (s failAfterThemeStep) ID() string { return "test:fail-after-theme" }
 func (s failAfterThemeStep) Run() error {
 	data, err := os.ReadFile(s.selected)
-	if err != nil || !bytes.Contains(data, []byte(`"theme":"gentleman"`)) {
+	if err != nil || !bytes.Contains(data, []byte(`"theme":"agent-smith"`)) {
 		return errors.New("theme write was not observed before failure")
 	}
 	*s.observed = true
@@ -320,7 +320,7 @@ func TestInstallThemeRollbackRestoresSelectedJSONCBytesAndMode(t *testing.T) {
 func assertThemeSelectedOnly(t *testing.T, selected, decoy string) {
 	t.Helper()
 	data, err := os.ReadFile(selected)
-	if err != nil || !bytes.Contains(data, []byte(`"theme":"gentleman"`)) || !bytes.Contains(data, []byte(`"user":true`)) || !bytes.Contains(data, []byte("// project settings")) {
+	if err != nil || !bytes.Contains(data, []byte(`"theme":"agent-smith"`)) || !bytes.Contains(data, []byte(`"user":true`)) || !bytes.Contains(data, []byte("// project settings")) {
 		t.Fatalf("selected JSONC theme not installed: %s, %v", data, err)
 	}
 	data, err = os.ReadFile(decoy)

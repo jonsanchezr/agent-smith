@@ -179,7 +179,7 @@ func TestPiOnlyDependencyTreeBackReturnsToAgentSelection(t *testing.T) {
 			m := NewModel(system.DetectionResult{}, "dev")
 			m.Screen = ScreenAgents
 			m.Selection.Agents = []model.AgentID{model.AgentPi}
-			m.Selection.Components = componentsForPreset(model.PresetFullGentleman, model.PersonaGentleman)
+			m.Selection.Components = componentsForPreset(model.PresetFullGentleman, model.PersonaAgentSmith)
 			m.Cursor = len(screens.AgentOptions())
 			state := applyFlowAction(t, m, flowAction{key: tea.KeyMsg{Type: tea.KeyEnter}})
 			if state.Screen != ScreenDependencyTree {

@@ -37,7 +37,7 @@ func TestPersonaOnlyUninstallRemovesOnlyManagedGentleman(t *testing.T) {
 				if modified {
 					gentleman["prompt"] = "user-owned prompt"
 				}
-				raw, err := json.Marshal(map[string]any{"agent": map[string]any{"gentleman": gentleman, "my-agent": map[string]any{"prompt": "mine"}}})
+				raw, err := json.Marshal(map[string]any{"agent": map[string]any{"agent-smith": gentleman, "my-agent": map[string]any{"prompt": "mine"}}})
 				if err != nil {
 					t.Fatal(err)
 				}
@@ -56,10 +56,10 @@ func TestPersonaOnlyUninstallRemovesOnlyManagedGentleman(t *testing.T) {
 					t.Fatal(err)
 				}
 				agents := root["agent"].(map[string]any)
-				if _, exists := agents["gentleman"]; exists != modified {
+				if _, exists := agents["agent-smith"]; exists != modified {
 					t.Fatalf("gentleman exists=%v want %v: %s", exists, modified, body)
 				}
-				if modified && agents["gentleman"].(map[string]any)["prompt"] != "user-owned prompt" {
+				if modified && agents["agent-smith"].(map[string]any)["prompt"] != "user-owned prompt" {
 					t.Fatalf("user prompt changed: %s", body)
 				}
 				if agents["my-agent"].(map[string]any)["prompt"] != "mine" {
