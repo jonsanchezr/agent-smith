@@ -17,6 +17,11 @@ var (
 	ColorMauve    = lipgloss.Color("#ebbcba")
 	ColorYellow   = lipgloss.Color("#f1ca93")
 	ColorTeal     = lipgloss.Color("#9ccfd8")
+
+	// Matrix-style green palette used by the AGENT-SMITH logo gradient.
+	ColorMatrixBright = lipgloss.Color("#00ff41")
+	ColorMatrixMid    = lipgloss.Color("#00b830")
+	ColorMatrixDim    = lipgloss.Color("#008f24")
 )
 
 // Cursor is the prefix used for the currently focused item.

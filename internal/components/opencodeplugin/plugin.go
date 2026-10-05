@@ -73,40 +73,52 @@ import { createMemo } from "solid-js"
 
 const id = "gentle-logo"
 
-const roseArt = [
-  "             ⣠⣾⣷⣶⣦⣤⣤⣄⣠⣄⣀  ⢀⣀⣀",
-  "          ⢀⣴⣿⣿⠿⣋⣭⣭⣯⣭⣍⣭⣿⣟⠛⠛⠿⠿⣿⣷⣄",
-  "      ⢀⣴⣾⡟⢻⣿⡟⠁⣼⣿⠏⣵⢻⣿⣻⣿⣿⢿⡻⣿⣿⣶⡌⢿⣿⣷⣦⣤⡄",
-  "   ⣤⣶⣾⣿⣿⠏ ⠈⢿⣄ ⢹⣏⠠⠟⣾⣿⣿⣿⣿⣿⠷⣏⣼⠟⢡⣿⡟⠋⢻⣿⣿⡄",
-  "   ⠈⣿⣿⣿⣿⡆   ⣽⢧⡘⠈⠳⣦⣍⠛⠛⢦⣉⣴⣛⣫⣭⣴⡟⠋  ⣾⣿⣿⡿",
-  "   ⢀⠹⣿⣿⣿⣷⣤⡄ ⠋ ⠙⢆ ⣠⠴⠟⠛⣛⣛⣛⠟⠋⠁⠺⡇ ⣀⣴⣿⣿⡟⠁",
-  "   ⠈⣀⠈⠛⠷⠿⣿⣿⣷⣤⣀ ⢠⠋   ⠈⠉⠉    ⣠⣴⣥⠾⠛⠉⣰⣿⣷",
-  "          ⠹⣯⣝⠛⠛⠷⢶⣤⣤⣀   ⢀⡠⠖⠋⠉⢉⣀⣀⣴⣾⣿⠿⠟⠃ ⠠⠦",
-  "⠁       ⠖  ⠘⠻⢿⣦⣄⡀  ⠉⠛⢦⠠⢊⠤⠴⢒⣛⣛⣩⣽⡿⠟⠁⢀⡀",
-  "⠲⠶⣦⠴⠶⠶⠶⠶⡶⠶⢶⣤⣄⡀⠨⠭⠽⠟⣓⢦⣀⠈⢇⡥⠖⠛⠋⠉⠉⠉    ⠈  ⢠⡤",
-  "  ⠈⢷ ⠐⠂⢤⣽⣄ ⠰⡎⠙⠳⣄⡀ ⠈⢣⠘⢦⠋⣀⡬⠟⠛⠛⠉⢀⣀⣀⣠⡤⠄⠃",
-  "   ⠈⢳⣀⡒⠉⠉⣉⠙⡲⣽⣄ ⣏⠳⡄ ⠘⡇ ⡾⠁ ⢀⡤⠖⣻⣿⡏⢡⡎ ⠰⠄",
-  "     ⠛⠻⢦⣄⣉⡁⣀⣀⣈⣙⣺⣌⡇⢠⢀⡇⡾  ⣴⣿⡷⠊ ⢲⣠⠟",
-  "          ⠈⠉    ⠈⠳⡄⣸⢱⠇⢀⣰⣯⣭⣥⠭⠾⠛⠃",
-  "                  ⡷⠡⡯⢖⠉   ⢠⠤",
-  "                ⡠⢊⡴⠤⠂⠃ ⠒",
-  "             ⢀⡴⢪⠔⣉⠔⠋",
-  "               ⠐⠈",
-]
+const agentSmithFont = {
+  A: ['01110','10001','10001','11111','10001','10001','10001'],
+  G: ['01111','10000','10000','10111','10001','10001','01110'],
+  E: ['11111','10000','10000','11110','10000','10000','11111'],
+  N: ['10001','11001','10101','10101','10101','10011','10001'],
+  T: ['11111','00100','00100','00100','00100','00100','00100'],
+  '-': ['00000','00000','00000','11111','00000','00000','00000'],
+  S: ['01110','10001','10000','01110','00001','10001','01110'],
+  M: ['10001','11011','10101','10101','10001','10001','10001'],
+  I: ['11111','00100','00100','00100','00100','00100','11111'],
+  H: ['10001','10001','10001','11111','10001','10001','10001'],
+}
 
-const compactArt = ["✦ Agent Smith ✦"]
+const agentSmithText = 'AGENT-SMITH'
+
+const buildAgentSmithArt = () => {
+  const lines = ['','','','','','','']
+  const chars = Array.from(agentSmithText)
+  chars.forEach((ch, i) => {
+    const pattern = agentSmithFont[ch] || agentSmithFont['-']
+    for (let r = 0; r < 7; r++) {
+      let row = ''
+      for (let c = 0; c < 5; c++) {
+        row += pattern[r][c] === '1' ? ch : ' '
+      }
+      lines[r] += (i < chars.length - 1) ? row + ' ' : row
+    }
+  })
+  return lines
+}
+
+const agentSmithArt = buildAgentSmithArt()
+
+const compactArt = ['[ AGENT-SMITH ]']
 
 const Logo = () => {
   const dim = useTerminalDimensions()
   const lines = createMemo(() => {
     const term = dim()
-    return term.height >= roseArt.length + 6 && term.width >= 64 ? roseArt : compactArt
+    return term.height >= agentSmithArt.length + 6 && term.width >= 65 ? agentSmithArt : compactArt
   })
 
   return (
     <box flexDirection="column" alignItems="center">
       {lines().map((line) => (
-        <text fg="magenta">{line}</text>
+        <text fg="#00ff41">{line}</text>
       ))}
     </box>
   )
